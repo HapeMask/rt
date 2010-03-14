@@ -30,6 +30,7 @@ clean:
 	for DIR in $(DIRS); do \
 		$(MAKE) -C $${DIR} clean; \
 		done
+	-rm ../obj/*.o
 	-rm rt
 
 run: rt
