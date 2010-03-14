@@ -1,7 +1,7 @@
 #ifndef __RT_FRAMEBUFFER__
 #define __RT_FRAMEBUFFER__
 
-#include "color.hpp"
+#include "../color/color.hpp"
 
 class framebuffer {
 	public:

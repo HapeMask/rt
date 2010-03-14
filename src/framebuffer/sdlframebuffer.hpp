@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 
 #include "framebuffer.hpp"
-#include "color.hpp"
+#include "../color/color.hpp"
 
 class sdlFramebuffer : public framebuffer {
 	public:

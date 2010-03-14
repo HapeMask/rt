@@ -1,6 +1,6 @@
 #include <vector>
 #include "defaultaccelerator.hpp"
-#include "intersectable.hpp"
+#include "../geometry/intersectable.hpp"
 
 using namespace std;
 

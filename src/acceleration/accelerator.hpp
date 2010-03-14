@@ -2,7 +2,7 @@
 #define __RT_ACCEL__
 
 #include <vector>
-#include "intersectable.hpp"
+#include "../geometry/intersectable.hpp"
 using namespace std;
 
 class accelerator : public intersectable {

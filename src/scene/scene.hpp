@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "intersectable.hpp"
-#include "accelerator.hpp"
+#include "../geometry/intersectable.hpp"
+#include "../acceleration/accelerator.hpp"
 
 using namespace std;
 

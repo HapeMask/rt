@@ -1,7 +1,7 @@
 #ifndef __INTERS__
 #define __INTERS__
-#include "point.hpp"
-#include "ray.hpp"
+#include "../mathlib/point.hpp"
+#include "../mathlib/ray.hpp"
 
 class intersectable {
 	public:

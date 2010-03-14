@@ -3,9 +3,9 @@
 
 #include <cmath>
 
-#include "point.hpp"
-#include "vector.hpp"
-#include "ray.hpp"
+#include "../mathlib/point.hpp"
+#include "../mathlib/vector.hpp"
+#include "../mathlib/ray.hpp"
 #include "intersectable.hpp"
 
 class triangle : public intersectable{

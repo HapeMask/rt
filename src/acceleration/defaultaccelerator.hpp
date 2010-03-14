@@ -2,7 +2,7 @@
 #define __RT_DEFAULTACCEL__
 
 #include <vector>
-#include "intersectable.hpp"
+#include "../geometry/intersectable.hpp"
 #include "accelerator.hpp"
 
 using namespace std;

@@ -1,9 +1,9 @@
 #ifndef __RT_CAMERA__
 #define __RT_CAMERA__
 
-#include "vector.hpp"
-#include "ray.hpp"
-#include "point.hpp"
+#include "../mathlib/vector.hpp"
+#include "../mathlib/ray.hpp"
+#include "../mathlib/point.hpp"
 
 class camera {
 	public:
