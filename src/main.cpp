@@ -5,6 +5,7 @@
 #include "geometry/triangle.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
+#include "mathlib/matrix.hpp"
 #include "camera/camera.hpp"
 using namespace std;
 
@@ -12,20 +13,32 @@ SDL_Surface* screen;
 
 int main(int argc, char** argv){
 	sdlFramebuffer f(512, 512, 32);
-	triangle t(point3(0,0,0), point3(1,0,0), point3(0,1,0));
-	camera c(512, 512, 45, vec3(0,1,0), vec3(0,0,1), point3(0.5, 0.5, -0.5f));
+
+	triangle t1(point3(0,0,0), point3(0,1,0), point3(-1,1,0));
+	triangle t2(point3(0,0,0), point3(-1,1,0), point3(-1,0,0));
+
+	float screen[4] = {-1, 1, -1, 1};
+	camera c(512, 512, screen, 0.f, 1000.f, 45.f, point3(0,0.5,-10), point3(0,0,0), point3(0,1,0));
+
 	ray r;
 	point3 p;
 	rgbColor white(1,1,1);
 	rgbColor black(0,0,0);
+	rgbColor blue(0,0,1);
 
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){
 			c.getRay(x, y, r);
-			if(t.intersect(r, p)){
+
+			if(t1.intersect(r, p)){
 				f.drawPixel(x, y, white);
 			}else{
 				f.drawPixel(x, y, black);
+			}
+
+			c.getRay(x, y, r);
+			if(t2.intersect(r, p)){
+				f.drawPixel(x, y, blue);
 			}
 		}
 	}

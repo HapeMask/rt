@@ -61,8 +61,9 @@ class mat3 {
 			return values[i][j];
 		}
 
-		const mat3 invTransform() const;
+		const mat3 inverse() const;
 		const mat3 transpose() const;
+		const float det() const;
 
 		// Solve Ax = b where A = *this, return x.
 		const vec3 solve(const vec3& b);
@@ -148,8 +149,9 @@ class mat4 {
 			return values[i][j];
 		}
 
-		const mat4 invTransform() const;
+		const mat4 inverse() const;
 		const mat4 transpose() const;
+		const float det() const;
 
 		// Solve Ax = b where A = *this, return x.
 		const vec4 solve(const vec4& b);
@@ -174,17 +176,18 @@ class mat4 {
 #ifdef DEBUG
 			assert(i<4 && i >= 0);
 #endif
-			return vec4(values[0][i], values[1][i], values[2][i], values[i][3]);
+			return vec4(values[0][i], values[1][i], values[2][i], values[3][i]);
 		}
 
-		static mat4 translate(const float& dx, const float& dy, const float& dz);
-		static mat4 scale(const float& sx, const float& sy, const float& sz);
-		static mat4 lookAt(const point3& pos, const point3& look, const vec3& up);
+		static const mat4 translate(const float& dx, const float& dy, const float& dz);
+		static const mat4 scale(const float& sx, const float& sy, const float& sz);
+		static const mat4 lookAt(const point3& pos, const point3& look, const vec3& up);
 
 	private:
 		float values[4][4];
 };
 
 ostream& operator<<(ostream& out, const mat3& m);
+ostream& operator<<(ostream& out, const mat4& m);
 
 #endif

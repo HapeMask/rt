@@ -303,9 +303,11 @@ vec3 cross(const vec3& u, const vec3& v);
 
 const vec2 normalize(const vec2& u);
 const vec3 normalize(const vec3& u);
+const vec4 normalize(const vec4& u);
 
 ostream& operator<<(ostream& out, const vec2& x);
 ostream& operator<<(ostream& out, const vec3& x);
+ostream& operator<<(ostream& out, const vec4& x);
 
 const vec3 operator*(const float& x, const vec3& u);
 vec3& operator*=(const float& x, vec3& u);

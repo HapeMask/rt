@@ -3,9 +3,19 @@
 #include <cmath>
 
 void camera::getRay(const int& x, const int& y, ray& r){
-	float upFrac = (float)(halfH - y) / (float)halfH;
-	float sideFrac = (float)(halfW - x) / (float)halfW;
-	vec3 v = (left * sideFrac) + (up * upFrac) + forward;
-	r.direction() = normalize(v);
-	r.origin() = position;
+	const vec4 rvec = vec4(vec3(x, y, 0.f), 1.f);
+	vec4 cameraSpacePos = rasterToCamera * rvec;
+	float w = cameraSpacePos.w();
+	cameraSpacePos /= w;
+
+	vec4 worldSpacePos = cameraToWorld * cameraSpacePos;
+	w = worldSpacePos.w();
+	worldSpacePos /= w;
+
+	vec4 worldSpaceDirection = cameraToWorld * normalize(cameraSpacePos);
+	w = worldSpaceDirection.w();
+	worldSpaceDirection /= w;
+
+	r.origin() = point3(worldSpacePos.x(), worldSpacePos.y(), worldSpacePos.z());
+	r.direction() = normalize(vec3(worldSpaceDirection.x(), worldSpaceDirection.y(), -worldSpaceDirection.z()));
 }

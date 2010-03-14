@@ -24,7 +24,7 @@ class color {
 
 class rgbColor : public color {
 	public:
-		rgbColor(const int& r, const int& g, const int& b){
+		rgbColor(const float& r, const float& g, const float& b){
 			r_ = r;
 			g_ = g;
 			b_ = b;

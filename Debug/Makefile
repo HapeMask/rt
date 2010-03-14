@@ -2,7 +2,7 @@
 
 CC=g++
 
-CFLAGS= -O0 -Wall -g -DDEBUG -I../ -fno-inline
+CFLAGS= -O0 -Wall -g -DDEBUG -I../ -fno-inline -fno-default-inline -fkeep-inline-functions
 
 CXXFLAGS=
 LDFLAGS=-lSDL

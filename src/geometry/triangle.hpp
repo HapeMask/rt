@@ -19,7 +19,7 @@ class triangle : public intersectable{
 
 			// Find the biggest normal axis, then remove that
 			// coordinate from A, B, C to get a,b,cPrime.
-			const float maxD = max(max(normal_(0), normal_(1)), normal_(2));
+			const float maxD = max(max(abs(normal_(0)), abs(normal_(1))), abs(normal_(2)));
 			if(maxD == normal_(0)){
 				axis1 = 1;
 				axis2 = 2;

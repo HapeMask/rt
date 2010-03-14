@@ -271,9 +271,9 @@ float dot(const vec4& u, const vec4& v){
 
 vec3 cross(const vec3& u, const vec3& v){
 	return vec3(
-			(u(1) * v(2)) - (u(2) * v(1)),
-			(u(2) * v(0)) - (u(0) * v(2)),
-			(u(0) * v(1)) - (u(1) * v(0))
+			(v(1) * u(2)) - (v(2) * u(1)),
+			(v(2) * u(0)) - (v(0) * u(2)),
+			(v(0) * u(1)) - (v(1) * u(0))
 		);
 }
 
@@ -287,11 +287,20 @@ ostream& operator<<(ostream& out, const vec3& x){
 	return out;
 }
 
+ostream& operator<<(ostream& out, const vec4& x){
+	out << "vec4(" << x(0) << ", " << x(1) << ", " << x(2) << ", " << x(3) <<  ")";
+	return out;
+}
+
 const vec2 normalize(const vec2& u){
 	return u / u.length();
 }
 
 const vec3 normalize(const vec3& u){
+	return u / u.length();
+}
+
+const vec4 normalize(const vec4& u){
 	return u / u.length();
 }
 
