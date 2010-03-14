@@ -4,8 +4,6 @@ CC=g++
 SRCDIR=../src
 OBJDIR=obj
 
-CFLAGS=
-
 CFLAGS += -O3 -msse -msse2 -msse3
 
 CXXFLAGS=

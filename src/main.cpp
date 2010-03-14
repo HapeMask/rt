@@ -1,11 +1,11 @@
 #include <SDL/SDL.h>
 #include <iostream>
 
-#include "sdlframebuffer.hpp"
-#include "vector.hpp"
-#include "triangle.hpp"
-#include "point.hpp"
-#include "camera.hpp"
+#include "framebuffer/sdlframebuffer.hpp"
+#include "geometry/triangle.hpp"
+#include "mathlib/point.hpp"
+#include "mathlib/vector.hpp"
+#include "camera/camera.hpp"
 using namespace std;
 
 SDL_Surface* screen;
