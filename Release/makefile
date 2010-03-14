@@ -1,4 +1,4 @@
-.PHONY: all clean run tests
+.PHONY: all clean run
 
 CC=g++
 SRCDIR=../src
@@ -6,7 +6,7 @@ OBJDIR=obj
 
 CFLAGS=
 
-CFLAGS += -Wall -g -DDEBUG
+CFLAGS += -O3 -msse -msse2 -msse3
 
 CXXFLAGS=
 LDFLAGS=-lSDL
@@ -16,7 +16,7 @@ OBJS=$(patsubst $(SRCDIR)/%.cpp, obj/%.o, $(wildcard $(SRCDIR)/*.cpp))
 all: rt
 
 rt: $(OBJS)
-	$(CC) $(patsubst obj/tests.o, , $^) $(LDFLAGS) -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $? -o $@
@@ -24,10 +24,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 clean:
 	-rm -f $(OBJDIR)/*.o
 	-rm rt
-	-rm tests
 
 run: rt
 	./rt
-
-tests: $(OBJS)
-	$(CC) $(patsubst obj/main.o, , $^) $(LDFLAGS) -o $@
