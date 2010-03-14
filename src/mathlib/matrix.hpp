@@ -60,8 +60,8 @@ class mat3 {
 			return values[i][j];
 		}
 
-		const float det() const;
-		const mat3 inverse() const;
+		const mat3 invTransform() const;
+		const mat3 transpose() const;
 
 		// Solve Ax = b where A = *this, return x.
 		const vec3 solve(const vec3& b);
@@ -93,6 +93,90 @@ class mat3 {
 };
 
 class mat4 {
+	public:
+		/**
+		 * Default constructor = identity.
+		 */
+		mat4(){
+			for(int i=0; i<4; i++){
+				for(int j=0; j<4; j++){
+					values[i][j] = (i==j) ? 1.f : 0.f;
+				}
+			}
+		}
+
+		mat4(const mat4& m){
+			for(int i=0; i<4; i++){
+				for(int j=0; j<4; j++){
+					values[i][j] = m(i,j);
+				}
+			}
+		}
+
+		/**
+		 * Column-vector constructor.
+		 */
+		mat4(const vec4& a, const vec4& b, const vec4& c, const vec4& d){
+			for(int i=0; i<4; i++){
+				values[i][0] = a(i);
+				values[i][1] = b(i);
+				values[i][2] = c(i);
+				values[i][3] = d(i);
+			}
+		}
+
+		mat4(float* v){
+			for(int i=0; i<4; i++){
+				for(int j=0; j<4; j++){
+					values[i][j] = v[4*i+j];
+				}
+			}
+		}
+
+		const float& operator()(const int& i, const int& j) const {
+#ifdef DEBUG
+			assert(i >= 0 && i < 4 && j >= 0 && j < 4);
+#endif
+			return values[i][j];
+		}
+
+		float& operator()(const int& i, const int& j){
+#ifdef DEBUG
+			assert(i >= 0 && i < 4 && j >= 0 && j < 4);
+#endif
+			return values[i][j];
+		}
+
+		const mat4 invTransform() const;
+		const mat4 transpose() const;
+
+		// Solve Ax = b where A = *this, return x.
+		const vec4 solve(const vec4& b);
+
+		const mat4 operator*(const float& x) const;
+		mat4& operator*=(const float& x);
+
+		mat4& operator*=(const mat4& m);
+		const mat4 operator*(const mat4& m) const;
+
+		const bool operator==(const mat4& m) const;
+
+		const vec4 hslice(const int& i) const {
+#ifdef DEBUG
+			assert(i<4 && i >= 0);
+#endif
+			return vec4(values[i][0], values[i][1], values[i][2], values[i][3]);
+		}
+
+		const vec4 vslice(const int& i) const {
+#ifdef DEBUG
+			assert(i<4 && i >= 0);
+#endif
+			return vec4(values[0][i], values[1][i], values[2][i], values[i][3]);
+		}
+
+	private:
+		float values[4][4];
 };
 
 ostream& operator<<(ostream& out, const mat3& m);

@@ -33,7 +33,7 @@ bool triangle::intersect(ray& r, point3& p){
 	const float beta = (pPrime.y()*cPrime.x() - pPrime.x()*cPrime.y()) / dBeta;
 	const float gamma = (pPrime.y() * bPrime.x() - pPrime.x()*bPrime.y()) / dGamma;
 
-	if(beta < 0 || gamma < 0 || beta+gamma > 1.f){
+	if(beta < -EPSILON || gamma < -EPSILON || beta+gamma > 1.f + EPSILON){
 		return false;
 	}
 

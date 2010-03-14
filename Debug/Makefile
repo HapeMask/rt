@@ -2,7 +2,7 @@
 
 CC=g++
 
-CFLAGS= -Wall -g -DDEBUG -I../
+CFLAGS= -O0 -Wall -g -DDEBUG -I../ -fno-inline
 
 CXXFLAGS=
 LDFLAGS=-lSDL
@@ -30,6 +30,7 @@ clean:
 	for DIR in $(DIRS); do \
 		$(MAKE) -C $${DIR} clean; \
 		done
+	-rm ../obj/*.o
 	-rm rt
 
 run: rt

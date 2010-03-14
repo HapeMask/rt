@@ -1,34 +1,6 @@
 #include "matrix.hpp"
 #include "vector.hpp"
 
-const float mat3::det() const {
-	return
-		values[0][0] * (values[2][2]*values[1][1] - values[2][1]*values[1][2]) -
-		values[1][0] * (values[2][2]*values[0][1] - values[2][1]*values[0][2]) +
-		values[2][0] * (values[1][2]*values[0][1] - values[1][1]*values[0][2]);
-}
-
-/**
- * LOL Lots of ops... probably never use this.
- * Also floating point roundoff errors make it so that
- * m * m.inverse() != IdentityMatrix :-(
- */
-const mat3 mat3::inverse() const {
-	float d = 1.f / det();
-	return mat3(vec3(
-				values[2][2]*values[1][1] - values[2][1]*values[1][2],
-				-(values[2][2]*values[1][0] - values[2][0]*values[1][2]),
-				values[2][1]*values[1][0] - values[2][0]*values[1][1]),
-			vec3(
-				-(values[2][2]*values[0][1] - values[2][1]*values[0][2]),
-				values[2][2]*values[0][0] - values[2][0]*values[0][2],
-				-(values[2][1]*values[0][0] - values[2][0]*values[0][1])),
-			vec3(
-				values[1][2]*values[0][1] - values[1][1]*values[0][2],
-				-(values[1][2]*values[0][0] - values[1][0]*values[0][2]),
-				values[1][1]*values[0][0] - values[1][0]*values[0][1])) * d;
-}
-
 const mat3 mat3::operator*(const float& x) const {
 	return mat3(*this) *= x;
 }
@@ -66,6 +38,61 @@ const bool mat3::operator==(const mat3& m) const{
 		}
 	}
 	return true;
+}
+
+const mat3 mat3::invTransform() const{
+	return transpose();
+}
+
+const mat3 mat3::transpose() const{
+	return mat3(hslice(0), hslice(1), hslice(2));
+}
+
+const mat4 mat4::operator*(const float& x) const {
+	return mat4(*this) *= x;
+}
+
+mat4& mat4::operator*=(const float& x) {
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			values[i][j] *= x;
+		}
+	}
+
+	return (*this);
+}
+
+mat4& mat4::operator*=(const mat4& m) {
+	(*this) = (*this) * m;
+	return (*this);
+}
+
+const mat4 mat4::operator*(const mat4& m) const{
+	mat4 n;
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			n(i,j) = dot(hslice(i), m.vslice(j));
+		}
+	}
+
+	return n;
+}
+
+const bool mat4::operator==(const mat4& m) const{
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			if(values[i][j] != m(i,j)) return false;
+		}
+	}
+	return true;
+}
+
+const mat4 mat4::invTransform() const{
+	return transpose();
+}
+
+const mat4 mat4::transpose() const{
+	return mat4(hslice(0), hslice(1), hslice(2), hslice(3));
 }
 
 ostream& operator<<(ostream& out, const mat3& m){

@@ -181,6 +181,109 @@ class vec3 {
 		float values[3];
 };
 
+class vec4 {
+	public:
+		vec4(){
+			values[0] = 0.f;
+			values[1] = 0.f;
+			values[2] = 0.f;
+			values[3] = 0.f;
+		}
+
+		vec4(const float& x, const float& y, const float& z, const float& w){
+			values[0] = x;
+			values[1] = y;
+			values[2] = z;
+			values[3] = w;
+		}
+
+		vec4(const vec4& x){
+			values[0] = x(0);
+			values[1] = x(1);
+			values[2] = x(2);
+			values[3] = x(3);
+		}
+
+		vec4(const float& x){
+			values[0] = x;
+			values[1] = x;
+			values[2] = x;
+			values[3] = x;
+		}
+
+		const float& operator()(const int& index) const{
+#ifdef DEBUG
+			assert(index >= 0 && index < 4);
+#endif
+			return values[index];
+		}
+
+		float& operator()(const int& index){
+#ifdef DEBUG
+			assert(index >= 0 && index < 4);
+#endif
+			return values[index];
+		}
+
+		const float& x() const {
+			return values[0];
+		}
+
+		const float& y() const {
+			return values[1];
+		}
+
+		const float& z() const {
+			return values[2];
+		}
+
+		const float& w() const {
+			return values[3];
+		}
+
+		float& x() {
+			return values[0];
+		}
+
+		float& y() {
+			return values[1];
+		}
+
+		float& z() {
+			return values[2];
+		}
+
+		float& w() {
+			return values[3];
+		}
+
+		const vec4 operator+(const vec4& v) const;
+		vec4& operator+=(const vec4& v);
+		const vec4 operator-(const vec4& v) const;
+		vec4& operator-=(const vec4& v);
+
+		const vec4 operator-() const;
+
+		const vec4 operator*(const float& x) const;
+		vec4& operator*=(const float& x);
+		const vec4 operator*(const vec4& v) const;
+		vec4& operator*=(const vec4& v);
+
+		const vec4 operator/(const float& x) const;
+		vec4& operator/=(const float& x);
+		const vec4 operator/(const vec4& v) const;
+		vec4& operator/=(const vec4& v);
+
+		const bool operator==(const vec4& v) const;
+
+		const float length() const;
+		const float length2() const;
+
+	private:
+		float values[4];
+};
+
+float dot(const vec4& u, const vec4& v);
 float dot(const vec3& u, const vec3& v);
 float dot(const vec2& u, const vec2& v);
 vec3 cross(const vec3& u, const vec3& v);

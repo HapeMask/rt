@@ -141,19 +141,6 @@ vec3& vec3::operator/=(const vec3& v){
 	return (*this);
 }
 
-float dot(const vec2& u, const vec2& v){
-	return
-		(u.x() * v.x()) +
-		(u.y() * v.y());
-}
-
-float dot(const vec3& u, const vec3& v){
-	return
-		(u.x() * v.x()) +
-		(u.y() * v.y()) +
-		(u.z() * v.z());
-}
-
 const bool vec3::operator==(const vec3& v) const {
 	return
 		(x() == v.x()) &&
@@ -167,6 +154,111 @@ const float vec3::length() const {
 
 const float vec3::length2() const {
 	return dot(*this, *this);
+}
+
+const vec4 vec4::operator+(const vec4& v) const {
+	return vec4(*this) += v;
+}
+
+vec4& vec4::operator+=(const vec4& v){
+	values[0] += v(0);
+	values[1] += v(1);
+	values[2] += v(2);
+	values[3] += v(3);
+	return (*this);
+}
+
+const vec4 vec4::operator-(const vec4& v) const {
+	return vec4(*this) -= v;
+}
+
+vec4& vec4::operator-=(const vec4& v){
+	return (*this) += -v;
+}
+
+const vec4 vec4::operator-() const {
+	return vec4(-x(), -y(), -z(), -w());
+}
+
+const vec4 vec4::operator*(const float& x) const {
+	return vec4(*this) *= x;
+}
+
+vec4& vec4::operator*=(const float& x){
+	values[0] *= x;
+	values[1] *= x;
+	values[2] *= x;
+	values[3] *= x;
+	return (*this);
+}
+
+const vec4 vec4::operator*(const vec4& v) const {
+	return vec4(*this) *= v;
+}
+
+vec4& vec4::operator*=(const vec4& v){
+	values[0] *= v(0);
+	values[1] *= v(1);
+	values[2] *= v(2);
+	values[3] *= v(3);
+	return (*this);
+}
+
+const vec4 vec4::operator/(const float& x) const {
+	return vec4(*this) *= 1.f / x;
+}
+
+vec4& vec4::operator/=(const float& x){
+	return (*this) *= 1.f / x;
+}
+
+const vec4 vec4::operator/(const vec4& v) const {
+	return vec4(*this) /= v;
+}
+
+vec4& vec4::operator/=(const vec4& v){
+	values[0] /= v(0);
+	values[1] /= v(1);
+	values[2] /= v(2);
+	values[3] /= v(3);
+	return (*this);
+}
+
+const bool vec4::operator==(const vec4& v) const {
+	return
+		(x() == v.x()) &&
+		(y() == v.y()) &&
+		(z() == v.z()) &&
+		(w() == v.w());
+}
+
+const float vec4::length() const {
+	return sqrt(length2());
+}
+
+const float vec4::length2() const {
+	return dot(*this, *this);
+}
+
+float dot(const vec2& u, const vec2& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y());
+}
+
+float dot(const vec3& u, const vec3& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y()) +
+		(u.z() * v.z());
+}
+
+float dot(const vec4& u, const vec4& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y()) +
+		(u.z() * v.z()) +
+		(u.w() * v.w());
 }
 
 vec3 cross(const vec3& u, const vec3& v){

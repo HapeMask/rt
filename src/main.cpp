@@ -13,14 +13,14 @@ SDL_Surface* screen;
 int main(int argc, char** argv){
 	sdlFramebuffer f(512, 512, 32);
 	triangle t(point3(0,0,0), point3(1,0,0), point3(0,1,0));
-	camera c(512, 512, 45, vec3(0,1,0), vec3(0,0,1), point3(0.5, 0.5, -2));
+	camera c(512, 512, 45, vec3(0,1,0), vec3(0,0,1), point3(0.5, 0.5, -0.5f));
 	ray r;
 	point3 p;
 	rgbColor white(1,1,1);
 	rgbColor black(0,0,0);
 
-	for(int y=1; y<=512; y++){
-		for(int x=1; x<=512; x++){
+	for(int y=0; y<512; y++){
+		for(int x=0; x<512; x++){
 			c.getRay(x, y, r);
 			if(t.intersect(r, p)){
 				f.drawPixel(x, y, white);
