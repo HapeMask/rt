@@ -4,15 +4,14 @@
 #include <iostream>
 #include <cassert>
 
-#include "vector.hpp"
 using namespace std;
+
+class vec3;
+class vec2;
 
 class point2 {
 	public:
-		point2(const vec2& u){
-			coords[0] = u(0);
-			coords[1] = u(1);
-		}
+		point2(const vec2& u);
 
 		point2(){
 			coords[0] = 0.f;
@@ -74,11 +73,7 @@ class point2 {
 
 class point3 {
 	public:
-		point3(const vec3& u){
-			coords[0] = u(0);
-			coords[1] = u(1);
-			coords[2] = u(2);
-		}
+		point3(const vec3& u);
 
 		point3(){
 			coords[0] = 0.f;

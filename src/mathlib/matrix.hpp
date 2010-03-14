@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "vector.hpp"
+#include "point.hpp"
 
 using namespace std;
 
@@ -156,6 +157,7 @@ class mat4 {
 		const mat4 operator*(const float& x) const;
 		mat4& operator*=(const float& x);
 
+		const vec4 operator*(const vec4& u) const;
 		mat4& operator*=(const mat4& m);
 		const mat4 operator*(const mat4& m) const;
 
@@ -174,6 +176,10 @@ class mat4 {
 #endif
 			return vec4(values[0][i], values[1][i], values[2][i], values[i][3]);
 		}
+
+		static mat4 translate(const float& dx, const float& dy, const float& dz);
+		static mat4 scale(const float& sx, const float& sy, const float& sz);
+		static mat4 lookAt(const point3& pos, const point3& look, const vec3& up);
 
 	private:
 		float values[4][4];

@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "vector.hpp"
+#include "point.hpp"
 
 using namespace std;
 
@@ -76,6 +77,13 @@ const float vec2::length() const {
 const float vec2::length2() const {
 	return dot(*this, *this);
 }
+
+vec3::vec3(const point3& p){
+	values[0] = p.x();
+	values[1] = p.y();
+	values[2] = p.z();
+}
+
 
 const vec3 vec3::operator+(const vec3& v) const {
 	return vec3(*this) += v;

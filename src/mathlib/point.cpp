@@ -5,6 +5,11 @@
 
 using namespace std;
 
+point2::point2(const vec2& u){
+	coords[0] = u(0);
+	coords[1] = u(1);
+}
+
 const point2 point2::operator+(const vec2& u) const {
 	return point2(*this) += u;
 }
@@ -33,6 +38,13 @@ const bool point2::operator==(const point2& p) const {
 		(x() == p.x()) &&
 		(y() == p.y());
 }
+
+point3::point3(const vec3& u){
+	coords[0] = u(0);
+	coords[1] = u(1);
+	coords[2] = u(2);
+}
+
 
 const point3 point3::operator+(const vec3& u) const {
 	return point3(*this) += u;

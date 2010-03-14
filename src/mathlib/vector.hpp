@@ -3,7 +3,11 @@
 
 #include <iostream>
 #include <cassert>
+
 using namespace std;
+
+class point3;
+class point2;
 
 class vec2 {
 	public:
@@ -117,6 +121,8 @@ class vec3 {
 			values[2] = x;
 		}
 
+		vec3(const point3& p);
+
 		const float& operator()(const int& index) const{
 #ifdef DEBUG
 			assert(index >= 0 && index < 3);
@@ -208,6 +214,13 @@ class vec4 {
 			values[0] = x;
 			values[1] = x;
 			values[2] = x;
+			values[3] = x;
+		}
+
+		vec4(const vec3& u, const float& x){
+			values[0] = u(0);
+			values[1] = u(1);
+			values[2] = u(2);
 			values[3] = x;
 		}
 
