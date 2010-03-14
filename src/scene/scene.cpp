@@ -1,5 +1,5 @@
 #include "scene.hpp"
-#include "../acceleration/defaultaccelerator.hpp"
+#include "acceleration/defaultaccelerator.hpp"
 
 scene::scene(){
 	accel = new defaultAccelerator();

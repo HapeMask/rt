@@ -2,7 +2,7 @@
 using namespace std;
 
 #include "sdlframebuffer.hpp"
-#include "../color/color.hpp"
+#include "color/color.hpp"
 
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
 	framebuffer(width, height, bpp){

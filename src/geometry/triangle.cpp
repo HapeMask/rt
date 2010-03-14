@@ -1,8 +1,8 @@
 #include "triangle.hpp"
-#include "../mathlib/constants.hpp"
-#include "../mathlib/vector.hpp"
-#include "../mathlib/point.hpp"
-#include "../mathlib/ray.hpp"
+#include "mathlib/constants.hpp"
+#include "mathlib/vector.hpp"
+#include "mathlib/point.hpp"
+#include "mathlib/ray.hpp"
 
 bool triangle::intersect(ray& r, point3& p){
 	const float D = dot(normal_, r.direction());
