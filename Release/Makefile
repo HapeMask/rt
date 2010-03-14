@@ -1,26 +1,35 @@
-.PHONY: all clean run
+.PHONY: all clean run compile link
 
 CC=g++
-SRCDIR=../src
-OBJDIR=obj
 
-CFLAGS += -O3 -msse -msse2 -msse3
+CFLAGS= -O3 -msse -msse2 -msse3
 
 CXXFLAGS=
 LDFLAGS=-lSDL
 
-OBJS=$(patsubst $(SRCDIR)/%.cpp, obj/%.o, $(wildcard $(SRCDIR)/*.cpp))
+SRC=../src
+DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer $(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)
 
-all: rt
+OBJS=$(foreach DIR,$(DIRS), $(patsubst $(DIR)/%.cpp, ../obj/%.o, $(wildcard $(DIR)/*.cpp)))
+
+all: compile rt
 
 rt: $(OBJS)
 	$(CC) $^ $(LDFLAGS) -o $@
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CC) $(CFLAGS) $(CXXFLAGS) -c $? -o $@
+compile:
+	for DIR in $(DIRS); do \
+		export CC='$(CC)'; \
+		export CFLAGS='$(CFLAGS)'; \
+		export CXXFLAGS='$(CXXFLAGS)'; \
+		export LDFLAGS='$(LDFLAGS)'; \
+		$(MAKE) -C $${DIR} all; \
+		done;
 
 clean:
-	-rm -f $(OBJDIR)/*.o
+	for DIR in $(DIRS); do \
+		$(MAKE) -C $${DIR} clean; \
+		done
 	-rm rt
 
 run: rt
