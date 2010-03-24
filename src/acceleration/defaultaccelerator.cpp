@@ -22,7 +22,7 @@ bool defaultAccelerator::intersect(ray& r, point3& p){
 	float minDist = 100000.f;
 	point3 closestPoint;
 	for(unsigned int i=0; i<hits.size(); i++){
-		const float dist = (r.origin() - hits[i]).length2();
+		const float dist = (r.origin - hits[i]).length2();
 		if(dist < minDist){
 			minDist = dist;
 			closestPoint = hits[i];

@@ -17,8 +17,7 @@ int main(int argc, char** argv){
 	triangle t1(point3(0,0,0), point3(0,1,0), point3(-1,1,0));
 	triangle t2(point3(0,0,0), point3(-1,1,0), point3(-1,0,0));
 
-	float screen[4] = {-1, 1, -1, 1};
-	camera c(512, 512, screen, 0.f, 1000.f, 45.f, point3(0,0.5,-10), point3(0,0,0), point3(0,1,0));
+	camera c(512, 512, 45.f, point3(0,0.5,-10), point3(0,0,0), point3(0,1,0));
 
 	ray r;
 	point3 p;

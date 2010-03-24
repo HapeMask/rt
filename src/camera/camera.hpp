@@ -6,54 +6,41 @@
 #include "mathlib/ray.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/constants.hpp"
+#include "mathlib/utility.hpp"
 
 #include <cmath>
 
 class camera {
 	public:
-		camera(const float& w, const float& h, const float scr[4], const float& nr, const float& fr,
-				const float& fov, const point3& pos, const point3& look, const vec3& up){
-			screen[0] = scr[0];
-			screen[1] = scr[1];
-			screen[2] = scr[2];
-			screen[3] = scr[3];
+		camera(const float& w, const float& h, const float& fov, const point3& pos,
+				const point3& look, const vec3& up){
 
-			near = nr;
-			far = fr;
+			dir_ = normalize(vec3(look) - vec3(pos));
+			right_ = cross(dir_, normalize(up));
+			up_ = cross(right_, dir_);
 
-			float m[4][4] = {
-				{1, 0, 0, 0},
-				{0, 1, 0, 0},
-				{0, 0, fr / (fr - nr), -(fr*nr)/(fr - nr)},
-				{0, 0, 0, 1}
-			};
+			pos_ = pos;
 
-			float invTan = 1.f / tanf((fov * PI / 180.f) / 2.f);
-			mat4 ms = mat4::scale(invTan, invTan, 1.f);
-			mat4 mm = mat4(m[0]);
+			fov_ = fov;
+			w_ = w;
+			h_ = h;
 
-			cameraToScreen = mat4::scale(invTan, invTan, 1.f) * mat4(m[0]);
-			worldToCamera = mat4::lookAt(pos, look, up);
+			halfW_ = w/2;
+			halfH_ = h/2;
 
-			cameraToWorld = worldToCamera.inverse();
-			worldToScreen = cameraToScreen.inverse() * worldToCamera;
+			aspect_ = w/h;
 
-			screenToRaster = mat4::scale(w, h, 1.f); 
-			screenToRaster *= mat4::scale(1.f / (screen[1] - screen[0]),
-						1.f / (screen[2] - screen[3]), 1.f);
-			screenToRaster *= mat4::translate(-screen[0], -screen[3], 0.f);
-
-			rasterToScreen = screenToRaster.inverse();
-			rasterToCamera = cameraToScreen.inverse() * rasterToScreen;
+			tf_  = tan(radians(fov));
 		}
 
 		void getRay(const int& x, const int& y, ray& r);
 
 	private:
-		float screen[4];
-		float near, far;
-		mat4 cameraToScreen, screenToRaster, rasterToScreen,
-			 rasterToCamera, worldToCamera, worldToScreen, cameraToWorld;
+		int w_, h_;
+		int halfW_, halfH_;
+		float fov_, aspect_, tf_;
+		vec3 dir_, up_, right_;
+		point3 pos_;
 };
 
 #endif
