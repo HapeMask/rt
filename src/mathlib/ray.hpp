@@ -9,12 +9,12 @@ class ray {
 		ray(){}
 
 		ray(const point3& o, const vec3& d){
-			origin_ = point3(o);
-			direction_ = vec3(d);
+			origin = point3(o);
+			direction = vec3(d);
 		}
 
-		point3 origin_;
-		vec3 direction_;
+		point3 origin;
+		vec3 direction;
 };
 
 #endif

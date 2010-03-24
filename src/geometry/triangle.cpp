@@ -14,12 +14,12 @@ bool triangle::intersect(ray& r, point3& p){
 	}
 	*/
 
-	const float t = -dot(r.origin() - a(), normal_) / D;
+	const float t = -dot(r.origin - a(), normal_) / D;
 	if(t <= EPSILON){
 		return false;
 	}
 
-	const point3 pI = r.origin() + (t * r.direction());
+	const point3 pI = r.origin + (t * r.direction);
 
 	const vec2 pPrime = vec2(pI(axis1), pI(axis2)) - aPrime;
 

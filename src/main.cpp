@@ -19,6 +19,17 @@ int main(int argc, char** argv){
 
 	camera c(512, 512, 45.f, point3(0,0.5,-10), point3(0,0,0), point3(0,1,0));
 
+	float v[4][4] = {
+		{1,0,0,0},
+		{0,1,0,0},
+		{0,0,1,0},
+		{0,0,1,0}
+	};
+	mat4 m(v[0]);
+	vec4 v(0,0,3,1);
+	cerr << (m * v) << endl;
+	return 0;
+
 	ray r;
 	point3 p;
 	rgbColor white(1,1,1);
