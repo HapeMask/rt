@@ -18,7 +18,8 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 
 	screen = SDL_SetVideoMode(width, height, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if(screen == NULL){
-		cerr << "Unable to obtain a screen context w/dimensions 512x512, 32bpp." << endl;
+		cerr << "Unable to obtain a screen context w/dimensions "
+			<< width << "x" << height << "@" << bpp << "bpp." << endl;
 		didInit = false;
 		return;
 	}

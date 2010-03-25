@@ -2,10 +2,15 @@
 
 CC=g++
 
-CFLAGS= -O0 -Wall -g -DDEBUG -I../ `sdl-config --cflags`
+SDL_CFLAGS= $(shell sdl-config --cflags)
+SDL_LDFLAGS= $(shell sdl-config --libs)
 
+CFLAGS= -O0 -Wall -g -DDEBUG -I../
 CXXFLAGS=
-LDFLAGS=`sdl-config --libs`
+LDFLAGS=
+
+CFLAGS += $(SDL_CFLAGS)
+LDFLAGS += $(SDL_LDFLAGS)
 
 SRC=../src
 DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer $(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)

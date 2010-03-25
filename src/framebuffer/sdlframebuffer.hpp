@@ -1,7 +1,7 @@
 #ifndef __RT_SDLFRAMEBUFFER__
 #define __RT_SDLFRAMEBUFFER__
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "framebuffer.hpp"
 #include "color/color.hpp"
