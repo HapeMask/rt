@@ -2,10 +2,10 @@
 
 CC=g++
 
-CFLAGS= -O0 -Wall -g -DDEBUG -I../ -I/opt/local/include -fno-inline -fno-default-inline -fkeep-inline-functions
+CFLAGS= -O0 -Wall -g -DDEBUG -I../ `sdl-config --cflags`
 
 CXXFLAGS=
-LDFLAGS=-lSDL
+LDFLAGS=`sdl-config --libs`
 
 SRC=../src
 DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer $(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)

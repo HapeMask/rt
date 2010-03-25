@@ -14,7 +14,7 @@ using namespace std;
 
 SDL_Surface* screen;
 
-int main(int argc, char** argv){
+int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
 	plane pl(vec3(0,1,0), point3(0,0,0));

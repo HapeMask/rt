@@ -2,10 +2,10 @@
 
 CC=g++
 
-CFLAGS= -O3 -msse -msse2 -msse3
+CFLAGS= -O3 -msse -msse2 -msse3 `sdl-config --cflags`
 
 CXXFLAGS=
-LDFLAGS=-lSDL
+LDFLAGS=`sdl-config --libs`
 
 SRC=../src
 DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer $(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)
