@@ -1,10 +1,10 @@
+#include "utility.hpp"
 #include "camera.hpp"
 
 #include "mathlib/ray.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/matrix.hpp"
 #include "mathlib/vector.hpp"
-#include "mathlib/utility.hpp"
 #include "mathlib/transformation.hpp"
 
 #include <cmath>

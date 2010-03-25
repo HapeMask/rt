@@ -3,6 +3,7 @@ using namespace std;
 
 #include "sdlframebuffer.hpp"
 #include "color/color.hpp"
+#include "utility.hpp"
 
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
 	framebuffer(width, height, bpp){
@@ -14,7 +15,8 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 		didInit = false;
 		return;
 	}
-	cerr << "SDL video loaded." << endl;
+
+	debugPrint("SDL video loaded.");
 
 	screen = SDL_SetVideoMode(width, height, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if(screen == NULL){
@@ -25,8 +27,6 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 	}
 
 	didInit = true;
-
-	SDL_WarpMouse(10,10);
 }
 
 void sdlFramebuffer::drawPixel(const int& x, const int& y, const color& c){
