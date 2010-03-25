@@ -4,11 +4,38 @@
 #include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
-bool triangle::intersect(ray& r, point3& p){
-	const float D = dot(normal_, r.direction());
+triangle::triangle(const point3& a, const point3& b, const point3& c) {
+	points[0] = a;
+	points[1] = b;
+	points[2] = c;
 
-	// Backface culling, perpendicularity test.
-	/*
+	normal_ = normalize(cross(b - a, c - a));
+
+	// Find the biggest normal axis, then remove that
+	// coordinate from A, B, C to get a,b,cPrime.
+	const float maxD = max(max(abs(normal_(0)), abs(normal_(1))), abs(normal_(2)));
+	if(maxD == normal_(0)){
+		axis1 = 1;
+		axis2 = 2;
+	}else if(maxD == normal_(1)){
+		axis1 = 0;
+		axis2 = 2;
+	}else{
+		axis1 = 0;
+		axis2 = 1;
+	}
+
+	aPrime = vec2(a(axis1), a(axis2));
+	bPrime = vec2(b(axis1), b(axis2)) - aPrime;
+	cPrime = vec2(c(axis1), c(axis2)) - aPrime;
+}
+
+bool triangle::intersect(ray& r, point3& p){
+	const float D = dot(normal_, r.direction);
+
+	/* Backface culling, perpendicularity test.
+	 * Can be uncommented for a speedup if reflections
+	 * aren't desired.
 	if(D >= 0){
 		return false;
 	}

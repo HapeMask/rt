@@ -179,10 +179,6 @@ class mat4 {
 			return vec4(values[0][i], values[1][i], values[2][i], values[3][i]);
 		}
 
-		static const mat4 translate(const float& dx, const float& dy, const float& dz);
-		static const mat4 scale(const float& sx, const float& sy, const float& sz);
-		static const mat4 lookAt(const point3& pos, const point3& look, const vec3& up);
-
 	private:
 		float values[4][4];
 };
