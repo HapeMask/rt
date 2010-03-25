@@ -25,6 +25,8 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 	}
 
 	didInit = true;
+
+	SDL_WarpMouse(10,10);
 }
 
 void sdlFramebuffer::drawPixel(const int& x, const int& y, const color& c){

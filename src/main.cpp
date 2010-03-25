@@ -46,7 +46,12 @@ int main(int argc, char* argv[]){
 		SDL_WaitEvent(&e);
 		switch(e.type){
 			case SDL_KEYDOWN:
-				cerr << "pressed: " << SDL_GetKeyName(e.key.keysym.sym) << endl;
+				if(e.key.state == SDL_PRESSED || e.key.state == SDL_KEYDOWN){
+					if(e.key.keysym.sym == 'q' && (
+							(e.key.keysym.mod & KMOD_CTRL) || (e.key.keysym.mod & KMOD_META) )){
+						exit(0);
+					}
+				}
 				break;
 			case SDL_QUIT:
 				exit(0);
