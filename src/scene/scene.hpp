@@ -8,13 +8,21 @@
 
 using namespace std;
 
-class scene {
+class scene : public intersectable{
 	public:
 		scene();
 		scene(accelerator* a);
 		~scene();
 
 		void addShape(intersectable* p);
+
+		/**
+		 * NOTE: Destroys the previous accelerator.
+		 */
+		void setAccelerator(accelerator* a);
+
+		virtual bool intersect(ray& r, point3& p);
+		void build();
 
 	private:
 		vector<intersectable*> shapes;

@@ -17,6 +17,7 @@ bool sphere::intersect(ray& r, point3& p){
 	if(d > EPSILON){
 		return true;
 	}else{
+		//cerr << "d: " << d << '\n';
 		return false;
 	}
 }

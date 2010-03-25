@@ -1,5 +1,8 @@
-#include <SDL.h>
+#include <cmath>
 #include <iostream>
+using namespace std;
+
+#include <SDL.h>
 
 #include "framebuffer/sdlframebuffer.hpp"
 #include "mathlib/point.hpp"
@@ -7,20 +10,22 @@
 #include "mathlib/matrix.hpp"
 #include "camera/camera.hpp"
 
+#include "scene/scene.hpp"
 #include "geometry/triangle.hpp"
 #include "geometry/sphere.hpp"
 #include "geometry/plane.hpp"
-using namespace std;
 
 SDL_Surface* screen;
 
 int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
-	plane pl(vec3(0,1,0), point3(0,0,0));
+	scene s;
+	s.addShape(new plane(vec3(0,1,0), point3(0,0,0)));
+	s.build();
 
 	float screen[4] = {-1, 1, -1, 1};
-	camera c(512, 512, screen, 0.1f, 100.f, 45.f, point3(0,1,-10), point3(0,0,0), point3(0,1,0));
+	camera c(512, 512, screen, 0.1f, 100.f, 45.f, point3(0,3.f,-10), point3(0,0,0), point3(0,1,0));
 
 	ray r;
 	point3 p;
@@ -31,8 +36,8 @@ int main(int argc, char* argv[]){
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){
 			c.getRay(x, y, r);
-			if(pl.intersect(r, p)){
-				f.drawPixel(x, y, white);
+			if(s.intersect(r, p)){
+				f.drawPixel(x, y, blue);
 			}
 		}
 	}

@@ -32,3 +32,7 @@ bool defaultAccelerator::intersect(ray& r, point3& p){
 	p = closestPoint;
 	return true;
 }
+
+void defaultAccelerator::build(const vector<intersectable*> shapes){
+	shapes_ = shapes;
+}

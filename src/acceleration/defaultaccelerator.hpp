@@ -13,11 +13,8 @@ using namespace std;
  */
 class defaultAccelerator : public accelerator {
 	public:
-		bool intersect(ray& r, point3& p);
-
-		void build(const vector<intersectable*> shapes){
-			shapes_ = shapes;
-		}
+		virtual bool intersect(ray& r, point3& p);
+		virtual void build(const vector<intersectable*> shapes);
 
 	private:
 		vector<intersectable*> shapes_;
