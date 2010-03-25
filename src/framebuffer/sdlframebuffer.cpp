@@ -8,7 +8,7 @@ using namespace std;
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
 	framebuffer(width, height, bpp){
 
-	cerr << "Loading SDL video..." << endl;
+	debugPrint("Loading SDL video...");
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		cerr << "Error loading SDL video:" << endl;
 		cerr << SDL_GetError() << endl;
