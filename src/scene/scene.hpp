@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class scene : public intersectable{
+class scene {
 	public:
 		scene();
 		scene(accelerator* a);
@@ -21,7 +21,7 @@ class scene : public intersectable{
 		 */
 		void setAccelerator(accelerator* a);
 
-		virtual bool intersect(ray& r, point3& p);
+		bool intersect(const ray& r, point3& p, intersection& i) const;
 		void build();
 
 	private:

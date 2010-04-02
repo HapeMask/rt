@@ -5,6 +5,6 @@
 
 class intersectable {
 	public:
-		virtual bool intersect(ray& r, point3& p) = 0;
+		virtual bool intersect(const ray& r, intersection& i) const = 0;
 };
 #endif
