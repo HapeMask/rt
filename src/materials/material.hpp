@@ -9,15 +9,9 @@
 class material {
 	public:
 		material(const brdf& br);
-		virtual const rgbColor sample(const point& p, const vec3& wi, const vec3& wo) = 0;
+		const rgbColor sample(const point& p, const vec3& wi, const vec3& wo) const;
 
 	protected:
 		brdf b;
-};
-
-class lambertMaterial : public material {
-	public:
-		lambertMaterial(const brdf& br) : material(br) {}
-		virtual const rgbColor sample(const point& p, const vec3& wi, const vec3& wo) const;
 };
 #endif
