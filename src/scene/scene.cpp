@@ -15,6 +15,10 @@ scene::~scene(){
 	delete accel;
 }
 
+void scene::addLight(light* l){
+	lights.push_back(l);
+}
+
 void scene::addPrimitive(primitive* p){
 	shapes.push_back(p);
 	needsBuilding = true;

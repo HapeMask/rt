@@ -14,7 +14,7 @@ LDFLAGS += $(SDL_LDFLAGS)
 
 SRC=../src
 DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer \
-$(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)/materials $(SRC)
+$(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)/tracer $(SRC)/materials $(SRC)
 
 OBJS=$(foreach DIR,$(DIRS), $(patsubst $(DIR)/%.cpp, ../obj/%.o, $(wildcard $(DIR)/*.cpp)))
 

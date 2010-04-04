@@ -8,6 +8,10 @@ class primitive : public intersectable {
 	public:
 		primitive(shape* parent) : parent_(parent) {}
 
+		void setParent(shape* parent){
+			parent_ = parent;
+		}
+
 		virtual const bool intersect(ray& r) const = 0;
 
 		shape* parent() const {

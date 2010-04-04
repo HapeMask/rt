@@ -19,11 +19,13 @@ class scene {
 
 		void addPrimitive(primitive* p);
 		void addShape(const shape& s);
+		void addLight(const light* l);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
 		 */
 		void setAccelerator(accelerator* a);
+		accelerator* getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
 		const intersection intersect1(ray& r) const;
@@ -32,6 +34,8 @@ class scene {
 
 	private:
 		vector<primitive*> shapes;
+		vector<light*> lights;
+
 		accelerator* accel;
 		bool needsBuilding;
 };

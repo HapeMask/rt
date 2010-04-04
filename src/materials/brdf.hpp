@@ -6,7 +6,7 @@
 
 class brdf {
 	public:
-		virtual const rgbColor f(vec3 wi, vec3 wo) const = 0;
+		virtual const rgbColor f(const vec3& wi, const vec3& wo) const = 0;
 };
 
 class lambertianBrdf : public brdf {

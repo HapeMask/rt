@@ -23,4 +23,5 @@ shape::~shape(){
 
 void shape::addPrimitive(primitive* p){
 	prims.push_back(p);
+	p->setParent(this);
 }
