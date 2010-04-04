@@ -13,6 +13,7 @@ class primitive : public intersectable {
 		}
 
 		virtual const bool intersect(ray& r) const = 0;
+		virtual const vec3 getNormal() const = 0;
 
 		shape* parent() const {
 			return parent_;

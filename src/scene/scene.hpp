@@ -9,6 +9,8 @@
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
 
+#include "light/light.hpp"
+
 using namespace std;
 
 class scene {
@@ -19,7 +21,7 @@ class scene {
 
 		void addPrimitive(primitive* p);
 		void addShape(const shape& s);
-		void addLight(const light* l);
+		void addLight(light* l);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
@@ -30,10 +32,16 @@ class scene {
 		const intersection intersect(ray& r) const;
 		const intersection intersect1(ray& r) const;
 		const bool intersectB(ray& r) const;
+
+		const vector<light*>& getLights(){
+			return lights;
+		}
+
 		void build();
 
 	private:
 		vector<primitive*> shapes;
+		vector<primitive*> myShapes;
 		vector<light*> lights;
 
 		accelerator* accel;

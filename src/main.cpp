@@ -19,6 +19,7 @@ using namespace std;
 #include "materials/material.hpp"
 #include "materials/brdf.hpp"
 #include "color/color.hpp"
+#include "light/light.hpp"
 
 #include "tracer/tracer.hpp"
 
@@ -28,11 +29,17 @@ int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
 	scene s;
-	shape sh;
-	sh.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+	shape sh, sh1;
+	//sh.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+	sh.addPrimitive(new triangle(point3(0,0,0), point3(1,0,0), point3(0,1,0)));
 	sh.setMaterial(new material(new lambertianBrdf(rgbColor(0,0,1.f))));
 
+	sh1.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+	sh1.setMaterial(new material(new lambertianBrdf(rgbColor(1.f,0,0))));
+
 	s.addShape(sh);
+	s.addShape(sh1);
+	s.addLight(new pointLight(vec3(3,3,-3), rgbColor(1.f,1.f,1.f)));
 	s.build();
 
 	float screen[4] = {-1, 1, -1, 1};

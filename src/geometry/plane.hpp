@@ -11,6 +11,7 @@ class plane : public primitive {
 		plane(const vec3& n, const point3& p0, shape* parent = NULL);
 
 		virtual const bool intersect(ray& r) const;
+		virtual const vec3 getNormal() const;
 
 	private:
 		vec3 normal;

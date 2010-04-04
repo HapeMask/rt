@@ -4,6 +4,7 @@
 
 #include "acceleration/defaultaccelerator.hpp"
 #include "acceleration/intersection.hpp"
+#include "light/light.hpp"
 
 scene::scene() : accel(new defaultAccelerator()), needsBuilding(false)
 {}
@@ -13,6 +14,14 @@ scene::scene(accelerator* a) : accel(a), needsBuilding(false)
 
 scene::~scene(){
 	delete accel;
+
+	for(size_t i = 0; i<lights.size(); i++){
+		delete(lights[i]);
+	}
+
+	for(size_t i = 0; i<myShapes.size(); i++){
+		delete(myShapes[i]);
+	}
 }
 
 void scene::addLight(light* l){
@@ -21,6 +30,7 @@ void scene::addLight(light* l){
 
 void scene::addPrimitive(primitive* p){
 	shapes.push_back(p);
+	myShapes.push_back(p);
 	needsBuilding = true;
 }
 
