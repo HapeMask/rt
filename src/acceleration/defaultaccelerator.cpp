@@ -4,13 +4,17 @@
 
 using namespace std;
 
-bool defaultAccelerator::intersect(ray& r, point3& p){
+const intersection intersect(ray& r) const{
 	// Just check every shape we have.
 	vector<point3> hits;
 
+	point3 ro(r.origin);
 	for(unsigned int i=0; i<shapes_.size(); i++){
-		if(shapes_[i]->intersect(r, p)){
-			hits.push_back(point3(p));
+		if(shapes_[i]->intersect(r)){
+			hits.push_back(point3(r.origin));
+
+			// Reset the ray's origin.
+			r.origin = ro;
 		}
 	}
 
@@ -19,7 +23,7 @@ bool defaultAccelerator::intersect(ray& r, point3& p){
 	}
 
 	// Grab the closest hit.
-	float minDist = 100000.f;
+	float minDist = 10000000.f;
 	point3 closestPoint;
 	for(unsigned int i=0; i<hits.size(); i++){
 		const float dist = (r.origin - hits[i]).length2();
@@ -29,7 +33,7 @@ bool defaultAccelerator::intersect(ray& r, point3& p){
 		}
 	}
 
-	p = closestPoint;
+	r.origin = closestPoint;
 	return true;
 }
 

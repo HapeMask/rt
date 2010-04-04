@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "geometry/intersectable.hpp"
+#include "intersection.hpp"
 #include "accelerator.hpp"
 
 using namespace std;
@@ -13,7 +14,7 @@ using namespace std;
  */
 class defaultAccelerator : public accelerator {
 	public:
-		virtual bool intersect(ray& r, point3& p);
+		virtual const intersection intersect(ray& r) const;
 		virtual void build(const vector<intersectable*> shapes);
 
 	private:
