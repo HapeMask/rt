@@ -7,10 +7,11 @@
 
 #include <cmath>
 
-plane::plane(const vec3& n, const point3& p0) : normal(n), p0(p0)
+plane::plane(const vec3& n, const point3& p0, shape* parent) :
+	primitive(parent), normal(n), p0(p0)
 {}
 
-bool plane::intersect(ray& r, point3& p){
+const bool plane::intersect(ray& r) const{
 	const float t = -dot(vec3(r.origin), normal) / dot(normal, r.direction);
 	if(t < 0){
 		return false;

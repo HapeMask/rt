@@ -4,13 +4,13 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
-#include "intersectable.hpp"
+#include "primitive.hpp"
 
-class plane : public intersectable {
+class plane : public primitive {
 	public:
-		plane(const vec3& n, const point3& p0);
+		plane(const vec3& n, const point3& p0, shape* parent = NULL);
 
-		virtual bool intersect(ray& r, point3& p);
+		virtual const bool intersect(ray& r) const;
 
 	private:
 		vec3 normal;

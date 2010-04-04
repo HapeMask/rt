@@ -1,5 +1,9 @@
 #include "scene.hpp"
+#include "geometry/intersectable.hpp"
+#include "geometry/shape.hpp"
+
 #include "acceleration/defaultaccelerator.hpp"
+#include "acceleration/intersection.hpp"
 
 scene::scene() : accel(new defaultAccelerator()), needsBuilding(false)
 {}
@@ -14,8 +18,16 @@ scene::~scene(){
 	}
 }
 
-void scene::addShape(intersectable* p){
+void scene::addPrimitive(primitive* p){
 	shapes.push_back(p);
+	needsBuilding = true;
+}
+
+void scene::addShape(const shape& s){
+	for(size_t i=0; i<s.primitives().size(); i++){
+		shapes.push_back(s.primitives()[i]);
+	}
+
 	needsBuilding = true;
 }
 
@@ -24,8 +36,16 @@ void scene::setAccelerator(accelerator* a){
 	accel = a;
 }
 
-bool scene::intersect(ray& r, point3& p){
-	return accel->intersect(r, p);
+const intersection scene::intersect(ray& r) const{
+	return accel->intersect(r);
+}
+
+const intersection scene::intersect1(ray& r) const{
+	return accel->intersect1(r);
+}
+
+const bool scene::intersectB(ray& r) const{
+	return accel->intersectB(r);
 }
 
 void scene::build(){

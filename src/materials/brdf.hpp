@@ -1,7 +1,7 @@
 #ifndef __RT_BRDF_
 #define __RT_BRDF_
 
-#include "color.hpp"
+#include "color/color.hpp"
 #include "mathlib/vector.hpp"
 
 class brdf {

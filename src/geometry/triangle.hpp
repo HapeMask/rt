@@ -6,13 +6,13 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
-#include "intersectable.hpp"
+#include "primitive.hpp"
 
-class triangle : public intersectable {
+class triangle : public primitive {
 	public:
-		triangle(const point3& a, const point3& b, const point3& c);
+		triangle(const point3& a, const point3& b, const point3& c, shape* parent = NULL);
 
-		virtual bool intersect(ray& r, point3& p);
+		virtual const bool intersect(ray& r) const;
 
 		const point3& a() const {
 			return points[0];

@@ -1,10 +1,14 @@
 #include "triangle.hpp"
+#include "shape.hpp"
+
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
-triangle::triangle(const point3& a, const point3& b, const point3& c) {
+triangle::triangle(const point3& a, const point3& b, const point3& c, shape* parent) :
+	primitive(parent) {
+
 	points[0] = a;
 	points[1] = b;
 	points[2] = c;
@@ -30,7 +34,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) {
 	cPrime = vec2(c(axis1), c(axis2)) - aPrime;
 }
 
-bool triangle::intersect(ray& r, point3& p){
+const bool triangle::intersect(ray& r) const {
 	const float D = dot(normal_, r.direction);
 
 	/* Backface culling, perpendicularity test.
@@ -46,6 +50,7 @@ bool triangle::intersect(ray& r, point3& p){
 		return false;
 	}
 
+	// Determine the potential intersection point.
 	const point3 pI = r.origin + (t * r.direction);
 
 	const vec2 pPrime = vec2(pI(axis1), pI(axis2)) - aPrime;
@@ -57,6 +62,7 @@ bool triangle::intersect(ray& r, point3& p){
 		return false;
 	}
 
+	// Calculate the barycentric coordinates of the potential intersection.
 	const float beta = (pPrime.y()*cPrime.x() - pPrime.x()*cPrime.y()) / dBeta;
 	const float gamma = (pPrime.y() * bPrime.x() - pPrime.x()*bPrime.y()) / dGamma;
 
@@ -64,6 +70,6 @@ bool triangle::intersect(ray& r, point3& p){
 		return false;
 	}
 
-	p = pI;
+	r.origin = pI;
 	return true;
 }

@@ -6,12 +6,10 @@
 
 class ray {
 	public:
-		ray(){}
+		ray() {}
 
-		ray(const point3& o, const vec3& d){
-			origin = point3(o);
-			direction = vec3(d);
-		}
+		ray(const point3& o, const vec3& d) : origin(point3(o)), direction(vec3(d))
+		{}
 
 		point3 origin;
 		vec3 direction;

@@ -2,7 +2,7 @@
 #define __RT_DEFAULTACCEL__
 
 #include <vector>
-#include "geometry/intersectable.hpp"
+#include "geometry/primitive.hpp"
 #include "intersection.hpp"
 #include "accelerator.hpp"
 
@@ -15,10 +15,13 @@ using namespace std;
 class defaultAccelerator : public accelerator {
 	public:
 		virtual const intersection intersect(ray& r) const;
-		virtual void build(const vector<intersectable*> shapes);
+		virtual const intersection intersect1(ray& r) const;
+		virtual const bool intersectB(ray& r) const;
+
+		virtual void build(const vector<primitive*> shapes);
 
 	private:
-		vector<intersectable*> shapes_;
+		vector<primitive*> contents_;
 };
 
 #endif

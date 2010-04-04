@@ -4,7 +4,10 @@
 #include <vector>
 
 #include "geometry/intersectable.hpp"
+#include "geometry/shape.hpp"
+
 #include "acceleration/accelerator.hpp"
+#include "acceleration/intersection.hpp"
 
 using namespace std;
 
@@ -14,18 +17,21 @@ class scene {
 		scene(accelerator* a);
 		~scene();
 
-		void addShape(intersectable* p);
+		void addPrimitive(primitive* p);
+		void addShape(const shape& s);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
 		 */
 		void setAccelerator(accelerator* a);
 
-		bool intersect(const ray& r, point3& p, intersection& i) const;
+		const intersection intersect(ray& r) const;
+		const intersection intersect1(ray& r) const;
+		const bool intersectB(ray& r) const;
 		void build();
 
 	private:
-		vector<intersectable*> shapes;
+		vector<primitive*> shapes;
 		accelerator* accel;
 		bool needsBuilding;
 };
