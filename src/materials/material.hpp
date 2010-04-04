@@ -8,7 +8,7 @@
 
 class material {
 	public:
-		material(const brdf* br);
+		material(brdf* br);
 
 		const rgbColor sample(const point3& p, const vec3& wi, const vec3& wo) const;
 

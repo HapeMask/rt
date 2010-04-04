@@ -1,5 +1,5 @@
 #include "brdf.hpp"
-#include "color.hpp"
+#include "color/color.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 

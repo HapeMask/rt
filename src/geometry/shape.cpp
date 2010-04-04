@@ -20,3 +20,7 @@ shape::~shape(){
 		delete prims[i];
 	}
 }
+
+void shape::addPrimitive(primitive* p){
+	prims.push_back(p);
+}

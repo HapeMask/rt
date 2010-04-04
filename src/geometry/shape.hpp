@@ -17,6 +17,7 @@ class shape {
 		~shape();
 
 		void setMaterial(material* m);
+		void addPrimitive(primitive* p);
 
 		const material* getMaterial() const {
 			return mat;

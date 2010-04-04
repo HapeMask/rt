@@ -13,9 +13,6 @@ scene::scene(accelerator* a) : accel(a), needsBuilding(false)
 
 scene::~scene(){
 	delete accel;
-	for(size_t i=0; i<shapes.size(); i++){
-		delete shapes[i];
-	}
 }
 
 void scene::addPrimitive(primitive* p){

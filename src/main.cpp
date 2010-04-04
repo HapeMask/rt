@@ -21,7 +21,10 @@ int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
 	scene s;
-	s.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+	shape sh;
+	sh.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+
+	s.addShape(sh);
 	s.build();
 
 	float screen[4] = {-1, 1, -1, 1};
@@ -35,8 +38,10 @@ int main(int argc, char* argv[]){
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){
 			c.getRay(x, y, r);
-			if(s.intersectB(r)){
-				f.drawPixel(x, y, blue);
+			const intersection i = s.intersect1(r);
+			if(i.hit){
+				f.drawPixel(x, y,
+						i.s->getMaterial()->sample(point3(0,0,0), vec3(0,0,0), vec3(0,0,0)));
 			}
 		}
 	}
