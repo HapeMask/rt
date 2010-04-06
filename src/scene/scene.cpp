@@ -51,10 +51,6 @@ const intersection scene::intersect(ray& r) const{
 	return accel->intersect(r);
 }
 
-const intersection scene::intersect1(ray& r) const{
-	return accel->intersect1(r);
-}
-
 const bool scene::intersectB(ray& r) const{
 	return accel->intersectB(r);
 }

@@ -30,7 +30,6 @@ class scene {
 		accelerator* getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
-		const intersection intersect1(ray& r) const;
 		const bool intersectB(ray& r) const;
 
 		const vector<light*>& getLights(){

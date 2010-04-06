@@ -1,4 +1,6 @@
 #include "sphere.hpp"
+#include "shape.hpp"
+#include "primitive.hpp"
 
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
@@ -8,8 +10,18 @@
 #include <cmath>
 
 sphere::sphere(const point3& p, const float& r, shape* parent) :
-	primitive(parent), location(p), radius(r), radius2(r*r)
-{}
+	primitive(parent),
+	location(p), radius(r), radius2(r*r)
+{
+	boundingBox = aabb(
+			p.y() + r, // Top
+			p.y() - r, // Bottom
+			p.x() - r, // Left
+			p.x() + r, // Right
+			p.z() - r, // Front
+			p.z() + r // Back
+			);
+}
 
 const bool sphere::intersect(ray& r) const {
 	vec3 dir = r.origin - location;

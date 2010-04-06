@@ -32,8 +32,17 @@ int main(int argc, char* argv[]){
 	scene s;
 	shape sh, sh1;
 	//sh.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
-	sh.addPrimitive(new triangle(point3(0,-.5f,0), point3(1,-.5f,0), point3(0,0.5f,0)));
-	//sh.addPrimitive(new sphere(point3(-1,0,1), 0.5f));
+	sh.addPrimitive(new triangle(point3(0,0,0), point3(1,0,0), point3(0,1,0)));
+	sh.addPrimitive(new sphere(point3(-1,0,1), 0.5f));
+
+	/*
+	srand(time(NULL));
+	vec3 p;
+	for(int i=0; i<50; i++){
+		sampleHemisphere(p, sampleUniform(), sampleUniform());
+		sh.addPrimitive(new sphere(p, 0.01f));
+	}
+	*/
 	sh.setMaterial(new material(new lambertianBrdf(rgbColor(0,0,1.f))));
 
 	sh1.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
@@ -53,6 +62,12 @@ int main(int argc, char* argv[]){
 	rgbColor blue(0,0,1);
 
 	whittedRayTracer rt(&s);
+
+	/*
+	c.getRay(10,10,r);
+	rt.L(r);
+	return 0;
+	*/
 
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){

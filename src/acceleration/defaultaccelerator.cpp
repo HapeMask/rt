@@ -1,6 +1,7 @@
 #include <vector>
 #include "defaultaccelerator.hpp"
 #include "geometry/primitive.hpp"
+#include <typeinfo>
 
 using namespace std;
 
@@ -39,17 +40,6 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 
 	r.origin = closestPoint;
 	return closestIntersection;
-}
-
-const intersection defaultAccelerator::intersect1(ray& r) const{
-	// Just check every shape we have.
-	for(unsigned int i=0; i<contents_.size(); i++){
-		if(contents_[i]->intersect(r)){
-			return intersection(contents_[i]->parent(), contents_[i]);
-		}
-	}
-
-	return intersection(false);
 }
 
 const bool defaultAccelerator::intersectB(ray& r) const{

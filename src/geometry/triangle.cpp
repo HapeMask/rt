@@ -6,8 +6,19 @@
 #include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
+#include <cmath>
+
 triangle::triangle(const point3& a, const point3& b, const point3& c, shape* parent) :
-	primitive(parent) {
+	primitive(parent){
+
+	boundingBox = aabb(
+			max(max(a.y(), b.y()), c.y()), // Top
+			min(min(a.y(), b.y()), c.y()), // Bottom
+			min(min(a.x(), b.x()), c.x()), // Left
+			max(max(a.x(), b.x()), c.x()), // Right
+			min(min(a.z(), b.z()), c.z()), // Front
+			max(max(a.z(), b.z()), c.z()) // Back
+			);
 
 	points[0] = a;
 	points[1] = b;

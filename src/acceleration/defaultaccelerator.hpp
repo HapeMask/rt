@@ -15,7 +15,6 @@ using namespace std;
 class defaultAccelerator : public accelerator {
 	public:
 		virtual const intersection intersect(ray& r) const;
-		virtual const intersection intersect1(ray& r) const;
 		virtual const bool intersectB(ray& r) const;
 
 		virtual void build(const vector<primitive*> shapes);

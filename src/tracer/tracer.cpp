@@ -3,7 +3,7 @@
 #include "mathlib/constants.hpp"
 
 const rgbColor whittedRayTracer::L(ray& r) const{
-	const intersection isect = parent->intersect1(r);
+	const intersection isect = parent->intersect(r);
 	if(isect.hit){
 		rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
 		if(parent->getLights().size() > 0){
