@@ -13,7 +13,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	for(unsigned int i=0; i<contents_.size(); i++){
 		if(contents_[i]->intersect(r)){
 			hits.push_back(intersection(contents_[i]->parent(), contents_[i]));
-			hitPoints.push_back(r.origin);
+			hitPoints.push_back(point3(r.origin));
 
 			// Reset the ray's origin.
 			r.origin = ro;
@@ -29,7 +29,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	point3 closestPoint;
 	intersection closestIntersection;
 	for(unsigned int i=0; i<hitPoints.size(); i++){
-		const float dist = (r.origin - hitPoints[i]).length2();
+		const float dist = (hitPoints[i] - ro).length2();
 		if(dist < minDist){
 			minDist = dist;
 			closestPoint = hitPoints[i];
@@ -56,33 +56,13 @@ const bool defaultAccelerator::intersectB(ray& r) const{
 	// Just check every shape we have.
 	vector<point3> hits;
 
-	point3 ro(r.origin);
 	for(unsigned int i=0; i<contents_.size(); i++){
 		if(contents_[i]->intersect(r)){
-			hits.push_back(point3(r.origin));
-
-			// Reset the ray's origin.
-			r.origin = ro;
+			return true;
 		}
 	}
 
-	if(hits.size() == 0){
-		return false;
-	}
-
-	// Grab the closest hit.
-	float minDist = 10000000.f;
-	point3 closestPoint;
-	for(unsigned int i=0; i<hits.size(); i++){
-		const float dist = (r.origin - hits[i]).length2();
-		if(dist < minDist){
-			minDist = dist;
-			closestPoint = hits[i];
-		}
-	}
-
-	r.origin = closestPoint;
-	return true;
+	return false;
 }
 
 void defaultAccelerator::build(const vector<primitive*> contents){

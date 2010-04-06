@@ -22,6 +22,7 @@ using namespace std;
 #include "light/light.hpp"
 
 #include "tracer/tracer.hpp"
+#include "samplers/samplers.hpp"
 
 SDL_Surface* screen;
 
@@ -31,7 +32,8 @@ int main(int argc, char* argv[]){
 	scene s;
 	shape sh, sh1;
 	//sh.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
-	sh.addPrimitive(new triangle(point3(0,0,0), point3(1,0,0), point3(0,1,0)));
+	sh.addPrimitive(new triangle(point3(0,-.5f,0), point3(1,-.5f,0), point3(0,0.5f,0)));
+	//sh.addPrimitive(new sphere(point3(-1,0,1), 0.5f));
 	sh.setMaterial(new material(new lambertianBrdf(rgbColor(0,0,1.f))));
 
 	sh1.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));

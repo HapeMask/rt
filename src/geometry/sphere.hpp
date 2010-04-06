@@ -4,13 +4,14 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
-#include "intersectable.hpp"
+#include "primitive.hpp"
 
-class sphere : public intersectable {
+class sphere : public primitive {
 	public:
-		sphere(const point3& p, const float& r);
+		sphere(const point3& p, const float& r, shape* parent = NULL);
 
-		virtual bool intersect(ray& r, point3& p);
+		virtual const bool intersect(ray& r) const;
+		virtual const vec3 getNormal(const point3& p) const;
 
 	private:
 		point3 location;

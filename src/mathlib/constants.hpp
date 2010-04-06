@@ -5,7 +5,7 @@ const float PI = 3.141592653589793f;
 const float TWOPI = 2.0f*PI;
 const float HALFPI = PI/2.0f;
 
-// A bit bigger than real machine epsilon usually.
-const float EPSILON = 0.0000005f;
+// Bigger than real machine epsilon usually.
+const float EPSILON = 0.0001f;
 
 #endif

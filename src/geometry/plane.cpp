@@ -13,7 +13,7 @@ plane::plane(const vec3& n, const point3& p0, shape* parent) :
 
 const bool plane::intersect(ray& r) const{
 	const float t = -dot(vec3(r.origin), normal) / dot(normal, r.direction);
-	if(t < 0){
+	if(t < EPSILON){
 		return false;
 	}else{
 		r.origin += t*r.direction;
@@ -21,6 +21,6 @@ const bool plane::intersect(ray& r) const{
 	}
 }
 
-const vec3 plane::getNormal() const {
+const vec3 plane::getNormal(const point3& p) const {
 	return normal;
 }

@@ -9,13 +9,12 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 		if(parent->getLights().size() > 0){
 			point3 lightPosition = parent->getLights()[0]->getPosition();
 
-			c *= dot(isect.p->getNormal(),
+			c *= dot(isect.p->getNormal(r.origin),
 					normalize(lightPosition - r.origin));
 			//c *= 1.f / (lightPosition - r.origin).length2();
 
 			// Test for shadowing.
-			const vec3 offset = EPSILON * isect.p->getNormal();
-			ray shadowRay(r.origin + offset, normalize(lightPosition - r.origin));
+			ray shadowRay(r.origin, normalize(lightPosition - r.origin));
 			if(parent->intersectB(shadowRay)){
 				return rgbColor(0,0,0);
 			}
