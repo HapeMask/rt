@@ -6,6 +6,6 @@ ostream& operator<<(ostream& out, const aabb& b){
 		"\n\tLeft: " << b.left <<
 		"\n\tRight: " << b.right <<
 		"\n\tFront: " << b.front <<
-		"\n\tBack: " << b.back << endl;
+		"\n\tBack: " << b.back;
 	return out;
 }

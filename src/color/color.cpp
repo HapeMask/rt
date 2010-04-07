@@ -1,4 +1,6 @@
 #include "color.hpp"
+#include <iostream>
+using namespace std;
 
 rgbColor::rgbColor(const float& r, const float& g, const float& b) : r(r), g(g), b(b)
 {}
@@ -68,5 +70,9 @@ rgbColor& rgbColor::operator*=(const rgbColor& c){
 	g *= c.g;
 	b *= c.b;
 	return (*this);
+}
+
+ostream& operator<<(ostream& out, const color& c){
+	out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
 }
 

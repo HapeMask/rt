@@ -1,7 +1,9 @@
-#include <stdint.h>
-
 #ifndef __COLORRT__
 #define __COLORRT__
+
+#include <stdint.h>
+#include <iostream>
+using namespace std;
 
 class color {
 	public:
@@ -26,6 +28,7 @@ class color {
 
 class rgbColor : public color {
 	public:
+		rgbColor() : r(0), g(0), b(0) {}
 		rgbColor(const float& r, const float& g, const float& b);
 		rgbColor(const color& c);
 
@@ -60,4 +63,6 @@ class rgbColor : public color {
 		float g;
 		float b;
 };
+
+ostream& operator<<(ostream& out, const color& c);
 #endif
