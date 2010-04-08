@@ -37,8 +37,16 @@ const intersection scene::intersect(ray& r) const{
 	return accel->intersect(r);
 }
 
-const bool scene::intersectB(ray& r) const{
+const bool scene::intersectB(const ray& r) const{
 	return accel->intersectB(r);
+}
+
+const intersection scene::intersectE(ray& r) const{
+	return accel->intersectE(r);
+}
+
+const bool scene::intersectEB(const ray& r) const{
+	return accel->intersectEB(r);
 }
 
 void scene::build(){

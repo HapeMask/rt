@@ -81,13 +81,21 @@ const intersection defaultAccelerator::intersectE(ray& r) const {
 	return closestIntersection;
 }
 
-
-const bool defaultAccelerator::intersectB(ray& r) const{
-	// Just check every shape we have.
-	vector<point3> hits;
-
+const bool defaultAccelerator::intersectB(const ray& r) const{
+	ray r2(r);
 	for(size_t i=0; i<shapes.size(); i++){
-		if(shapes[i]->intersect(r)){
+		if(shapes[i]->intersect(r2)){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+const bool defaultAccelerator::intersectEB(const ray& r) const{
+	ray r2(r);
+	for(size_t i=0; i<emitters.size(); i++){
+		if(emitters[i]->intersect(r2)){
 			return true;
 		}
 	}
@@ -107,6 +115,7 @@ void defaultAccelerator::build(const scene& s){
 		shapePtr emitter = s.getEmitters()[i];
 		for(size_t j = 0; j<emitter->getPrimitives().size(); j++){
 			emitters.push_back(emitter->getPrimitives()[j]);
+			shapes.push_back(emitter->getPrimitives()[j]);
 		}
 	}
 }

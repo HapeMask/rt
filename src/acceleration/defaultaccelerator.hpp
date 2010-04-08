@@ -19,8 +19,9 @@ using tr1::shared_ptr;
 class defaultAccelerator : public accelerator {
 	public:
 		virtual const intersection intersect(ray& r) const;
-		virtual const bool intersectB(ray& r) const;
+		virtual const bool intersectB(const ray& r) const;
 		virtual const intersection intersectE(ray& r) const;
+		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
 

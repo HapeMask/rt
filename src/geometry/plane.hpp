@@ -8,14 +8,14 @@
 
 class plane : public primitive {
 	public:
-		plane(const vec3& n, const point3& p0, shape* parent = NULL);
+		plane(const vec3& n, const float& d_, shape* parent = NULL);
 
 		virtual const bool intersect(ray& r) const;
 		virtual const vec3 getNormal(const point3& p) const;
 
 	private:
 		vec3 normal;
-		point3 p0;
+		float d;
 };
 #endif
 

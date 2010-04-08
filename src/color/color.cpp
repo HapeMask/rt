@@ -36,7 +36,7 @@ const rgbColor rgbColor::operator/(const float& f) const{
 }
 
 rgbColor& rgbColor::operator/=(const float& f){
-	this->operator*=(1.f/f);
+	return this->operator*=(1.f/f);
 }
 
 const rgbColor rgbColor::operator-(const rgbColor& c) const{
@@ -51,7 +51,7 @@ rgbColor& rgbColor::operator-=(const rgbColor& c){
 }
 
 const rgbColor rgbColor::operator+(const rgbColor& c) const{
-	return rgbColor(*this) *= c;
+	return rgbColor(*this) += c;
 }
 
 rgbColor& rgbColor::operator+=(const rgbColor& c){
@@ -74,5 +74,5 @@ rgbColor& rgbColor::operator*=(const rgbColor& c){
 
 ostream& operator<<(ostream& out, const color& c){
 	out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
+	return out;
 }
-

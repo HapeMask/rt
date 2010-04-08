@@ -7,12 +7,12 @@
 
 #include <cmath>
 
-plane::plane(const vec3& n, const point3& p0, shape* parent) :
-	primitive(parent), normal(normalize(n)), p0(p0)
+plane::plane(const vec3& n, const float& d_, shape* parent) :
+	primitive(parent), normal(normalize(n)), d(d_)
 {}
 
 const bool plane::intersect(ray& r) const{
-	const float t = -dot(vec3(r.origin), normal) / dot(normal, r.direction);
+	const float t = -(dot(vec3(r.origin), normal) - d) / dot(normal, r.direction);
 	if(t < EPSILON){
 		return false;
 	}else{

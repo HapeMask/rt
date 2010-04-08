@@ -9,6 +9,9 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 		return rgbColor(0,0,0);
 	}
 
+	if(isect.s->getMaterial()->isEmissive()){
+		return isect.s->getMaterial()->sampleL();
+	}
 
 	rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
 	if(parent->getLights().size() > 0){
@@ -19,37 +22,30 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 		//c *= 1.f / (lightPosition - r.origin).length2();
 
 		// Test for shadowing.
-		if(!isect.s->getMaterial()->isEmissive()){
-			ray shadowRay(r.origin, normalize(lightPosition - r.origin));
-			if(parent->intersectB(shadowRay)){
-				c = rgbColor(0,0,0);
-			}
-		}else{
-			return isect.s->getMaterial()->sampleL();
+		const ray shadowRay(r.origin, normalize(lightPosition - r.origin));
+		if(parent->intersectB(shadowRay) || parent->intersectEB(shadowRay)){
+			c = rgbColor(0,0,0);
 		}
 
 		// Sample emitters.
-
-		/*
 		rgbColor indir;
 		vec3 w;
-		for(int i=0; i<32; i++){
+		for(int i=0; i<64; i++){
 			sampleHemisphere(w, sampleUniform(), sampleUniform());
 			ray r2(r.origin, w);
-			const intersection isectE = parent->intersect(r2);
+			const intersection isectE = parent->intersectE(r2);
 			if(isectE.hit){
 				indir +=
 						isectE.s->getMaterial()->
-						sample(point3(0,0,0), vec3(0,0,0), vec3(0,0,0));
+						sampleL();
 			}
 		}
-		indir /= 32.f;
-		cerr << "ind: " << indir << endl;
-		*/
+		indir /= 64.f;
 
-		return c;
+		return c + indir;
 
 	}else{
+		cerr << "NO LIGHTS" << endl;
 		return rgbColor(0,0,0);
 	}
 }

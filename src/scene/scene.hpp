@@ -28,7 +28,9 @@ class scene {
 		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
-		const bool intersectB(ray& r) const;
+		const intersection intersectE(ray& r) const;
+		const bool intersectEB(const ray& r) const;
+		const bool intersectB(const ray& r) const;
 
 		const vector<shapePtr>& getShapes() const {
 			return shapes;
