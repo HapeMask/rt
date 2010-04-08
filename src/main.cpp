@@ -4,6 +4,8 @@ using namespace std;
 
 #include <SDL.h>
 
+#include "utility.hpp"
+
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/matrix.hpp"
@@ -32,37 +34,16 @@ int main(int argc, char* argv[]){
 	scene s;
 	shape* sh = new shape();
 	shape* sh1 = new shape();
-	shape* sh2 = new shape();
-	shape* sh3 = new shape();
-	shape* sh4 = new shape();
-	shape* sh5 = new shape();
 
-	sh->addPrimitive(new triangle(point3(-0.5,2.5,0.5), point3(0.5,2.5,-0.5), point3(0.5,2.5,0.5)));
-	sh->addPrimitive(new triangle(point3(-0.5,2.5,0.5), point3(-0.5,2.5,-0.5), point3(0.5,2.5,-0.5)));
-	sh->setMaterial(new material(rgbColor(1,1,1), 10.0f));
+	sh->addPrimitive(new plane(vec3(1,0,0), -3.f));
+	sh->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
 
-	sh1->addPrimitive(new plane(vec3(1,0,0), -3.f));
-	sh1->setMaterial(new material(new lambertianBrdf(rgbColor(0,0,1))));
+	sh1->addPrimitive(new sphere(point3(-1.0f, 0,0), 0.5f));
+	sh1->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
 
-	sh2->addPrimitive(new plane(vec3(-1,0,0), -3.f));
-	sh2->setMaterial(new material(new lambertianBrdf(rgbColor(0,1,0))));
-
-	sh3->addPrimitive(new plane(vec3(0,1,0), -3.f));
-	sh3->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
-
-	sh4->addPrimitive(new plane(vec3(0,-1,0), -3.f));
-	sh4->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
-
-	sh5->addPrimitive(new sphere(point3(-1.0f, 0,0), 0.5f));
-	sh5->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
-
-	s.addEmitter(sh);
+	s.addShape(sh);
 	s.addShape(sh1);
-	s.addShape(sh2);
-	s.addShape(sh3);
-	s.addShape(sh4);
-	s.addShape(sh5);
-	s.addLight(new pointLight(vec3(-300,300,-300), rgbColor(1.f,1.f,1.f)));
+	s.addLight(new pointLight(vec3(3,3,-3), rgbColor(1.f,1.f,1.f)));
 	s.build();
 
 	float screen[4] = {-1, 1, -1, 1};
@@ -92,6 +73,9 @@ int main(int argc, char* argv[]){
 	f.flip();
 
 	cerr << "done" << endl;
+	vec3 vt(2,-3,0);
+	clamp(vt);
+	cerr << vt << endl;
 
 	SDL_Event e;
 	while(true){

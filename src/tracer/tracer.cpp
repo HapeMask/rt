@@ -19,30 +19,13 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 
 		c *= dot(isect.p->getNormal(r.origin),
 				normalize(lightPosition - r.origin));
-		//c *= 1.f / (lightPosition - r.origin).length2();
+		c *= 1.f / (lightPosition - r.origin).length2();
 
 		// Test for shadowing.
 		const ray shadowRay(r.origin, normalize(lightPosition - r.origin));
 		if(parent->intersectB(shadowRay) || parent->intersectEB(shadowRay)){
 			c = rgbColor(0,0,0);
 		}
-
-		// Sample emitters.
-		rgbColor indir;
-		vec3 w;
-		for(int i=0; i<64; i++){
-			sampleHemisphere(w, sampleUniform(), sampleUniform());
-			ray r2(r.origin, w);
-			const intersection isectE = parent->intersectE(r2);
-			if(isectE.hit){
-				indir +=
-						isectE.s->getMaterial()->
-						sampleL();
-			}
-		}
-		indir /= 64.f;
-
-		return c + indir;
 
 	}else{
 		cerr << "NO LIGHTS" << endl;
