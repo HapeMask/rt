@@ -1,35 +1,37 @@
 #ifndef __RT_SHAPE__
 #define __RT_SHAPE__
 
+#include "primitive.hpp"
 #include "materials/material.hpp"
 #include "color/color.hpp"
 
 #include <vector>
+#include <tr1/memory>
 using namespace std;
+using tr1::shared_ptr;
 
-class primitive;
 class shape {
 	public:
 		shape() {}
 		shape(material* m);
-		shape(const vector<primitive*>& pr);
-		shape(material* m, const vector<primitive*>& pr);
-		~shape();
+		shape(const vector<primitivePtr>& pr);
+		shape(material* m, const vector<primitivePtr>& pr);
 
 		void setMaterial(material* m);
 		void addPrimitive(primitive* p);
 
-		material* getMaterial() const {
+		materialPtr getMaterial() const {
 			return mat;
 		}
 
-		const vector<primitive*>& primitives() const {
+		const vector<primitivePtr>& getPrimitives() const {
 			return prims;
 		}
 
 	protected:
-		vector<primitive*> prims;
-		material* mat;
+		vector<primitivePtr> prims;
+		materialPtr mat;
 };
 
+typedef shared_ptr<shape> shapePtr;
 #endif

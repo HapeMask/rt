@@ -12,39 +12,25 @@ scene::scene() : accel(new defaultAccelerator()), needsBuilding(false)
 scene::scene(accelerator* a) : accel(a), needsBuilding(false)
 {}
 
-scene::~scene(){
-	delete accel;
-
-	for(size_t i = 0; i<lights.size(); i++){
-		delete(lights[i]);
-	}
-
-	for(size_t i = 0; i<myShapes.size(); i++){
-		delete(myShapes[i]);
-	}
-}
-
 void scene::addLight(light* l){
-	lights.push_back(l);
+	lightPtr p(l);
+	lights.push_back(p);
 }
 
-void scene::addPrimitive(primitive* p){
+void scene::addShape(shape* s){
+	shapePtr p(s);
 	shapes.push_back(p);
-	myShapes.push_back(p);
 	needsBuilding = true;
 }
 
-void scene::addShape(const shape& s){
-	for(size_t i=0; i<s.primitives().size(); i++){
-		shapes.push_back(s.primitives()[i]);
-	}
-
+void scene::addEmitter(shape* s){
+	shapePtr p(s);
+	emitters.push_back(p);
 	needsBuilding = true;
 }
 
 void scene::setAccelerator(accelerator* a){
-	delete accel;
-	accel = a;
+	accel.reset(a);
 }
 
 const intersection scene::intersect(ray& r) const{
@@ -57,7 +43,7 @@ const bool scene::intersectB(ray& r) const{
 
 void scene::build(){
 	if(needsBuilding){
-		accel->build(shapes);
+		accel->build(*this);
 		needsBuilding = false;
 	}
 }

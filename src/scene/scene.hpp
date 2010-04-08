@@ -3,12 +3,11 @@
 
 #include <vector>
 
-#include "geometry/intersectable.hpp"
-#include "geometry/shape.hpp"
-
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
 
+#include "geometry/shape.hpp"
+#include "geometry/primitive.hpp"
 #include "light/light.hpp"
 
 using namespace std;
@@ -17,33 +16,40 @@ class scene {
 	public:
 		scene();
 		scene(accelerator* a);
-		~scene();
 
-		void addPrimitive(primitive* p);
-		void addShape(const shape& s);
-		void addLight(light* l);
+		void addShape(shape* s);
+		void addEmitter(shape* p);
+		void addLight(light* p);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
 		 */
 		void setAccelerator(accelerator* a);
-		accelerator* getAccelerator() { return accel; }
+		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
 		const bool intersectB(ray& r) const;
 
-		const vector<light*>& getLights(){
+		const vector<shapePtr>& getShapes() const {
+			return shapes;
+		}
+
+		const vector<lightPtr>& getLights() const {
 			return lights;
+		}
+
+		const vector<shapePtr>& getEmitters() const {
+			return emitters;
 		}
 
 		void build();
 
 	private:
-		vector<primitive*> shapes;
-		vector<primitive*> myShapes;
-		vector<light*> lights;
+		vector<shapePtr> shapes;
+		vector<shapePtr> emitters;
+		vector<lightPtr> lights;
 
-		accelerator* accel;
+		acceleratorPtr accel;
 		bool needsBuilding;
 };
 #endif

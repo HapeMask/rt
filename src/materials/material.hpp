@@ -1,10 +1,15 @@
 #ifndef __RT_MATERIAL_
 #define __RT_MATERIAL_
 
+#include <tr1/memory>
+
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "brdf.hpp"
+
+using namespace std;
+using tr1::shared_ptr;
 
 class material {
 public:
@@ -24,4 +29,6 @@ protected:
 	rgbColor emitColor;
 	float emitPower;
 };
+
+typedef shared_ptr<material> materialPtr;
 #endif

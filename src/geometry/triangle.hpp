@@ -8,6 +8,9 @@
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"
 
+#include <tr1/memory>
+using std::tr1::shared_ptr;
+
 class triangle : public primitive {
 	public:
 		triangle(const point3& a, const point3& b, const point3& c, shape* parent = NULL);
@@ -53,4 +56,6 @@ class triangle : public primitive {
 		unsigned short axis1;
 		unsigned short axis2;
 };
+
+typedef shared_ptr<triangle> trianglePtr;
 #endif

@@ -2,11 +2,15 @@
 #define __RT_DEFAULTACCEL__
 
 #include <vector>
-#include "geometry/primitive.hpp"
+#include <tr1/memory>
+
 #include "intersection.hpp"
 #include "accelerator.hpp"
+#include "scene/scene.hpp"
+#include "geometry/primitive.hpp"
 
 using namespace std;
+using tr1::shared_ptr;
 
 /**
  * Default "acceleration structure." Just checks all
@@ -16,11 +20,13 @@ class defaultAccelerator : public accelerator {
 	public:
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(ray& r) const;
+		virtual const intersection intersectE(ray& r) const;
 
-		virtual void build(const vector<primitive*> shapes);
+		virtual void build(const scene& s);
 
 	private:
-		vector<primitive*> contents_;
+		vector<primitivePtr> shapes;
+		vector<primitivePtr> emitters;
 };
 
 #endif

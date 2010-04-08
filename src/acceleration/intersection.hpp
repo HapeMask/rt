@@ -6,20 +6,20 @@
 
 class intersection {
 	public:
-		intersection() : s(NULL), p(NULL), hit(false) {}
+		intersection() : hit(false) {}
 
 		intersection(const bool& didHit){
 			hit = didHit;
 		}
 
-		intersection(shape* sh, primitive* pr) {
+		intersection(shapePtr sh, primitivePtr pr) {
 			s = sh;
 			p = pr;
 			hit = true;
 		}
 
-		shape* s;
-		primitive* p;
+		shapePtr s;
+		primitivePtr p;
 		bool hit;
 };
 #endif

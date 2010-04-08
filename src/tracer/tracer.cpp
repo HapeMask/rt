@@ -30,6 +30,7 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 
 		// Sample emitters.
 
+		/*
 		rgbColor indir;
 		vec3 w;
 		for(int i=0; i<32; i++){
@@ -44,8 +45,9 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 		}
 		indir /= 32.f;
 		cerr << "ind: " << indir << endl;
+		*/
 
-		return c + indir;
+		return c;
 
 	}else{
 		return rgbColor(0,0,0);

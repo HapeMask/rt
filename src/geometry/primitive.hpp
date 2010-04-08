@@ -1,32 +1,39 @@
 #ifndef __RT_PRIM__
 #define __RT_PRIM__
 
-#include "shape.hpp"
 #include "aabb.hpp"
 #include "intersectable.hpp"
 #include "mathlib/point.hpp"
 
+#include <tr1/memory>
+using std::tr1::shared_ptr;
+
+class shape;
+typedef shared_ptr<shape> shapePtr;
+
 class primitive : public intersectable {
 	public:
-		primitive(shape* parent) : parent_(parent) {}
-
-		void setParent(shape* parent){
-			parent_ = parent;
-		}
+		primitive(shape* p) : parent(p) {}
 
 		virtual const bool intersect(ray& r) const = 0;
 		virtual const vec3 getNormal(const point3& p) const = 0;
+
+		void setParent(shape* p){
+			parent.reset(p);
+		}
 
 		const aabb& getBounds(){
 			return boundingBox;
 		}
 
-		shape* parent() const {
-			return parent_;
+		shapePtr getParent() const {
+			return parent;
 		}
 
 	protected:
-		shape* parent_;
+		shapePtr parent;
 		aabb boundingBox;
 };
+
+typedef shared_ptr<primitive> primitivePtr;
 #endif

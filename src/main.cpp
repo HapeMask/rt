@@ -30,12 +30,14 @@ int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
 	scene s;
-	shape sh, sh1;
-	sh.addPrimitive(new sphere(point3(0,1.f,0), 1.f));
-	sh.setMaterial(new material(rgbColor(0,0,1.f), 1.f));
+	shape* sh(new shape());
+	shape* sh1(new shape());
 
-	sh1.addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
-	sh1.setMaterial(new material(new lambertianBrdf(rgbColor(1.f,0,0))));
+	sh->addPrimitive(new sphere(point3(0,1.f,0), 1.f));
+	sh->setMaterial(new material(rgbColor(0,0,1.f), 1.f));
+
+	sh1->addPrimitive(new plane(vec3(0,1,0), point3(0,0,0)));
+	sh1->setMaterial(new material(new lambertianBrdf(rgbColor(1.f,0,0))));
 
 	s.addShape(sh);
 	s.addShape(sh1);
@@ -53,18 +55,18 @@ int main(int argc, char* argv[]){
 	whittedRayTracer rt(&s);
 
 
+	/*
 	c.getRay(150,230,r);
 	rt.L(r);
 	return 0;
+	*/
 
-	/*
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){
 			c.getRay(x, y, r);
 			f.drawPixel(x, y, rt.L(r));
 		}
 	}
-	*/
 
 	f.flip();
 

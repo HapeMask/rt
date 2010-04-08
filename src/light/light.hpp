@@ -1,9 +1,14 @@
 #ifndef __RT_LIGHT__
 #define __RT_LIGHT__
 
+#include <tr1/memory>
+
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
+
+using namespace std;
+using tr1::shared_ptr;
 
 class light {
 	public:
@@ -32,4 +37,6 @@ class pointLight : public light {
 	private:
 		rgbColor _color;
 };
+
+typedef shared_ptr<light> lightPtr;
 #endif
