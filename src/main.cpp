@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
 	sh1->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
 
 	s.addShape(sh);
-	s.addShape(sh1);
+	//s.addShape(sh1);
 	s.addLight(new pointLight(vec3(3,3,-3), rgbColor(1.f,1.f,1.f)));
 	s.build();
 
@@ -73,9 +73,6 @@ int main(int argc, char* argv[]){
 	f.flip();
 
 	cerr << "done" << endl;
-	vec3 vt(2,-3,0);
-	clamp(vt);
-	cerr << vt << endl;
 
 	SDL_Event e;
 	while(true){
