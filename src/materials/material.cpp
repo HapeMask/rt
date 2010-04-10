@@ -3,7 +3,7 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 
-material::material(brdf* br) : b(br), emissive(false)
+material::material(brdfPtr br) : b(br), emissive(false)
 {}
 
 material::material(const rgbColor& c, const float& pow) : emissive(true),

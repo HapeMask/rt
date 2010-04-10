@@ -1,0 +1,10 @@
+scene(default){
+	shape{
+		plane(1,0,0,-3)
+		plane(-1,0,0,-3)
+		plane(0,1,0,-3)
+		plane(0,-1,0,-3)
+		plane(0,0,-1,-3)
+		material(lambert(1,0,0))
+	}
+}

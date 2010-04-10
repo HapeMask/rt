@@ -9,7 +9,7 @@ WIN_CFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
 CFLAGS= -I../ -O3 -msse -msse2 -msse3
 CXXFLAGS=
-LDFLAGS=
+LDFLAGS= -lboost_regex
 
 CFLAGS += $(SDL_CFLAGS) $(WIN_CFLAGS)
 LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)

@@ -3,6 +3,8 @@
 
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
+#include <tr1/memory>
+using std::tr1::shared_ptr;
 
 class brdf {
 	public:
@@ -20,4 +22,6 @@ class lambertianBrdf : public brdf {
 	private:
 		rgbColor rOverPi;
 };
+
+typedef shared_ptr<brdf> brdfPtr;
 #endif

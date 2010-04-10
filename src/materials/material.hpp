@@ -13,7 +13,7 @@ using tr1::shared_ptr;
 
 class material {
 public:
-	material(brdf* br);
+	material(brdfPtr br);
 	material(const rgbColor& c, const float& pow);
 
 	const rgbColor sample(const point3& p, const vec3& wi, const vec3& wo) const;
@@ -24,7 +24,7 @@ public:
 	}
 
 protected:
-	brdf* b;
+	brdfPtr b;
 	bool emissive;
 	rgbColor emitColor;
 	float emitPower;
