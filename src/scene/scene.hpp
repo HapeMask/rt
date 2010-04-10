@@ -2,6 +2,7 @@
 #define __RT_SCENE__
 
 #include <vector>
+#include <tr1/memory>
 
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
@@ -11,15 +12,16 @@
 #include "light/light.hpp"
 
 using namespace std;
+using tr1::shared_ptr;
 
 class scene {
 	public:
 		scene();
 		scene(accelerator* a);
 
-		void addShape(shape* s);
-		void addEmitter(shape* p);
-		void addLight(light* p);
+		void addShape(shapePtr s);
+		void addEmitter(shapePtr p);
+		void addLight(lightPtr p);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
@@ -54,4 +56,6 @@ class scene {
 		acceleratorPtr accel;
 		bool needsBuilding;
 };
+
+typedef shared_ptr<scene> scenePtr;
 #endif

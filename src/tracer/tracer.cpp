@@ -19,7 +19,8 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 
 		c *= dot(isect.p->getNormal(r.origin),
 				normalize(lightPosition - r.origin));
-		//c *= 1.f / (lightPosition - r.origin).length2();
+		c *= 1.f / (lightPosition - r.origin).length2();
+		c *= parent->getLights()[0]->getPower() ;
 
 		// Test for shadowing.
 		/*
@@ -29,6 +30,7 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 		}
 		*/
 
+		return c;
 	}else{
 		cerr << "NO LIGHTS" << endl;
 		return rgbColor(0,0,0);

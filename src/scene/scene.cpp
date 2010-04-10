@@ -12,20 +12,17 @@ scene::scene() : accel(new defaultAccelerator()), needsBuilding(false)
 scene::scene(accelerator* a) : accel(a), needsBuilding(false)
 {}
 
-void scene::addLight(light* l){
-	lightPtr p(l);
-	lights.push_back(p);
+void scene::addLight(lightPtr l){
+	lights.push_back(l);
 }
 
-void scene::addShape(shape* s){
-	shapePtr p(s);
-	shapes.push_back(p);
+void scene::addShape(shapePtr s){
+	shapes.push_back(s);
 	needsBuilding = true;
 }
 
-void scene::addEmitter(shape* s){
-	shapePtr p(s);
-	emitters.push_back(p);
+void scene::addEmitter(shapePtr s){
+	emitters.push_back(s);
 	needsBuilding = true;
 }
 

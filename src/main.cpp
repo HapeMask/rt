@@ -25,6 +25,7 @@ using namespace std;
 
 #include "tracer/tracer.hpp"
 #include "samplers/samplers.hpp"
+#include "scene/parser.hpp"
 
 SDL_Surface* screen;
 
@@ -32,18 +33,18 @@ int main(int argc, char* argv[]){
 	sdlFramebuffer f(512, 512, 32);
 
 	scene s;
-	shape* sh = new shape();
-	shape* sh1 = new shape();
+	shapePtr sh(new shape());
+	shapePtr sh1(new shape());
 
-	sh->addPrimitive(new plane(vec3(1,0,0), -3.f));
-	sh->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
+	sh->addPrimitive(primitivePtr(new plane(vec3(1,0,0), -3.f)));
+	sh->setMaterial(materialPtr(new material(new lambertianBrdf(rgbColor(1,1,1)))));
 
-	sh1->addPrimitive(new sphere(point3(-1.0f, 0,0), 0.5f));
-	sh1->setMaterial(new material(new lambertianBrdf(rgbColor(1,1,1))));
+	sh1->addPrimitive(primitivePtr(new sphere(point3(-1.0f, 0,0), 0.5f)));
+	sh1->setMaterial(materialPtr(new material(new lambertianBrdf(rgbColor(1,1,1)))));
 
 	s.addShape(sh);
 	//s.addShape(sh1);
-	s.addLight(new pointLight(vec3(3,3,-3), rgbColor(1.f,1.f,1.f)));
+	s.addLight(lightPtr(new pointLight(point3(3,3,-3), rgbColor(1.f,1.f,1.f), 20.0f)));
 	s.build();
 
 	float screen[4] = {-1, 1, -1, 1};
@@ -57,11 +58,12 @@ int main(int argc, char* argv[]){
 	whittedRayTracer rt(&s);
 
 	srand(time(NULL));
-	/*
-	c.getRay(150,230,r);
-	rt.L(r);
+
+	ifstream in("../src/scene/test.scn");
+	sceneParser p;
+	p.parse(in);
+	in.close();
 	return 0;
-	*/
 
 	for(int y=0; y<512; y++){
 		for(int x=0; x<512; x++){

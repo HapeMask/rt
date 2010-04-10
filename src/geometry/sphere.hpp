@@ -9,6 +9,7 @@
 class sphere : public primitive {
 	public:
 		sphere(const point3& p, const float& r, shape* parent = NULL);
+		virtual ~sphere() {}
 
 		virtual const bool intersect(ray& r) const;
 		virtual const vec3 getNormal(const point3& p) const;

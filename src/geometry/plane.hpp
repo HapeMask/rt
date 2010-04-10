@@ -9,6 +9,7 @@
 class plane : public primitive {
 	public:
 		plane(const vec3& n, const float& d_, shape* parent = NULL);
+		virtual ~plane() {}
 
 		virtual const bool intersect(ray& r) const;
 		virtual const vec3 getNormal(const point3& p) const;

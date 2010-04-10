@@ -5,8 +5,10 @@
 #include "intersectable.hpp"
 #include "mathlib/point.hpp"
 
+#include <vector>
 #include <tr1/memory>
-using std::tr1::shared_ptr;
+using namespace std;
+using tr1::shared_ptr;
 
 class shape;
 typedef shared_ptr<shape> shapePtr;
@@ -14,6 +16,7 @@ typedef shared_ptr<shape> shapePtr;
 class primitive : public intersectable {
 	public:
 		primitive(shape* p) : parent(p) {}
+		virtual ~primitive() {}
 
 		virtual const bool intersect(ray& r) const = 0;
 		virtual const vec3 getNormal(const point3& p) const = 0;

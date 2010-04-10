@@ -16,9 +16,10 @@ class shape {
 		shape(material* m);
 		shape(const vector<primitivePtr>& pr);
 		shape(material* m, const vector<primitivePtr>& pr);
+		virtual ~shape() {}
 
-		void setMaterial(material* m);
-		void addPrimitive(primitive* p);
+		void setMaterial(materialPtr m);
+		void addPrimitive(primitivePtr p);
 
 		materialPtr getMaterial() const {
 			return mat;
