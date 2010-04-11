@@ -2,6 +2,7 @@
 #include "acceleration/intersection.hpp"
 #include "mathlib/constants.hpp"
 #include "samplers/samplers.hpp"
+#include "utility.hpp"
 
 const rgbColor whittedRayTracer::L(ray& r) const{
 	const intersection isect = parent->intersect(r);
@@ -15,20 +16,15 @@ const rgbColor whittedRayTracer::L(ray& r) const{
 
 	rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
 	if(parent->getLights().size() > 0){
-		point3 lightPosition = parent->getLights()[0]->getPosition();
+		const point3 lightPosition = parent->getLights()[0]->getPosition();
+		const float lightDist = (lightPosition - r.origin).length();
 
-		c *= dot(isect.p->getNormal(r.origin),
-				normalize(lightPosition - r.origin));
+		c *= clamp(dot(isect.p->getNormal(r.origin),
+				normalize(lightPosition - r.origin)));
 		c *= 1.f / (lightPosition - r.origin).length2();
-		c *= parent->getLights()[0]->getPower() ;
+		c *= parent->getLights()[0]->getPower();
 
 		// Test for shadowing.
-		/*
-		const ray shadowRay(r.origin, normalize(lightPosition - r.origin));
-		if(parent->intersectB(shadowRay) || parent->intersectEB(shadowRay)){
-			c = rgbColor(0,0,0);
-		}
-		*/
 
 		return c;
 	}else{

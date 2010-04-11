@@ -17,16 +17,24 @@ inline const float degrees(const float& rad){
 	return (rad / PI) * 180.f;
 }
 
-inline void clamp(rgbColor& c){
-	c.r = min(max(c.r, 0.f), 1.f);
-	c.g = min(max(c.g, 0.f), 1.f);
-	c.b = min(max(c.b, 0.f), 1.f);
+inline rgbColor clamp(const rgbColor& c){
+	rgbColor c1(c);
+	c1.r = min(max(c.r, 0.f), 1.f);
+	c1.g = min(max(c.g, 0.f), 1.f);
+	c1.b = min(max(c.b, 0.f), 1.f);
+	return c1;
 }
 
-inline void clamp(vec3& v){
-	v.x() = min(max(v.x(), 0.f), 1.f);
-	v.y() = min(max(v.y(), 0.f), 1.f);
-	v.z() = min(max(v.z(), 0.f), 1.f);
+inline vec3 clamp(const vec3& v){
+	vec3 v1(v);
+	v1.x() = min(max(v.x(), 0.f), 1.f);
+	v1.y() = min(max(v.y(), 0.f), 1.f);
+	v1.z() = min(max(v.z(), 0.f), 1.f);
+	return v1;
+}
+
+inline float clamp(const float& f){
+	return min(max(f, 0.f), 1.f);
 }
 
 inline void debugPrint(string s){

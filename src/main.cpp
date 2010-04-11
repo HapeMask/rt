@@ -73,9 +73,9 @@ int main(int argc, char* argv[]){
 		screen[2] = -ratio;
 		screen[3] = ratio;
 	}
-	camera c(width, height, screen, 0.1f, 100.f, 45.f, point3(0,1.f,-10), point3(0,0,0), point3(0,1,0));
+	camera c(width, height, screen, 0.1f, 100.f, 45.f, point3(0,0,-10), point3(0,0,0), point3(0,1,0));
 
-	ray r;
+	ray r0, r1, r2, r3, r4;
 	rgbColor white(1,1,1);
 	rgbColor black(0,0,0);
 	rgbColor blue(0,0,1);
@@ -86,8 +86,14 @@ int main(int argc, char* argv[]){
 
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			c.getRay(x, y, r);
-			f.drawPixel(x, y, rt.L(r));
+			c.getRay(x, y, r0);
+			c.getRay(x+0.25f, y+0.25f, r1);
+			c.getRay(x-0.25f, y+0.25f, r2);
+			c.getRay(x+0.25f, y-0.25f, r3);
+			c.getRay(x-0.25f, y-0.25f, r4);
+			f.drawPixel(x, y,
+					(rt.L(r0) + rt.L(r1) + rt.L(r2) + rt.L(r3) + rt.L(r4)) /5.f
+					);
 		}
 	}
 

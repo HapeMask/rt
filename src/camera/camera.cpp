@@ -33,7 +33,7 @@ camera::camera(const float& w, const float& h, const float scr[4], const float& 
 	rasterToCamera = transform3d(cameraToScreen.inverse() * screenToRaster.inverse());
 }
 
-void camera::getRay(const int& x, const int& y, ray& r){
+void camera::getRay(const float& x, const float& y, ray& r){
 	const point3 rasterPos(x, y, 0.f);
 	const point3 cameraPos = rasterToCamera.apply(rasterPos);
 
