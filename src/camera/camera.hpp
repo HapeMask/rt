@@ -8,7 +8,7 @@
 
 class camera {
 	public:
-		camera(const float& w, const float& h, const float scr[4], const float& nr, const float& fr,
+		camera(const float& w, const float& h, const float& nr, const float& fr,
 				const float& fov, const point3& pos, const point3& look, const vec3& up);
 
 		void getRay(const float& x, const float& y, ray& r);

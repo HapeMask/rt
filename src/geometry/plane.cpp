@@ -13,7 +13,7 @@ plane::plane(const vec3& n, const float& d_, shape* parent) :
 
 const bool plane::intersect(ray& r) const{
 	const float t = -(dot(vec3(r.origin), normal) - d) / dot(normal, r.direction);
-	if(t < EPSILON){
+	if(t <= r.tMin || t >= r.tMax){
 		return false;
 	}else{
 		r.origin += t*r.direction;

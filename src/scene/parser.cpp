@@ -47,6 +47,8 @@ void sceneParser::scn(scene& s){
 	match(RPAREN);
 	match(LBRACE);
 
+	s.addLight(li());
+
 	vector<shapePtr> shapes;
 	shapes = shapeList();
 	match(RBRACE);
@@ -122,6 +124,44 @@ brdfPtr sceneParser::bd(){
 		match(BRDF);
 		match(LPAREN);
 		match(RPAREN);
+	}
+}
+
+lightPtr sceneParser::li(){
+	lightPtr lp;
+	match(LIGHT);
+	match(LANGLE);
+	string type(currentToken);
+	match(LIGHTTYPE);
+	match(RANGLE);
+	match(LPAREN);
+	if(type == "point"){
+		float px = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float py = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float pz = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float r = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float g = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float b = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float i = curFloat();
+		match(FLOAT);
+		lp.reset(new pointLight(point3(px,py,pz), rgbColor(r,g,b), i));
+	}
+	match(RPAREN);
+
+	if(lp.get() != NULL){
+		return lp;
 	}
 }
 
@@ -240,6 +280,8 @@ void sceneParser::match(const regex& token){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, SCENE, match_continuous)){
 			currentToken = m.str();
+		}else if(regex_search(textC, m, LIGHTTYPE, match_continuous)){
+			currentToken = m.str();
 		}else if(regex_search(textC, m, SHAPE, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, LIGHT, match_continuous)){
@@ -255,6 +297,10 @@ void sceneParser::match(const regex& token){
 		}else if(regex_search(textC, m, SEMICOLON, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, COMMA, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, LANGLE, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, RANGLE, match_continuous)){
 			currentToken = m.str();
 		}
 

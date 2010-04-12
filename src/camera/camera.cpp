@@ -9,12 +9,22 @@
 
 #include <cmath>
 
-camera::camera(const float& w, const float& h, const float scr[4], const float& nr, const float& fr,
+camera::camera(const float& w, const float& h, const float& nr, const float& fr,
 				const float& fov, const point3& pos, const point3& look, const vec3& up){
-	screen[0] = scr[0];
-	screen[1] = scr[1];
-	screen[2] = scr[2];
-	screen[3] = scr[3];
+	float screen[4];
+	if(w > h){
+		const float ratio = (float)w / (float)h;
+		screen[0] = -ratio;
+		screen[1] = ratio;
+		screen[2] = -1;
+		screen[3] = 1;
+	}else{
+		const float ratio = (float)h / (float)w;
+		screen[0] = -1;
+		screen[1] = 1;
+		screen[2] = -ratio;
+		screen[3] = ratio;
+	}
 
 	near = nr;
 	far = fr;

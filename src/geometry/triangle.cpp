@@ -57,7 +57,7 @@ const bool triangle::intersect(ray& r) const {
 	*/
 
 	const float t = -dot(r.origin - a(), normal_) / D;
-	if(t <= EPSILON){
+	if(t <= r.tMin || t >= r.tMax){
 		return false;
 	}
 

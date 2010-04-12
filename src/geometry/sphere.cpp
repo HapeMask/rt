@@ -43,8 +43,8 @@ const bool sphere::intersect(ray& r) const {
 	const float t0 = q / A;
 	const float t1 = C / q;
 
-	if(t0 < EPSILON){
-		if(t1 < EPSILON){
+	if(t0 <= r.tMin || t0 >= r.tMax){
+		if(t1 <= r.tMin || t1 >= r.tMax){
 			return false;
 		}
 	}

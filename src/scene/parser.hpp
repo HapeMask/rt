@@ -13,28 +13,6 @@
 using namespace std;
 using namespace boost;
 
-static const regex WHITESPACE("\\s+");
-static const regex LPAREN("\\(");
-static const regex RPAREN("\\)");
-static const regex LBRACE("\\{");
-static const regex RBRACE("\\}");
-static const regex SCENE("scene");
-static const regex BRDF("lambert|phong|microfacet");
-static const regex LAMBERT("lambert");
-static const regex PHONG("phong");
-static const regex MICROFACET("microfacet");
-static const regex ACCELTYPE("default|grid|kdtree");
-static const regex PRIMITIVE("triangle|plane|sphere");
-static const regex TRIANGLE("triangle");
-static const regex SPHERE("sphere");
-static const regex PLANE("plane");
-static const regex SHAPE("shape");
-static const regex LIGHT("light");
-static const regex MATERIAL("material");
-static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
-static const regex SEMICOLON(";");
-static const regex COMMA(",");
-
 class ParseException : public runtime_error {
 	public:
 		ParseException(const string& s) : runtime_error("ParseException"), expectedToken(s) {}
@@ -64,5 +42,31 @@ class sceneParser {
 		primitivePtr prim();
 		materialPtr mat();
 		brdfPtr bd();
+		lightPtr li();
 };
+
+static const regex WHITESPACE("\\s+");
+static const regex LPAREN("\\(");
+static const regex RPAREN("\\)");
+static const regex LBRACE("\\{");
+static const regex RBRACE("\\}");
+static const regex SCENE("scene");
+static const regex BRDF("lambert|phong|microfacet");
+static const regex LAMBERT("lambert");
+static const regex PHONG("phong");
+static const regex MICROFACET("microfacet");
+static const regex ACCELTYPE("default|grid|kdtree");
+static const regex PRIMITIVE("triangle|plane|sphere");
+static const regex TRIANGLE("triangle");
+static const regex LIGHTTYPE("point|spot|area");
+static const regex SPHERE("sphere");
+static const regex PLANE("plane");
+static const regex SHAPE("shape");
+static const regex LIGHT("light");
+static const regex MATERIAL("material");
+static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
+static const regex SEMICOLON(";");
+static const regex LANGLE("<");
+static const regex RANGLE(">");
+static const regex COMMA(",");
 #endif
