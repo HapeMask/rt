@@ -7,7 +7,10 @@
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
 
+#include "camera/camera.hpp"
+
 #include "geometry/shape.hpp"
+#include "geometry/aabb.hpp"
 #include "geometry/primitive.hpp"
 #include "light/light.hpp"
 
@@ -38,13 +41,27 @@ class scene {
 			return shapes;
 		}
 
-		const vector<lightPtr>& getLights() const {
-			return lights;
+		const size_t numLights() const {
+			return lights.size();
+		}
+
+		const lightPtr& getLight(const int& i) const {
+			return lights[i];
 		}
 
 		const vector<shapePtr>& getEmitters() const {
 			return emitters;
 		}
+
+		const aabb& getBounds(){
+			return bounds;
+		}
+
+		const cameraPtr& getCamera(){
+			return cam;
+		}
+
+		void setCamera(cameraPtr p);
 
 		void build();
 
@@ -53,8 +70,10 @@ class scene {
 		vector<shapePtr> emitters;
 		vector<lightPtr> lights;
 
+		cameraPtr cam;
 		acceleratorPtr accel;
 		bool needsBuilding;
+		aabb bounds;
 };
 
 typedef shared_ptr<scene> scenePtr;

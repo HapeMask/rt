@@ -43,6 +43,7 @@ class sceneParser {
 		materialPtr mat();
 		brdfPtr bd();
 		lightPtr li();
+		cameraPtr cam();
 };
 
 static const regex WHITESPACE("\\s+");
@@ -51,8 +52,10 @@ static const regex RPAREN("\\)");
 static const regex LBRACE("\\{");
 static const regex RBRACE("\\}");
 static const regex SCENE("scene");
-static const regex BRDF("lambert|phong|microfacet");
+static const regex CAMERA("camera");
+static const regex BRDF("lambert|specular|phong|microfacet");
 static const regex LAMBERT("lambert");
+static const regex SPECULAR("specular");
 static const regex PHONG("phong");
 static const regex MICROFACET("microfacet");
 static const regex ACCELTYPE("default|grid|kdtree");

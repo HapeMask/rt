@@ -29,9 +29,14 @@ class shape {
 			return prims;
 		}
 
+		const aabb& getBounds(){
+			return bounds;
+		}
+
 	protected:
 		vector<primitivePtr> prims;
 		materialPtr mat;
+		aabb bounds;
 };
 
 typedef shared_ptr<shape> shapePtr;

@@ -37,6 +37,10 @@ inline float clamp(const float& f){
 	return min(max(f, 0.f), 1.f);
 }
 
+inline vec3 reflect(const vec3& v, const vec3& n){
+	return v - (2*dot(v,n)*n);
+}
+
 inline void debugPrint(string s){
 #ifdef DEBUG
 	cout << s << endl;

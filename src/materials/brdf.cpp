@@ -3,10 +3,9 @@
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 
-lambertianBrdf::lambertianBrdf(const rgbColor& r) : rOverPi(r / PI)
+lambertianBrdf::lambertianBrdf(const rgbColor& r) : brdf(false), rOverPi(r / PI)
 {}
 
 const rgbColor lambertianBrdf::f(const vec3& wi, const vec3& wo) const {
-	//return rOverPi;
-	return rOverPi * PI;
+	return rOverPi;
 }

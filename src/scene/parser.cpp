@@ -6,6 +6,8 @@
 #include "geometry/plane.hpp"
 #include "geometry/sphere.hpp"
 
+#include "camera/camera.hpp"
+
 #include "color/color.hpp"
 #include "materials/material.hpp"
 #include "materials/brdf.hpp"
@@ -48,6 +50,7 @@ void sceneParser::scn(scene& s){
 	match(LBRACE);
 
 	s.addLight(li());
+	s.setCamera(cam());
 
 	vector<shapePtr> shapes;
 	shapes = shapeList();
@@ -116,6 +119,11 @@ brdfPtr sceneParser::bd(){
 		match(FLOAT);
 		match(RPAREN);
 		return brdfPtr(new lambertianBrdf(rgbColor(r,g,b)));
+	}else if(is(SPECULAR)){
+		match(BRDF);
+		match(LPAREN);
+		match(RPAREN);
+		return brdfPtr(new specularBrdf());
 	}else if(is(PHONG)){
 		match(BRDF);
 		match(LPAREN);
@@ -125,6 +133,50 @@ brdfPtr sceneParser::bd(){
 		match(LPAREN);
 		match(RPAREN);
 	}
+}
+
+cameraPtr sceneParser::cam(){
+	match(CAMERA);
+	match(LANGLE);
+	float w, h;
+	w = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	h = curFloat();
+	match(FLOAT);
+	match(RANGLE);
+	match(LPAREN);
+	float fov = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float px = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float py = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float pz = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float lx = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float ly = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float lz = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float ux = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float uy = curFloat();
+	match(FLOAT);
+	match(COMMA);
+	float uz = curFloat();
+	match(FLOAT);
+	match(RPAREN);
+	return cameraPtr(new camera(w, h, 0.1f, 100.f, fov, point3(px,py,pz),point3(lx,ly,lz),point3(ux,uy,uz)));
 }
 
 lightPtr sceneParser::li(){
@@ -277,6 +329,8 @@ void sceneParser::match(const regex& token){
 		}else if(regex_search(textC, m, MATERIAL, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, ACCELTYPE, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, CAMERA, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, SCENE, match_continuous)){
 			currentToken = m.str();

@@ -8,8 +8,21 @@ using std::tr1::shared_ptr;
 
 class brdf {
 	public:
+		brdf() : specular(false)
+		{}
+
+		brdf(const bool& b) : specular(b)
+		{}
+
 		virtual const rgbColor f(const vec3& wi, const vec3& wo) const = 0;
 		virtual ~brdf() {}
+
+		const bool& isSpecular(){
+			return specular;
+		}
+
+	private:
+		bool specular;
 };
 
 class lambertianBrdf : public brdf {
@@ -21,6 +34,18 @@ class lambertianBrdf : public brdf {
 
 	private:
 		rgbColor rOverPi;
+};
+
+class specularBrdf : public brdf {
+	public:
+		specularBrdf() : brdf(true)
+		{}
+
+		virtual const rgbColor f(const vec3& wi, const vec3& wo) const {
+			return rgbColor(0,0,0);
+		}
+
+		virtual ~specularBrdf() {}
 };
 
 typedef shared_ptr<brdf> brdfPtr;

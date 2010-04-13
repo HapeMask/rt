@@ -3,8 +3,8 @@
 using namespace std;
 
 #include <SDL.h>
-#include <limits>
 
+#include <sys/time.h>
 #include "utility.hpp"
 
 #include "mathlib/point.hpp"
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]){
 
 	s.build();
 
-	camera c(width, height, 0.1f, 100.f, 45.f, point3(0,0,-10), point3(0,0,0), point3(0,1,0));
+	const cameraPtr& c = s.getCamera();
 
 	ray r0, r1, r2, r3, r4;
 	rgbColor white(1,1,1);
@@ -56,16 +56,28 @@ int main(int argc, char* argv[]){
 
 	srand(time(NULL));
 
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			c.getRay(x, y, r0);
+			c->getRay(x, y, r0);
+			/*
+			c->getRay(x+0.25, y+0.25, r1);
+			c->getRay(x+0.25, y-0.25, r2);
+			c->getRay(x-0.25, y-0.25, r3);
+			c->getRay(x-0.25, y+0.25, r4);
+			*/
 			f.drawPixel(x, y, rt.L(r0));
+			//f.drawPixel(x, y, (rt.L(r0)+rt.L(r1)+rt.L(r2)+rt.L(r3)+rt.L(r4))/5.f);
 		}
 	}
+	gettimeofday(&end, NULL);
 
 	f.flip();
 
-	cerr << "done" << endl;
+	float sec = end.tv_sec - start.tv_sec;
+	sec += (end.tv_usec - start.tv_usec) / 1e6;
+	cerr << sec << "s" << endl;
 
 	SDL_Event e;
 	while(true){

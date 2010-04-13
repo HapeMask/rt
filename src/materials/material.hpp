@@ -23,6 +23,10 @@ public:
 		return emissive;
 	}
 
+	const bool& isSpecular(){
+		return b->isSpecular();
+	}
+
 protected:
 	brdfPtr b;
 	bool emissive;

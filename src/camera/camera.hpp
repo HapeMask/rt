@@ -6,6 +6,9 @@
 #include "mathlib/point.hpp"
 #include "mathlib/transformation.hpp"
 
+#include <tr1/memory>
+using std::tr1::shared_ptr;
+
 class camera {
 	public:
 		camera(const float& w, const float& h, const float& nr, const float& fr,
@@ -20,4 +23,5 @@ class camera {
 					worldToCamera;
 };
 
+typedef shared_ptr<camera> cameraPtr;
 #endif

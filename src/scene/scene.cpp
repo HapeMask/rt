@@ -2,6 +2,8 @@
 #include "geometry/intersectable.hpp"
 #include "geometry/shape.hpp"
 
+#include "camera/camera.hpp"
+
 #include "acceleration/defaultaccelerator.hpp"
 #include "acceleration/intersection.hpp"
 #include "light/light.hpp"
@@ -19,6 +21,13 @@ void scene::addLight(lightPtr l){
 void scene::addShape(shapePtr s){
 	shapes.push_back(s);
 	needsBuilding = true;
+	const aabb& box = s->getBounds();
+	bounds.top = max(bounds.top, box.top);
+	bounds.bottom = min(bounds.bottom, box.bottom);
+	bounds.right = max(bounds.right, box.right);
+	bounds.left = min(bounds.left, box.left);
+	bounds.back = max(bounds.back, box.back);
+	bounds.front = min(bounds.front, box.front);
 }
 
 void scene::addEmitter(shapePtr s){
@@ -44,6 +53,10 @@ const intersection scene::intersectE(ray& r) const{
 
 const bool scene::intersectEB(const ray& r) const{
 	return accel->intersectEB(r);
+}
+
+void scene::setCamera(cameraPtr p){
+	cam = p;
 }
 
 void scene::build(){
