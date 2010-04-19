@@ -49,5 +49,6 @@ void camera::getRay(const float& x, const float& y, ray& r){
 
 	r.origin = cameraPos;
 	r.direction = normalize(vec3(cameraPos));
+
 	r = worldToCamera.reverse(r);
 }

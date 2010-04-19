@@ -21,19 +21,30 @@ class sdlFramebuffer : public framebuffer {
 			}
 		}
 
-		void drawPixel(const int& x, const int& y, const color& c);
+        ~sdlFramebuffer();
+
+        void drawPixel(const int& x, const int& y, const color& c);
 
 		const bool readyForDrawing() const{
 			return didInit;
 		}
 
 		void flip(){
+            for(int y=0; y<height(); y++){
+                for(int x=0; x<width(); x++){
+                    setPixel(x, y, buffer[(y * width()) + x]);
+                }
+            }
+
 			SDL_UpdateRect(screen, 1, 1, width_, height_);
 			SDL_Flip(screen);
 		}
 
 	private:
+		void setPixel(const int& x, const int& y, const color& c);
+
 		SDL_Surface* screen;
 		bool didInit;
+        rgbColor* buffer;
 };
 #endif

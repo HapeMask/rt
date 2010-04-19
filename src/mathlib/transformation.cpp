@@ -90,7 +90,7 @@ const transform3d scale(const float& sx, const float& sy, const float& sz){
 }
 
 const transform3d lookAt(const point3& pos, const point3& look, const vec3& up){
-	vec3 dir = normalize(vec3(look) - vec3(pos));
+	vec3 dir = normalize(look - pos);
 	vec3 right = cross(dir, normalize(up));
 	vec3 newUp = cross(right, dir);
 

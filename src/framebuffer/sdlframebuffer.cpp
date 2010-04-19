@@ -26,10 +26,19 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 		return;
 	}
 
+    buffer = new rgbColor[width*height];
 	didInit = true;
 }
 
+sdlFramebuffer::~sdlFramebuffer(){
+    delete[] buffer;
+}
+
 void sdlFramebuffer::drawPixel(const int& x, const int& y, const color& c){
+    buffer[(width() * y) + x] = c;
+}
+
+void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
 	if(SDL_MUSTLOCK(screen)){
 		if(SDL_LockSurface(screen) < 0){
 			return;

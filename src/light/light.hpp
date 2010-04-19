@@ -12,7 +12,7 @@ using tr1::shared_ptr;
 
 class light {
 	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {}
+		light(const point3& p, const float& pow, const rgbColor& c) : lightColor(c), position(p), power(pow) {}
 
 		virtual const rgbColor L(const point3& p) const = 0;
 

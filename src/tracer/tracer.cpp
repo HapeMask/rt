@@ -39,10 +39,10 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		}
 
 		c *= clamp(dot(isect.p->getNormal(r.origin),
-				normalize(lightPosition - r.origin)));
-		c *= 1.f / (lightDist*lightDist);
+				normalize(lightPosition - r.origin))) *
+		(1.f / (lightDist*lightDist));
 		c *= parent->getLight(0)->getPower();
-		c *= parent->getLight(0)->getColor();
+        c*= parent->getLight(0)->getColor();
 
 		return clamp(c);
 	}else{

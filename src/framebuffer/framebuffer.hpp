@@ -10,6 +10,7 @@ class framebuffer {
 			height_ = h;
 			bpp_ = b;
 		}
+        virtual ~framebuffer() {}
 
 		virtual void drawPixel(const int& x, const int& y, const color& c) = 0;
 		virtual const bool readyForDrawing() const = 0;

@@ -58,6 +58,7 @@ int main(int argc, char* argv[]){
 
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
+
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
 			c->getRay(x, y, r0);
