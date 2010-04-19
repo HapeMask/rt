@@ -33,12 +33,19 @@ SDL_Surface* screen;
 const int width = 512;
 const int height = 384;
 
-int main(int argc, char* argv[]){
+int main(int argc, char* args[]){
 	sdlFramebuffer f(width, height, 32);
 
 	scene s;
 
-	ifstream in("../src/scene/test.scn");
+    string filename;
+    if(argc < 2){
+        filename = "../src/scene/test.scn";
+    }else{
+        filename = string(args[1]);
+    }
+
+	ifstream in(filename.c_str());
 	sceneParser p;
 	p.parse(s, in);
 	in.close();
