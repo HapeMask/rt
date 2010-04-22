@@ -34,6 +34,12 @@ const int width = 512;
 const int height = 384;
 
 int main(int argc, char* args[]){
+    aabb box(point3(2,2,2), point3(-2,-2,-2));
+    ray r(point3(0,0,-3), vec3(0,0,1));
+    cerr << box.intersect(r) << endl;
+    cerr << r.tMin << ", " << r.tMax << endl;
+    return 0;
+
 	sdlFramebuffer f(width, height, 32);
 
 	scene s;

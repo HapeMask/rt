@@ -22,12 +22,12 @@ void scene::addShape(shapePtr s){
 	shapes.push_back(s);
 	needsBuilding = true;
 	const aabb& box = s->getBounds();
-	bounds.top = max(bounds.top, box.top);
-	bounds.bottom = min(bounds.bottom, box.bottom);
-	bounds.right = max(bounds.right, box.right);
-	bounds.left = min(bounds.left, box.left);
-	bounds.back = max(bounds.back, box.back);
-	bounds.front = min(bounds.front, box.front);
+	bounds.setTop(max(bounds.top(), box.top()));
+	bounds.setBottom(min(bounds.bottom(), box.bottom()));
+	bounds.setRight(max(bounds.right(), box.right()));
+	bounds.setLeft(min(bounds.left(), box.left()));
+	bounds.setBack(max(bounds.back(), box.back()));
+	bounds.setFront(min(bounds.front(), box.front()));
 }
 
 void scene::addEmitter(shapePtr s){

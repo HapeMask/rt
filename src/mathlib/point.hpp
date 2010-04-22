@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cassert>
+#include "sse.hpp"
 
 using namespace std;
 
@@ -131,6 +132,14 @@ class point3 {
 			return coords[2];
 		}
 
+        inline __m128 getSIMD(){
+            return simdCoords;
+        }
+
+        inline const __m128 getSIMD() const {
+            return simdCoords;
+        }
+
 		const point3 operator+(const vec3& u) const;
 		point3& operator+=(const vec3& u);
 
@@ -141,7 +150,10 @@ class point3 {
 		const bool operator==(const point3& p) const;
 
 	private:
-		float coords[3];
+        union{
+            float ALIGN_16 coords[4];
+            __m128 simdCoords;
+        };
 };
 
 ostream& operator<<(ostream& out, const point3& p);

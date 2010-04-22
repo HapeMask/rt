@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "shape.hpp"
 #include "geometry/primitive.hpp"
 #include "materials/material.hpp"
@@ -18,11 +20,12 @@ void shape::setMaterial(materialPtr m){
 void shape::addPrimitive(primitivePtr p){
 	prims.push_back(p);
 	p->setParent(this);
+
 	const aabb& box = p->getBounds();
-	bounds.top = max(bounds.top, box.top);
-	bounds.bottom = min(bounds.bottom, box.bottom);
-	bounds.right = max(bounds.right, box.right);
-	bounds.left = min(bounds.left, box.left);
-	bounds.back = max(bounds.back, box.back);
-	bounds.front = min(bounds.front, box.front);
+	bounds.setTop(max(bounds.top(), box.top()));
+	bounds.setBottom(min(bounds.bottom(), box.bottom()));
+	bounds.setRight(max(bounds.right(), box.right()));
+	bounds.setLeft(min(bounds.left(), box.left()));
+	bounds.setBack(max(bounds.back(), box.back()));
+	bounds.setFront(min(bounds.front(), box.front()));
 }

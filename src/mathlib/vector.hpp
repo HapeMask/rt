@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cassert>
+#include "sse.hpp"
 
 using namespace std;
 
@@ -161,6 +162,14 @@ class vec3 {
 			return values[2];
 		}
 
+        inline __m128 getSIMD(){
+            return simdValues;
+        }
+
+        inline const __m128 getSIMD() const {
+            return simdValues;
+        }
+
 		const vec3 operator+(const vec3& v) const;
 		vec3& operator+=(const vec3& v);
 		const vec3 operator-(const vec3& v) const;
@@ -184,7 +193,10 @@ class vec3 {
 		const float length2() const;
 
 	private:
-		float values[3];
+        union{
+            float ALIGN_16 values[4];
+            __m128 simdValues;
+        };
 };
 
 class vec4 {
@@ -293,7 +305,10 @@ class vec4 {
 		const float length2() const;
 
 	private:
-		float values[4];
+        union{
+            float ALIGN_16 values[4];
+            __m128 simdValues;
+        };
 };
 
 float dot(const vec4& u, const vec4& v);

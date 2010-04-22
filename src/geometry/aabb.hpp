@@ -1,8 +1,11 @@
 #ifndef __RT_AABB__
 #define __RT_AABB__
 
-#include <cmath>
 #include <iostream>
+
+#include "mathlib/sse.hpp"
+#include "mathlib/ray.hpp"
+#include "mathlib/point.hpp"
 using namespace std;
 
 /**
@@ -13,10 +16,9 @@ using namespace std;
  */
 class aabb {
 	public:
-		aabb() : top(0), bottom(0),
-		left(0), right(0),
-		front(0), back(0)
-		{}
+        aabb() {}
+
+        aabb(const point3& mx, const point3& mi) : min(mi), max(mx) {}
 
 		aabb(	const float& t,
 				const float& b,
@@ -24,25 +26,60 @@ class aabb {
 				const float& r,
 				const float& f,
 				const float& ba) :
-			top(t), bottom(b),
-			left(l), right(r),
-			front(f), back(ba) {}
+            min(b,l,f), max(t,r,ba) {}
 
-		const float height(){
-			return abs(top - bottom);
-		}
+        inline const float& top() const {
+            return max.y();
+        }
 
-		const float width(){
-			return abs(left - right);
-		}
+        inline const float& right() const {
+            return max.y();
+        }
 
-		const float depth(){
-			return abs(front - back);
-		}
+        inline const float& back() const {
+            return max.y();
+        }
 
-		float top, bottom,
-		left, right,
-		front, back;
+        inline const float& bottom() const {
+            return min.y();
+        }
+
+        inline const float& left() const {
+            return min.y();
+        }
+
+        inline const float& front() const {
+            return min.y();
+        }
+
+        inline void setTop(const float& f){
+             max.y() = f;
+        }
+
+        inline void setRight(const float& f){
+             max.y() = f;
+        }
+
+        inline void setBack(const float& f){
+             max.y() = f;
+        }
+
+        inline void setBottom(const float& f){
+             min.y() = f;
+        }
+
+        inline void setLeft(const float& f){
+             min.y() = f;
+        }
+
+        inline void setFront(const float& f){
+             min.y() = f;
+        }
+
+        const bool intersect(ray& r) const;
+
+        point3 min;
+        point3 max;
 };
 
 ostream& operator<<(ostream& out, const aabb& b);
