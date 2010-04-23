@@ -53,11 +53,11 @@ class scene {
 			return emitters;
 		}
 
-		const aabb& getBounds(){
+		const aabb& getBounds() const{
 			return bounds;
 		}
 
-		const cameraPtr& getCamera(){
+		const cameraPtr& getCamera() const{
 			return cam;
 		}
 

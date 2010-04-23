@@ -18,8 +18,8 @@ const bool aabb::intersect(ray& r) const{
     const __m128 pos_inf = loadps(PS_POS_INF);
     const __m128 neg_inf = loadps(PS_NEG_INF);
 
-    const __m128 boxMin = min.getSIMD();
-    const __m128 boxMax = max.getSIMD();
+    const __m128 boxMin = _min.getSIMD();
+    const __m128 boxMax = _max.getSIMD();
     const __m128 pos = r.origin.getSIMD();
     const __m128 dir = r.direction.getSIMD();
 
