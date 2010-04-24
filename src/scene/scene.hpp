@@ -29,7 +29,7 @@ class scene {
 		/**
 		 * NOTE: Destroys the previous accelerator.
 		 */
-		void setAccelerator(accelerator* a);
+		void setAccelerator(acceleratorPtr a);
 		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;

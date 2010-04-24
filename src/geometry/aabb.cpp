@@ -7,14 +7,17 @@ ostream& operator<<(ostream& out, const aabb& b){
 		"\n\tLeft: " << b.left() <<
 		"\n\tRight: " << b.right() <<
 		"\n\tFront: " << b.front() <<
-		"\n\tBack: " << b.back();
+		"\n\tBack: " << b.back() <<
+		"\n\tMin: " << b.min() <<
+		"\n\tMax: " << b.max();
+
 	return out;
 }
 
 /*
  * http://www.flipcode.com/archives/SSE_RayBox_Intersection_Test.shtml
  */
-const bool aabb::intersect(ray& r) const{
+const bool aabb::intersect(const ray& r, float& tmin) const {
     const __m128 pos_inf = loadps(PS_POS_INF);
     const __m128 neg_inf = loadps(PS_NEG_INF);
 
@@ -48,8 +51,8 @@ const bool aabb::intersect(ray& r) const{
 
     const bool ret = _mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin);
 
-    storess(lmin, &r.tMin);
-    storess(lmax, &r.tMax);
+    storess(lmin, &tmin);
+    //storess(lmax, &tmax);
 
     return ret;
 }

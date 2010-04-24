@@ -21,13 +21,7 @@ void scene::addLight(lightPtr l){
 void scene::addShape(shapePtr s){
 	shapes.push_back(s);
 	needsBuilding = true;
-	const aabb& box = s->getBounds();
-	bounds.setTop(max(bounds.top(), box.top()));
-	bounds.setBottom(min(bounds.bottom(), box.bottom()));
-	bounds.setRight(max(bounds.right(), box.right()));
-	bounds.setLeft(min(bounds.left(), box.left()));
-	bounds.setBack(max(bounds.back(), box.back()));
-	bounds.setFront(min(bounds.front(), box.front()));
+    bounds = mergeAabb(bounds, s->getBounds());
 }
 
 void scene::addEmitter(shapePtr s){
@@ -35,8 +29,8 @@ void scene::addEmitter(shapePtr s){
 	needsBuilding = true;
 }
 
-void scene::setAccelerator(accelerator* a){
-	accel.reset(a);
+void scene::setAccelerator(acceleratorPtr a){
+    accel = a;
 }
 
 const intersection scene::intersect(ray& r) const{

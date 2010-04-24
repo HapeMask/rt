@@ -27,16 +27,16 @@ class vec2 {
 			values[1] = x(1);
 		}
 
-		const float& operator()(const int& index) const{
+		const float& operator()(const unsigned short& index) const{
 #ifdef DEBUG
-			assert(index >= 0 && index < 2);
+			assert(index < 2);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const int& index){
+		float& operator()(const unsigned short& index){
 #ifdef DEBUG
-			assert(index >= 0 && index < 2);
+			assert(index < 2);
 #endif
 			return values[index];
 		}
@@ -122,18 +122,22 @@ class vec3 {
 			values[2] = x;
 		}
 
+        vec3(const __m128 v){
+            simdValues = v;
+        }
+
 		vec3(const point3& p);
 
-		const float& operator()(const int& index) const{
+		const float& operator()(const unsigned short& index) const{
 #ifdef DEBUG
-			assert(index >= 0 && index < 3);
+			assert(index < 3);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const int& index){
+		float& operator()(const unsigned short& index){
 #ifdef DEBUG
-			assert(index >= 0 && index < 3);
+			assert(index < 3);
 #endif
 			return values[index];
 		}
@@ -236,16 +240,16 @@ class vec4 {
 			values[3] = x;
 		}
 
-		const float& operator()(const int& index) const{
+		const float& operator()(const unsigned short& index) const{
 #ifdef DEBUG
-			assert(index >= 0 && index < 4);
+			assert(index < 4);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const int& index){
+		float& operator()(const unsigned short& index){
 #ifdef DEBUG
-			assert(index >= 0 && index < 4);
+			assert(index < 4);
 #endif
 			return values[index];
 		}

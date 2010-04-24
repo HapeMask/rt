@@ -16,6 +16,7 @@ typedef shared_ptr<shape> shapePtr;
 class primitive : public intersectable {
 	public:
 		primitive(shape* p) : parent(p) {}
+        primitive(shape* p, const aabb& box) : parent(p), boundingBox(box) {}
 		virtual ~primitive() {}
 
 		virtual const bool intersect(ray& r) const = 0;

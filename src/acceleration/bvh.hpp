@@ -9,30 +9,47 @@
 #include <vector>
 using namespace std;
 
-enum AXIS {X=0, Y=1, Z=2, CHILD=3};
-enum CHILD {LEFT=0, RIGHT=1};
+enum {LEFT=0, RIGHT=1};
+const unsigned short BVH_MAX_PRIMS_PER_LEAF= 4;
+const unsigned int AXIS_X = 0;
+const unsigned int AXIS_Y = 1;
+const unsigned int AXIS_Z = 2;
+const unsigned int AXIS_LEAF = 3;
 
 typedef struct bn {
     aabb box;
     union{
-        bn* children[2];
-        size_t primRange[2];
+        bn* child[2];
+        unsigned int prims[2];
     };
-    AXIS axis;
+
+    unsigned short axis;
+
+    bn() {
+        child[LEFT] = NULL;
+        child[RIGHT] = NULL;
+    }
 
     ~bn() {
-        if(children[LEFT] != NULL)
-            delete children[LEFT];
-
-        if(children[RIGHT] != NULL)
-            delete children[RIGHT];
+        if(axis != AXIS_LEAF){
+            delete child[LEFT];
+            delete child[RIGHT];
+        }
     }
 } bvhNode;
 
 class bvh : public accelerator {
     public:
         bvh();
-        ~bvh() { delete root; }
+        ~bvh() {
+            if(primitiveRoot != NULL){
+                delete primitiveRoot;
+            }
+
+            if(emitterRoot != NULL){
+                delete emitterRoot;
+            }
+        }
 
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
@@ -41,16 +58,19 @@ class bvh : public accelerator {
 
 		virtual void build(const scene& s);
 
-    private:
-        bvhNode* _build(const aabb& box, unsigned int n, int depth = 0);
+        bvhNode* primitiveRoot;
+        bvhNode* emitterRoot;
 
-        bvhNode* root;
-        vector<vector<primitivePtr> > sortedPrims;
-        vector<vector<primitivePtr> > sortedEmitters;
+    private:
+        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitive*>& prims, int depth = 0);
+        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth = 0) const;
+        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth = 0) const;
+
+        vector<primitive*> primitives;
+        vector<primitive*> emitters;
 };
 
-bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
-bool aabbCmpY(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
-bool aabbCmpZ(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
-
+inline bool aabbCmpX(primitive* a, primitive* b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
+inline bool aabbCmpY(primitive* a, primitive* b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
+inline bool aabbCmpZ(primitive* a, primitive* b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
 #endif

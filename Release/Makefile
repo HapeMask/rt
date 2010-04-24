@@ -7,7 +7,7 @@ SDL_LDFLAGS= $(shell sdl-config --libs)
 
 WIN_CFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
-CFLAGS= -I../ -O3 -msse3 -mfpmath=sse -ffast-math
+CFLAGS= -I../ -O3 -msse -msse2 -msse3 -ffast-math -fno-pic -fno-stack-check
 CXXFLAGS=
 LDFLAGS= -lboost_regex
 

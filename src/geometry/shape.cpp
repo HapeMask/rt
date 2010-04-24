@@ -21,11 +21,5 @@ void shape::addPrimitive(primitivePtr p){
 	prims.push_back(p);
 	p->setParent(this);
 
-	const aabb& box = p->getBounds();
-	bounds.setTop(max(bounds.top(), box.top()));
-	bounds.setBottom(min(bounds.bottom(), box.bottom()));
-	bounds.setRight(max(bounds.right(), box.right()));
-	bounds.setLeft(min(bounds.left(), box.left()));
-	bounds.setBack(max(bounds.back(), box.back()));
-	bounds.setFront(min(bounds.front(), box.front()));
+    bounds = mergeAabb(bounds, p->getBounds());
 }

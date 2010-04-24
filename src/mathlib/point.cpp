@@ -67,7 +67,7 @@ point3& point3::operator-=(const vec3& u) {
 }
 
 const vec3 point3::operator-(const point3& p) const {
-	return vec3(x(), y(), z()) - vec3(p.x(), p.y(), p.z());
+    return vec3(x() - p.x(), y() - p.y(), z() - p.z());
 }
 
 const bool point3::operator==(const point3& p) const {

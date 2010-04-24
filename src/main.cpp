@@ -28,6 +28,7 @@ using namespace std;
 #include "tracer/tracer.hpp"
 #include "samplers/samplers.hpp"
 #include "scene/parser.hpp"
+#include "acceleration/bvh.hpp"
 
 SDL_Surface* screen;
 
@@ -66,6 +67,15 @@ int main(int argc, char* args[]){
 
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
+
+    /*
+    bvh b;
+    b.build(s);
+    bvhNode* root = b.primitiveRoot;
+    c->getRay(308, 137, r0);
+    cerr << b.intersectB(r0) << endl;
+    return 0;
+    */
 
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){

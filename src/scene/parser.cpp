@@ -8,6 +8,9 @@
 
 #include "camera/camera.hpp"
 
+#include "acceleration/defaultaccelerator.hpp"
+#include "acceleration/bvh.hpp"
+
 #include "color/color.hpp"
 #include "materials/material.hpp"
 #include "materials/brdf.hpp"
@@ -48,6 +51,12 @@ void sceneParser::scn(scene& s){
 	match(ACCELTYPE);
 	match(RPAREN);
 	match(LBRACE);
+
+    if(accel == "bvh"){
+        s.setAccelerator(acceleratorPtr(new bvh));
+    }else{
+        s.setAccelerator(acceleratorPtr(new defaultAccelerator));
+    }
 
 	s.addLight(li());
 	s.setCamera(cam());

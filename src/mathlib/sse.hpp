@@ -19,6 +19,6 @@
 #define muxhps(low,high) _mm_movehl_ps((low),(high))
 
 static const float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};
-static const float PS_NEG_INF[4] = {-POS_INF, -POS_INF, -POS_INF, -POS_INF};
+static const float PS_NEG_INF[4] = {NEG_INF, NEG_INF, NEG_INF, NEG_INF};
 
 #endif

@@ -58,7 +58,7 @@ static const regex LAMBERT("lambert");
 static const regex SPECULAR("specular");
 static const regex PHONG("phong");
 static const regex MICROFACET("microfacet");
-static const regex ACCELTYPE("default|grid|kdtree");
+static const regex ACCELTYPE("default|grid|kdtree|bvh|bih");
 static const regex PRIMITIVE("triangle|plane|sphere");
 static const regex TRIANGLE("triangle");
 static const regex LIGHTTYPE("point|spot|area");

@@ -18,7 +18,7 @@ class aabb {
 	public:
         aabb() {}
 
-        aabb(const vec3& mx, const vec3& mi) : _min(mi), _max(mx), _mid((_min+_max)/2.f) {}
+        aabb(const vec3& mi, const vec3& mx) : _min(mi), _max(mx), _mid((_min+_max)/2.f) {}
 
 		aabb(	const float& t,
 				const float& b,
@@ -66,41 +66,61 @@ class aabb {
 
         inline void setTop(const float& f){
              _max.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
         inline void setRight(const float& f){
              _max.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
         inline void setBack(const float& f){
              _max.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
         inline void setBottom(const float& f){
              _min.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
         inline void setLeft(const float& f){
              _min.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
         inline void setFront(const float& f){
              _min.y() = f;
-             _mid = (_min+_max)/2.f;
+             updateMid();
         }
 
-        const bool intersect(ray& r) const;
+        inline void setMax(const unsigned short& i, const float& f){
+            _max(i) = f;
+            updateMid();
+        }
+
+        inline void setMin(const unsigned short& i, const float& f){
+            _min(i) = f;
+            updateMid();
+        }
+
+        const bool intersect(const ray& r, float& tmin) const;
 
     private:
+        inline void updateMid() {
+             _mid = (_min+_max)/2.f;
+        }
         vec3 _min;
         vec3 _max;
         vec3 _mid;
 };
 
 ostream& operator<<(ostream& out, const aabb& b);
+inline const aabb mergeAabb(const aabb& a, const aabb& b){
+    return aabb(vec3(
+                minps(a.min().getSIMD(), b.min().getSIMD())),
+            vec3(
+                maxps(a.max().getSIMD(), b.max().getSIMD())));
+}
+
 #endif

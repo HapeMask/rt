@@ -48,16 +48,16 @@ class mat4 {
 			}
 		}
 
-		const float& operator()(const int& i, const int& j) const {
+		const float& operator()(const unsigned short& i, const unsigned short& j) const {
 #ifdef DEBUG
-			assert(i >= 0 && i < 4 && j >= 0 && j < 4);
+			assert(i < 4 && j < 4);
 #endif
 			return values[i][j];
 		}
 
-		float& operator()(const int& i, const int& j){
+		float& operator()(const unsigned short& i, const unsigned short& j){
 #ifdef DEBUG
-			assert(i >= 0 && i < 4 && j >= 0 && j < 4);
+			assert(i < 4 && j < 4);
 #endif
 			return values[i][j];
 		}
@@ -78,16 +78,16 @@ class mat4 {
 
 		const bool operator==(const mat4& m) const;
 
-		const vec4 hslice(const int& i) const {
+		const vec4 hslice(const unsigned short& i) const {
 #ifdef DEBUG
-			assert(i<4 && i >= 0);
+			assert(i<4);
 #endif
 			return vec4(values[i][0], values[i][1], values[i][2], values[i][3]);
 		}
 
-		const vec4 vslice(const int& i) const {
+		const vec4 vslice(const unsigned short& i) const {
 #ifdef DEBUG
-			assert(i<4 && i >= 0);
+			assert(i<4);
 #endif
 			return vec4(values[0][i], values[1][i], values[2][i], values[3][i]);
 		}

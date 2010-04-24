@@ -10,18 +10,13 @@
 #include <cmath>
 
 sphere::sphere(const point3& p, const float& r, shape* parent) :
-	primitive(parent),
+	primitive(parent, aabb(
+                    vec3(p.x()-r, p.y()-r, p.z()-r),
+                    vec3(p.x()+r, p.y()+r, p.z()+r)
+                )
+            ),
 	location(p), radius(r), radius2(r*r)
-{
-	boundingBox = aabb(
-			p.y() + r, // Top
-			p.y() - r, // Bottom
-			p.x() - r, // Left
-			p.x() + r, // Right
-			p.z() - r, // Front
-			p.z() + r // Back
-			);
-}
+{}
 
 const bool sphere::intersect(ray& r) const {
 	vec3 dir = r.origin - location;
