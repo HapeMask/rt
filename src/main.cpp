@@ -15,6 +15,7 @@ using namespace std;
 #include "camera/camera.hpp"
 #include "scene/scene.hpp"
 
+#include "geometry/primitive.hpp"
 #include "geometry/triangle.hpp"
 #include "geometry/sphere.hpp"
 #include "geometry/plane.hpp"

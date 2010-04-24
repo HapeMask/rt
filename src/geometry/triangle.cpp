@@ -28,17 +28,23 @@ triangle::triangle(const point3& a, const point3& b, const point3& c, shape* par
 
 	// Find the biggest normal axis, then remove that
 	// coordinate from A, B, C to get a,b,cPrime.
-	const float maxD = max(max(abs(normal_(0)), abs(normal_(1))), abs(normal_(2)));
-	if(maxD == normal_(0)){
-		axis1 = 1;
-		axis2 = 2;
-	}else if(maxD == normal_(1)){
-		axis1 = 0;
-		axis2 = 2;
-	}else{
-		axis1 = 0;
-		axis2 = 1;
-	}
+    if(abs(normal_.x()) > abs(normal_.y())){
+        if(abs(normal_.x()) > abs(normal_.z())){
+            axis1 = 1;
+            axis2 = 2;
+        }else{
+            axis1 = 0;
+            axis2 = 1;
+        }
+    }else{
+        if(abs(normal_.y()) > abs(normal_.z())){
+            axis1 = 0;
+            axis2 = 2;
+        }else{
+            axis1 = 0;
+            axis2 = 1;
+        }
+    }
 
 	aPrime = vec2(a(axis1), a(axis2));
 	bPrime = vec2(b(axis1), b(axis2)) - aPrime;

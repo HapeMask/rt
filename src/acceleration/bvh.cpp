@@ -70,8 +70,9 @@ void bvh::build(const scene& s){
     sortedEmitters[Y] = yEmitters;
     sortedEmitters[Z] = zEmitters;
 
-    _build(s.getBounds());
+    _build(s.getBounds(), xPrims.size());
 }
 
-bvhNode* bvh::_build(const aabb& box, int depth){
+bvhNode* bvh::_build(const aabb& box, unsigned int n, int depth){
+    const int axis = depth % 3;
 }

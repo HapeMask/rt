@@ -42,7 +42,7 @@ class bvh : public accelerator {
 		virtual void build(const scene& s);
 
     private:
-        bvhNode* _build(const aabb& box, int depth = 0);
+        bvhNode* _build(const aabb& box, unsigned int n, int depth = 0);
 
         bvhNode* root;
         vector<vector<primitivePtr> > sortedPrims;
