@@ -32,12 +32,7 @@ using namespace std;
 
 SDL_Surface* screen;
 
-const int width = 512;
-const int height = 384;
-
 int main(int argc, char* args[]){
-	sdlFramebuffer f(width, height, 32);
-
 	scene s;
 
     string filename;
@@ -55,6 +50,9 @@ int main(int argc, char* args[]){
 	s.build();
 
 	const cameraPtr& c = s.getCamera();
+    const int width = c->width();
+    const int height = c->height();
+	sdlFramebuffer f(width, height, 32);
 
 	ray r0, r1, r2, r3, r4;
 	rgbColor white(1,1,1);
@@ -67,6 +65,12 @@ int main(int argc, char* args[]){
 
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
+
+    /*
+    c->getRay(256, 256, r0);
+    cerr << rt.L(r0) << endl;
+    return 0;
+    */
 
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){

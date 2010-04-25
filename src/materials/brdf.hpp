@@ -15,6 +15,7 @@ class brdf {
 		{}
 
 		virtual const rgbColor f(const vec3& wi, const vec3& wo) const = 0;
+        virtual const vec3 sampleF(const float& u1, const float& u2, const vec3& wo, const vec3& normal) const = 0;
 		virtual ~brdf() {}
 
 		const bool& isSpecular(){
@@ -30,6 +31,7 @@ class lambertianBrdf : public brdf {
 		lambertianBrdf(const rgbColor& r);
 		virtual ~lambertianBrdf() {}
 
+        virtual const vec3 sampleF(const float& u1, const float& u2, const vec3& wo, const vec3& normal) const;
 		virtual const rgbColor f(const vec3& wi, const vec3& wo) const;
 
 	private:
@@ -38,14 +40,19 @@ class lambertianBrdf : public brdf {
 
 class specularBrdf : public brdf {
 	public:
-		specularBrdf() : brdf(true)
+		specularBrdf(const bool refl, const float& i) : brdf(true), reflective(refl), ior(i)
 		{}
 
+        virtual const vec3 sampleF(const float& u1, const float& u2, const vec3& wo, const vec3& normal) const;
 		virtual const rgbColor f(const vec3& wi, const vec3& wo) const {
 			return rgbColor(0,0,0);
 		}
 
 		virtual ~specularBrdf() {}
+
+    private:
+        bool reflective;
+        float ior;
 };
 
 typedef shared_ptr<brdf> brdfPtr;

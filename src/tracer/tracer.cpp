@@ -18,10 +18,22 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		return rgbColor(0,0,0);
 	}
 
+    const vec3& normal = isect.p->getNormal(r.origin);
 	if(isect.s->getMaterial()->isEmissive()){
 		return isect.s->getMaterial()->sampleL();
 	}else if(isect.s->getMaterial()->isSpecular()){
-		ray r2 = ray(r.origin, reflect(r.direction, isect.p->getNormal(r.origin)));
+        const vec3 refractionNormal =
+            (dot(r.direction, normal) < 0) ? normal : -normal;
+
+        ray r2(r.origin, isect.s->getMaterial()->sampleF(0, 0, -r.direction, refractionNormal));
+
+        /*
+        r2.origin += vec3(EPSILON * r2.direction);
+        cerr << r2.origin << endl << r2.direction << endl;
+        cerr << "---------" << endl;
+        cerr << r.origin << endl << r.direction << endl;
+        cerr << endl;
+        */
 		return _L(r2, depth+1);
 	}
 
@@ -34,12 +46,12 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		ray shadowRay(point3(r.origin), normalize(lightPosition - r.origin));
 		shadowRay.tMax = lightDist;
 		const intersection isect2 = parent->intersect(shadowRay);
+
 		if(isect2.hit){
 			return rgbColor(0,0,0);
 		}
 
-		c *= clamp(dot(isect.p->getNormal(r.origin),
-				normalize(lightPosition - r.origin))) *
+		c *= clamp(dot(normal, normalize(lightPosition - r.origin))) *
 		(1.f / (lightDist*lightDist));
 		c *= parent->getLight(0)->getPower();
         c*= parent->getLight(0)->getColor();

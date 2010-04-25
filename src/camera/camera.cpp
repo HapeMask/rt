@@ -10,7 +10,7 @@
 #include <cmath>
 
 camera::camera(const float& w, const float& h, const float& nr, const float& fr,
-				const float& fov, const point3& pos, const point3& look, const vec3& up){
+				const float& fov, const point3& pos, const point3& look, const vec3& up) : _width(w), _height(h) {
 	float screen[4];
 	if(w > h){
 		const float ratio = (float)w / (float)h;

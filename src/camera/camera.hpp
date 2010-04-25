@@ -16,8 +16,16 @@ class camera {
 
 		void getRay(const float& x, const float& y, ray& r);
 
+        inline const float& width() const{
+            return _width;
+        }
+
+        inline const float& height() const{
+            return _height;
+        }
+
 	private:
-		float screen[4];
+        float _width, _height;
 		float near, far;
 		transform3d cameraToScreen, screenToRaster, rasterToCamera,
 					worldToCamera;

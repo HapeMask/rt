@@ -19,6 +19,10 @@ public:
 	const rgbColor sample(const point3& p, const vec3& wi, const vec3& wo) const;
 	const rgbColor sampleL() const;
 
+    inline const vec3 sampleF(const float& u1, const float& u2, const vec3& wo, const vec3& normal) const {
+        return b->sampleF(u1, u2, wo, normal);
+    }
+
 	const bool& isEmissive(){
 		return emissive;
 	}

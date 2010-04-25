@@ -66,6 +66,7 @@ static const regex SPHERE("sphere");
 static const regex PLANE("plane");
 static const regex SHAPE("shape");
 static const regex LIGHT("light");
+static const regex SPECTYPE("conductor|dielectric");
 static const regex MATERIAL("material");
 static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
 static const regex SEMICOLON(";");

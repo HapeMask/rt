@@ -44,7 +44,18 @@ const bool sphere::intersect(ray& r) const {
 		}
 	}
 
-	r.origin += (min(t0, t1) * r.direction);
+    float t = 0.f;
+    if(t0 >= r.tMin && t0 <= r.tMax && t0 > 0){
+        if(t1 >= r.tMin && t1 <= r.tMax && t1 > 0){
+            t = min(t0, t1);
+        }else{
+            t = t0;
+        }
+    }else{
+        t = t1;
+    }
+
+	r.origin += t * r.direction;
 	return true;
 }
 

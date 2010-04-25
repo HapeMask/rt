@@ -47,7 +47,7 @@ void sceneParser::scn(scene& s){
 	match(SCENE);
 	match(LPAREN);
 
-	string accel = currentToken;
+	string accel(currentToken);
 	match(ACCELTYPE);
 	match(RPAREN);
 	match(LBRACE);
@@ -131,8 +131,20 @@ brdfPtr sceneParser::bd(){
 	}else if(is(SPECULAR)){
 		match(BRDF);
 		match(LPAREN);
+        string type(currentToken);
+        match(SPECTYPE);
+        float ior = 1.00029f;
+        if(type == "dielectric"){
+            match(COMMA);
+            ior = curFloat();
+            match(FLOAT);
+        }
 		match(RPAREN);
-		return brdfPtr(new specularBrdf());
+        if(type == "conductor"){
+            return brdfPtr(new specularBrdf(true, ior));
+        }else{
+            return brdfPtr(new specularBrdf(false, ior));
+        }
 	}else if(is(PHONG)){
 		match(BRDF);
 		match(LPAREN);
@@ -333,6 +345,8 @@ void sceneParser::match(const regex& token){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, PRIMITIVE, match_continuous)){
 			currentToken = m.str();
+        }else if(regex_search(textC, m, SPECTYPE, match_continuous)){
+            currentToken = m.str();
 		}else if(regex_search(textC, m, BRDF, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, MATERIAL, match_continuous)){
