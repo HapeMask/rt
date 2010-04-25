@@ -42,7 +42,7 @@ const bool bvh::intersectEB(const ray& r) const{
     return _intersectB(emitterRoot, r, emitters);
 }
 
-const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth) const{
+const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const{
     float tLeft=0, tRight=0;
 
     if(!node->box.intersect(r, tLeft)){
@@ -50,42 +50,31 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
     }else if(node->axis == AXIS_LEAF){
         const unsigned int numPrims = node->prims[1] - node->prims[0];
 
-        // Making these a constant size lets GCC optimize it
-        // better than using rays[numPrims].
-        ray rays[BVH_MAX_PRIMS_PER_LEAF];
-        bool didHit[BVH_MAX_PRIMS_PER_LEAF];
-
-        for(unsigned int i=0; i<numPrims; i++){
-            rays[i] = ray(r);
-            didHit[i] = false;
-        }
-
-        // Find the intersection points for each primitive in the leaf.
-        for(unsigned int i=0; i<numPrims; i++){
-            didHit[i] = prims[node->prims[0]+i]->intersect(rays[i]);
-        }
-
         // Check each hit and find the closest.
-        int closestIndex = -1;
+        primitivePtr closestPrim;
+        ray closestRay;
+        bool didHit = false;
         float minDist = POS_INF;
         for(unsigned int i=0; i<numPrims; i++){
-            if(didHit[i]){
-                const float dist = (rays[i].origin - r.origin).length2();
+            ray rCopy(r);
+            if(prims[node->prims[0]+i]->intersect(rCopy)){
+                const float dist = (rCopy.origin - r.origin).length2();
+                didHit = true;
 
                 if(dist < minDist){
-                    closestIndex = i;
+                    closestPrim = prims[node->prims[0]+i];
                     minDist = dist;
+                    closestRay = rCopy;
                 }
             }
         }
 
         // If we missed all the primitives in the leaf,
         // return no hit, otherwise return the hitpoint.
-        if(closestIndex < 0){
-            return intersection(false);
+        if(didHit){
+            return intersection(closestPrim->getParent(), closestPrim, (closestRay.origin - r.origin).length());
         }else{
-            primitivePtr prim = prims[node->prims[0]+closestIndex];
-            return intersection(prim->getParent(), prim, (rays[closestIndex].origin - r.origin).length());
+            return intersection(false);
         }
     }
 
@@ -98,27 +87,35 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
      */
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft){
-        const intersection isectLeft = _intersect(node->child[LEFT], r, prims, depth+1);
+        const intersection isectLeft = _intersect(node->child[LEFT], r, prims);
 
         if(didIntersectRight){
-            const intersection isectRight = _intersect(node->child[RIGHT], r, prims, depth+1);
+            // Ray intersects both boxes.
+            const intersection isectRight = _intersect(node->child[RIGHT], r, prims);
 
+            // Return the closest actual hit.
             if(isectLeft.t < isectRight.t){
                 return isectLeft;
             }else{
                 return isectRight;
             }
         }else{
+            // Ray only intersects left.
             return isectLeft;
         }
     }else if(didIntersectRight){
-        return _intersect(node->child[RIGHT], r, prims, depth+1);
+        // Ray only intersects right.
+        return _intersect(node->child[RIGHT], r, prims);
     }else{
+        // Ray misses both boxes.
         return intersection(false);
     }
 }
 
-const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth) const{
+/**
+ * Used for shadow rays, returns as soon as it finds a hit.
+ */
+const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const{
     float tLeft=0, tRight=0;
 
     if(!node->box.intersect(r, tLeft)){
@@ -126,21 +123,10 @@ const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<prim
     }else if(node->axis == AXIS_LEAF){
         const unsigned int numPrims = node->prims[1] - node->prims[0];
 
-        bool didHit[BVH_MAX_PRIMS_PER_LEAF];
-
-        for(unsigned int i=0; i<numPrims; i++){
-            didHit[i] = false;
-        }
-
         // Find the intersection points for each primitive in the leaf.
         for(unsigned int i=0; i<numPrims; i++){
             ray rCopy(r);
-            didHit[i] = prims[node->prims[0]+i]->intersect(rCopy);
-        }
-
-        // Check to see if we hit anything.
-        for(unsigned int i=0; i<numPrims; i++){
-            if(didHit[i]){
+            if(prims[node->prims[0]+i]->intersect(rCopy)){
                 return true;
             }
         }
@@ -150,28 +136,23 @@ const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<prim
     const bool didIntersectLeft = node->child[LEFT]->box.intersect(r, tLeft);
     const bool didIntersectRight = node->child[RIGHT]->box.intersect(r, tRight);
 
-    /*
-     * Lots of nested if's below :(
-     * TODO: FIX THIS?
-     */
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft){
-        const bool isectLeft = _intersectB(node->child[LEFT], r, prims, depth+1);
+        const bool isectLeft = _intersectB(node->child[LEFT], r, prims);
 
         if(didIntersectRight){
-            const bool isectRight = _intersectB(node->child[RIGHT], r, prims, depth+1);
+            const bool isectRight = _intersectB(node->child[RIGHT], r, prims);
 
             return (isectLeft || isectRight);
         }else{
             return isectLeft;
         }
     }else if(didIntersectRight){
-        return _intersectB(node->child[RIGHT], r, prims, depth+1);
+        return _intersectB(node->child[RIGHT], r, prims);
     }else{
         return false;
     }
 }
-
 
 void bvh::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();
@@ -196,12 +177,10 @@ void bvh::build(const scene& s){
     emitterRoot = _build(s.getBounds(), 0, emitters.size(), emitters);
 }
 
-bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, int depth){
+bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis){
     if(start == end){
         return NULL;
     }
-
-    const unsigned short axis = depth % 3;
 
     bvhNode* node = new bvhNode;
     node->box = box;
@@ -223,7 +202,11 @@ bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vect
         case AXIS_Z:
             sort(prims.begin()+start, prims.begin()+end, aabbCmpZ);
             break;
+        case AXIS_LEAF:
+            cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
+            return NULL;
     }
+
     // Avoid potential integer overflow that:
     //  mid = (start+end)/2
     // would cause.
@@ -232,24 +215,19 @@ bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vect
     aabb leftBox(prims[start]->getBounds());
     aabb rightBox(prims[mid]->getBounds());
 
-    for(int i=start; i<mid; i++){
+    // TODO: Find a more efficient way of doing this.
+    // See r288-ish for one way that almost worked but
+    // not quite.
+    for(unsigned int i=start; i<mid; i++){
         leftBox = mergeAabb(leftBox, prims[i]->getBounds());
     }
 
-    for(int i=mid; i<end; i++){
+    for(unsigned int i=mid; i<end; i++){
         rightBox = mergeAabb(rightBox, prims[i]->getBounds());
     }
 
-    /*
-    aabb leftBox(box);
-    aabb rightBox(box);
-
-    leftBox.setMax(axis, prims[mid-1]->getBounds().max()(axis));
-    rightBox.setMin(axis, prims[mid]->getBounds().min()(axis));
-    */
-
-    node->child[LEFT] = _build(leftBox, start, mid, prims, depth+1);
-    node->child[RIGHT] = _build(rightBox, mid, end, prims, depth+1);
+    node->child[LEFT] = _build(leftBox, start, mid, prims, nextAxis(axis));
+    node->child[RIGHT] = _build(rightBox, mid, end, prims, nextAxis(axis));
     node->axis = axis;
     return node;
 }

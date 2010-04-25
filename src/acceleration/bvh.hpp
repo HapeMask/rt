@@ -11,10 +11,26 @@ using namespace std;
 
 enum {LEFT=0, RIGHT=1};
 const unsigned short BVH_MAX_PRIMS_PER_LEAF= 4;
+/*
 const unsigned int AXIS_X = 0;
 const unsigned int AXIS_Y = 1;
 const unsigned int AXIS_Z = 2;
 const unsigned int AXIS_LEAF = 3;
+*/
+enum AXIS{AXIS_X=0,AXIS_Y=1,AXIS_Z=2,AXIS_LEAF=3};
+
+inline AXIS nextAxis(AXIS axis){
+    switch(axis){
+        case AXIS_X:
+          return AXIS_Y;
+        case AXIS_Y:
+          return AXIS_Z;
+        case AXIS_Z:
+          return AXIS_X;
+        case AXIS_LEAF:
+          return AXIS_LEAF;
+    }
+}
 
 typedef struct bn {
     aabb box;
@@ -23,7 +39,7 @@ typedef struct bn {
         unsigned int prims[2];
     };
 
-    unsigned short axis;
+    AXIS axis;
 
     bn() {
         child[LEFT] = NULL;
@@ -59,9 +75,9 @@ class bvh : public accelerator {
 		virtual void build(const scene& s);
 
     private:
-        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, int depth = 0);
-        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth = 0) const;
-        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth = 0) const;
+        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
+        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;
+        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;
 
         bvhNode* primitiveRoot;
         bvhNode* emitterRoot;
