@@ -7,12 +7,14 @@ SDL_LDFLAGS= $(shell sdl-config --libs)
 
 WIN_CFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
-CFLAGS= -I../ -O3 -msse -msse2 -msse3 -ffast-math -fno-pic -fno-stack-check
+CFLAGS= -I../ -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
+	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
+	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations -fargument-noalias-global -Wstrict-aliasing=1
 CXXFLAGS=
-LDFLAGS= -lboost_regex
+LDFLAGS= -lboost_regex -fwhole-program
 
 CFLAGS += $(SDL_CFLAGS) $(WIN_CFLAGS)
-LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
+LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS) $(CFLAGS)
 
 SRC=../src
 DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer \

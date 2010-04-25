@@ -1,7 +1,10 @@
 #include "bvh.hpp"
 #include "intersection.hpp"
+
+#include "geometry/triangle.hpp"
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
+
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
 #include "scene/scene.hpp"
@@ -14,7 +17,7 @@ bvh::bvh() : primitiveRoot(NULL), emitterRoot(NULL)
 {}
 
 const intersection bvh::intersect(ray& r) const{
-    intersection isect = _intersect(primitiveRoot, r, primitives);
+    const intersection isect = _intersect(primitiveRoot, r, primitives);
     if(isect.hit){
         r.origin += isect.t * r.direction;
     }
@@ -36,9 +39,10 @@ const intersection bvh::intersectE(ray& r) const{
 }
 
 const bool bvh::intersectEB(const ray& r) const{
+    return _intersectB(emitterRoot, r, emitters);
 }
 
-const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth) const{
+const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth) const{
     float tLeft=0, tRight=0;
 
     if(!node->box.intersect(r, tLeft)){
@@ -46,8 +50,10 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
     }else if(node->axis == AXIS_LEAF){
         const unsigned int numPrims = node->prims[1] - node->prims[0];
 
-        ray rays[numPrims];
-        bool didHit[numPrims];
+        // Making these a constant size lets GCC optimize it
+        // better than using rays[numPrims].
+        ray rays[BVH_MAX_PRIMS_PER_LEAF];
+        bool didHit[BVH_MAX_PRIMS_PER_LEAF];
 
         for(unsigned int i=0; i<numPrims; i++){
             rays[i] = ray(r);
@@ -65,6 +71,7 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
         for(unsigned int i=0; i<numPrims; i++){
             if(didHit[i]){
                 const float dist = (rays[i].origin - r.origin).length2();
+
                 if(dist < minDist){
                     closestIndex = i;
                     minDist = dist;
@@ -77,7 +84,7 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
         if(closestIndex < 0){
             return intersection(false);
         }else{
-            primitive* prim = prims[node->prims[0]+closestIndex];
+            primitivePtr prim = prims[node->prims[0]+closestIndex];
             return intersection(prim->getParent(), prim, (rays[closestIndex].origin - r.origin).length());
         }
     }
@@ -111,7 +118,7 @@ const intersection bvh::_intersect(const bvhNode* node, const ray& r, const vect
     }
 }
 
-const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth) const{
+const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth) const{
     float tLeft=0, tRight=0;
 
     if(!node->box.intersect(r, tLeft)){
@@ -119,7 +126,7 @@ const bool bvh::_intersectB(const bvhNode* node, const ray& r, const vector<prim
     }else if(node->axis == AXIS_LEAF){
         const unsigned int numPrims = node->prims[1] - node->prims[0];
 
-        bool didHit[numPrims];
+        bool didHit[BVH_MAX_PRIMS_PER_LEAF];
 
         for(unsigned int i=0; i<numPrims; i++){
             didHit[i] = false;
@@ -174,14 +181,14 @@ void bvh::build(const scene& s){
     for(size_t i=0; i<shapes.size(); i++){
         const vector<primitivePtr>& p = shapes[i]->getPrimitives();
         for(size_t j=0; j<p.size(); j++){
-            primitives.push_back(p[j].get());
+            primitives.push_back(p[j]);
         }
     }
 
     for(size_t i=0; i<emitterShapes.size(); i++){
         const vector<primitivePtr>& e = emitterShapes[i]->getPrimitives();
         for(size_t j=0; j<e.size(); j++){
-            emitters.push_back(e[j].get());
+            emitters.push_back(e[j]);
         }
     }
 
@@ -189,7 +196,7 @@ void bvh::build(const scene& s){
     emitterRoot = _build(s.getBounds(), 0, emitters.size(), emitters);
 }
 
-bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vector<primitive*>& prims, int depth){
+bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, int depth){
     if(start == end){
         return NULL;
     }
@@ -222,11 +229,24 @@ bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vect
     // would cause.
     const unsigned int mid = start + (end-start)/2;
 
+    aabb leftBox(prims[start]->getBounds());
+    aabb rightBox(prims[mid]->getBounds());
+
+    for(int i=start; i<mid; i++){
+        leftBox = mergeAabb(leftBox, prims[i]->getBounds());
+    }
+
+    for(int i=mid; i<end; i++){
+        rightBox = mergeAabb(rightBox, prims[i]->getBounds());
+    }
+
+    /*
     aabb leftBox(box);
     aabb rightBox(box);
 
-    leftBox.setMax(axis, prims[mid]->getBounds().max()(axis));
+    leftBox.setMax(axis, prims[mid-1]->getBounds().max()(axis));
     rightBox.setMin(axis, prims[mid]->getBounds().min()(axis));
+    */
 
     node->child[LEFT] = _build(leftBox, start, mid, prims, depth+1);
     node->child[RIGHT] = _build(rightBox, mid, end, prims, depth+1);

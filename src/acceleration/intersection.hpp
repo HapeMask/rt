@@ -10,11 +10,11 @@ class intersection {
 		intersection() : hit(false), t(POS_INF) {}
 
 		intersection(const bool& didHit) : hit(didHit), t(POS_INF) {}
-		intersection(const shapePtr& sh, primitive* pr) : s(sh), p(pr), hit(true) {}
-		intersection(const shapePtr& sh, primitive* pr, const float& f) : s(sh), p(pr), hit(true), t(f) {}
+		intersection(const shapePtr& sh, primitivePtr pr) : s(sh), p(pr), hit(true) {}
+		intersection(const shapePtr& sh, primitivePtr pr, const float& f) : s(sh), p(pr), hit(true), t(f) {}
 
 		shapePtr s;
-		primitive* p;
+		primitivePtr p;
 		bool hit;
         float t;
 };

@@ -58,19 +58,19 @@ class bvh : public accelerator {
 
 		virtual void build(const scene& s);
 
+    private:
+        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, int depth = 0);
+        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth = 0) const;
+        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims, const int depth = 0) const;
+
         bvhNode* primitiveRoot;
         bvhNode* emitterRoot;
 
-    private:
-        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitive*>& prims, int depth = 0);
-        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth = 0) const;
-        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitive*>& prims, const int depth = 0) const;
-
-        vector<primitive*> primitives;
-        vector<primitive*> emitters;
+        vector<primitivePtr> primitives;
+        vector<primitivePtr> emitters;
 };
 
-inline bool aabbCmpX(primitive* a, primitive* b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
-inline bool aabbCmpY(primitive* a, primitive* b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
-inline bool aabbCmpZ(primitive* a, primitive* b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
+inline bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
+inline bool aabbCmpY(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
+inline bool aabbCmpZ(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
 #endif
