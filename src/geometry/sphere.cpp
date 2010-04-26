@@ -19,30 +19,24 @@ sphere::sphere(const point3& p, const float& r, shape* parent) :
 {}
 
 const bool sphere::intersect(ray& r) const {
-	vec3 dir = r.origin - location;
+	const vec3 dir(r.origin - location);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);
 	const float C = dot(dir, dir) - (radius*radius);
 	const float s = (B*B - 4*A*C);
+
 	if(s < EPSILON){
 		return false;
 	}
 
-	float q;
-	if(B < EPSILON){
-		q = (-B + sqrt(s)) / 2.f;
-	}else{
-		q = (-B - sqrt(s)) / 2.f;
-	}
-
+    const float q = (B < EPSILON) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
 	const float t0 = q / A;
 	const float t1 = C / q;
 
-	if(t0 <= r.tMin || t0 >= r.tMax){
-		if(t1 <= r.tMin || t1 >= r.tMax){
-			return false;
-		}
-	}
+	if( (t0 <= r.tMin || t0 >= r.tMax) &&
+		(t1 <= r.tMin || t1 >= r.tMax)){
+        return false;
+    }
 
     float t = 0.f;
     if(t0 >= r.tMin && t0 <= r.tMax && t0 > 0){

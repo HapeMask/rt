@@ -40,10 +40,10 @@ class mat4 {
 			}
 		}
 
-		mat4(float* v){
+		mat4(const float v[4][4]){
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
-					values[i][j] = v[4*i+j];
+					values[i][j] = v[i][j];
 				}
 			}
 		}

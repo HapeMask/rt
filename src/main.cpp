@@ -67,14 +67,14 @@ int main(int argc, char* args[]){
 	gettimeofday(&start, NULL);
 
     /*
-    c->getRay(256, 256, r0);
+    r0 = c->getRay(256, 256);
     cerr << rt.L(r0) << endl;
     return 0;
     */
 
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			c->getRay(x, y, r0);
+			r0 = c->getRay(x, y);
 			/*
 			c->getRay(x+0.25, y+0.25, r1);
 			c->getRay(x+0.25, y-0.25, r2);

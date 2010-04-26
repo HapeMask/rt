@@ -32,9 +32,9 @@ class transform3d{
 		const vec3 apply(const vec3& v);
 		const ray apply(const ray& r);
 
-		const point3 reverse(const point3& p);
-		const vec3 reverse(const vec3& v);
-		const ray reverse(const ray& r);
+		const point3 unapply(const point3& p);
+		const vec3 unapply(const vec3& v);
+		const ray unapply(const ray& r);
 
 		const transform3d operator*(const transform3d& t) const;
 		transform3d& operator*=(const transform3d& t);

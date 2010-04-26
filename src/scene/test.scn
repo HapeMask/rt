@@ -5,7 +5,7 @@ scene(default){
 	shape{
 		plane(0,1,0,-3)
 		plane(0,-1,0,-3)
-		material(specular())
+		material(lambert(1,1,1))
 	}
 
 	shape{

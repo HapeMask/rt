@@ -8,13 +8,15 @@
 #include <cmath>
 
 const point3 transform3d::apply(const point3& p){
-	vec4 v = vec4(vec3(p), 1.f);
-	v = mat * v;
+	const vec4 v = mat * vec4(vec3(p), 1.f);
 	return point3(vec3(v.x(), v.y(), v.z()) / v.w());
 }
 
 const vec3 transform3d::apply(const vec3& v){
-	float x = v.x(), y = v.y(), z = v.z();
+	const float& x = v.x();
+    const float& y = v.y();
+    const float& z = v.z();
+
 	return vec3(
 			mat(0,0)*x + mat(0,1)*y + mat(0,2)*z,
 			mat(1,0)*x + mat(1,1)*y + mat(1,2)*z,
@@ -23,20 +25,19 @@ const vec3 transform3d::apply(const vec3& v){
 }
 
 const ray transform3d::apply(const ray& r){
-	ray r2(r);
-	r2.origin = apply(r.origin);
-	r2.direction = apply(r.direction);
-	return r2;
+	return ray(apply(r.origin), apply(r.direction));
 }
 
-const point3 transform3d::reverse(const point3& p){
-	vec4 v = vec4(vec3(p), 1.f);
-	v = inv * v;
+const point3 transform3d::unapply(const point3& p){
+	const vec4 v = inv * vec4(vec3(p), 1.f);
 	return point3(vec3(v.x(), v.y(), v.z()) / v.w());
 }
 
-const vec3 transform3d::reverse(const vec3& v){
-	float x = v.x(), y = v.y(), z = v.z();
+const vec3 transform3d::unapply(const vec3& v){
+	const float& x = v.x();
+    const float& y = v.y();
+    const float& z = v.z();
+
 	return vec3(
 			inv(0,0)*x + inv(0,1)*y + inv(0,2)*z,
 			inv(1,0)*x + inv(1,1)*y + inv(1,2)*z,
@@ -44,11 +45,8 @@ const vec3 transform3d::reverse(const vec3& v){
 		);
 }
 
-const ray transform3d::reverse(const ray& r){
-	ray r2(r);
-	r2.origin = reverse(r.origin);
-	r2.direction = reverse(r.direction);
-	return r2;
+const ray transform3d::unapply(const ray& r){
+    return ray(unapply(r.origin), unapply(r.direction));
 }
 
 const transform3d transform3d::operator*(const transform3d& t) const {
@@ -90,43 +88,28 @@ const transform3d scale(const float& sx, const float& sy, const float& sz){
 }
 
 const transform3d lookAt(const point3& pos, const point3& look, const vec3& up){
-	vec3 dir = normalize(look - pos);
-	vec3 right = cross(dir, normalize(up));
-	vec3 newUp = cross(right, dir);
+	const vec3 dir(normalize(look - pos));
+	const vec3 right(cross(dir, normalize(up)));
+	const vec3 newUp(cross(right, dir));
 
-	mat4 m;
-	m(0,0) = right.x();
-	m(1,0) = right.y();
-	m(2,0) = right.z();
-	m(3,0) = 0.f;
+    const float v[4][4] = {
+        {right.x(), newUp.x(), dir.x(), pos.x()},
+        {right.y(), newUp.y(), dir.y(), pos.y()},
+        {right.z(), newUp.z(), dir.z(), pos.z()},
+        {0.f, 0.f, 0.f, 1.f}
+    };
 
-	m(0,1) = newUp.x();
-	m(1,1) = newUp.y();
-	m(2,1) = newUp.z();
-	m(3,1) = 0.f;
-
-	m(0,2) = dir.x();
-	m(1,2) = dir.y();
-	m(2,2) = dir.z();
-	m(3,2) = 0.f;
-
-	m(0,3) = pos.x();
-	m(1,3) = pos.y();
-	m(2,3) = pos.z();
-	m(3,3) = 1.f;
-
-	return transform3d(m.inverse());
+    return transform3d(mat4(v).inverse());
 }
 
 const transform3d perspective(const float& fov, const float& near, const float& far){
 	const float invTan = 1.f / tan(radians(fov) / 2.f);
-	float v[4][4] = {
+	const float v[4][4] = {
 		{1, 0, 0, 0},
 		{0, 1, 0, 0},
 		{0, 0, far / (far - near), -(far*near)/(far - near)},
 		{0, 0, 1, 0}
 	};
-	mat4 m(v[0]);
 
-	return scale(invTan, invTan, 1.f) * transform3d(m);
+	return scale(invTan, invTan, 1.f) * transform3d(mat4(v));
 }
