@@ -26,11 +26,11 @@ class primitive : public intersectable {
 			parent.reset(p);
 		}
 
-		const aabb& getBounds(){
+		const aabb& getBounds() const{
 			return boundingBox;
 		}
 
-		shapePtr getParent() const {
+		const shapePtr getParent() const {
 			return parent;
 		}
 

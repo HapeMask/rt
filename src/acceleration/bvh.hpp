@@ -29,35 +29,26 @@ inline AXIS nextAxis(AXIS axis){
 typedef struct bn {
     aabb box;
     union{
-        bn* child[2];
+        unsigned int rightChild;
         unsigned int prims[2];
     };
 
+    int index;
+
     AXIS axis;
-
-    bn() {
-        child[LEFT] = NULL;
-        child[RIGHT] = NULL;
-    }
-
-    ~bn() {
-        if(axis != AXIS_LEAF){
-            delete child[LEFT];
-            delete child[RIGHT];
-        }
-    }
 } bvhNode;
 
 class bvh : public accelerator {
     public:
-        bvh();
+        bvh() {}
+
         ~bvh() {
-            if(primitiveRoot != NULL){
-                delete primitiveRoot;
+            if(primitiveNodes != NULL){
+                delete[] primitiveNodes;
             }
 
-            if(emitterRoot != NULL){
-                delete emitterRoot;
+            if(emitterNodes != NULL){
+                delete[] emitterNodes;
             }
         }
 
@@ -67,17 +58,22 @@ class bvh : public accelerator {
 		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
-        int size();
 
     private:
-        int _size(bvhNode* node);
+        //bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
+        void _build(const aabb& box,
+                unsigned int start, unsigned int end,
+                vector<primitivePtr>& prims,
+                bvhNode* nodes,
+                AXIS axis, int& index);
 
-        bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
-        const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;
-        const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;
+        const intersection _intersect(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const;
+        const bool _intersectB(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const;
 
-        bvhNode* primitiveRoot;
-        bvhNode* emitterRoot;
+        bvhNode* primitiveNodes;
+        bvhNode* emitterNodes;
+
+        int numPrimitives, numEmitters;
 
         vector<primitivePtr> primitives;
         vector<primitivePtr> emitters;
