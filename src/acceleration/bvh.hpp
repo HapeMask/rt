@@ -10,7 +10,7 @@
 using namespace std;
 
 enum {LEFT=0, RIGHT=1};
-const unsigned short BVH_MAX_PRIMS_PER_LEAF= 4;
+const unsigned short BVH_MAX_PRIMS_PER_LEAF = 16;
 enum AXIS{AXIS_X=0,AXIS_Y=1,AXIS_Z=2,AXIS_LEAF=3};
 
 inline AXIS nextAxis(AXIS axis){
@@ -32,8 +32,6 @@ typedef struct bn {
         unsigned int rightChild;
         unsigned int prims[2];
     };
-
-    int index;
 
     AXIS axis;
 } bvhNode;

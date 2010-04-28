@@ -5,6 +5,7 @@
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
+#include "utility.hpp"
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
 #include "scene/scene.hpp"
@@ -215,7 +216,6 @@ void bvh::_build(const aabb& box,
     }
 
     bvhNode node;
-    node.index = index;
     node.box = box;
     if((end-start) <= BVH_MAX_PRIMS_PER_LEAF){
         node.prims[0] = start;
@@ -244,7 +244,11 @@ void bvh::_build(const aabb& box,
     // Avoid potential integer overflow that:
     //  mid = (start+end)/2
     // would cause.
-    const unsigned int mid = start + (end-start)/2;
+    //
+    // Rounding ensures that the leaves are well-filled.
+    // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
+    const unsigned int mid =
+        roundUpToMultiple(start + (end-start)/2, BVH_MAX_PRIMS_PER_LEAF);
 
     aabb leftBox(prims[start]->getBounds());
     aabb rightBox(prims[mid]->getBounds());

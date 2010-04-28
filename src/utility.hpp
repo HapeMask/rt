@@ -41,6 +41,10 @@ inline vec3 reflect(const vec3& v, const vec3& n){
 	return v - (2*dot(v,n)*n);
 }
 
+inline const int roundUpToMultiple(int n, int m){
+    return ceil((float)n/(float)m) * m;
+}
+
 inline void debugPrint(string s){
 #ifdef DEBUG
 	cout << s << endl;

@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <cmath>
 #include <iostream>
 using namespace std;
@@ -32,10 +33,16 @@ using namespace std;
 
 SDL_Surface* screen;
 
+// Default to 8 threads.
+#ifndef RT_OMP_THREADS
+#define RT_OMP_THREADS 8
+#endif
+
 int main(int argc, char* args[]){
 	scene s;
 
     string filename;
+
     if(argc < 2){
         filename = "../src/scene/test.scn";
     }else{
@@ -71,6 +78,10 @@ int main(int argc, char* args[]){
     return 0;
     */
 
+    omp_set_num_threads(RT_OMP_THREADS);
+    cerr << "Rendering on " << RT_OMP_THREADS << " threads." << endl;
+
+#pragma omp parallel for private(r0)
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
 			r0 = c->getRay(x, y);
