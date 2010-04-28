@@ -61,7 +61,6 @@ int main(int argc, char* args[]){
     const int height = c->height();
 	sdlFramebuffer f(width, height, 32);
 
-	ray r0, r1, r2, r3, r4;
 	rgbColor white(1,1,1);
 	rgbColor black(0,0,0);
 	rgbColor blue(0,0,1);
@@ -73,26 +72,13 @@ int main(int argc, char* args[]){
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-    /*
-    cerr << "BVH Size: " << ((bvh*)s.getAccelerator().get())->size() << endl;
-    return 0;
-    */
-
     omp_set_num_threads(RT_OMP_THREADS);
     cerr << "Rendering on " << RT_OMP_THREADS << " threads." << endl;
 
-#pragma omp parallel for private(r0)
+#pragma omp parallel for
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			r0 = c->getRay(x, y);
-			/*
-			c->getRay(x+0.25, y+0.25, r1);
-			c->getRay(x+0.25, y-0.25, r2);
-			c->getRay(x-0.25, y-0.25, r3);
-			c->getRay(x-0.25, y+0.25, r4);
-			*/
-			f.drawPixel(x, y, rt.L(r0));
-			//f.drawPixel(x, y, (rt.L(r0)+rt.L(r1)+rt.L(r2)+rt.L(r3)+rt.L(r4))/5.f);
+			f.drawPixel(x, y, rt.L(c->getRay(x,y)));
 		}
 	}
 	gettimeofday(&end, NULL);

@@ -4,8 +4,9 @@
 #include "samplers/samplers.hpp"
 #include "utility.hpp"
 
-const rgbColor whittedRayTracer::L(ray& r) const{
-	return _L(r);
+const rgbColor whittedRayTracer::L(const ray& r) const{
+    ray r2(r);
+	return _L(r2);
 }
 
 const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
@@ -27,13 +28,6 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
         ray r2(r.origin, isect.s->getMaterial()->sampleF(0, 0, -r.direction, refractionNormal));
 
-        /*
-        r2.origin += vec3(EPSILON * r2.direction);
-        cerr << r2.origin << endl << r2.direction << endl;
-        cerr << "---------" << endl;
-        cerr << r.origin << endl << r.direction << endl;
-        cerr << endl;
-        */
 		return _L(r2, depth+1);
 	}
 

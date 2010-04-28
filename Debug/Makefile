@@ -7,7 +7,7 @@ SDL_LDFLAGS= $(shell sdl-config --libs)
 
 WIN_CFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
-CFLAGS= -O0 -Wall -g -DDEBUG -I../ -DRT_OMP_THREADS=1
+CFLAGS= -O0 -Wall -g -DDEBUG -I../ -DRT_OMP_THREADS=1 -fopenmp
 CXXFLAGS=
 LDFLAGS= -lboost_regex
 
@@ -24,7 +24,7 @@ OBJS=$(foreach DIR,$(DIRS), $(patsubst $(DIR)/%.cpp, ../obj/%.o, $(wildcard $(DI
 all: compile rt
 
 rt: $(OBJS)
-	$(CC) $^ $(LDFLAGS) -o $@
+	$(CC) $^ $(LDFLAGS) $(CFLAGS) -o $@
 
 compile:
 	for DIR in $(DIRS); do \
