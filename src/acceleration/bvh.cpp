@@ -231,3 +231,15 @@ bvhNode* bvh::_build(const aabb& box, unsigned int start, unsigned int end, vect
     node->axis = axis;
     return node;
 }
+
+int bvh::size(){
+    return _size(primitiveRoot);
+}
+
+int bvh::_size(bvhNode* node){
+    if(node->axis == AXIS_LEAF){
+        return 1;
+    }
+
+    return _size(node->child[LEFT]) + _size(node->child[RIGHT]) + 1;
+}

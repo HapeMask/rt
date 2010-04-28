@@ -9,7 +9,8 @@ WIN_CFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
 CFLAGS= -I../ -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
-	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations -fargument-noalias-global -Wstrict-aliasing=1
+	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations \
+	-fno-exceptions -DRT_NO_EXCEPTIONS
 CXXFLAGS=
 LDFLAGS= -lboost_regex -fwhole-program
 

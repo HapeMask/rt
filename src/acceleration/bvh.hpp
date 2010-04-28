@@ -11,12 +11,6 @@ using namespace std;
 
 enum {LEFT=0, RIGHT=1};
 const unsigned short BVH_MAX_PRIMS_PER_LEAF= 4;
-/*
-const unsigned int AXIS_X = 0;
-const unsigned int AXIS_Y = 1;
-const unsigned int AXIS_Z = 2;
-const unsigned int AXIS_LEAF = 3;
-*/
 enum AXIS{AXIS_X=0,AXIS_Y=1,AXIS_Z=2,AXIS_LEAF=3};
 
 inline AXIS nextAxis(AXIS axis){
@@ -73,8 +67,11 @@ class bvh : public accelerator {
 		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
+        int size();
 
     private:
+        int _size(bvhNode* node);
+
         bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
         const intersection _intersect(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;
         const bool _intersectB(const bvhNode* node, const ray& r, const vector<primitivePtr>& prims) const;

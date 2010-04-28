@@ -67,8 +67,7 @@ int main(int argc, char* args[]){
 	gettimeofday(&start, NULL);
 
     /*
-    r0 = c->getRay(256, 256);
-    cerr << rt.L(r0) << endl;
+    cerr << "BVH Size: " << ((bvh*)s.getAccelerator().get())->size() << endl;
     return 0;
     */
 

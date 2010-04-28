@@ -33,6 +33,7 @@ class sceneParser {
 
 		float curFloat();
 		void match(const regex& token);
+		void match(const string& token);
 		bool is(const regex& token);
 
 		void scn(scene& s);
@@ -68,6 +69,7 @@ static const regex SHAPE("shape");
 static const regex LIGHT("light");
 static const regex SPECTYPE("conductor|dielectric");
 static const regex MATERIAL("material");
+static const regex OBJFILE("objfile");
 static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
 static const regex SEMICOLON(";");
 static const regex LANGLE("<");

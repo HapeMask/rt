@@ -35,12 +35,16 @@ void sceneParser::parse(scene& s, istream& in){
 	}
 
 	text = regex_replace(text, WHITESPACE, "");
+#ifndef RT_NO_EXCEPTIONS
 	try{
+#endif
 		scn(s);
+#ifndef RT_NO_EXCEPTIONS
 	}catch(const ParseException& e){
 		cerr << "Syntax error. Expected token: " << e.expectedToken << endl;
 		cerr << "Actual token was: " << currentToken << endl;
 	}
+#endif
 }
 
 void sceneParser::scn(scene& s){
@@ -240,15 +244,29 @@ lightPtr sceneParser::li(){
 
 vector<primitivePtr> sceneParser::primitiveList(){
 	vector<primitivePtr> prims;
-	prims.push_back(prim());
 
-	if(is(PRIMITIVE)){
-		vector<primitivePtr> pr2 = primitiveList();
-		for(size_t i=0; i<pr2.size(); i++){
-			prims.push_back(pr2[i]);
-		}
-	}
-	return prims;
+    // primitiveList : primitive primitiveList
+    if(is(PRIMITIVE)){
+        prims.push_back(prim());
+
+        if(is(PRIMITIVE) || is(OBJFILE)){
+            vector<primitivePtr> pr2 = primitiveList();
+            for(size_t i=0; i<pr2.size(); i++){
+                prims.push_back(pr2[i]);
+            }
+        }
+    // primitiveList : objfile primitiveList
+    }else if(is(OBJFILE)){
+        //parse objfile
+
+        if(is(PRIMITIVE) || is(OBJFILE)){
+            vector<primitivePtr> pr2 = primitiveList();
+            for(size_t i=0; i<pr2.size(); i++){
+                prims.push_back(pr2[i]);
+            }
+        }
+    }
+    return prims;
 }
 
 primitivePtr sceneParser::prim(){
@@ -334,6 +352,10 @@ bool sceneParser::is(const regex& token){
 	return regex_match(currentToken, token);
 }
 
+void sceneParser::match(const string& token){
+    match(regex(token));
+}
+
 void sceneParser::match(const regex& token){
 	if(regex_search(text, token, match_continuous)){
 		text = regex_replace(text, token, "", format_first_only);
@@ -384,5 +406,7 @@ void sceneParser::match(const regex& token){
 		return;
 	}
 
+#ifndef RT_NO_EXCEPTIONS
 	throw ParseException(token.str());
+#endif
 }
