@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "sse.hpp"
 #include "vector.hpp"
 #include "point.hpp"
 
@@ -90,9 +91,7 @@ const vec3 vec3::operator+(const vec3& v) const {
 }
 
 vec3& vec3::operator+=(const vec3& v){
-	values[0] += v(0);
-	values[1] += v(1);
-	values[2] += v(2);
+    simdValues = addps(simdValues, v.simdValues);
 	return (*this);
 }
 
@@ -105,7 +104,9 @@ vec3& vec3::operator-=(const vec3& v){
 }
 
 const vec3 vec3::operator-() const {
-	return vec3(-x(), -y(), -z());
+    // This might be slower...
+    return vec3(subps(_mm_setzero_ps(), simdValues));
+	//return vec3(-x(), -y(), -z());
 }
 
 const vec3 vec3::operator*(const float& x) const {
@@ -124,9 +125,7 @@ const vec3 vec3::operator*(const vec3& v) const {
 }
 
 vec3& vec3::operator*=(const vec3& v){
-	values[0] *= v(0);
-	values[1] *= v(1);
-	values[2] *= v(2);
+    simdValues = mulps(simdValues, v.simdValues);
 	return (*this);
 }
 
@@ -143,9 +142,7 @@ const vec3 vec3::operator/(const vec3& v) const {
 }
 
 vec3& vec3::operator/=(const vec3& v){
-	values[0] /= v(0);
-	values[1] /= v(1);
-	values[2] /= v(2);
+    simdValues = divps(simdValues, v.simdValues);
 	return (*this);
 }
 
@@ -205,10 +202,7 @@ const vec4 vec4::operator*(const vec4& v) const {
 }
 
 vec4& vec4::operator*=(const vec4& v){
-	values[0] *= v(0);
-	values[1] *= v(1);
-	values[2] *= v(2);
-	values[3] *= v(3);
+    simdValues = mulps(simdValues, v.simdValues);
 	return (*this);
 }
 
@@ -225,10 +219,7 @@ const vec4 vec4::operator/(const vec4& v) const {
 }
 
 vec4& vec4::operator/=(const vec4& v){
-	values[0] /= v(0);
-	values[1] /= v(1);
-	values[2] /= v(2);
-	values[3] /= v(3);
+    simdValues = divps(simdValues, v.simdValues);
 	return (*this);
 }
 

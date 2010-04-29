@@ -14,6 +14,7 @@
 #define maxps           _mm_max_ps
 #define mulps           _mm_mul_ps
 #define divps           _mm_div_ps
+#define addps           _mm_add_ps
 #define subps           _mm_sub_ps
 #define rotatelps(ps)   _mm_shuffle_ps((ps),(ps), 0x39)
 #define muxhps(low,high) _mm_movehl_ps((low),(high))

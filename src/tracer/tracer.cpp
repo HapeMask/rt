@@ -26,7 +26,9 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         const vec3 refractionNormal =
             (dot(r.direction, normal) < 0) ? normal : -normal;
 
-        ray r2(r.origin, isect.s->getMaterial()->sampleF(0, 0, -r.direction, refractionNormal));
+        vec3 specDir;
+        isect.s->getMaterial()->sampleF(0, 0, refractionNormal, -r.direction, specDir);
+        ray r2(r.origin, specDir);
 
 		return _L(r2, depth+1);
 	}

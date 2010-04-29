@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <string.h>
 #include "sse.hpp"
 
 using namespace std;
@@ -87,9 +88,12 @@ class vec2 {
 class vec3 {
 	public:
 		vec3(){
+            memset(values, 0, 16);
+            /*
 			values[0] = 0.f;
 			values[1] = 0.f;
 			values[2] = 0.f;
+            */
 		}
 
 		vec3(const float& x, const float& y, const float& z){
@@ -166,10 +170,6 @@ class vec3 {
 			return values[2];
 		}
 
-        inline __m128 getSIMD(){
-            return simdValues;
-        }
-
         inline const __m128 getSIMD() const {
             return simdValues;
         }
@@ -206,10 +206,7 @@ class vec3 {
 class vec4 {
 	public:
 		vec4(){
-			values[0] = 0.f;
-			values[1] = 0.f;
-			values[2] = 0.f;
-			values[3] = 0.f;
+            memset(values, 0, 16);
 		}
 
 		vec4(const float& x, const float& y, const float& z, const float& w){

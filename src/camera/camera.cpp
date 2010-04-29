@@ -10,8 +10,9 @@
 #include <cmath>
 
 camera::camera(const float& w, const float& h, const float& nr, const float& fr,
-				const float& fov, const point3& pos, const point3& look, const vec3& up) : _width(w), _height(h) {
-	float screen[4];
+        const float& fo, const point3& p, const point3& l, const vec3& u) :  _width(w), _height(h),
+near(nr), far(fr), fov(fo), pos(p), look(l), up(u) {
+
 	if(w > h){
 		const float ratio = (float)w / (float)h;
 		screen[0] = -ratio;
@@ -26,14 +27,15 @@ camera::camera(const float& w, const float& h, const float& nr, const float& fr,
 		screen[3] = ratio;
 	}
 
-	near = nr;
-	far = fr;
+    updateMatrices();
+}
 
+void camera::updateMatrices(){
 	worldToCamera = lookAt(pos, look, up);
 	cameraToScreen = perspective(fov, near, far);
 
 	screenToRaster = transform3d(
-			scale(w, h, 1.f) *
+			scale(_width, _height, 1.f) *
 			scale(
 				1.f / (screen[1] - screen[0]),
 				1.f / (screen[2] - screen[3]), 1.f) *
@@ -41,6 +43,12 @@ camera::camera(const float& w, const float& h, const float& nr, const float& fr,
 		);
 
 	rasterToCamera = transform3d(cameraToScreen.inverse() * screenToRaster.inverse());
+}
+
+void camera::move(const vec3& dir){
+    pos += dir;
+    look += dir;
+    updateMatrices();
 }
 
 const ray camera::getRay(const float& x, const float& y){
