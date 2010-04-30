@@ -85,13 +85,14 @@ vec3::vec3(const point3& p){
 	values[2] = p.z();
 }
 
-
 const vec3 vec3::operator+(const vec3& v) const {
 	return vec3(*this) += v;
 }
 
 vec3& vec3::operator+=(const vec3& v){
-    simdValues = addps(simdValues, v.simdValues);
+	values[0] += v(0);
+	values[1] += v(1);
+	values[2] += v(2);
 	return (*this);
 }
 
@@ -104,9 +105,7 @@ vec3& vec3::operator-=(const vec3& v){
 }
 
 const vec3 vec3::operator-() const {
-    // This might be slower...
-    return vec3(subps(_mm_setzero_ps(), simdValues));
-	//return vec3(-x(), -y(), -z());
+	return vec3(-x(), -y(), -z());
 }
 
 const vec3 vec3::operator*(const float& x) const {
@@ -125,7 +124,9 @@ const vec3 vec3::operator*(const vec3& v) const {
 }
 
 vec3& vec3::operator*=(const vec3& v){
-    simdValues = mulps(simdValues, v.simdValues);
+	values[0] *= v(0);
+	values[1] *= v(1);
+	values[2] *= v(2);
 	return (*this);
 }
 
@@ -142,7 +143,9 @@ const vec3 vec3::operator/(const vec3& v) const {
 }
 
 vec3& vec3::operator/=(const vec3& v){
-    simdValues = divps(simdValues, v.simdValues);
+	values[0] /= v(0);
+	values[1] /= v(1);
+	values[2] /= v(2);
 	return (*this);
 }
 
@@ -202,7 +205,6 @@ const vec4 vec4::operator*(const vec4& v) const {
 }
 
 vec4& vec4::operator*=(const vec4& v){
-    simdValues = mulps(simdValues, v.simdValues);
 	return (*this);
 }
 
@@ -219,7 +221,10 @@ const vec4 vec4::operator/(const vec4& v) const {
 }
 
 vec4& vec4::operator/=(const vec4& v){
-    simdValues = divps(simdValues, v.simdValues);
+	values[0] /= v(0);
+	values[1] /= v(1);
+	values[2] /= v(2);
+	values[3] /= v(3);
 	return (*this);
 }
 

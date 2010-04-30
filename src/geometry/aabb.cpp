@@ -18,8 +18,11 @@ ostream& operator<<(ostream& out, const aabb& b){
  * http://www.flipcode.com/archives/SSE_RayBox_Intersection_Test.shtml
  */
 const bool aabb::intersect(const ray& r, float& tmin) const {
-    const __m128 pos_inf = loadps(PS_POS_INF);
-    const __m128 neg_inf = loadps(PS_NEG_INF);
+    //const __m128 pos_inf = loadps(PS_POS_INF);
+    //const __m128 neg_inf = loadps(PS_NEG_INF);
+	__m128 pos_inf, neg_inf;
+	memcpy(&pos_inf, PS_POS_INF, 16);
+	memcpy(&neg_inf, PS_NEG_INF, 16);
 
     const __m128 boxMin = _min.getSIMD();
     const __m128 boxMax = _max.getSIMD();

@@ -43,11 +43,16 @@ int main(int argc, char* args[]){
 
     string filename;
 
+	int numThreads = RT_OMP_THREADS;
     if(argc < 2){
         filename = "../src/scene/test.scn";
     }else{
         filename = string(args[1]);
     }
+
+	if(argc == 3){
+		numThreads = atoi(args[2]);
+	}
 
 	ifstream in(filename.c_str());
     if(!in.is_open()){
@@ -78,8 +83,8 @@ int main(int argc, char* args[]){
 	gettimeofday(&start, NULL);
     */
 
-    omp_set_num_threads(RT_OMP_THREADS);
-    cerr << "Rendering on " << RT_OMP_THREADS << " threads." << endl;
+    omp_set_num_threads(numThreads);
+    cerr << "Rendering on " << numThreads << " threads." << endl;
 
 	//gettimeofday(&end, NULL);
 

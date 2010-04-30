@@ -87,13 +87,14 @@ class vec2 {
 
 class vec3 {
 	public:
+		inline const __m128 getSIMD() const{
+			__m128 ret;
+			memcpy(&ret, values, 16);
+			return ret;
+		}
+
 		vec3(){
             memset(values, 0, 16);
-            /*
-			values[0] = 0.f;
-			values[1] = 0.f;
-			values[2] = 0.f;
-            */
 		}
 
 		vec3(const float& x, const float& y, const float& z){
@@ -127,7 +128,7 @@ class vec3 {
 		}
 
         vec3(const __m128 v){
-            simdValues = v;
+			memcpy(values, &v, 16);
         }
 
 		vec3(const point3& p);
@@ -170,10 +171,6 @@ class vec3 {
 			return values[2];
 		}
 
-        inline const __m128 getSIMD() const {
-            return simdValues;
-        }
-
 		const vec3 operator+(const vec3& v) const;
 		vec3& operator+=(const vec3& v);
 		const vec3 operator-(const vec3& v) const;
@@ -197,10 +194,7 @@ class vec3 {
 		const float length2() const;
 
 	private:
-        union{
-            float values[4] ALIGN_16;
-            __m128 simdValues;
-        };
+		float values[3] ALIGN_16;
 };
 
 class vec4 {
@@ -306,11 +300,24 @@ class vec4 {
 		const float length2() const;
 
 	private:
-        union{
-            float values[4] ALIGN_16;
-            __m128 simdValues;
-        };
+		float values[4] ALIGN_16;
 };
+
+inline const vec3 max(const vec3& a, const vec3& b){
+	return vec3(
+			max(a(0),b(0)),
+			max(a(1),b(1)),
+			max(a(2),b(2))
+		);
+}
+
+inline const vec3 min(const vec3& a, const vec3& b){
+	return vec3(
+			min(a(0),b(0)),
+			min(a(1),b(1)),
+			min(a(2),b(2))
+		);
+}
 
 float dot(const vec4& u, const vec4& v);
 float dot(const vec3& u, const vec3& v);

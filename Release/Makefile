@@ -15,24 +15,23 @@ LDFLAGS= -lboost_regex -fwhole-program
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
 LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
 
-SRC = $(shell find ../src/ -name '*.cpp')
+SRC = $(shell find $(SRCDIR) -name '*.cpp')
 OBJS=$(SRC:.cpp=.o)
 
 all: rt
 
 deps: $(SRC)
+	-rm deps;
 	for f in $(SRC); do\
-		cpp -MM -I../src/ $$f >> deps;\
+		cpp -MM $(CXXFLAGS) $$f >> deps;\
 	done
 
 rt: $(OBJS)
 	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
 clean:
-	for DIR in $(DIRS); do \
-		$(MAKE) -C $${DIR} clean; \
-		done
-	-rm ../obj/*.o
+	-rm $(shell find $(SRCDIR) -name '*.o')
+	-rm deps
 	-rm rt
 
 run: rt
