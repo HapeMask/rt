@@ -78,24 +78,18 @@ int main(int argc, char* args[]){
 	whittedRayTracer rt(&s);
 	srand(time(NULL));
 
-    /*
-	struct timeval start, end;
-	gettimeofday(&start, NULL);
-    */
-
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
 
-	//gettimeofday(&end, NULL);
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
+    draw(height, width, c, f, rt);
+	gettimeofday(&end, NULL);
 
-
-    /*
 	float sec = end.tv_sec - start.tv_sec;
 	sec += (end.tv_usec - start.tv_usec) / 1e6;
 	cerr << sec << "s" << endl;
-    */
 
-    draw(height, width, c, f, rt);
     SDL_EnableKeyRepeat(3,3);
 
 	SDL_Event e;

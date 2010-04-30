@@ -132,12 +132,8 @@ class point3 {
 			return coords[2];
 		}
 
-        inline __m128 getSIMD(){
-            return simdCoords;
-        }
-
         inline const __m128 getSIMD() const {
-            return simdCoords;
+            return loadps(coords);
         }
 
 		const point3 operator+(const vec3& u) const;
@@ -150,10 +146,7 @@ class point3 {
 		const bool operator==(const point3& p) const;
 
 	private:
-        union{
-            float coords[4] ALIGN_16;
-            __m128 simdCoords;
-        };
+        float coords[3] ALIGN_16;
 };
 
 ostream& operator<<(ostream& out, const point3& p);

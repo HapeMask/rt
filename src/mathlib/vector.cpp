@@ -72,7 +72,7 @@ const bool vec2::operator==(const vec2& v) const {
 }
 
 const float vec2::length() const {
-	return sqrt(length2());
+	return sqrtf(length2());
 }
 
 const float vec2::length2() const {
@@ -157,7 +157,7 @@ const bool vec3::operator==(const vec3& v) const {
 }
 
 const float vec3::length() const {
-	return sqrt(length2());
+	return sqrtf(length2());
 }
 
 const float vec3::length2() const {
@@ -237,7 +237,7 @@ const bool vec4::operator==(const vec4& v) const {
 }
 
 const float vec4::length() const {
-	return sqrt(length2());
+	return sqrtf(length2());
 }
 
 const float vec4::length2() const {

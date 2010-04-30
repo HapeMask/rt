@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//nothing
 class point3;
 class point2;
 
@@ -87,14 +88,8 @@ class vec2 {
 
 class vec3 {
 	public:
-		inline const __m128 getSIMD() const{
-			__m128 ret;
-			memcpy(&ret, values, 16);
-			return ret;
-		}
-
 		vec3(){
-            memset(values, 0, 16);
+            memset(values, 0, 12);
 		}
 
 		vec3(const float& x, const float& y, const float& z){
@@ -133,42 +128,46 @@ class vec3 {
 
 		vec3(const point3& p);
 
-		const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const unsigned short& index) const{
 #ifdef DEBUG
 			assert(index < 3);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const unsigned short& index){
+		inline float& operator()(const unsigned short& index){
 #ifdef DEBUG
 			assert(index < 3);
 #endif
 			return values[index];
 		}
 
-		const float& x() const {
+		inline const float& x() const {
 			return values[0];
 		}
 
-		const float& y() const {
+		inline const float& y() const {
 			return values[1];
 		}
 
-		const float& z() const {
+		inline const float& z() const {
 			return values[2];
 		}
 
-		float& x() {
+		inline float& x() {
 			return values[0];
 		}
 
-		float& y() {
+		inline float& y() {
 			return values[1];
 		}
 
-		float& z() {
+		inline float& z() {
 			return values[2];
+		}
+
+		inline const __m128 getSIMD() const{
+            return loadps(values);
 		}
 
 		const vec3 operator+(const vec3& v) const;
@@ -231,51 +230,55 @@ class vec4 {
 			values[3] = x;
 		}
 
-		const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const unsigned short& index) const{
 #ifdef DEBUG
 			assert(index < 4);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const unsigned short& index){
+		inline float& operator()(const unsigned short& index){
 #ifdef DEBUG
 			assert(index < 4);
 #endif
 			return values[index];
 		}
 
-		const float& x() const {
+		inline const float& x() const {
 			return values[0];
 		}
 
-		const float& y() const {
+		inline const float& y() const {
 			return values[1];
 		}
 
-		const float& z() const {
+		inline const float& z() const {
 			return values[2];
 		}
 
-		const float& w() const {
+		inline const float& w() const {
 			return values[3];
 		}
 
-		float& x() {
+		inline float& x() {
 			return values[0];
 		}
 
-		float& y() {
+		inline float& y() {
 			return values[1];
 		}
 
-		float& z() {
+		inline float& z() {
 			return values[2];
 		}
 
-		float& w() {
+		inline float& w() {
 			return values[3];
 		}
+
+        inline const __m128 getSIMD() const{
+            return loadps(values);
+        }
 
 		const vec4 operator+(const vec4& v) const;
 		vec4& operator+=(const vec4& v);
