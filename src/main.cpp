@@ -91,7 +91,7 @@ int main(int argc, char* args[]){
     */
 
     draw(height, width, c, f, rt);
-    SDL_EnableKeyRepeat(50,10);
+    SDL_EnableKeyRepeat(3,3);
 
 	SDL_Event e;
 	while(true){

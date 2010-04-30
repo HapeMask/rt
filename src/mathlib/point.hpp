@@ -151,7 +151,7 @@ class point3 {
 
 	private:
         union{
-            float ALIGN_16 coords[4];
+            float coords[4] ALIGN_16;
             __m128 simdCoords;
         };
 };

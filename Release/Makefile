@@ -1,42 +1,32 @@
 .PHONY: all clean run compile link
+SRCDIR=../src
 
-CC=g++
-
-SDL_CFLAGS= $(shell sdl-config --cflags)
+SDL_CXXFLAGS= $(shell sdl-config --cflags)
 SDL_LDFLAGS= $(shell sdl-config --libs)
 
-WIN_CFLAGS = -IC:\MinGW\include\SDL
+WIN_CXXFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
-CFLAGS= -I../ -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
+CXXFLAGS= -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -fopenmp
-CXXFLAGS=
 LDFLAGS= -lboost_regex -fwhole-program
 
-CFLAGS += $(SDL_CFLAGS) $(WIN_CFLAGS)
+CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
 LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
 
-SRC=../src
-DIRS=$(SRC)/acceleration $(SRC)/camera $(SRC)/color $(SRC)/framebuffer \
-$(SRC)/light $(SRC)/geometry $(SRC)/mathlib $(SRC)/scene $(SRC)/tracer \
-$(SRC)/materials $(SRC)/samplers $(SRC)
+SRC = $(shell find ../src/ -name '*.cpp')
+OBJS=$(SRC:.cpp=.o)
 
-OBJS=$(foreach DIR,$(DIRS), $(patsubst $(DIR)/%.cpp, ../obj/%.o, $(wildcard $(DIR)/*.cpp)))
+all: rt
 
-all: compile rt
+deps: $(SRC)
+	for f in $(SRC); do\
+		cpp -MM -I../src/ $$f >> deps;\
+	done
 
 rt: $(OBJS)
-	$(CC) $^ $(LDFLAGS) $(CFLAGS) -o $@
-
-compile:
-	for DIR in $(DIRS); do \
-		export CC='$(CC)'; \
-		export CFLAGS='$(CFLAGS)'; \
-		export CXXFLAGS='$(CXXFLAGS)'; \
-		export LDFLAGS='$(LDFLAGS)'; \
-		$(MAKE) -C $${DIR} all; \
-		done;
+	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
 clean:
 	for DIR in $(DIRS); do \
@@ -47,3 +37,5 @@ clean:
 
 run: rt
 	./rt
+
+include deps

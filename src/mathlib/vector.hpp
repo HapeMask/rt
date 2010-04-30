@@ -198,7 +198,7 @@ class vec3 {
 
 	private:
         union{
-            float ALIGN_16 values[4];
+            float values[4] ALIGN_16;
             __m128 simdValues;
         };
 };
@@ -307,7 +307,7 @@ class vec4 {
 
 	private:
         union{
-            float ALIGN_16 values[4];
+            float values[4] ALIGN_16;
             __m128 simdValues;
         };
 };
