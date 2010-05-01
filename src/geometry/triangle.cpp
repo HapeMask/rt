@@ -49,9 +49,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c, shape* par
 const bool triangle::intersect(ray& r) const {
 	const float D = dot(normal_, r.direction);
 
-	/* Backface culling, perpendicularity test.
-	 * Can be uncommented for a speedup if reflections
-	 * aren't desired.
+	/* Backface culling.
 	if(D >= 0){
 		return false;
 	}

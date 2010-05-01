@@ -19,6 +19,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		return rgbColor(0,0,0);
 	}
 
+    // Handle emissive and specular materials.
     const vec3& normal = isect.p->getNormal(r.origin);
 	if(isect.s->getMaterial()->isEmissive()){
 		return isect.s->getMaterial()->sampleL();
@@ -33,28 +34,25 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		return _L(r2, depth+1);
 	}
 
-	rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
-	if(parent->numLights() > 0){
-		const point3 lightPosition = parent->getLight(0)->getPosition();
+    // Diffuse stuff.
+    rgbColor ret(0,0,0);
+	const rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
+	for(unsigned int i=0; i<parent->numLights(); ++i){
+        const lightPtr li = parent->getLight(i);
+		const point3 lightPosition = li->getPosition();
 		const float lightDist = (lightPosition - r.origin).length();
 
 		// Test for shadowing early.
 		ray shadowRay(point3(r.origin), normalize(lightPosition - r.origin));
 		shadowRay.tMax = lightDist;
 		const intersection isect2 = parent->intersect(shadowRay);
-
 		if(isect2.hit){
-			return rgbColor(0,0,0);
+            continue;
 		}
 
-		c *= clamp(dot(normal, normalize(lightPosition - r.origin))) *
-		(1.f / (lightDist*lightDist));
-		c *= parent->getLight(0)->getPower();
-        c*= parent->getLight(0)->getColor();
-
-		return clamp(c);
-	}else{
-		cerr << "NO LIGHTS" << endl;
-		return rgbColor(0,0,0);
+		ret += (c * dot(normal, normalize(lightPosition - r.origin)) *
+		(1.f / (lightDist*lightDist))) * li->getPower() * li->getColor();
 	}
+
+    return clamp(ret);
 }

@@ -62,8 +62,10 @@ void sceneParser::scn(scene& s){
         s.setAccelerator(acceleratorPtr(new defaultAccelerator));
     }
 
-	s.addLight(li());
 	s.setCamera(cam());
+    while(is(LIGHT)){
+        s.addLight(li());
+    }
 
 	vector<shapePtr> shapes;
 	shapes = shapeList();

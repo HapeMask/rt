@@ -29,6 +29,7 @@ deps:
 include deps
 
 rt: $(OBJS)
+	@echo "OBJS: $(OBJS)"
 	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
 clean:

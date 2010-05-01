@@ -1,6 +1,9 @@
-scene(bvh){
-	light<point>(0,1.5,0, 1,1,1, 15)
+scene(default){
 	camera<512,512>(45, 0,0,-10, 0,0,0, 0,1,0)
+	light<point>(-2,1.5,0, 0,1,0, 3.25)
+	light<point>(1,1.5,0, 0,0,1, 3.25)
+	light<point>(0,1.5,-1, 1,1,1, 3.25)
+	light<point>(0,1.5,1, 1,1,1, 3.25)
 
 	shape{
         triangle(-3,-3,-3, -3,-3,3, -3,3,-3)
