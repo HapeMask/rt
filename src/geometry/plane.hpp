@@ -13,6 +13,9 @@ class plane : public primitive {
 
 		virtual const bool intersect(ray& r) const;
 		virtual const vec3 getNormal(const point3& p) const;
+        virtual const point3 uniformSampleSurface() const{
+            return point3(0,0,0);
+        }
 
 	private:
 		vec3 normal;

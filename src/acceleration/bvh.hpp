@@ -56,6 +56,9 @@ class bvh : public accelerator {
 		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
+        virtual primitivePtr getEmitter(const unsigned int i){
+            return emitters[i];
+        }
 
     private:
         //bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);

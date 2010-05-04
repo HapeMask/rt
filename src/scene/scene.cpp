@@ -19,14 +19,14 @@ void scene::addLight(lightPtr l){
 }
 
 void scene::addShape(shapePtr s){
-	shapes.push_back(s);
+    if(!s->getMaterial()->isEmissive()){
+        shapes.push_back(s);
+    }else{
+        emitters.push_back(s);
+    }
+
 	needsBuilding = true;
     bounds = mergeAabb(bounds, s->getBounds());
-}
-
-void scene::addEmitter(shapePtr s){
-	emitters.push_back(s);
-	needsBuilding = true;
 }
 
 void scene::setAccelerator(acceleratorPtr a){

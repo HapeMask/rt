@@ -21,6 +21,7 @@ class primitive : public intersectable {
 
 		virtual const bool intersect(ray& r) const = 0;
 		virtual const vec3 getNormal(const point3& p) const = 0;
+        virtual const point3 uniformSampleSurface() const = 0;
 
 		void setParent(shape* p){
 			parent.reset(p);

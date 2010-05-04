@@ -3,6 +3,7 @@
 #include "mathlib/constants.hpp"
 #include "samplers/samplers.hpp"
 #include "utility.hpp"
+#include "geometry/triangle.hpp"
 
 const rgbColor whittedRayTracer::L(const ray& r) const{
     ray r2(r);
@@ -22,8 +23,9 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     // Handle emissive and specular materials.
     const vec3& normal = isect.p->getNormal(r.origin);
 	if(isect.s->getMaterial()->isEmissive()){
-		return isect.s->getMaterial()->sampleL();
+		return clamp(isect.s->getMaterial()->sampleL());
 	}else if(isect.s->getMaterial()->isSpecular()){
+        // Flip the normal if we're inside a shape.
         const vec3 refractionNormal =
             (dot(r.direction, normal) < 0) ? normal : -normal;
 
@@ -35,7 +37,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	}
 
     // Diffuse stuff.
-    rgbColor ret(0,0,0);
+    rgbColor Li(0,0,0);
 	const rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
 	for(unsigned int i=0; i<parent->numLights(); ++i){
         const lightPtr li = parent->getLight(i);
@@ -50,9 +52,23 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             continue;
 		}
 
-		ret += (c * dot(normal, normalize(lightPosition - r.origin)) *
+		Li += (c * dot(normal, normalize(lightPosition - r.origin)) *
 		(1.f / (lightDist*lightDist))) * li->getPower() * li->getColor();
 	}
 
-    return clamp(ret);
+    // Area lights.
+    /*
+    int hits = 0;
+    for(unsigned int j=0; j<4; ++j){
+        const point3 randPoint = parent->getAccelerator()->getEmitter(0)->uniformSampleSurface();
+        ray lightRay(point3(r.origin), normalize(randPoint - r.origin));
+        lightRay.tMax = (randPoint - r.origin).length();
+        const intersection isectE = parent->intersectEB(lightRay);
+        if(isectE.hit){
+            Li += isectE.s->getMaterial()->sampleL() * c;
+        }
+    }
+    */
+
+    return clamp(Li);
 }

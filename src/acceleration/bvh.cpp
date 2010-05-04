@@ -174,6 +174,7 @@ void bvh::build(const scene& s){
     for(size_t i=0; i<emitterShapes.size(); ++i){
         const vector<primitivePtr>& e = emitterShapes[i]->getPrimitives();
         for(size_t j=0; j<e.size(); ++j){
+            primitives.push_back(e[j]);
             emitters.push_back(e[j]);
         }
     }

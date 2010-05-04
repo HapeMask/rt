@@ -13,7 +13,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	vector<point3> hitPoints;
 
 	const point3 ro(r.origin);
-	for(unsigned int i=0; i<shapes.size(); i++){
+	for(unsigned int i=0; i<shapes.size(); ++i){
 		if(shapes[i]->intersect(r)){
 			hits.push_back(intersection(shapes[i]->getParent(), shapes[i]));
 			hitPoints.push_back(point3(r.origin));
@@ -31,7 +31,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	float minDist = 10000000.f;
 	point3 closestPoint;
 	intersection closestIntersection;
-	for(unsigned int i=0; i<hitPoints.size(); i++){
+	for(unsigned int i=0; i<hitPoints.size(); ++i){
 		const float dist = (hitPoints[i] - ro).length2();
 		if(dist < minDist){
 			minDist = dist;
@@ -50,7 +50,7 @@ const intersection defaultAccelerator::intersectE(ray& r) const {
 	vector<point3> hitPoints;
 
 	const point3 ro(r.origin);
-	for(unsigned int i=0; i<emitters.size(); i++){
+	for(unsigned int i=0; i<emitters.size(); ++i){
 		if(emitters[i]->intersect(r)){
 			hits.push_back(intersection(emitters[i]->getParent(), emitters[i]));
 			hitPoints.push_back(point3(r.origin));
@@ -68,7 +68,7 @@ const intersection defaultAccelerator::intersectE(ray& r) const {
 	float minDist = 10000000.f;
 	point3 closestPoint;
 	intersection closestIntersection;
-	for(unsigned int i=0; i<hitPoints.size(); i++){
+	for(unsigned int i=0; i<hitPoints.size(); ++i){
 		const float dist = (hitPoints[i] - ro).length2();
 		if(dist < minDist){
 			minDist = dist;
@@ -83,7 +83,7 @@ const intersection defaultAccelerator::intersectE(ray& r) const {
 
 const bool defaultAccelerator::intersectB(const ray& r) const{
 	ray r2(r);
-	for(size_t i=0; i<shapes.size(); i++){
+	for(size_t i=0; i<shapes.size(); ++i){
 		if(shapes[i]->intersect(r2)){
 			return true;
 		}
@@ -94,7 +94,7 @@ const bool defaultAccelerator::intersectB(const ray& r) const{
 
 const bool defaultAccelerator::intersectEB(const ray& r) const{
 	ray r2(r);
-	for(size_t i=0; i<emitters.size(); i++){
+	for(size_t i=0; i<emitters.size(); ++i){
 		if(emitters[i]->intersect(r2)){
 			return true;
 		}
@@ -104,16 +104,16 @@ const bool defaultAccelerator::intersectEB(const ray& r) const{
 }
 
 void defaultAccelerator::build(const scene& s){
-	for(size_t i = 0; i<s.getShapes().size(); i++){
+	for(size_t i = 0; i<s.getShapes().size(); ++i){
 		shapePtr shape = s.getShapes()[i];
-		for(size_t j = 0; j<shape->getPrimitives().size(); j++){
+		for(size_t j = 0; j<shape->getPrimitives().size(); ++j){
 			shapes.push_back(shape->getPrimitives()[j]);
 		}
 	}
 
-	for(size_t i = 0; i<s.getEmitters().size(); i++){
+	for(size_t i = 0; i<s.getEmitters().size(); ++i){
 		shapePtr emitter = s.getEmitters()[i];
-		for(size_t j = 0; j<emitter->getPrimitives().size(); j++){
+		for(size_t j = 0; j<emitter->getPrimitives().size(); ++j){
 			emitters.push_back(emitter->getPrimitives()[j]);
 			shapes.push_back(emitter->getPrimitives()[j]);
 		}

@@ -23,7 +23,6 @@ class scene {
 		scene(accelerator* a);
 
 		void addShape(shapePtr s);
-		void addEmitter(shapePtr p);
 		void addLight(lightPtr p);
 
 		/**

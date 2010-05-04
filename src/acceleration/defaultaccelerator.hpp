@@ -24,6 +24,9 @@ class defaultAccelerator : public accelerator {
 		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
+        virtual primitivePtr getEmitter(const unsigned int i){
+            return emitters[i];
+        }
 
 	private:
 		vector<primitivePtr> shapes;

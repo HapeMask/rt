@@ -43,6 +43,8 @@ class triangle : public primitive {
 			return normal_;
 		}
 
+        virtual const point3 uniformSampleSurface() const;
+
 	private:
 		point3 points[3];
 		vec3 normal_;

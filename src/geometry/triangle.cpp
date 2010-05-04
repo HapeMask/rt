@@ -6,6 +6,8 @@
 #include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
+#include "samplers/samplers.hpp"
+
 #include <cmath>
 
 triangle::triangle(const point3& a, const point3& b, const point3& c, shape* parent) :
@@ -82,4 +84,10 @@ const bool triangle::intersect(ray& r) const {
 
 	r.origin = pI;
 	return true;
+}
+
+const point3 triangle::uniformSampleSurface() const{
+    point3 ret;
+    uniformSampleTriangle(ret, *this);
+    return ret;
 }

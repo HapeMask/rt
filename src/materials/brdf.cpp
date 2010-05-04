@@ -22,7 +22,7 @@ const rgbColor specularBrdf::sampleF(const float& u1, const float& u2, const vec
         return rgbColor(0,0,0);
     }else{
         const float cosTheta1 = dot(normal, -wo);
-        const float nr = (cosTheta1 < 0.f) ? (1.00029f / ior) : (ior / 1.00029f);
+        const float nr = (cosTheta1 <= 0.f) ? (1.00029f / ior) : (ior / 1.00029f);
         const float sinSqTheta = (nr*nr) * (1.f - cosTheta1*cosTheta1);
 
         wi = (nr * -wo) - ( nr * cosTheta1 + sqrt(1.f - sinSqTheta))*normal;

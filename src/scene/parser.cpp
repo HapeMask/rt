@@ -71,11 +71,7 @@ void sceneParser::scn(scene& s){
 	shapes = shapeList();
 	match(RBRACE);
 	for(size_t i=0; i<shapes.size(); i++){
-		if(shapes[i]->getMaterial()->isEmissive()){
-			s.addEmitter(shapes[i]);
-		}else{
-			s.addShape(shapes[i]);
-		}
+        s.addShape(shapes[i]);
 	}
 }
 
@@ -112,10 +108,33 @@ shapePtr sceneParser::shp(){
 }
 
 materialPtr sceneParser::mat(){
+    materialPtr m;
+
 	match(MATERIAL);
 	match(LPAREN);
-	materialPtr m(new material(bd()));
-	match(RPAREN);
+    if(is(EMISSIVE)){
+        match(EMISSIVE);
+        match(LPAREN);
+        float r = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        float g = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        float b = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        float intensity = curFloat();
+        match(FLOAT);
+        match(RPAREN);
+        match(RPAREN);
+
+        return materialPtr(new material(rgbColor(r,g,b), intensity));
+    }else{
+        brdfPtr br = bd();
+        match(RPAREN);
+        return materialPtr(new material(br));
+    }
 
 	return m;
 }
@@ -377,6 +396,8 @@ void sceneParser::match(const regex& token){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, ACCELTYPE, match_continuous)){
 			currentToken = m.str();
+		}else if(regex_search(textC, m, EMISSIVE, match_continuous)){
+			currentToken = m.str();
 		}else if(regex_search(textC, m, CAMERA, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, SCENE, match_continuous)){
@@ -394,8 +415,6 @@ void sceneParser::match(const regex& token){
 		}else if(regex_search(textC, m, LBRACE, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, RBRACE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, SEMICOLON, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, COMMA, match_continuous)){
 			currentToken = m.str();
