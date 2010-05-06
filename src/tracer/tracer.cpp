@@ -25,12 +25,15 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(isect.s->getMaterial()->isEmissive()){
 		return clamp(isect.s->getMaterial()->sampleL());
 	}else if(isect.s->getMaterial()->isSpecular()){
-        // Flip the normal if we're inside a shape.
-        const vec3 refractionNormal =
-            (dot(r.direction, normal) < 0) ? normal : -normal;
-
         vec3 specDir;
-        isect.s->getMaterial()->sampleF(0, 0, refractionNormal, -r.direction, specDir);
+        const rgbColor f =
+            isect.s->getMaterial()->sampleF(0, 0, normal, -r.direction, specDir);
+
+        // TIR
+        if(f.r < 0){
+            return rgbColor(1,0,0);
+        }
+
         ray r2(r.origin, specDir);
 
 		return _L(r2, depth+1);

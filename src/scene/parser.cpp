@@ -281,7 +281,6 @@ vector<primitivePtr> sceneParser::primitiveList(){
         match(FILEPATH);
         match(RPAREN);
         const vector<primitivePtr> tris = objParser::parse(filename);
-        cerr << tris.size() << endl;
         for(unsigned int i=0; i<tris.size(); i++){
             prims.push_back(tris[i]);
         }

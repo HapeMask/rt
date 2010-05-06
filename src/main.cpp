@@ -68,6 +68,7 @@ int main(int argc, char* args[]){
 	const cameraPtr& c = s.getCamera();
     const int width = c->width();
     const int height = c->height();
+
 	sdlFramebuffer f(width, height, 32);
 
 	rgbColor white(1,1,1);

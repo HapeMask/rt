@@ -70,34 +70,28 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
         return leafTest(node, r);
     }
 
-    const bvhNode& leftChild = nodes[node.children[LEFT]];
-    const bvhNode& rightChild = nodes[node.children[RIGHT]];
-    const bool didIntersectLeft = leftChild.box.intersect(r, tLeft);
-    const bool didIntersectRight = rightChild.box.intersect(r, tRight);
+    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeft);
+    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRight);
 
     // Check the child boxes to see if we hit them.
-    if(didIntersectLeft){
-        const intersection isectLeft = _intersect(index+1, r);
-
-        if(didIntersectRight){
-            // Ray intersects both boxes.
+    if(didIntersectLeft && didIntersectRight){
+        const intersection isectLeft = _intersect(node.children[LEFT], r);
+        // Early exit if the intersection is closer than the other box.
+        if(isectLeft.t <= tRight){
+            return isectLeft;
+        }else{
             const intersection isectRight = _intersect(node.children[RIGHT], r);
-
-            // Return the closest actual hit.
-            if(isectLeft.t < isectRight.t){
+            if(isectLeft.t <= isectRight.t){
                 return isectLeft;
             }else{
                 return isectRight;
             }
-        }else{
-            // Ray only intersects left.
-            return isectLeft;
         }
+    }else if(didIntersectLeft){
+        return _intersect(node.children[LEFT], r);
     }else if(didIntersectRight){
-        // Ray only intersects right.
         return _intersect(node.children[RIGHT], r);
     }else{
-        // Ray misses both boxes.
         return intersection(false);
     }
 }
@@ -124,24 +118,18 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
         return false;
     }
 
-    const bvhNode& leftChild = nodes[node.children[LEFT]];
-    const bvhNode& rightChild = nodes[node.children[RIGHT]];
-    const bool didIntersectLeft = leftChild.box.intersect(r, tLeft);
-    const bool didIntersectRight = rightChild.box.intersect(r, tRight);
+    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeft);
+    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRight);
 
     // Check the child boxes to see if we hit them.
-    if(didIntersectLeft){
-        const bool isectLeft = _intersectB(index+1, r);
-
-        if(didIntersectRight){
-            const bool isectRight = _intersectB(node.children[RIGHT], r);
-
-            return (isectLeft || isectRight);
-        }else{
-            return isectLeft;
-        }
+    if(didIntersectLeft && didIntersectRight){
+        return
+            (_intersectB(node.children[LEFT], r) ||
+             _intersectB(node.children[RIGHT], r));
+    }else if(didIntersectLeft){
+        return _intersectB(node.children[LEFT], r);
     }else if(didIntersectRight){
-        return _intersectB(node.children[RIGHT], r);
+        return _intersectB(node.children[LEFT], r);
     }else{
         return false;
     }
