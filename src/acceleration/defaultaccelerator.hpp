@@ -20,17 +20,11 @@ class defaultAccelerator : public accelerator {
 	public:
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
-		virtual const intersection intersectE(ray& r) const;
-		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
-        virtual primitivePtr getEmitter(const unsigned int i){
-            return emitters[i];
-        }
 
 	private:
 		vector<primitivePtr> shapes;
-		vector<primitivePtr> emitters;
 };
 
 #endif

@@ -15,7 +15,7 @@
 using namespace std;
 
 const intersection bvh::intersect(ray& r) const{
-    const intersection isect = _intersect(0, r, primitives, primitiveNodes);
+    const intersection isect = _intersect(0, r);
     if(isect.hit){
         r.origin += isect.t * r.direction;
     }
@@ -24,23 +24,42 @@ const intersection bvh::intersect(ray& r) const{
 }
 
 const bool bvh::intersectB(const ray& r) const{
-    return _intersectB(0, r, primitives, primitiveNodes);
+    return _intersectB(0, r);
 }
 
-const intersection bvh::intersectE(ray& r) const{
-    intersection isect = _intersect(0, r, emitters, emitterNodes);
-    if(isect.hit){
-        r.origin += isect.t * r.direction;
+const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
+    const unsigned int numPrims = node.prims[1] - node.prims[0];
+
+    // Check each hit and find the closest.
+    primitivePtr closestPrim;
+    ray closestRay;
+    bool didHit = false;
+    float minDist = POS_INF;
+
+    for(unsigned int i=0; i<numPrims; ++i){
+        ray rCopy(r);
+        if(primitives[node.prims[0]+i]->intersect(rCopy)){
+            const float dist = (rCopy.origin - r.origin).length2();
+            didHit = true;
+
+            if(dist < minDist){
+                closestPrim = primitives[node.prims[0]+i];
+                minDist = dist;
+                closestRay = rCopy;
+            }
+        }
     }
 
-    return isect;
+    // If we missed all the primitives in the leaf,
+    // return no hit, otherwise return the hitpoint.
+    if(didHit){
+        return intersection(closestPrim->getParent(), closestPrim, (closestRay.origin - r.origin).length());
+    }else{
+        return intersection(false);
+    }
 }
 
-const bool bvh::intersectEB(const ray& r) const{
-    return _intersectB(0, r, emitters, emitterNodes);
-}
-
-const intersection bvh::_intersect(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const{
+const intersection bvh::_intersect(const int& index, const ray& r) const{
     float tLeft=0, tRight=0;
 
     const bvhNode& node = nodes[index];
@@ -48,52 +67,21 @@ const intersection bvh::_intersect(const int& index, const ray& r, const vector<
     if(!node.box.intersect(r, tLeft)){
         return intersection(false);
     }else if(node.axis == AXIS_LEAF){
-        const unsigned int numPrims = node.prims[1] - node.prims[0];
-
-        // Check each hit and find the closest.
-        primitivePtr closestPrim;
-        ray closestRay;
-        bool didHit = false;
-        float minDist = POS_INF;
-        for(unsigned int i=0; i<numPrims; ++i){
-            ray rCopy(r);
-            if(prims[node.prims[0]+i]->intersect(rCopy)){
-                const float dist = (rCopy.origin - r.origin).length2();
-                didHit = true;
-
-                if(dist < minDist){
-                    closestPrim = prims[node.prims[0]+i];
-                    minDist = dist;
-                    closestRay = rCopy;
-                }
-            }
-        }
-
-        // If we missed all the primitives in the leaf,
-        // return no hit, otherwise return the hitpoint.
-        if(didHit){
-            return intersection(closestPrim->getParent(), closestPrim, (closestRay.origin - r.origin).length());
-        }else{
-            return intersection(false);
-        }
+        return leafTest(node, r);
     }
 
-    const bvhNode& leftChild = nodes[index+1];
-    const bvhNode& rightChild = nodes[node.rightChild];
+    const bvhNode& leftChild = nodes[node.children[LEFT]];
+    const bvhNode& rightChild = nodes[node.children[RIGHT]];
     const bool didIntersectLeft = leftChild.box.intersect(r, tLeft);
     const bool didIntersectRight = rightChild.box.intersect(r, tRight);
 
-    /*
-     * Lots of nested if's below :(
-     * TODO: FIX THIS?
-     */
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft){
-        const intersection isectLeft = _intersect(index+1, r, prims, nodes);
+        const intersection isectLeft = _intersect(index+1, r);
 
         if(didIntersectRight){
             // Ray intersects both boxes.
-            const intersection isectRight = _intersect(node.rightChild, r, prims, nodes);
+            const intersection isectRight = _intersect(node.children[RIGHT], r);
 
             // Return the closest actual hit.
             if(isectLeft.t < isectRight.t){
@@ -107,7 +95,7 @@ const intersection bvh::_intersect(const int& index, const ray& r, const vector<
         }
     }else if(didIntersectRight){
         // Ray only intersects right.
-        return _intersect(node.rightChild, r, prims, nodes);
+        return _intersect(node.children[RIGHT], r);
     }else{
         // Ray misses both boxes.
         return intersection(false);
@@ -117,7 +105,7 @@ const intersection bvh::_intersect(const int& index, const ray& r, const vector<
 /**
  * Used for shadow rays, returns as soon as it finds a hit.
  */
-const bool bvh::_intersectB(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const{
+const bool bvh::_intersectB(const int& index, const ray& r) const{
     float tLeft=0, tRight=0;
 
     const bvhNode& node = nodes[index];
@@ -129,31 +117,31 @@ const bool bvh::_intersectB(const int& index, const ray& r, const vector<primiti
         // Find the intersection points for each primitive in the leaf.
         for(unsigned int i=0; i<numPrims; ++i){
             ray rCopy(r);
-            if(prims[node.prims[0]+i]->intersect(rCopy)){
+            if(primitives[node.prims[0]+i]->intersect(rCopy)){
                 return true;
             }
         }
         return false;
     }
 
-    const bvhNode& leftChild = nodes[index+1];
-    const bvhNode& rightChild = nodes[node.rightChild];
+    const bvhNode& leftChild = nodes[node.children[LEFT]];
+    const bvhNode& rightChild = nodes[node.children[RIGHT]];
     const bool didIntersectLeft = leftChild.box.intersect(r, tLeft);
     const bool didIntersectRight = rightChild.box.intersect(r, tRight);
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft){
-        const bool isectLeft = _intersectB(index+1, r, prims, nodes);
+        const bool isectLeft = _intersectB(index+1, r);
 
         if(didIntersectRight){
-            const bool isectRight = _intersectB(node.rightChild, r, prims, nodes);
+            const bool isectRight = _intersectB(node.children[RIGHT], r);
 
             return (isectLeft || isectRight);
         }else{
             return isectLeft;
         }
     }else if(didIntersectRight){
-        return _intersectB(node.rightChild, r, prims, nodes);
+        return _intersectB(node.children[RIGHT], r);
     }else{
         return false;
     }
@@ -161,9 +149,8 @@ const bool bvh::_intersectB(const int& index, const ray& r, const vector<primiti
 
 void bvh::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();
-    const vector<shapePtr>& emitterShapes = s.getEmitters();
 
-    // Fill the list of primitives and emitter primitives.
+    // Fill the list of primitives.
     for(size_t i=0; i<shapes.size(); ++i){
         const vector<primitivePtr>& p = shapes[i]->getPrimitives();
         for(size_t j=0; j<p.size(); ++j){
@@ -171,39 +158,15 @@ void bvh::build(const scene& s){
         }
     }
 
-    for(size_t i=0; i<emitterShapes.size(); ++i){
-        const vector<primitivePtr>& e = emitterShapes[i]->getPrimitives();
-        for(size_t j=0; j<e.size(); ++j){
-            primitives.push_back(e[j]);
-            emitters.push_back(e[j]);
-        }
-    }
-
     const unsigned int numPrims = primitives.size();
-    const unsigned int numEmitters = emitters.size();
 
     // Allocate space for the trees.
     // A binary tree with N leaves has 2N-1 total nodes.
-    const int numPrimNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
-    const int numEmitterNodes = 2 * ceil((float)numEmitters / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
-
-    if(numPrimNodes > 0){
-        primitiveNodes = new bvhNode[numPrimNodes];
-    }else{
-        primitiveNodes = NULL;
-    }
-
-    if(numEmitterNodes > 0){
-        emitterNodes = new bvhNode[numEmitterNodes];
-    }else{
-        emitterNodes = NULL;
-    }
+    numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
+    nodes = new bvhNode[numNodes];
 
     int index = 0;
-    _build(s.getBounds(), 0, primitives.size(), primitives, primitiveNodes, AXIS_X, index);
-
-    index = 0;
-    _build(s.getBounds(), 0, emitters.size(), emitters, emitterNodes, AXIS_X, index);
+    _build(s.getBounds(), 0, primitives.size(), primitives, nodes, AXIS_X, index);
 }
 
 void bvh::_build(const aabb& box,
@@ -267,7 +230,9 @@ void bvh::_build(const aabb& box,
 
     // Put the node into the storage array.
     node.axis = axis;
+    node.children[LEFT] = index+1;
     nodes[index] = node;
+
     const int savedIndex(index);
 
     // Set the next free position.
@@ -279,7 +244,7 @@ void bvh::_build(const aabb& box,
 
     // Set the next free position.
     ++index;
-    nodes[savedIndex].rightChild = index;
+    nodes[savedIndex].children[1] = index;
 
     _build(rightBox, mid, end, prims, nodes, nextAxis(axis), index);
 }

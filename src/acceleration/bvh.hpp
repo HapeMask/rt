@@ -29,7 +29,7 @@ inline AXIS nextAxis(AXIS axis){
 typedef struct bn {
     aabb box;
     union{
-        unsigned int rightChild;
+        unsigned int children[2];
         unsigned int prims[2];
     };
 
@@ -41,24 +41,15 @@ class bvh : public accelerator {
         bvh() {}
 
         ~bvh() {
-            if(primitiveNodes != NULL){
-                delete[] primitiveNodes;
-            }
-
-            if(emitterNodes != NULL){
-                delete[] emitterNodes;
+            if(nodes != NULL){
+                delete[] nodes;
             }
         }
 
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
-		virtual const intersection intersectE(ray& r) const;
-		virtual const bool intersectEB(const ray& r) const;
 
 		virtual void build(const scene& s);
-        virtual primitivePtr getEmitter(const unsigned int i){
-            return emitters[i];
-        }
 
     private:
         //bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
@@ -68,16 +59,13 @@ class bvh : public accelerator {
                 bvhNode* nodes,
                 AXIS axis, int& index);
 
-        const intersection _intersect(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const;
-        const bool _intersectB(const int& index, const ray& r, const vector<primitivePtr>& prims, const bvhNode* nodes) const;
+        const intersection _intersect(const int& index, const ray& r) const;
+        const bool _intersectB(const int& index, const ray& r) const;
+        const intersection leafTest(const bvhNode& node, const ray& r) const;
 
-        bvhNode* primitiveNodes;
-        bvhNode* emitterNodes;
-
-        int numPrimitives, numEmitters;
-
+        unsigned int numNodes;
+        bvhNode* nodes;
         vector<primitivePtr> primitives;
-        vector<primitivePtr> emitters;
 };
 
 inline bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }

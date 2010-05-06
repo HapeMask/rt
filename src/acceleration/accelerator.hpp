@@ -17,11 +17,8 @@ class accelerator {
 
 		virtual const intersection intersect(ray& r) const = 0;
 		virtual const bool intersectB(const ray& r) const = 0;
-		virtual const intersection intersectE(ray& r) const = 0;
-		virtual const bool intersectEB(const ray& r) const = 0;
 
 		virtual void build(const scene& s) = 0;
-        virtual primitivePtr getEmitter(const unsigned int i) = 0;
 };
 
 typedef shared_ptr<accelerator> acceleratorPtr;

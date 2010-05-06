@@ -32,8 +32,6 @@ class scene {
 		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
-		const intersection intersectE(ray& r) const;
-		const bool intersectEB(const ray& r) const;
 		const bool intersectB(const ray& r) const;
 
 		const vector<shapePtr>& getShapes() const {
@@ -44,13 +42,17 @@ class scene {
 			return lights.size();
 		}
 
-		const lightPtr& getLight(const int& i) const {
+		const lightPtr& getLight(const unsigned int& i) const {
 			return lights[i];
 		}
 
-		const vector<shapePtr>& getEmitters() const {
-			return emitters;
-		}
+        const size_t numEmitters() const {
+            return emitters.size();
+        }
+
+        const shapePtr& getEmitter(const unsigned int& i) const {
+            return emitters[i];
+        }
 
 		const aabb& getBounds() const{
 			return bounds;
@@ -61,7 +63,6 @@ class scene {
 		}
 
 		void setCamera(cameraPtr p);
-
 		void build();
 
 	private:

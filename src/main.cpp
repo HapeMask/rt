@@ -19,7 +19,6 @@ using namespace std;
 #include "geometry/primitive.hpp"
 #include "geometry/triangle.hpp"
 #include "geometry/sphere.hpp"
-#include "geometry/plane.hpp"
 
 #include "materials/material.hpp"
 #include "materials/brdf.hpp"
@@ -105,7 +104,7 @@ int main(int argc, char* args[]){
                             }
                             break;
                         case 'w':
-                            c->move(vec3(0.f,0.f,0.3f));
+                            c->move(vec3(0.f,0.f,-0.3f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'z':
@@ -113,7 +112,7 @@ int main(int argc, char* args[]){
                             draw(height, width, c, f, rt);
                             break;
                         case 's':
-                            c->move(vec3(0.f,0.f,-0.3f));
+                            c->move(vec3(0.f,0.f,0.3f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'x':

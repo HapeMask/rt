@@ -19,9 +19,8 @@ void scene::addLight(lightPtr l){
 }
 
 void scene::addShape(shapePtr s){
-    if(!s->getMaterial()->isEmissive()){
-        shapes.push_back(s);
-    }else{
+    shapes.push_back(s);
+    if(s->getMaterial()->isEmissive()){
         emitters.push_back(s);
     }
 
@@ -39,14 +38,6 @@ const intersection scene::intersect(ray& r) const{
 
 const bool scene::intersectB(const ray& r) const{
 	return accel->intersectB(r);
-}
-
-const intersection scene::intersectE(ray& r) const{
-	return accel->intersectE(r);
-}
-
-const bool scene::intersectEB(const ray& r) const{
-	return accel->intersectEB(r);
 }
 
 void scene::setCamera(cameraPtr p){

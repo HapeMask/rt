@@ -1,9 +1,10 @@
 #include "parser.hpp"
 #include "scene.hpp"
+#include "objparser.hpp"
+
 #include "geometry/primitive.hpp"
 #include "geometry/shape.hpp"
 #include "geometry/triangle.hpp"
-#include "geometry/plane.hpp"
 #include "geometry/sphere.hpp"
 
 #include "camera/camera.hpp"
@@ -269,22 +270,27 @@ vector<primitivePtr> sceneParser::primitiveList(){
     // primitiveList : primitive primitiveList
     if(is(PRIMITIVE)){
         prims.push_back(prim());
-
-        if(is(PRIMITIVE) || is(OBJFILE)){
-            vector<primitivePtr> pr2 = primitiveList();
-            for(size_t i=0; i<pr2.size(); i++){
-                prims.push_back(pr2[i]);
-            }
-        }
     // primitiveList : objfile primitiveList
     }else if(is(OBJFILE)){
-        //parse objfile
+        match(OBJFILE);
+        match(LPAREN);
 
-        if(is(PRIMITIVE) || is(OBJFILE)){
-            vector<primitivePtr> pr2 = primitiveList();
-            for(size_t i=0; i<pr2.size(); i++){
-                prims.push_back(pr2[i]);
-            }
+        // Strip quotes.
+        string filename(currentToken.substr(1,currentToken.length() - 2));
+
+        match(FILEPATH);
+        match(RPAREN);
+        const vector<primitivePtr> tris = objParser::parse(filename);
+        cerr << tris.size() << endl;
+        for(unsigned int i=0; i<tris.size(); i++){
+            prims.push_back(tris[i]);
+        }
+    }
+
+    if(is(PRIMITIVE) || is(OBJFILE)){
+        vector<primitivePtr> pr2 = primitiveList();
+        for(size_t i=0; i<pr2.size(); i++){
+            prims.push_back(pr2[i]);
         }
     }
     return prims;
@@ -343,24 +349,6 @@ primitivePtr sceneParser::prim(){
 		match(RPAREN);
 
 		p = primitivePtr(new sphere(point3(px, py, pz), r));
-	}else if(is(PLANE)){
-		match(PRIMITIVE);
-		match(LPAREN);
-
-		float px = curFloat();
-		match(FLOAT);
-		match(COMMA);
-		float py = curFloat();
-		match(FLOAT);
-		match(COMMA);
-		float pz = curFloat();
-		match(FLOAT);
-		match(COMMA);
-		float d = curFloat();
-		match(FLOAT);
-		match(RPAREN);
-
-		p = primitivePtr(new plane(vec3(px, py, pz), d));
 	}
 	return p;
 }
@@ -399,6 +387,10 @@ void sceneParser::match(const regex& token){
 		}else if(regex_search(textC, m, EMISSIVE, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, CAMERA, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, FILEPATH, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, OBJFILE, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, SCENE, match_continuous)){
 			currentToken = m.str();
