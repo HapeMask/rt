@@ -17,7 +17,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
 	const intersection isect = parent->intersect(r);
 	if(!isect.hit){
-		return rgbColor(0,0,0);
+		return 0.f;
 	}
 
     // Handle emissive and specular materials.
@@ -31,16 +31,17 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
         // TIR
         if(f.r < 0){
+            //ray r1(r.origin, normal);
+            //return _L(r1, depth+1);
             return rgbColor(1,0,0);
         }
 
         ray r2(r.origin, specDir);
-
 		return _L(r2, depth+1);
 	}
 
     // Diffuse stuff.
-    rgbColor Li(0,0,0);
+    rgbColor Li(0.f);
 	const rgbColor c = isect.s->getMaterial()->sample(r.origin, vec3(0,0,0), -r.direction);;
 	for(unsigned int i=0; i<parent->numLights(); ++i){
         const lightPtr li = parent->getLight(i);

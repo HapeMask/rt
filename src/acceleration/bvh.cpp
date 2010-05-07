@@ -53,7 +53,7 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     // If we missed all the primitives in the leaf,
     // return no hit, otherwise return the hitpoint.
     if(didHit){
-        return intersection(closestPrim->getParent(), closestPrim, (closestRay.origin - r.origin).length());
+        return intersection(closestPrim->getParent(), closestPrim.get(), (closestRay.origin - r.origin).length());
     }else{
         return intersection(false);
     }

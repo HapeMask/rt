@@ -28,13 +28,13 @@ class transform3d{
 			return inv;
 		}
 
-		const point3 apply(const point3& p);
-		const vec3 apply(const vec3& v);
-		const ray apply(const ray& r);
+		const point3 apply(const point3& p) const;
+		const vec3 apply(const vec3& v) const;
+		const ray apply(const ray& r) const;
 
-		const point3 unapply(const point3& p);
-		const vec3 unapply(const vec3& v);
-		const ray unapply(const ray& r);
+		const point3 unapply(const point3& p) const;
+		const vec3 unapply(const vec3& v) const;
+		const ray unapply(const ray& r) const;
 
 		const transform3d operator*(const transform3d& t) const;
 		transform3d& operator*=(const transform3d& t);

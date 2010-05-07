@@ -9,8 +9,8 @@
 
 #include <cmath>
 
-sphere::sphere(const point3& p, const float& r, shape* parent) :
-	primitive(parent, aabb(
+sphere::sphere(const point3& p, const float& r) :
+	primitive(aabb(
                     vec3(p.x()-r, p.y()-r, p.z()-r),
                     vec3(p.x()+r, p.y()+r, p.z()+r)
                 )

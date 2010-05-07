@@ -2,6 +2,9 @@
 #include <iostream>
 using namespace std;
 
+rgbColor::rgbColor(const float& f) : r(f), g(f), b(f)
+{}
+
 rgbColor::rgbColor(const float& r, const float& g, const float& b) : r(r), g(g), b(b)
 {}
 

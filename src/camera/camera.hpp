@@ -14,7 +14,7 @@ class camera {
 		camera(const float& w, const float& h, const float& nr, const float& fr,
 				const float& fo, const point3& p, const point3& l, const vec3& u);
 
-		const ray getRay(const float& x, const float& y);
+		const ray getRay(const float& x, const float& y) const;
 
         inline const float& width() const{
             return _width;

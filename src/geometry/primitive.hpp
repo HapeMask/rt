@@ -2,7 +2,6 @@
 #define __RT_PRIM__
 
 #include "aabb.hpp"
-#include "intersectable.hpp"
 #include "mathlib/point.hpp"
 
 #include <vector>
@@ -13,10 +12,9 @@ using tr1::shared_ptr;
 class shape;
 typedef shared_ptr<shape> shapePtr;
 
-class primitive : public intersectable {
+class primitive{
 	public:
-		primitive(shape* p) : parent(p) {}
-        primitive(shape* p, const aabb& box) : parent(p), boundingBox(box) {}
+        primitive(const aabb& box) : boundingBox(box) {}
 		virtual ~primitive() {}
 
 		virtual const bool intersect(ray& r) const = 0;
@@ -24,19 +22,25 @@ class primitive : public intersectable {
         virtual const point3 uniformSampleSurface() const = 0;
 
 		void setParent(shape* p){
-			parent.reset(p);
+            parent = p;
 		}
 
 		const aabb& getBounds() const{
 			return boundingBox;
 		}
 
-		const shapePtr getParent() const {
+        /**
+         * NOTE: Never construct a primitivePtr from this!
+         * NEVER!
+         * This shape* probably came from a shape instance owned by a
+         * reference counted shapePtr.
+         */
+		shape* getParent() const {
 			return parent;
 		}
 
 	protected:
-		shapePtr parent;
+		shape* parent;
 		aabb boundingBox;
 };
 

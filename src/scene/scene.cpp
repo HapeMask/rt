@@ -1,5 +1,4 @@
 #include "scene.hpp"
-#include "geometry/intersectable.hpp"
 #include "geometry/shape.hpp"
 
 #include "camera/camera.hpp"

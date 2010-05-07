@@ -50,7 +50,7 @@ class scene {
             return emitters.size();
         }
 
-        const shapePtr& getEmitter(const unsigned int& i) const {
+        shapePtr getEmitter(const unsigned int& i) const {
             return emitters[i];
         }
 
@@ -58,7 +58,7 @@ class scene {
 			return bounds;
 		}
 
-		const cameraPtr& getCamera() const{
+		cameraPtr getCamera() const{
 			return cam;
 		}
 

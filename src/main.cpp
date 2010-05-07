@@ -1,4 +1,7 @@
+#ifdef RT_MULTITHREADED
 #include <omp.h>
+#endif
+
 #include <cmath>
 #include <iostream>
 using namespace std;
@@ -35,7 +38,7 @@ using namespace std;
 #define RT_OMP_THREADS 8
 #endif
 
-void draw(const int height, const int width, const cameraPtr& c, sdlFramebuffer& f, const rayTracer& rt);
+void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt);
 
 int main(int argc, char* args[]){
 	scene s;
@@ -65,9 +68,9 @@ int main(int argc, char* args[]){
 
 	s.build();
 
-	const cameraPtr& c = s.getCamera();
-    const int width = c->width();
-    const int height = c->height();
+	camera& c = *s.getCamera();
+    const int width = c.width();
+    const int height = c.height();
 
 	sdlFramebuffer f(width, height, 32);
 
@@ -78,8 +81,16 @@ int main(int argc, char* args[]){
 	whittedRayTracer rt(&s);
 	srand(time(NULL));
 
+    /*
+    ray r0 = c.getRay(256,256);
+    rt.L(r0);
+    return 0;
+    */
+
+#ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
+#endif
 
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
@@ -101,31 +112,31 @@ int main(int argc, char* args[]){
                     switch(e.key.keysym.sym){
                         case 'q':
                             if((e.key.keysym.mod & KMOD_CTRL) || (e.key.keysym.mod & KMOD_META)){
-                                exit(0);
+                                return 0;
                             }
                             break;
                         case 'w':
-                            c->move(vec3(0.f,0.f,-0.3f));
+                            c.move(vec3(0.f,0.f,-0.3f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'z':
-                            c->move(vec3(0.f,-0.3f,0.f));
+                            c.move(vec3(0.f,-0.3f,0.f));
                             draw(height, width, c, f, rt);
                             break;
                         case 's':
-                            c->move(vec3(0.f,0.f,0.3f));
+                            c.move(vec3(0.f,0.f,0.3f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'x':
-                            c->move(vec3(0.f,0.3f,0.f));
+                            c.move(vec3(0.f,0.3f,0.f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'a':
-                            c->move(vec3(-0.3f,0.f,0.f));
+                            c.move(vec3(-0.3f,0.f,0.f));
                             draw(height, width, c, f, rt);
                             break;
                         case 'd':
-                            c->move(vec3(0.3f,0.f,0.f));
+                            c.move(vec3(0.3f,0.f,0.f));
                             draw(height, width, c, f, rt);
                             break;
                         default:
@@ -134,18 +145,20 @@ int main(int argc, char* args[]){
 				}
 				break;
 			case SDL_QUIT:
-				exit(0);
+				return 0;
 				break;
 		}
 	}
 	return 0;
 }
 
-void draw(const int height, const int width, const cameraPtr& c, sdlFramebuffer& f, const rayTracer& rt){
+void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt){
+#ifdef RT_MULTITHREADED
 #pragma omp parallel for
+#endif
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			f.drawPixel(x, y, rt.L(c->getRay(x,y)));
+			f.drawPixel(x, y, rt.L(c.getRay(x,y)));
 		}
 	}
 

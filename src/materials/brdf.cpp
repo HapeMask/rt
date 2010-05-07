@@ -21,14 +21,23 @@ const rgbColor specularBrdf::sampleF(const float& u1, const float& u2, const vec
         wi = reflect(-wo, normal);
         return rgbColor(0,0,0);
     }else{
-        const float cosTheta1 = -dot(normal, -wo);
-        const float nr = (cosTheta1 >= 0.f) ? (1.00029f / ior) : (ior / 1.00029f);
+        const float cosTheta1 = dot(normal, -wo);
+
+        // The normal always points out of the object (as in PBRT), thus
+        // we need to check if the ray is inside the object by checking
+        // the sign of the angle between the ray and the normal.
+        //
+        // Swaps IOR accordingly and generates a refraction normal
+        // that always points in the same direction as the ray.
+        const float nr = (cosTheta1 <= 0.f) ? (1.f / ior) : (ior / 1.f);
+        const vec3 refractionNormal = (cosTheta1 <= 0.f) ? normal : -normal;
+
         const float sinSqTheta = nr * nr * (1.f - cosTheta1*cosTheta1);
         if(sinSqTheta > 1.f){
             return rgbColor(-1,-1,-1);
         }
 
-        wi = (nr * -wo) + (nr * cosTheta1 - sqrt(1.f - sinSqTheta)) * normal;
+        wi = normalize((nr * -wo) + (nr * cosTheta1 - sqrt(1.f - sinSqTheta)) * refractionNormal);
         return rgbColor(0,0,0);
     }
 }

@@ -15,7 +15,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	const point3 ro(r.origin);
 	for(unsigned int i=0; i<shapes.size(); ++i){
 		if(shapes[i]->intersect(r)){
-			hits.push_back(intersection(shapes[i]->getParent(), shapes[i]));
+			hits.push_back(intersection(shapes[i]->getParent(), shapes[i].get()));
 			hitPoints.push_back(point3(r.origin));
 
 			// Reset the ray's origin.

@@ -9,7 +9,7 @@ WIN_LDFLAGS = -LC:\MinGW\lib
 CXXFLAGS= -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations \
-	-fno-exceptions -DRT_NO_EXCEPTIONS -fopenmp
+	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp
 LDFLAGS= -lboost_regex -fwhole-program
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)

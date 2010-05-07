@@ -81,8 +81,7 @@ vector<shapePtr> sceneParser::shapeList(){
 
 	match(SHAPE);
 	match(LBRACE);
-	shapePtr sh = shp();
-	shapes.push_back(sh);
+	shapes.push_back(shp());
 	match(RBRACE);
 	if(is(SHAPE)){
 		vector<shapePtr> sh2 = shapeList();
@@ -96,21 +95,18 @@ vector<shapePtr> sceneParser::shapeList(){
 
 shapePtr sceneParser::shp(){
 	shapePtr p(new shape());
+
 	vector<primitivePtr> prims = primitiveList();
 
 	for(size_t i=0; i<prims.size(); i++){
 		p->addPrimitive(prims[i]);
 	}
 
-	materialPtr m = mat();
-	p->setMaterial(m);
-
+	p->setMaterial(mat());
 	return p;
 }
 
 materialPtr sceneParser::mat(){
-    materialPtr m;
-
 	match(MATERIAL);
 	match(LPAREN);
     if(is(EMISSIVE)){
@@ -130,14 +126,14 @@ materialPtr sceneParser::mat(){
         match(RPAREN);
         match(RPAREN);
 
-        return materialPtr(new material(rgbColor(r,g,b), intensity));
+        const materialPtr m(new material(rgbColor(r,g,b), intensity));
+        return m;
     }else{
         brdfPtr br = bd();
         match(RPAREN);
-        return materialPtr(new material(br));
+        const materialPtr m(new material(br));
+        return m;
     }
-
-	return m;
 }
 
 brdfPtr sceneParser::bd(){
@@ -153,7 +149,9 @@ brdfPtr sceneParser::bd(){
 		float b = curFloat();
 		match(FLOAT);
 		match(RPAREN);
-		return brdfPtr(new lambertianBrdf(rgbColor(r,g,b)));
+
+        const brdfPtr p(new lambertianBrdf(rgbColor(r,g,b)));
+        return p;
 	}else if(is(SPECULAR)){
 		match(BRDF);
 		match(LPAREN);
@@ -167,9 +165,11 @@ brdfPtr sceneParser::bd(){
         }
 		match(RPAREN);
         if(type == "conductor"){
-            return brdfPtr(new specularBrdf(true, ior));
+            const brdfPtr p(new specularBrdf(true, ior));
+            return p;
         }else{
-            return brdfPtr(new specularBrdf(false, ior));
+            const brdfPtr p(new specularBrdf(false, ior));
+            return p;
         }
 	}else if(is(PHONG)){
 		match(BRDF);
@@ -223,11 +223,12 @@ cameraPtr sceneParser::cam(){
 	float uz = curFloat();
 	match(FLOAT);
 	match(RPAREN);
-	return cameraPtr(new camera(w, h, 0.1f, 100.f, fov, point3(px,py,pz),point3(lx,ly,lz),point3(ux,uy,uz)));
+
+	const cameraPtr c(new camera(w, h, 0.1f, 100.f, fov, point3(px,py,pz),point3(lx,ly,lz),point3(ux,uy,uz)));
+    return c;
 }
 
 lightPtr sceneParser::li(){
-	lightPtr lp;
 	match(LIGHT);
 	match(LANGLE);
 	string type(currentToken);
@@ -255,12 +256,9 @@ lightPtr sceneParser::li(){
 		match(COMMA);
 		float i = curFloat();
 		match(FLOAT);
-		lp.reset(new pointLight(point3(px,py,pz), rgbColor(r,g,b), i));
-	}
-	match(RPAREN);
-
-	if(lp.get() != NULL){
-		return lp;
+        match(RPAREN);
+		const lightPtr l(new pointLight(point3(px,py,pz), rgbColor(r,g,b), i));
+        return l;
 	}
 }
 

@@ -10,7 +10,7 @@
 
 class triangle : public primitive {
 	public:
-		triangle(const point3& a, const point3& b, const point3& c, shape* parent = NULL);
+		triangle(const point3& a, const point3& b, const point3& c);
 		virtual ~triangle() {}
 
 		virtual const bool intersect(ray& r) const;

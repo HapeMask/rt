@@ -7,12 +7,12 @@
 
 #include <cmath>
 
-const point3 transform3d::apply(const point3& p){
+const point3 transform3d::apply(const point3& p) const {
 	const vec4 v = mat * vec4(vec3(p), 1.f);
 	return point3(vec3(v.x(), v.y(), v.z()) / v.w());
 }
 
-const vec3 transform3d::apply(const vec3& v){
+const vec3 transform3d::apply(const vec3& v) const {
 	const float& x = v.x();
     const float& y = v.y();
     const float& z = v.z();
@@ -24,16 +24,16 @@ const vec3 transform3d::apply(const vec3& v){
 		);
 }
 
-const ray transform3d::apply(const ray& r){
+const ray transform3d::apply(const ray& r) const {
 	return ray(apply(r.origin), apply(r.direction));
 }
 
-const point3 transform3d::unapply(const point3& p){
+const point3 transform3d::unapply(const point3& p) const {
 	const vec4 v = inv * vec4(vec3(p), 1.f);
 	return point3(vec3(v.x(), v.y(), v.z()) / v.w());
 }
 
-const vec3 transform3d::unapply(const vec3& v){
+const vec3 transform3d::unapply(const vec3& v) const {
 	const float& x = v.x();
     const float& y = v.y();
     const float& z = v.z();
@@ -45,7 +45,7 @@ const vec3 transform3d::unapply(const vec3& v){
 		);
 }
 
-const ray transform3d::unapply(const ray& r){
+const ray transform3d::unapply(const ray& r) const {
     return ray(unapply(r.origin), unapply(r.direction));
 }
 

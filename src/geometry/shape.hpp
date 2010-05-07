@@ -12,12 +12,6 @@ using tr1::shared_ptr;
 
 class shape {
 	public:
-		shape() {}
-		shape(material* m);
-		shape(const vector<primitivePtr>& pr);
-		shape(material* m, const vector<primitivePtr>& pr);
-		virtual ~shape() {}
-
 		void setMaterial(materialPtr m);
 		void addPrimitive(primitivePtr p);
 
