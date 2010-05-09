@@ -172,5 +172,5 @@ const rgbColor specularBtdf::sampleF(const float& u1, const float& u2, const vec
     }
 
     wi = normalize((nr * -wo) + (nr * cosTheta1 - sqrt(1.f - sinSqTheta)) * refractionNormal);
-    return rgbColor(1,1,1.5);
+    return rgbColor(1,1,1);
 }
