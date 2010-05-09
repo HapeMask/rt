@@ -42,7 +42,7 @@ class sceneParser {
 		vector<primitivePtr> primitiveList();
 		primitivePtr prim();
 		materialPtr mat();
-		brdfPtr bd();
+		bsdfPtr bd();
 		lightPtr li();
 		cameraPtr cam();
 };
@@ -57,7 +57,7 @@ static const regex SCENE("scene");
 static const regex CAMERA("camera");
 static const regex BRDF("lambert|specular|phong|microfacet");
 static const regex LAMBERT("lambert");
-static const regex SPECULAR("specular");
+static const regex RE_SPECULAR("specular");
 static const regex PHONG("phong");
 static const regex MICROFACET("microfacet");
 static const regex EMISSIVE("emissive");

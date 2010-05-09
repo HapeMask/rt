@@ -14,7 +14,7 @@
 
 #include "color/color.hpp"
 #include "materials/material.hpp"
-#include "materials/brdf.hpp"
+#include "materials/bsdf.hpp"
 
 #include <vector>
 #include <stdexcept>
@@ -129,14 +129,14 @@ materialPtr sceneParser::mat(){
         const materialPtr m(new material(rgbColor(r,g,b), intensity));
         return m;
     }else{
-        brdfPtr br = bd();
+        bsdfPtr br = bd();
         match(RPAREN);
         const materialPtr m(new material(br));
         return m;
     }
 }
 
-brdfPtr sceneParser::bd(){
+bsdfPtr sceneParser::bd(){
 	if(is(LAMBERT)){
 		match(BRDF);
 		match(LPAREN);
@@ -150,25 +150,30 @@ brdfPtr sceneParser::bd(){
 		match(FLOAT);
 		match(RPAREN);
 
-        const brdfPtr p(new lambertianBrdf(rgbColor(r,g,b)));
+        bsdfPtr p(new bsdf());
+        p->addBxdf(new lambertianBrdf(rgbColor(r,g,b)));
         return p;
-	}else if(is(SPECULAR)){
+	}else if(is(RE_SPECULAR)){
 		match(BRDF);
 		match(LPAREN);
         string type(currentToken);
         match(SPECTYPE);
-        float ior = 1.00029f;
+        float ior = 1.f;
         if(type == "dielectric"){
             match(COMMA);
             ior = curFloat();
             match(FLOAT);
         }
 		match(RPAREN);
+
         if(type == "conductor"){
-            const brdfPtr p(new specularBrdf(true, ior));
+            bsdfPtr p(new bsdf());
+            p->addBxdf(new specularBrdf(ior, CONDUCTOR));
             return p;
         }else{
-            const brdfPtr p(new specularBrdf(false, ior));
+            bsdfPtr p(new bsdf());
+            p->addBxdf(new specularBtdf(ior, DIELECTRIC));
+
             return p;
         }
 	}else if(is(PHONG)){

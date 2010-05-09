@@ -1,6 +1,6 @@
 scene(bvh){
 	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
-    light<point>(0,2.5,0, 1,1,1, 7.5)
+    light<point>(0,2.5,0, 1,1,1, 8.0)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
@@ -34,8 +34,16 @@ scene(bvh){
     }
 
     shape{
-        sphere(0,0,0, 1)
-        material(specular(dielectric, 1.6))
+        sphere(2,0,0, 1)
+        material(specular(dielectric, 1.33))
+    }
+
+    shape{
+        sphere(2.3,-0.2,-2.8, 0.2)
+        sphere(2.7,0.2,-2.8, 0.2)
+        sphere(2.3,0.2,-2.8, 0.2)
+        sphere(2.7,-0.2,-2.8, 0.2)
+        material(lambert(0,3,0))
     }
 
     shape{

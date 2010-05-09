@@ -60,6 +60,10 @@ class rgbColor : public color {
 			return b;
 		}
 
+        inline const bool isBlack() const {
+            return (r <= 0 && g <= 0 && b <= 0);
+        }
+
 		float r;
 		float g;
 		float b;
