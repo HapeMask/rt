@@ -100,18 +100,6 @@ class specularBtdf : public bxdf {
         float ior;
 };
 
-class phongBrdf : public bxdf {
-    public:
-        phongBrdf(const float& N) : bxdf(bxdfType(REFLECTION | SPECULAR)), n(N)
-        {}
-
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
-        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
-
-    private:
-        float n;
-}
-
 typedef shared_ptr<bsdf> bsdfPtr;
 typedef shared_ptr<bxdf> bxdfPtr;
 #endif

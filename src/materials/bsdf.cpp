@@ -184,11 +184,3 @@ const rgbColor specularBtdf::sampleF(const float& u1, const float& u2, const vec
 
     return rgbColor(1.f);
 }
-
-const rgbColor phongBrdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const{
-    return rgbColor(1.f);
-}
-
-const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
-    return 
-}
