@@ -23,7 +23,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	}
 
     // Handle emissive and specular materials.
-    const vec3& normal = isect.normal;
+    const vec3& normal = isect.shadingNormal;
     const bsdf& b = isect.s->getMaterial()->getBsdf();
     const material& mat = *isect.s->getMaterial().get();
     rgbColor Li(0.f);

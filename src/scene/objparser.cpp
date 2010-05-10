@@ -1,14 +1,20 @@
 #include "objparser.hpp"
 #include "geometry/triangle.hpp"
-#include "geometry/primitive.hpp"
 
 #include <fstream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-const vector<primitivePtr> objParser::parse(const string& filename){
+typedef struct tps{
+    int a;
+    int b;
+    int c;
+} trianglePointSet;
+
+const vector<trianglePtr> objParser::parse(const string& filename){
     ifstream file(filename.c_str());
-    vector<primitivePtr> tris(0);
+    vector<trianglePtr> tris(0);
 
     if(!file.is_open() || !file.good()){
         cerr << "Unable to open SMF file for reading: " << filename.c_str() << endl;
@@ -66,6 +72,8 @@ const vector<primitivePtr> objParser::parse(const string& filename){
         file >> chunk;
     }
 
+    vector<vector<trianglePtr> > vertPolys(points.size());
+    vector<trianglePointSet> triPoints;
     // Read in the faces and construct the polys.
     while(!file.eof() && chunk == "f"){
         file >> chunk;
@@ -89,11 +97,43 @@ const vector<primitivePtr> objParser::parse(const string& filename){
         }
         const unsigned int vert3 = strtol(chunk.c_str(), NULL, 10);
 
-        // TODO:
-        // Add flag for vertex ordering. NOTE that it uses vert1,vert3,vert2 instead of 1,2,3
-        // because my SMF files assume clockwise ordering while the RT assumes CCW ordering.
-        tris.push_back(primitivePtr(new triangle(points[vert1-1], points[vert2-1], points[vert3-1])));
+        trianglePtr tri(new triangle(points[vert1-1], points[vert2-1], points[vert3-1]));
+        tris.push_back(tri);
+
+        const trianglePointSet tps = {vert1-1, vert2-1, vert3-1};
+        triPoints.push_back(tps);
+
+        vertPolys[vert1-1].push_back(tri);
+        vertPolys[vert2-1].push_back(tri);
+        vertPolys[vert3-1].push_back(tri);
+
         file >> chunk;
+    }
+
+    // Sum the normals for all faces adjacent to each vert,
+    // then store the vertex normal.
+    cerr << "TEST" << endl;
+    vector<vec3> vertNormals;
+    for(size_t i=0; i<points.size(); ++i){
+        const vector<trianglePtr>& vps = vertPolys[i];
+        vec3 normal(0.f,0.f,0.f);
+
+        vector<vec3> addedNorms;
+        for(size_t j=0; j<vps.size(); ++j){
+            // TODO: THIS SUCKS...
+            if(find(addedNorms.begin(), addedNorms.end(), vps[j]->normal()) == addedNorms.end()){
+                addedNorms.push_back(vps[j]->normal());
+                normal += addedNorms[addedNorms.size() - 1];
+            }
+        }
+        //addedNorms.clear();
+
+        vertNormals.push_back(normalize(normal));
+    }
+
+    for(size_t i=0; i<tris.size(); ++i){
+        const trianglePointSet& tp = triPoints[i];
+        tris[i]->setVertNormals(vertNormals[tp.a], vertNormals[tp.b], vertNormals[tp.c]);
     }
 
     file.close();

@@ -8,6 +8,8 @@
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"
 
+#include <tr1/memory>
+
 class triangle : public primitive {
 	public:
 		triangle(const point3& a, const point3& b, const point3& c);
@@ -39,10 +41,17 @@ class triangle : public primitive {
 			return points[2];
 		}
 
+        const vec3& normal() const{
+            return normal_;
+        }
+
+        void setVertNormals(const vec3& an, const vec3& bn, const vec3& cn);
+
         virtual const point3 uniformSampleSurface() const;
 
 	private:
 		point3 points[3];
+        vec3 vertNormals[3];
 		vec3 normal_;
 
 		vec2 aPrime;
@@ -51,5 +60,9 @@ class triangle : public primitive {
 
 		unsigned short axis1;
 		unsigned short axis2;
+
+        bool hasVertNormals;
 };
+
+typedef std::tr1::shared_ptr<triangle> trianglePtr;
 #endif

@@ -17,7 +17,7 @@ class intersection {
 		const primitive* p;
 		bool hit;
         float t;
-        vec3 dpdu, dpdv, normal;
+        vec3 dpdu, dpdv, normal, shadingNormal;
 };
 
 static const intersection noIntersect(false);

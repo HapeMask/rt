@@ -18,7 +18,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
                     vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
                     vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
                 )
-            ){
+            ), hasVertNormals(false) {
 
 	points[0] = a;
 	points[1] = b;
@@ -81,14 +81,21 @@ const intersection triangle::intersect(ray& r) const {
 	const float beta = (pPrime.y()*cPrime.x() - pPrime.x()*cPrime.y()) / dBeta;
 	const float gamma = (pPrime.y() * bPrime.x() - pPrime.x()*bPrime.y()) / dGamma;
 
-	if(beta < -EPSILON || gamma < -EPSILON || beta+gamma > 1.f + EPSILON){
+	if(beta < 0.f || gamma < 0.f || beta+gamma > 1.f){
 		return noIntersect;
 	}
+
 
 	r.origin = pI;
     intersection isect(parent, this, t);
     isect.normal = normal_;
     makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
+    if(!hasVertNormals){
+        isect.shadingNormal = normal_;
+    }else{
+        const float alpha = 1.f - (beta + gamma);
+        isect.shadingNormal = alpha * vertNormals[0] + beta * vertNormals[1] + gamma * vertNormals[2];
+    }
 	return isect;
 }
 
@@ -96,4 +103,11 @@ const point3 triangle::uniformSampleSurface() const{
     point3 ret;
     uniformSampleTriangle(ret, *this);
     return ret;
+}
+
+void triangle::setVertNormals(const vec3& an, const vec3& bn, const vec3& cn){
+    vertNormals[0] = an;
+    vertNormals[1] = bn;
+    vertNormals[2] = cn;
+    hasVertNormals = true;
 }
