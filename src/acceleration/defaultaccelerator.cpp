@@ -10,16 +10,13 @@ using tr1::shared_ptr;
 const intersection defaultAccelerator::intersect(ray& r) const{
 	// Just check every shape we have.
 	vector<intersection> hits;
-	vector<point3> hitPoints;
 
 	const point3 ro(r.origin);
 	for(unsigned int i=0; i<shapes.size(); ++i){
-		if(shapes[i]->intersect(r)){
-			hits.push_back(intersection(shapes[i]->getParent(), shapes[i].get()));
-			hitPoints.push_back(point3(r.origin));
-
-			// Reset the ray's origin.
-			r.origin = ro;
+        ray rCopy(r);
+        const intersection isect = shapes[i]->intersect(rCopy);
+		if(isect.hit){
+			hits.push_back(isect);
 		}
 	}
 
@@ -28,26 +25,23 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	}
 
 	// Grab the closest hit.
-	float minDist = 10000000.f;
-	point3 closestPoint;
+	float minDist = POS_INF;
 	intersection closestIntersection;
-	for(unsigned int i=0; i<hitPoints.size(); ++i){
-		const float dist = (hitPoints[i] - ro).length2();
-		if(dist < minDist){
-			minDist = dist;
-			closestPoint = hitPoints[i];
+	for(unsigned int i=0; i<hits.size(); ++i){
+		if(hits[i].t < minDist){
+			minDist = hits[i].t;
 			closestIntersection = hits[i];
 		}
 	}
 
-	r.origin = closestPoint;
+	r.origin += closestIntersection.t * r.direction;
 	return closestIntersection;
 }
 
 const bool defaultAccelerator::intersectB(const ray& r) const{
 	ray r2(r);
 	for(size_t i=0; i<shapes.size(); ++i){
-		if(shapes[i]->intersect(r2)){
+		if(shapes[i]->intersect(r2).hit){
 			return true;
 		}
 	}

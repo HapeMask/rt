@@ -33,19 +33,21 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     // Check each hit and find the closest.
     primitivePtr closestPrim;
     ray closestRay;
+    intersection closestIsect;
     bool didHit = false;
     float minDist = POS_INF;
 
     for(unsigned int i=0; i<numPrims; ++i){
         ray rCopy(r);
-        if(primitives[node.prims[0]+i]->intersect(rCopy)){
-            const float dist = (rCopy.origin - r.origin).length2();
+        const intersection isect = primitives[node.prims[0]+i]->intersect(rCopy);
+        if(isect.hit){
             didHit = true;
 
-            if(dist < minDist){
+            if(isect.t < minDist){
                 closestPrim = primitives[node.prims[0]+i];
-                minDist = dist;
+                minDist = isect.t;
                 closestRay = rCopy;
+                closestIsect = isect;
             }
         }
     }
@@ -53,9 +55,9 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     // If we missed all the primitives in the leaf,
     // return no hit, otherwise return the hitpoint.
     if(didHit){
-        return intersection(closestPrim->getParent(), closestPrim.get(), (closestRay.origin - r.origin).length());
+        return closestIsect;
     }else{
-        return intersection(false);
+        return noIntersect;
     }
 }
 
@@ -111,7 +113,7 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
         // Find the intersection points for each primitive in the leaf.
         for(unsigned int i=0; i<numPrims; ++i){
             ray rCopy(r);
-            if(primitives[node.prims[0]+i]->intersect(rCopy)){
+            if(primitives[node.prims[0]+i]->intersect(rCopy).hit){
                 return true;
             }
         }

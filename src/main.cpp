@@ -24,7 +24,7 @@ using namespace std;
 #include "geometry/sphere.hpp"
 
 #include "materials/material.hpp"
-#include "materials/brdf.hpp"
+#include "materials/bsdf.hpp"
 #include "color/color.hpp"
 #include "light/light.hpp"
 
@@ -41,6 +41,15 @@ using namespace std;
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt);
 
 int main(int argc, char* args[]){
+    /*
+    const sphere sph(point3(0,0,0), 1);
+    ray rr(point3(-10,0,11), normalize(vec3(1,0,-1)));
+    const intersection isect = sph.intersect(rr);
+    cerr << -rr.direction << endl;
+    cerr << worldToBsdf(-rr.direction, isect.normal, isect.dpdu, isect.dpdv) << endl;
+    return 0;
+    */
+
 	scene s;
 
     string filename;

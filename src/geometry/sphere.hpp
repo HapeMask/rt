@@ -4,6 +4,7 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
+#include "acceleration/intersection.hpp"
 #include "primitive.hpp"
 
 class sphere : public primitive {
@@ -11,8 +12,7 @@ class sphere : public primitive {
 		sphere(const point3& p, const float& r);
 		virtual ~sphere() {}
 
-		virtual const bool intersect(ray& r) const;
-		virtual const vec3 getNormal(const point3& p) const;
+		virtual const intersection intersect(ray& r) const;
         virtual const point3 uniformSampleSurface() const;
 
 	private:

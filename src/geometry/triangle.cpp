@@ -1,10 +1,13 @@
 #include "triangle.hpp"
 #include "shape.hpp"
 
+#include "utility.hpp"
+
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
+#include "acceleration/intersection.hpp"
 
 #include "samplers/samplers.hpp"
 
@@ -48,7 +51,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 	cPrime = vec2(c(axis1), c(axis2)) - aPrime;
 }
 
-const bool triangle::intersect(ray& r) const {
+const intersection triangle::intersect(ray& r) const {
 	const float D = dot(normal_, r.direction);
 
 	/* Backface culling.
@@ -59,7 +62,7 @@ const bool triangle::intersect(ray& r) const {
 
 	const float t = -dot(r.origin - a(), normal_) / D;
 	if(t <= r.tMin || t >= r.tMax){
-		return false;
+		return noIntersect;
 	}
 
 	// Determine the potential intersection point.
@@ -71,7 +74,7 @@ const bool triangle::intersect(ray& r) const {
 	const float dGamma = -dBeta;
 
 	if(abs(dBeta) <= EPSILON){
-		return false;
+		return noIntersect;
 	}
 
 	// Calculate the barycentric coordinates of the potential intersection.
@@ -79,11 +82,14 @@ const bool triangle::intersect(ray& r) const {
 	const float gamma = (pPrime.y() * bPrime.x() - pPrime.x()*bPrime.y()) / dGamma;
 
 	if(beta < -EPSILON || gamma < -EPSILON || beta+gamma > 1.f + EPSILON){
-		return false;
+		return noIntersect;
 	}
 
 	r.origin = pI;
-	return true;
+    intersection isect(parent, this, t);
+    isect.normal = normal_;
+    makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
+	return isect;
 }
 
 const point3 triangle::uniformSampleSurface() const{

@@ -43,7 +43,7 @@ scene(bvh){
         sphere(2.7,0.2,-2.8, 0.2)
         sphere(2.3,0.2,-2.8, 0.2)
         sphere(2.7,-0.2,-2.8, 0.2)
-        material(lambert(0,3,0))
+        material(lambert(0,1,0))
     }
 
     shape{

@@ -11,14 +11,14 @@ using tr1::shared_ptr;
 
 class shape;
 typedef shared_ptr<shape> shapePtr;
+class intersection;
 
 class primitive{
 	public:
         primitive(const aabb& box) : boundingBox(box) {}
 		virtual ~primitive() {}
 
-		virtual const bool intersect(ray& r) const = 0;
-		virtual const vec3 getNormal(const point3& p) const = 0;
+		virtual const intersection intersect(ray& r) const = 0;
         virtual const point3 uniformSampleSurface() const = 0;
 
 		void setParent(shape* p){

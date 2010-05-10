@@ -24,7 +24,7 @@ class bxdf {
         bxdf(const bxdfType t) : type(t) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const = 0;
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const = 0;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const = 0;
         virtual ~bxdf() {}
 
         const bxdfType getType() const {
@@ -47,7 +47,7 @@ class bsdf {
         ~bsdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type) const;
-        const rgbColor sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi, bxdfType type) const;
+        const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, bxdfType type) const;
         void addBxdf(bxdf* b);
 
     private:
@@ -61,7 +61,7 @@ class lambertianBrdf : public bxdf {
         lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(REFLECTION | DIFFUSE)), rOverPi(r / PI) {}
         virtual ~lambertianBrdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
     private:
@@ -74,9 +74,9 @@ class specularBrdf : public bxdf {
         {}
         virtual ~specularBrdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0,0,0);
+            return rgbColor(0.f);
         }
 
     private:
@@ -90,15 +90,27 @@ class specularBtdf : public bxdf {
         {}
         virtual ~specularBtdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0,0,0);
+            return rgbColor(0.f);
         }
 
     private:
         fresnelType fType;
         float ior;
 };
+
+class phongBrdf : public bxdf {
+    public:
+        phongBrdf(const float& N) : bxdf(bxdfType(REFLECTION | SPECULAR)), n(N)
+        {}
+
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+
+    private:
+        float n;
+}
 
 typedef shared_ptr<bsdf> bsdfPtr;
 typedef shared_ptr<bxdf> bxdfPtr;

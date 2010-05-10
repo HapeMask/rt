@@ -5,6 +5,8 @@
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 
+#include <cmath>
+
 bsdf::~bsdf(){
     if(specTra != NULL){
         delete specTra;
@@ -103,36 +105,36 @@ const rgbColor bsdf::f(const vec3& wi, const vec3& wo, bxdfType type) const{
     return rgbColor(0.f);
 }
 
-const rgbColor bsdf::sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi, bxdfType type) const{
+const rgbColor bsdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, bxdfType type) const{
     switch(type){
         case (SPECULAR | TRANSMISSION):
             if(specTra != NULL){
-                return specTra->sampleF(u1, u2, normal, wo, wi);
+                return specTra->sampleF(u1, u2, wo, wi);
             }
             break;
         case (SPECULAR | REFLECTION):
             if(specRef != NULL){
-                return specRef->sampleF(u1, u2, normal, wo, wi);
+                return specRef->sampleF(u1, u2, wo, wi);
             }
             break;
         case (DIFFUSE | TRANSMISSION):
             if(diffTra != NULL){
-                return diffTra->sampleF(u1, u2, normal, wo, wi);
+                return diffTra->sampleF(u1, u2, wo, wi);
             }
             break;
         case (DIFFUSE | REFLECTION):
             if(diffRef != NULL){
-                return diffRef->sampleF(u1, u2, normal, wo, wi);
+                return diffRef->sampleF(u1, u2, wo, wi);
             }
             break;
         case (GLOSSY | TRANSMISSION):
             if(glossTra != NULL){
-                return glossTra->sampleF(u1, u2, normal, wo, wi);
+                return glossTra->sampleF(u1, u2, wo, wi);
             }
             break;
         case (GLOSSY | REFLECTION):
             if(glossRef != NULL){
-                return glossRef->sampleF(u1, u2, normal, wo, wi);
+                return glossRef->sampleF(u1, u2, wo, wi);
             }
             break;
     }
@@ -144,17 +146,17 @@ const rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
 	return rOverPi;
 }
 
-const rgbColor lambertianBrdf::sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const{
+const rgbColor lambertianBrdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const{
     return rOverPi;
 }
 
-const rgbColor specularBrdf::sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const{
-    wi = reflect(-wo, normal);
+const rgbColor specularBrdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const{
+    wi = vec3(-wo.x(), wo.y(), -wo.z());
     return rgbColor(1,1,1);
 }
 
-const rgbColor specularBtdf::sampleF(const float& u1, const float& u2, const vec3& normal, const vec3& wo, vec3& wi) const{
-    const float cosTheta1 = dot(normal, -wo);
+const rgbColor specularBtdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const{
+    const bool entering = (bsdfCosTheta(wo) > 0.f);
 
     // The normal always points out of the object (as in PBRT), thus
     // we need to check if the ray is inside the object by checking
@@ -162,15 +164,31 @@ const rgbColor specularBtdf::sampleF(const float& u1, const float& u2, const vec
     //
     // Swaps IOR accordingly and generates a refraction normal
     // that always points in the same direction as the ray.
-    const float nr = (cosTheta1 <= 0.f) ? (1.f / ior) : (ior / 1.f);
-    const vec3 refractionNormal = (cosTheta1 <= 0.f) ? normal : -normal;
+    const float nr = entering ? (1.f / ior) : ior;
 
-    const float sinSqTheta = nr * nr * (1.f - cosTheta1*cosTheta1);
+    const float sin2ThetaT = nr * nr * bsdfSin2Theta(wo);
     // Total Internal Reflection
-    if(sinSqTheta > 1.f){
-        return rgbColor(0,0,0);
+    if(sin2ThetaT > 1.f){
+        return rgbColor(0.f);
     }
 
-    wi = normalize((nr * -wo) + (nr * cosTheta1 - sqrt(1.f - sinSqTheta)) * refractionNormal);
-    return rgbColor(1,1,1);
+    // Flip the normal if we're entering the surface.
+    const float cosThetaT = entering ?
+        -sqrtf(max(0.f, 1.f - sin2ThetaT)) :
+        sqrtf(max(0.f, 1.f - sin2ThetaT));
+
+    wi.x() = nr * -wo.x();
+    wi.y() = cosThetaT;
+    wi.z() = nr * -wo.z();
+    wi = normalize(wi);
+
+    return rgbColor(1.f);
+}
+
+const rgbColor phongBrdf::sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const{
+    return rgbColor(1.f);
+}
+
+const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
+    return 
 }

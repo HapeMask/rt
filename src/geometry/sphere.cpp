@@ -7,6 +7,8 @@
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
 
+#include "utility.hpp"
+
 #include <cmath>
 
 sphere::sphere(const point3& p, const float& r) :
@@ -18,7 +20,7 @@ sphere::sphere(const point3& p, const float& r) :
 	location(p), radius(r), radius2(r*r)
 {}
 
-const bool sphere::intersect(ray& r) const {
+const intersection sphere::intersect(ray& r) const {
 	const vec3 dir(r.origin - location);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);
@@ -26,7 +28,7 @@ const bool sphere::intersect(ray& r) const {
 	const float s = (B*B - 4*A*C);
 
 	if(s < EPSILON){
-		return false;
+		return noIntersect;
 	}
 
     const float q = (B < EPSILON) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
@@ -35,7 +37,7 @@ const bool sphere::intersect(ray& r) const {
 
 	if( (t0 <= r.tMin || t0 >= r.tMax) &&
 		(t1 <= r.tMin || t1 >= r.tMax)){
-        return false;
+        return noIntersect;
     }
 
     float t = 0.f;
@@ -50,13 +52,12 @@ const bool sphere::intersect(ray& r) const {
     }
 
 	r.origin += t * r.direction;
-	return true;
+    intersection isect(parent, this, t);
+    isect.normal = normalize(r.origin - location);
+    makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
+	return isect;
 }
 
 const point3 sphere::uniformSampleSurface() const{
     return point3(0,0,0);
-}
-
-const vec3 sphere::getNormal(const point3& p) const {
-	return normalize(p - location);
 }

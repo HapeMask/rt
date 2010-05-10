@@ -10,12 +10,15 @@ class intersection {
 		intersection() : hit(false), t(POS_INF) {}
 
 		intersection(const bool& didHit) : hit(didHit), t(POS_INF) {}
-		intersection(shape* sh, primitive* pr) : s(sh), p(pr), hit(true) {}
-		intersection(shape* sh, primitive* pr, const float& f) : s(sh), p(pr), hit(true), t(f) {}
+		intersection(const shape* sh, const primitive* pr) : s(sh), p(pr), hit(true) {}
+		intersection(const shape* sh, const primitive* pr, const float& f) : s(sh), p(pr), hit(true), t(f) {}
 
-		shape* s;
-		primitive* p;
+		const shape* s;
+		const primitive* p;
 		bool hit;
         float t;
+        vec3 dpdu, dpdv, normal;
 };
+
+static const intersection noIntersect(false);
 #endif
