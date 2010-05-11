@@ -306,7 +306,7 @@ class vec4 {
 		float values[4] ALIGN_16;
 };
 
-inline const vec3 max(const vec3& a, const vec3& b){
+inline const vec3 vecMax(const vec3& a, const vec3& b){
 	return vec3(
 			max(a(0),b(0)),
 			max(a(1),b(1)),
@@ -314,7 +314,7 @@ inline const vec3 max(const vec3& a, const vec3& b){
 		);
 }
 
-inline const vec3 min(const vec3& a, const vec3& b){
+inline const vec3 vecMin(const vec3& a, const vec3& b){
 	return vec3(
 			min(a(0),b(0)),
 			min(a(1),b(1)),
@@ -337,5 +337,7 @@ ostream& operator<<(ostream& out, const vec4& x);
 
 const vec3 operator*(const float& x, const vec3& u);
 vec3& operator*=(const float& x, vec3& u);
+
+const vec3 operator/(const float& x, const vec3& v);
 
 #endif

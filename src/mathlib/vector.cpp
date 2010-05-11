@@ -307,3 +307,7 @@ const vec3 operator*(const float& x, const vec3& u){
 vec3& operator*=(const float& x, vec3& u){
 	return (u *= x);
 }
+
+const vec3 operator/(const float& x, const vec3& v){
+	return vec3(x / v(0), x / v(1), x / v(2));
+}
