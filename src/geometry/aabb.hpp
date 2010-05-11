@@ -5,9 +5,6 @@
 #include "mathlib/ray.hpp"
 #include "mathlib/vector.hpp"
 
-#include <iostream>
-using namespace std;
-
 /**
  * Axis-Aligned Bounding Box
  * Sides defined looking down the +Z axis.
@@ -16,7 +13,7 @@ using namespace std;
  */
 class aabb {
 	public:
-        aabb() {}
+        aabb() : _min(vec3(POS_INF)), _max(vec3(NEG_INF)) {}
 
         aabb(const vec3& mi, const vec3& mx) : _min(mi), _max(mx), _mid((_min+_max)/2.f) {}
 
@@ -111,7 +108,7 @@ ostream& operator<<(ostream& out, const aabb& b);
  * Returns the bounding box that bounds boxes a and b.
  */
 inline const aabb mergeAabb(const aabb& a, const aabb& b){
-	return aabb(min(a.min(), b.min()), max(a.max(), b.max()));
+	return aabb(vecMin(a.min(), b.min()), vecMax(a.max(), b.max()));
 	/*
     return aabb(vec3(
                 minps(a.min().getSIMD(), b.min().getSIMD())),

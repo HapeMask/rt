@@ -15,8 +15,10 @@
 
 triangle::triangle(const point3& a, const point3& b, const point3& c) :
     primitive(aabb(
-                    vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
-                    vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
+                    //vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
+                    //vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
+					vecMin(vecMin(a, b), c),
+					vecMax(vecMax(a, b), c)
                 )
             ), hasVertNormals(false) {
 
