@@ -14,7 +14,7 @@ const rgbColor whittedRayTracer::L(const ray& r) const{
 
 const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(depth > MAXDEPTH){
-		return rgbColor(0,0,0);
+		return 0.f;
 	}
 
 	const intersection isect = parent->intersect(r);
@@ -35,7 +35,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     // Diffuse calculations.
 	for(unsigned int i=0; i<parent->numLights(); ++i){
         const lightPtr li = parent->getLight(i);
-		const point3 lightPosition = li->getPosition();
+		const point3& lightPosition = li->getPosition();
 		const float lightDist = (lightPosition - r.origin).length();
         const vec3 lightDir =  normalize(lightPosition - r.origin);
 
@@ -55,8 +55,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     // Trace specular rays.
     vec3 specDir;
     const rgbColor fr =
-        b.sampleF(0, 0, worldToBsdf(-r.direction, normal, isect.dpdu, isect.dpdv), specDir, bxdfType(SPECULAR | REFLECTION));
-    specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
+        b.sampleF(0, 0, worldToBsdf(-r.direction, normal, isect.dsdu, isect.dsdv), specDir, bxdfType(SPECULAR | REFLECTION));
+    specDir = bsdfToWorld(specDir, normal, isect.dsdu, isect.dsdv);
 
     if(!fr.isBlack()){
         ray r2(r.origin, specDir);
@@ -64,8 +64,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     }
 
     const rgbColor ft =
-        b.sampleF(0, 0, worldToBsdf(-r.direction, normal, isect.dpdu, isect.dpdv), specDir, bxdfType(SPECULAR | TRANSMISSION));
-    specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
+        b.sampleF(0, 0, worldToBsdf(-r.direction, normal, isect.dsdu, isect.dsdv), specDir, bxdfType(SPECULAR | TRANSMISSION));
+    specDir = bsdfToWorld(specDir, normal, isect.dsdu, isect.dsdv);
 
     if(!ft.isBlack()){
         ray r2(r.origin, specDir);

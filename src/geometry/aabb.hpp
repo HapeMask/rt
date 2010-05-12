@@ -91,7 +91,7 @@ class aabb {
              updateMid();
         }
 
-        const bool intersect(const ray& r, float& tmin) const;
+        const bool intersect(const ray& r, float& tmin, float& tmax) const;
 
     private:
         inline void updateMid() {
@@ -108,13 +108,10 @@ ostream& operator<<(ostream& out, const aabb& b);
  * Returns the bounding box that bounds boxes a and b.
  */
 inline const aabb mergeAabb(const aabb& a, const aabb& b){
-	return aabb(vecMin(a.min(), b.min()), vecMax(a.max(), b.max()));
-	/*
     return aabb(vec3(
                 minps(a.min().getSIMD(), b.min().getSIMD())),
             vec3(
                 maxps(a.max().getSIMD(), b.max().getSIMD())));
-	*/
 }
 
 #endif

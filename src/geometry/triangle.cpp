@@ -15,10 +15,8 @@
 
 triangle::triangle(const point3& a, const point3& b, const point3& c) :
     primitive(aabb(
-                    //vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
-                    //vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
-					vecMin(vecMin(a, b), c),
-					vecMax(vecMax(a, b), c)
+                    vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
+                    vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
                 )
             ), hasVertNormals(false) {
 
@@ -55,14 +53,8 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 
 const intersection triangle::intersect(ray& r) const {
 	const float D = dot(normal_, r.direction);
-
-	/* Backface culling.
-	if(D >= 0){
-		return false;
-	}
-	*/
-
 	const float t = -dot(r.origin - a(), normal_) / D;
+
 	if(t <= r.tMin || t >= r.tMax){
 		return noIntersect;
 	}
@@ -75,7 +67,7 @@ const intersection triangle::intersect(ray& r) const {
 	const float dBeta = bPrime.y()*cPrime.x() - bPrime.x()*cPrime.y();
 	const float dGamma = -dBeta;
 
-	if(abs(dBeta) <= EPSILON){
+	if(abs(dBeta) < EPSILON){
 		return noIntersect;
 	}
 
@@ -97,6 +89,7 @@ const intersection triangle::intersect(ray& r) const {
     }else{
         const float alpha = 1.f - (beta + gamma);
         isect.shadingNormal = alpha * vertNormals[0] + beta * vertNormals[1] + gamma * vertNormals[2];
+        makeCoordinateSystem(isect.shadingNormal, isect.dsdu, isect.dsdv);
     }
 	return isect;
 }

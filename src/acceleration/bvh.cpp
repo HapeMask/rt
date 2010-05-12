@@ -62,24 +62,25 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
 }
 
 const intersection bvh::_intersect(const int& index, const ray& r) const{
-    float tLeft=0, tRight=0;
+    float tLeftMin=0, tRightMin=0;
+    float tLeftMax=0, tRightMax=0;
 
     const bvhNode& node = nodes[index];
 
-    if(!node.box.intersect(r, tLeft)){
+    if(!node.box.intersect(r, tLeftMin, tLeftMax)){
         return intersection(false);
     }else if(node.axis == AXIS_LEAF){
         return leafTest(node, r);
     }
 
-    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeft);
-    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRight);
+    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
+    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
         const intersection isectLeft = _intersect(node.children[LEFT], r);
         // Early exit if the intersection is closer than the other box.
-        if(isectLeft.t <= tRight){
+        if(isectLeft.t <= tRightMin){
             return isectLeft;
         }else{
             const intersection isectRight = _intersect(node.children[RIGHT], r);
@@ -102,10 +103,11 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
  * Used for shadow rays, returns as soon as it finds a hit.
  */
 const bool bvh::_intersectB(const int& index, const ray& r) const{
-    float tLeft=0, tRight=0;
+    float tLeftMin=0, tRightMin=0;
+    float tLeftMax=0, tRightMax=0;
 
     const bvhNode& node = nodes[index];
-    if(!node.box.intersect(r, tLeft)){
+    if(!node.box.intersect(r, tLeftMin, tLeftMax)){
         return false;
     }else if(node.axis == AXIS_LEAF){
         const unsigned int numPrims = node.prims[1] - node.prims[0];
@@ -120,8 +122,8 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
         return false;
     }
 
-    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeft);
-    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRight);
+    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
+    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){

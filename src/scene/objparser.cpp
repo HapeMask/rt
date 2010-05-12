@@ -112,7 +112,6 @@ const vector<trianglePtr> objParser::parse(const string& filename){
 
     // Sum the normals for all faces adjacent to each vert,
     // then store the vertex normal.
-    cerr << "TEST" << endl;
     vector<vec3> vertNormals;
     for(size_t i=0; i<points.size(); ++i){
         const vector<trianglePtr>& vps = vertPolys[i];
