@@ -13,13 +13,14 @@ class shape;
 typedef shared_ptr<shape> shapePtr;
 class intersection;
 
-class primitive{
+class primitive {
 	public:
         primitive(const aabb& box) : boundingBox(box) {}
 		virtual ~primitive() {}
 
 		virtual const intersection intersect(ray& r) const = 0;
         virtual const point3 uniformSampleSurface() const = 0;
+        virtual const vec3 getNormal(const point3& p) const = 0;
 
 		void setParent(shape* p){
             parent = p;
@@ -29,12 +30,6 @@ class primitive{
 			return boundingBox;
 		}
 
-        /**
-         * NOTE: Never construct a primitivePtr from this!
-         * NEVER!
-         * This shape* probably came from a shape instance owned by a
-         * reference counted shapePtr.
-         */
 		shape* getParent() const {
 			return parent;
 		}

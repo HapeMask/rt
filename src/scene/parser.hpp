@@ -47,6 +47,7 @@ class sceneParser {
 		cameraPtr cam();
 };
 
+static const regex COMMENTLINE("//[^\\n\\r]*(\\n|\\r|\\r\\n)");
 static const regex WHITESPACE("\\s+");
 static const regex LPAREN("\\(");
 static const regex RPAREN("\\)");

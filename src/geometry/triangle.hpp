@@ -41,7 +41,11 @@ class triangle : public primitive {
 			return points[2];
 		}
 
-        const vec3& normal() const{
+        virtual const vec3 getNormal(const point3& p) const {
+            return normal_;
+        }
+
+        inline const vec3& normal() const {
             return normal_;
         }
 

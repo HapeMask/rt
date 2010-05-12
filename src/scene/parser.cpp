@@ -32,9 +32,10 @@ sceneParser::sceneParser() : text(""), currentToken("")
 void sceneParser::parse(scene& s, istream& in){
 	string temp("");
 	while(getline(in, temp)){
-		text += temp;
+		text += temp + '\n';
 	}
 
+	text = regex_replace(text, COMMENTLINE, "");
 	text = regex_replace(text, WHITESPACE, "");
 #ifndef RT_NO_EXCEPTIONS
 	try{

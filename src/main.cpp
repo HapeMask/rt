@@ -91,7 +91,7 @@ int main(int argc, char* args[]){
 	srand(time(NULL));
 
     /*
-    ray r0 = c.getRay(226,321);
+    ray r0 = c.getRay(256,128);
     cerr << rt.L(r0) << endl;
     return 0;
     */

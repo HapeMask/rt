@@ -1,4 +1,4 @@
-#ifndef __RT_SAMPLERS___
+#ifndef __RT_SAMPLERS__
 #define __RT_SAMPLERS__
 
 #include "mathlib/vector.hpp"
@@ -11,6 +11,10 @@
 
 inline const float sampleUniform(){
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+}
+
+inline const int sampleRange(const int& a, const int& b){
+    return a + (rand() % (b-a+1));
 }
 
 inline void uniformSampleDisk(vec3& v){
@@ -41,7 +45,7 @@ inline void uniformSampleTriangle(point3& p, const triangle& t){
     const float u = 1.f - su0;
     const float v = u1 * su0;
 
-    p = u * (t.b() - t.a()) + v * (t.c() - t.a());
+    p = (u * t.a() + v * t.b() + (1.f - u - v) * t.c());
 }
 
 inline void cosineSampleHemisphere(vec3& v){

@@ -40,7 +40,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         const vec3 lightDir =  normalize(lightPosition - r.origin);
 
 		// Test for shadowing early.
-		ray shadowRay(point3(r.origin), lightDir);
+		ray shadowRay(r.origin, lightDir);
 		shadowRay.tMax = lightDist;
 		const intersection isect2 = parent->intersect(shadowRay);
 		if(isect2.hit){
@@ -51,6 +51,25 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 		Li += (c * dot(normal, lightDir) *
 		(1.f / (lightDist*lightDist))) * li->getPower() * li->getColor();
 	}
+
+    // Area light.
+    const unsigned int areaSamps = 64;
+    for(unsigned int i=0; i<areaSamps; ++i){
+        const shape& emitter = *parent->getEmitter(0).get();
+        vec3 eNorm;
+        const point3& emitterSample = emitter.uniformSampleSurface(eNorm);
+        const float emitterDist = (emitterSample - r.origin).length();
+        const vec3 emitterDir = normalize(emitterSample - r.origin);
+        ray emitRay(r.origin, emitterDir);
+        emitRay.tMax = emitterDist - EPSILON;
+        const intersection isectE = parent->intersect(emitRay);
+
+        if(!isectE.hit && dot(eNorm, emitterDir) <= 0.f){
+            const rgbColor c = mat.sample(r.origin, -r.direction, emitterDir, bxdfType(DIFFUSE | REFLECTION));;
+            Li += (emitter.getMaterial()->Le() * (1.f / (emitterDist*emitterDist)) * c * dot(normal, emitterDir))
+                / (float)areaSamps;
+        }
+    }
 
     // Trace specular rays.
     vec3 specDir;

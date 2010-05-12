@@ -4,7 +4,9 @@
 #include "primitive.hpp"
 #include "materials/material.hpp"
 #include "color/color.hpp"
+#include "samplers/samplers.hpp"
 
+#include <cmath>
 #include <vector>
 #include <tr1/memory>
 using namespace std;
@@ -26,6 +28,13 @@ class shape {
 		const aabb& getBounds(){
 			return bounds;
 		}
+
+        const point3 uniformSampleSurface(vec3& normal) const {
+            const primitive& prim = *prims[sampleRange(0,prims.size()-1)].get();
+            const point3& p = prim.uniformSampleSurface();
+            normal = prim.getNormal(p);
+            return p;
+        }
 
 	protected:
 		vector<primitivePtr> prims;

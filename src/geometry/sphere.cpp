@@ -60,6 +60,10 @@ const intersection sphere::intersect(ray& r) const {
 	return isect;
 }
 
+const vec3 sphere::getNormal(const point3& p) const{
+    return normalize(p - location);
+}
+
 const point3 sphere::uniformSampleSurface() const{
     return point3(0,0,0);
 }
