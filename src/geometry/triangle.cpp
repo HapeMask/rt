@@ -55,7 +55,7 @@ const intersection triangle::intersect(ray& r) const {
 	const float D = dot(normal_, r.direction);
 	const float t = -dot(r.origin - a(), normal_) / D;
 
-	if(t <= r.tMin || t >= r.tMax){
+	if(t < r.tMin || t >= r.tMax){
 		return noIntersect;
 	}
 
@@ -67,9 +67,11 @@ const intersection triangle::intersect(ray& r) const {
 	const float dBeta = bPrime.y()*cPrime.x() - bPrime.x()*cPrime.y();
 	const float dGamma = -dBeta;
 
+    /*
 	if(abs(dBeta) < EPSILON){
 		return noIntersect;
 	}
+    */
 
 	// Calculate the barycentric coordinates of the potential intersection.
 	const float beta = (pPrime.y()*cPrime.x() - pPrime.x()*cPrime.y()) / dBeta;
@@ -78,7 +80,6 @@ const intersection triangle::intersect(ray& r) const {
 	if(beta < 0.f || gamma < 0.f || beta+gamma > 1.f){
 		return noIntersect;
 	}
-
 
 	r.origin = pI;
     intersection isect(parent, this, t);

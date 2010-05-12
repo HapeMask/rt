@@ -19,7 +19,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
 	const intersection isect = parent->intersect(r);
 	if(!isect.hit){
-		return 0.f;
+		return rgbColor(0.2,0.3,1.f);
 	}
 
     // Handle emissive and specular materials.

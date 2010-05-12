@@ -1,54 +1,54 @@
-scene(bvh){
-	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
-    light<point>(0,2.5,0, 1,1,1, 8.0)
+scene(default){
+	camera<512,512>(45, 0,0,20, 0,0,0, 0,1,0)
+    light<point>(0,2.5,0, 1,1,1, 32.0)
 
 	shape{
-        triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
-        triangle(-3,3,-3, -3,3,3, -3,-3,3)
+        triangle(-6,-6,-6, -6,6,-6, -6,-6,6)
+        triangle(-6,6,-6, -6,6,6, -6,-6,6)
 		material(lambert(0,1,0))
 	}
 
 	shape{
-        triangle(3,-3,3, 3,3,-3, 3,-3,-3)
-        triangle(3,-3,3, 3,3,3, 3,3,-3)
+        triangle(6,-6,6, 6,6,-6, 6,-6,-6)
+        triangle(6,-6,6, 6,6,6, 6,6,-6)
 		material(lambert(0,0,1))
 	}
 
 	shape{
-        triangle(-3,3,-3, 3,-3,-3, 3,3,-3)
-        triangle(-3,3,-3, -3,-3,-3, 3,-3,-3)
+        triangle(-6,6,-6, 6,-6,-6, 6,6,-6)
+        triangle(-6,6,-6, -6,-6,-6, 6,-6,-6)
 
-        triangle(3,3,-3, 3,3,3, -3,3,-3)
-        triangle(3,3,3, -3,3,3, -3,3,-3)
+        triangle(6,6,-6, 6,6,6, -6,6,-6)
+        triangle(6,6,6, -6,6,6, -6,6,-6)
 
-        triangle(-3,-3,-3, 3,-3,3, 3,-3,-3)
-        triangle(-3,-3,-3, -3,-3,3, 3,-3,3)
+        triangle(-6,-6,-6, 6,-6,6, 6,-6,-6)
+        triangle(-6,-6,-6, -6,-6,6, 6,-6,6)
 
 		material(lambert(1,1,1))
 	}
 
     shape{
-        sphere(2,2,0, 1)
-        sphere(2,-2,0, 1)
+        sphere(4,4,0, 2)
+        sphere(4,-4,0, 2)
         material(specular(conductor))
     }
 
     shape{
-        sphere(2,0,0, 1)
+        sphere(4,0,0, 2)
         material(specular(dielectric, 1.33))
     }
 
     shape{
-        sphere(2.3,-0.2,-2.8, 0.2)
-        sphere(2.7,0.2,-2.8, 0.2)
-        sphere(2.3,0.2,-2.8, 0.2)
-        sphere(2.7,-0.2,-2.8, 0.2)
+        sphere(4.4,-0.4,-5.6, 0.4)
+        sphere(4.6,0.4,-5.6, 0.4)
+        sphere(4.4,0.4,-5.6, 0.4)
+        sphere(4.6,-0.4,-5.6, 0.4)
         material(lambert(0,1,0))
     }
 
     shape{
-        triangle(-0.5,2.99,-0.5, 0.5,2.99,-0.5, -0.5,2.99,0.5)
-        triangle(0.5,2.99,0.5, -0.5,2.99,0.5, 0.5,2.99,-0.5)
+        triangle(-0.5,5.99,-0.5, 0.5,5.99,-0.5, -0.5,5.99,0.5)
+        triangle(0.5,5.99,0.5, -0.5,5.99,0.5, 0.5,5.99,-0.5)
         material(emissive(1,1,1, 2.0))
     }
 }

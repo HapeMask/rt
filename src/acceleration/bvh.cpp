@@ -10,6 +10,7 @@
 #include "mathlib/constants.hpp"
 #include "scene/scene.hpp"
 
+#include <sys/time.h>
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -158,7 +159,16 @@ void bvh::build(const scene& s){
     nodes = new bvhNode[numNodes];
 
     int index = 0;
+    cerr << "Building BVH..." << endl;
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
+
     _build(s.getBounds(), 0, primitives.size(), primitives, nodes, AXIS_X, index);
+
+	gettimeofday(&end, NULL);
+	float sec = end.tv_sec - start.tv_sec;
+	sec += (end.tv_usec - start.tv_usec) / 1e6;
+	cerr << "Built BVH in " << sec << "s." << endl;
 }
 
 void bvh::_build(const aabb& box,

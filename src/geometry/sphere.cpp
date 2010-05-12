@@ -27,7 +27,7 @@ const intersection sphere::intersect(ray& r) const {
 	const float C = dot(dir, dir) - (radius*radius);
 	const float s = (B*B - 4*A*C);
 
-	if(s < EPSILON){
+	if(s < 0.f){
 		return noIntersect;
 	}
 

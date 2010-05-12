@@ -52,7 +52,7 @@ static const regex LPAREN("\\(");
 static const regex RPAREN("\\)");
 static const regex LBRACE("\\{");
 static const regex RBRACE("\\}");
-static const regex FILEPATH("\"[a-zA-Z0-9.-_/]+\"");
+static const regex FILEPATH("\"[a-zA-Z0-9._/-]+\"");
 static const regex SCENE("scene");
 static const regex CAMERA("camera");
 static const regex BRDF("lambert|specular|phong|microfacet");
