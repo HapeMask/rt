@@ -167,7 +167,17 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
 #endif
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
-			f.drawPixel(x, y, rt.L(c.getRay(x,y)));
+            f.drawPixel(x, y, rt.L(c.getRay(x,y)));
+            /*
+			f.drawPixel(x, y,
+                    (rt.L(c.getRay(x,y)) +
+                     rt.L(c.getRay((float)x+0.25f,(float)y+0.25f)) + 
+                     rt.L(c.getRay((float)x-0.25f,(float)y+0.25f)) + 
+                     rt.L(c.getRay((float)x-0.25f,(float)y-0.25f)) + 
+                     rt.L(c.getRay((float)x+0.25f,(float)y-0.25f))
+                    )/5.f
+                    );
+                    */
 		}
 	}
 

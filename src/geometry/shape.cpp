@@ -13,4 +13,6 @@ void shape::addPrimitive(primitivePtr p){
 	p->setParent(this);
 
     bounds = mergeAabb(bounds, p->getBounds());
+    area_ += p->area();
+    pdf_ = 1.f / area_;
 }

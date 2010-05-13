@@ -64,6 +64,6 @@ const vec3 sphere::getNormal(const point3& p) const{
     return normalize(p - location);
 }
 
-const point3 sphere::uniformSampleSurface() const{
+const point3 sphere::sampleSurface(const float& u0, const float& u1) const{
     return point3(0,0,0);
 }

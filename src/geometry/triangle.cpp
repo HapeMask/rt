@@ -24,7 +24,9 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 	points[1] = b;
 	points[2] = c;
 
-	normal_ = normalize(cross(b - a, c - a));
+    normal_ = cross(b - a, c - a);
+    area_ = 0.5 * normal_.length();
+	normal_ = normalize(normal_);
 
 	// Find the biggest normal axis, then remove that
 	// coordinate from A, B, C to get a,b,cPrime.
@@ -95,9 +97,9 @@ const intersection triangle::intersect(ray& r) const {
 	return isect;
 }
 
-const point3 triangle::uniformSampleSurface() const{
+const point3 triangle::sampleSurface(const float& u0, const float& u1) const {
     point3 ret;
-    uniformSampleTriangle(ret, *this);
+    sampleTriangle(ret, *this, u0, u1);
     return ret;
 }
 

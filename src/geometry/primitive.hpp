@@ -1,6 +1,7 @@
 #ifndef __RT_PRIM__
 #define __RT_PRIM__
 
+#include "samplers/samplers.hpp"
 #include "aabb.hpp"
 #include "mathlib/point.hpp"
 
@@ -19,8 +20,14 @@ class primitive {
 		virtual ~primitive() {}
 
 		virtual const intersection intersect(ray& r) const = 0;
-        virtual const point3 uniformSampleSurface() const = 0;
+
+        virtual const point3 sampleSurface(const float& u0, const float& u1) const = 0;
+        virtual const point3 uniformSampleSurface() const {
+            return sampleSurface(sampleUniform(), sampleUniform());
+        }
+
         virtual const vec3 getNormal(const point3& p) const = 0;
+        virtual const float area() const = 0;
 
 		void setParent(shape* p){
             parent = p;

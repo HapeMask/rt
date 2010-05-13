@@ -53,11 +53,18 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	}
 
     // Area light.
-    const unsigned int areaSamps = 64;
-    for(unsigned int i=0; i<areaSamps; ++i){
-        const shape& emitter = *parent->getEmitter(0).get();
-        vec3 eNorm;
-        const point3& emitterSample = emitter.uniformSampleSurface(eNorm);
+    const unsigned int areaSamples = 16;
+
+    const shape& emitter = *parent->getEmitter(0).get();
+    const primitive& prim = *emitter.getPrimitives()[sampleRange(0, emitter.getPrimitives().size()-1)].get();
+    float samples[areaSamples][2];
+    getLDSamples2D(samples, areaSamples);
+    for(unsigned int i=0; i<areaSamples; ++i){
+        //vec3 eNorm;
+        //const point3 emitterSample = emitter.sampleSurface(eNorm, samples[i][0], samples[i][1]);
+        const point3 emitterSample = prim.sampleSurface(samples[i][0], samples[i][1]);
+        const vec3 eNorm = prim.getNormal(emitterSample);
+
         const float emitterDist = (emitterSample - r.origin).length();
         const vec3 emitterDir = normalize(emitterSample - r.origin);
         ray emitRay(r.origin, emitterDir);
@@ -67,7 +74,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         if(!isectE.hit && dot(eNorm, emitterDir) <= 0.f){
             const rgbColor c = mat.sample(r.origin, -r.direction, emitterDir, bxdfType(DIFFUSE | REFLECTION));;
             Li += (emitter.getMaterial()->Le() * (1.f / (emitterDist*emitterDist)) * c * dot(normal, emitterDir))
-                / (float)areaSamps;
+                / (float)areaSamples;
         }
     }
 

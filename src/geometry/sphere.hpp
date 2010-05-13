@@ -1,6 +1,7 @@
 #ifndef __RT_SPHERE__
 #define __RT_SPHERE__
 
+#include "mathlib/constants.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
@@ -13,8 +14,12 @@ class sphere : public primitive {
 		virtual ~sphere() {}
 
 		virtual const intersection intersect(ray& r) const;
-        virtual const point3 uniformSampleSurface() const;
+        virtual const point3 sampleSurface(const float& u0, const float& u1) const;
         virtual const vec3 getNormal(const point3& p) const;
+
+        inline virtual const float area() const {
+            return 4.f * PI * radius2;
+        }
 
 	private:
 		point3 location;

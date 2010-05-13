@@ -7,6 +7,7 @@
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"
+#include "acceleration/intersection.hpp"
 
 #include <tr1/memory>
 
@@ -51,7 +52,10 @@ class triangle : public primitive {
 
         void setVertNormals(const vec3& an, const vec3& bn, const vec3& cn);
 
-        virtual const point3 uniformSampleSurface() const;
+        virtual const point3 sampleSurface(const float& u0, const float& u1) const;
+        inline virtual const float area() const {
+            return area_;
+        }
 
 	private:
 		point3 points[3];
@@ -62,6 +66,7 @@ class triangle : public primitive {
 		vec2 bPrime;
 		vec2 cPrime;
 
+        float area_;
 		unsigned short axis1;
 		unsigned short axis2;
 
