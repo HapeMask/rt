@@ -72,24 +72,6 @@ inline const vec3 bsdfToWorld(const vec3& v, const vec3& n, const vec3& dpdu, co
             dpdu.z() * v.x() + n.z() * v.y() + dpdv.z() * v.z());
 }
 
-inline const float bsdfCosTheta(const vec3& v){
-    return v.y();
-}
-
-inline const float bsdfCos2Theta(const vec3& v){
-    return v.y()*v.y();
-}
-
-inline const float bsdfSinTheta(const vec3& v){
-    // sintheta(v) = sqrt(1 - cos2theta(v))
-    return sqrtf(max(0.f, 1.f - v.y()*v.y()));
-}
-
-inline const float bsdfSin2Theta(const vec3& v){
-    const float c = bsdfCosTheta(v);
-    return 1.f - c*c;
-}
-
 inline void debugPrint(string s){
 #ifdef DEBUG
 	cout << s << endl;

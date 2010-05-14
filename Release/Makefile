@@ -18,19 +18,18 @@ LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
 SRC = $(shell find $(SRCDIR) -name '*.cpp')
 OBJS=$(SRC:.cpp=.o)
 
-all: deps rt
+all: rt
+
+#include  deps
+
+rt: $(OBJS)
+	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
 deps:
 	-rm deps;
 	for f in $(SRC); do\
 		cpp -MM $(CXXFLAGS) $$f >> deps;\
 	done
-
-include deps
-
-rt: $(OBJS)
-	@echo "OBJS: $(OBJS)"
-	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
 clean:
 	-rm $(shell find $(SRCDIR) -name '*.o')

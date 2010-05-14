@@ -91,7 +91,7 @@ int main(int argc, char* args[]){
 	srand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,128);
+    ray r0 = c.getRay(400,400);
     cerr << rt.L(r0) << endl;
     return 0;
     */
@@ -180,6 +180,5 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
                     */
 		}
 	}
-
-	f.flip();
+    f.flip();
 }

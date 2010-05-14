@@ -1,6 +1,6 @@
 scene(default){
 	camera<512,512>(45, 0,0,20, 0,0,0, 0,1,0)
-    //light<point>(0,2.5,0, 1,1,1, 32.0)
+    light<point>(0,5,0, 1,1,1, 32.0)
 
 	shape{
         triangle(-6,-6,-6, -6,6,-6, -6,-6,6)
@@ -28,28 +28,20 @@ scene(default){
 	}
 
     shape{
-        sphere(4,4,0, 2)
-        sphere(4,-4,0, 2)
-        material(specular(conductor))
-    }
-
-    shape{
         sphere(4,0,0, 2)
         material(specular(dielectric, 1.33))
     }
 
     shape{
-        sphere(4.4,-0.4,-5.6, 0.4)
-        sphere(4.6,0.4,-5.6, 0.4)
-        sphere(4.4,0.4,-5.6, 0.4)
-        sphere(4.6,-0.4,-5.6, 0.4)
-        material(lambert(0,1,0))
+        sphere(4,4,0, 2)
+        sphere(4,-4,0, 2)
+        material(specular(conductor))
     }
 
-    shape{
-        triangle(-1.0,5.9,-1.0, 1.0,5.9,-1.0, -1.0,5.9,1.0)
-        triangle(1.0,5.9,1.0, -1.0,5.9,1.0, 1.0,5.9,-1.0)
-        material(emissive(1,1,1, 32.0))
-    }
+//    shape{
+//        triangle(-1.0,5.9,-1.0, 1.0,5.9,-1.0, -1.0,5.9,1.0)
+//        triangle(1.0,5.9,1.0, -1.0,5.9,1.0, 1.0,5.9,-1.0)
+//        material(emissive(1,1,1, 32.0))
+//    }
 }
 

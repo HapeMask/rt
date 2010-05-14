@@ -17,7 +17,7 @@ class material {
         material(const rgbColor& c, const float& pow);
 
         const rgbColor Le() const;
-        const rgbColor sample(const point3& p, const vec3& wi, const vec3& wo, bxdfType type) const;
+        const rgbColor sample(const point3& p, const vec3& wo, const vec3& wi, bxdfType type) const;
 
         inline const bsdf& getBsdf() const {
             return *b.get();

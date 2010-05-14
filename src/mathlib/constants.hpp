@@ -7,6 +7,8 @@ static const float NEG_INF = logf(0);
 static const float PI = 3.141592653589793f;
 static const float TWOPI = 2.0f*PI;
 static const float HALFPI = PI/2.0f;
+static const float INVPI = 1.f/PI;
+static const float INVTWOPI = 1.f/TWOPI;
 
 // Bigger than real machine epsilon usually.
 static const float EPSILON = 5e-5f;

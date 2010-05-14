@@ -242,30 +242,75 @@ lightPtr sceneParser::li(){
 	match(RANGLE);
 	match(LPAREN);
 	if(type == "point"){
-		float px = curFloat();
+		const float px = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float py = curFloat();
+		const float py = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float pz = curFloat();
+		const float pz = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float r = curFloat();
+		const float r = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float g = curFloat();
+		const float g = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float b = curFloat();
+		const float b = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float i = curFloat();
+		const float intensity = curFloat();
 		match(FLOAT);
         match(RPAREN);
-		const lightPtr l(new pointLight(point3(px,py,pz), rgbColor(r,g,b), i));
+
+		const lightPtr l(new pointLight(point3(px,py,pz), intensity, rgbColor(r,g,b)));
         return l;
-	}
+	}else if(type == "area"){
+		const float px = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float py = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float pz = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float ax = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float ay = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float az = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float bx = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float by = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float bz = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float r = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float g = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		const float b = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float intensity = curFloat();
+		match(FLOAT);
+        match(RPAREN);
+
+		const lightPtr l(new areaLight(point3(px,py,pz), intensity, rgbColor(r,g,b),
+                    vec3(ax,ay,az), vec3(bx,by,bz)));
+        return l;
+    }
 }
 
 vector<primitivePtr> sceneParser::primitiveList(){

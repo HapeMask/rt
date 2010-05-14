@@ -19,12 +19,57 @@ enum fresnelType {
     DIELECTRIC = 1
 };
 
+class bxdf;
+class bsdf {
+    public:
+        bsdf() : specTra(NULL), specRef(NULL),
+        diffTra(NULL), diffRef(NULL),
+        glossTra(NULL), glossRef(NULL) {}
+        ~bsdf();
+
+        virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type) const;
+        const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
+                const vec3& wo, vec3& wi, bxdfType type) const;
+
+        const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
+                const vec3& wo, vec3& wi, bxdfType type, float& pd) const;
+
+        void addBxdf(bxdf* b);
+
+        inline static const bool isSupertype(bxdfType a, bxdfType b) {
+            return (a & b);
+        }
+
+        inline static const float cosTheta(const vec3& v){
+            return v.y();
+        }
+
+        inline static const float cos2Theta(const vec3& v){
+            return v.y()*v.y();
+        }
+
+        inline static const float sinTheta(const vec3& v){
+            // sintheta(v) = sqrt(1 - cos2theta(v))
+            return sqrtf(max(0.f, 1.f - v.y()*v.y()));
+        }
+
+        inline static const float sin2Theta(const vec3& v){
+            const float c = cosTheta(v);
+            return 1.f - c*c;
+        }
+
+    private:
+        bxdf *specTra, *specRef,
+             *diffTra, *diffRef,
+             *glossTra, *glossRef;
+};
+
 class bxdf {
     public:
         bxdf(const bxdfType t) : type(t) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const = 0;
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const = 0;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, float& pd) const;
         virtual ~bxdf() {}
 
         const bxdfType getType() const {
@@ -35,25 +80,14 @@ class bxdf {
             return (type & t) == type;
         }
 
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
+            // PDF for solid angle over entire hemisphere:
+            // Cos(Theta)/Pi
+            return bsdf::cosTheta(wi) * INVPI;
+        }
+
     private:
         bxdfType type;
-};
-
-class bsdf {
-    public:
-        bsdf() : specTra(NULL), specRef(NULL),
-        diffTra(NULL), diffRef(NULL),
-        glossTra(NULL), glossRef(NULL) {}
-        ~bsdf();
-
-        virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type) const;
-        const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, bxdfType type) const;
-        void addBxdf(bxdf* b);
-
-    private:
-        bxdf *specTra, *specRef,
-             *diffTra, *diffRef,
-             *glossTra, *glossRef;
 };
 
 class lambertianBrdf : public bxdf {
@@ -61,7 +95,6 @@ class lambertianBrdf : public bxdf {
         lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(REFLECTION | DIFFUSE)), rOverPi(r / PI) {}
         virtual ~lambertianBrdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
     private:
@@ -74,9 +107,13 @@ class specularBrdf : public bxdf {
         {}
         virtual ~specularBrdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0.f);
+            return 0.f;
+        }
+
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const{
+            return 0.f;
         }
 
     private:
@@ -90,9 +127,13 @@ class specularBtdf : public bxdf {
         {}
         virtual ~specularBtdf() {}
 
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0.f);
+            return 0.f;
+        }
+
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
+            return 0.f;
         }
 
     private:
