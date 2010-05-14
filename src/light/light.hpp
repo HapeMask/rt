@@ -5,6 +5,7 @@
 
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
+#include "mathlib/ray.hpp"
 #include "color/color.hpp"
 
 using namespace std;
@@ -14,12 +15,18 @@ class light {
 	public:
 		light(const point3& p, const float& pow, const rgbColor& c) : lightColor(c), position(p), power(pow) {}
 
-        virtual const rgbColor sampleL(const float& u0, const float& u1) const = 0;
+        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
+        virtual const bool intersect(const ray& r) const {
+            return false;
+        }
 
-		virtual const rgbColor L(const point3& p) const = 0;
+		inline virtual const rgbColor L(const point3& p) const {
+            return lightColor * power * (1.f / (position - p).length2());
+        }
+
         virtual const bool isPointSource() const = 0;
 
-        const point3& getPosition(){
+        const point3& getPosition() const{
             return position;
         }
 
@@ -32,39 +39,37 @@ class light {
 		}
 
 	protected:
-        vec3 position;
+        point3 position;
 		rgbColor lightColor;
 		float power;
 };
 
 class pointLight : public light {
 	public:
-		pointLight(const point3& p, const rgbColor& c, const float& pow);
+		pointLight(const point3& p, const float& pow, const rgbColor& c);
         inline virtual const bool isPointSource() const {
             return true;
         }
 
-        virtual const rgbColor sampleL(const float& u0, const float& u1) const {
-            return 0.f;
-        }
-		virtual const rgbColor L(const point3& p) const;
+        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
 };
 
 class areaLight : public light {
     public:
-        areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
-                const vec3& A, const vec3& B,
-                const vec3& normal, const float& w, const float& h);
+        areaLight(const point3& p, const float& pow, const rgbColor& c,
+                const vec3& A, const vec3& B);
+
+        virtual const bool intersect(const ray& r) const;
         inline virtual const bool isPointSource() const {
             return false;
         }
 
-        virtual const rgbColor sampleL(const float& u0, const float& u1) const;
+        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
 		virtual const rgbColor L(const point3& p) const;
 
     private:
         vec3 a, b, normal;
-        float width, height;
+        float invArea;
 };
 
 typedef shared_ptr<light> lightPtr;
