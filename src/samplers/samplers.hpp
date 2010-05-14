@@ -12,11 +12,11 @@ void uniformSampleDisk(vec3& v);
 void uniformSampleHemisphere(vec3& v);
 void sampleTriangle(point3& p, const triangle& t, const float& u0, const float& u1);
 void uniformSampleTriangle(point3& p, const triangle& t);
-void sampleRectangle(point3& p, const vec3& a, const vec3& b, const point3& A,
+void sampleRectangle(point3& p, const vec3& a, const vec3& b, const point3& pos,
         const float& u0, const float& u1);
 void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point3& A);
-void cosineSampleHemisphere(vec3& v);
+void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1);
 const float radicalInverse(unsigned int n, const int& base);
-void getLDSamples2D(float samples[][2], const int& count);
+void getLDSamples2D(float samples[][2], const unsigned int& count);
 
 #endif
