@@ -15,12 +15,17 @@
 #include <algorithm>
 using namespace std;
 
+//DBG
+int boxesTested = 0;
+
 const intersection bvh::intersect(ray& r) const{
-    const intersection isect = _intersect(0, r);
+    intersection isect = _intersect(0, r);
     if(isect.hit){
         r.origin += isect.t * r.direction;
     }
 
+    isect.debugInfo = boxesTested;
+    boxesTested = 0;
     return isect;
 }
 
@@ -76,6 +81,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
 
     const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
     const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
+    boxesTested += 2;
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){

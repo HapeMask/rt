@@ -18,6 +18,7 @@ class intersection {
 		bool hit;
         float t;
         vec3 dpdu, dpdv, dsdu, dsdv, normal, shadingNormal;
+        int debugInfo;
 };
 
 static const intersection noIntersect(false);
