@@ -61,11 +61,14 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         }else{
             // Area Sampling
             rgbColor areaContrib(0.f);
+
             for(unsigned int i=0; i<areaSamples; ++i){
                 vec3 lightDir;
                 float pdf;
 
-                const rgbColor Li = li->sampleL(r.origin, lightDir, 0, 0, pdf);
+                float sample[2];
+                getNextSample(sample);
+                const rgbColor Li = li->sampleL(r.origin, lightDir, sample[0], sample[1], pdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
                 shadowRay.tMax = lightDir.length();

@@ -39,7 +39,7 @@ using namespace std;
 #define RT_OMP_THREADS 8
 #endif
 
-void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt);
+void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize);
 
 int main(int argc, char* args[]){
     /*
@@ -108,7 +108,8 @@ int main(int argc, char* args[]){
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-    draw(height, width, c, f, rt);
+    const unsigned int blockSize = (width/numThreads)*(height/numThreads);
+    draw(height, width, c, f, rt, blockSize);
 
 	gettimeofday(&end, NULL);
 
@@ -132,27 +133,27 @@ int main(int argc, char* args[]){
                             break;
                         case 'w':
                             c.move(vec3(0.f,0.f,-0.3f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case 'z':
                             c.move(vec3(0.f,-0.3f,0.f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case 's':
                             c.move(vec3(0.f,0.f,0.3f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case 'x':
                             c.move(vec3(0.f,0.3f,0.f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case 'a':
                             c.move(vec3(-0.3f,0.f,0.f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case 'd':
                             c.move(vec3(0.3f,0.f,0.f));
-                            draw(height, width, c, f, rt);
+                            draw(height, width, c, f, rt, blockSize);
                             break;
                         default:
                             break;
@@ -167,9 +168,9 @@ int main(int argc, char* args[]){
 	return 0;
 }
 
-void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt){
+void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for collapse(2) schedule(dynamic, blockSize)
 #endif
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){

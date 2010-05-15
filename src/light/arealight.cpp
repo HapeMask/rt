@@ -13,8 +13,8 @@ areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
 
 const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const{
     point3 samplePoint;
-    //sampleRectangle(samplePoint, a, b, position, u0, u1);
-    uniformSampleRectangle(samplePoint, a, b, position);
+    sampleRectangle(samplePoint, a, b, position, u0, u1);
+    //uniformSampleRectangle(samplePoint, a, b, position);
     wi = samplePoint - p;
     const float cosTheta = -dot(wi, normal);
     // P(wi) = r^2 / cosTheta * A
