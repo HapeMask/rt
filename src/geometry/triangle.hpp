@@ -17,6 +17,9 @@ class triangle : public primitive {
 		virtual ~triangle() {}
 
 		virtual const intersection intersect(ray& r) const;
+        static const intersection* intersect4(
+                const ray& r, const triangle* t1, const triangle* t2,
+                const triangle* t3, const triangle* t4);
 
 		const point3& a() const {
 			return points[0];
@@ -61,15 +64,9 @@ class triangle : public primitive {
 		point3 points[3];
         vec3 vertNormals[3];
 		vec3 normal_;
-
-		vec2 aPrime;
-		vec2 bPrime;
-		vec2 cPrime;
+        vec3 B, C;
 
         float area_;
-		unsigned short axis1;
-		unsigned short axis2;
-
         bool hasVertNormals;
 };
 

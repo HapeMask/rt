@@ -18,7 +18,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
                     vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
                     vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
                 )
-            ), hasVertNormals(false) {
+            ), hasVertNormals(false), B(b-a), C(c-a) {
 
 	points[0] = a;
 	points[1] = b;
@@ -27,63 +27,35 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
     normal_ = cross(b - a, c - a);
     area_ = 0.5 * normal_.length();
 	normal_ = normalize(normal_);
-
-	// Find the biggest normal axis, then remove that
-	// coordinate from A, B, C to get a,b,cPrime.
-    if(abs(normal_.x()) > abs(normal_.y())){
-        if(abs(normal_.x()) > abs(normal_.z())){
-            axis1 = 1;
-            axis2 = 2;
-        }else{
-            axis1 = 0;
-            axis2 = 1;
-        }
-    }else{
-        if(abs(normal_.y()) > abs(normal_.z())){
-            axis1 = 0;
-            axis2 = 2;
-        }else{
-            axis1 = 0;
-            axis2 = 1;
-        }
-    }
-
-	aPrime = vec2(a(axis1), a(axis2));
-	bPrime = vec2(b(axis1), b(axis2)) - aPrime;
-	cPrime = vec2(c(axis1), c(axis2)) - aPrime;
 }
 
 const intersection triangle::intersect(ray& r) const {
-	const float D = dot(normal_, r.direction);
-	const float t = -dot(r.origin - a(), normal_) / D;
+    const vec3 s1 = cross(C, r.direction);
+    const float D = dot(s1, B);
+    if(abs(D) < EPSILON){
+        return noIntersect;
+    }
 
+    const float invD = 1.f / D;
+
+    const vec3 dir = r.origin - points[0];
+    const float beta = dot(dir, s1) * invD;
+    if(beta < 0.f || beta > 1.f){
+        return noIntersect;
+    }
+
+    const vec3 s2 = cross(B, dir);
+    const float gamma = dot(r.direction, s2) * invD;
+    if(gamma < 0.f || beta + gamma > 1.f){
+        return noIntersect;
+    }
+
+    const float t = dot(C, s2) * invD;
 	if(t < r.tMin || t >= r.tMax){
 		return noIntersect;
 	}
 
-	// Determine the potential intersection point.
-	const point3 pI = r.origin + (t * r.direction);
-
-	const vec2 pPrime = vec2(pI(axis1), pI(axis2)) - aPrime;
-
-	const float dBeta = bPrime.y()*cPrime.x() - bPrime.x()*cPrime.y();
-	const float dGamma = -dBeta;
-
-    /*
-	if(abs(dBeta) < EPSILON){
-		return noIntersect;
-	}
-    */
-
-	// Calculate the barycentric coordinates of the potential intersection.
-	const float beta = (pPrime.y()*cPrime.x() - pPrime.x()*cPrime.y()) / dBeta;
-	const float gamma = (pPrime.y() * bPrime.x() - pPrime.x()*bPrime.y()) / dGamma;
-
-	if(beta < 0.f || gamma < 0.f || beta+gamma > 1.f){
-		return noIntersect;
-	}
-
-	r.origin = pI;
+	r.origin = r.origin + t * r.direction;
     intersection isect(parent, this, t);
     isect.normal = normal_;
     makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);

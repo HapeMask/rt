@@ -26,6 +26,7 @@ class primitive {
             return sampleSurface(sampleUniform(), sampleUniform());
         }
 
+
         virtual const vec3 getNormal(const point3& p) const = 0;
         virtual const float area() const = 0;
 

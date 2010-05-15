@@ -1,22 +1,25 @@
 #include "bvh.hpp"
 #include "intersection.hpp"
+#include "utility.hpp"
 
 #include "geometry/triangle.hpp"
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
-#include "utility.hpp"
+#include "scene/scene.hpp"
+
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
-#include "scene/scene.hpp"
+#include "mathlib/sse.hpp"
 
 #include <sys/time.h>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 //DBG
-int boxesTested = 0;
+//int boxesTested = 0;
 
 const intersection bvh::intersect(ray& r) const{
     intersection isect = _intersect(0, r);
@@ -24,8 +27,8 @@ const intersection bvh::intersect(ray& r) const{
         r.origin += isect.t * r.direction;
     }
 
-    isect.debugInfo = boxesTested;
-    boxesTested = 0;
+    //isect.debugInfo = boxesTested;
+    //boxesTested = 0;
     return isect;
 }
 
@@ -81,7 +84,9 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
 
     const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
     const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
-    boxesTested += 2;
+
+    //DBG
+    //boxesTested += 2;
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
@@ -162,6 +167,7 @@ void bvh::build(const scene& s){
     // Allocate space for the trees.
     // A binary tree with N leaves has 2N-1 total nodes.
     numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
+    //numNodes = 2 * numPrims - 1;
     nodes = new bvhNode[numNodes];
 
     int index = 0;
@@ -221,6 +227,7 @@ void bvh::_build(const aabb& box,
     // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
     const unsigned int mid =
         roundUpToMultiple(start + (end-start)/2, BVH_MAX_PRIMS_PER_LEAF);
+    //const unsigned int mid = (start+end)/2;
 
     aabb leftBox(prims[start]->getBounds());
     aabb rightBox(prims[mid]->getBounds());

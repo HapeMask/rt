@@ -1,4 +1,5 @@
 #include "samplers.hpp"
+#include "mathlib/SFMT.h"
 
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
@@ -9,7 +10,8 @@
 #include <cmath>
 
 const float sampleUniform(){
-	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+	//return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    return genrand_real1();
 }
 
 const int sampleRange(const int& a, const int& b){
@@ -73,11 +75,11 @@ const float radicalInverse(unsigned int n, const int& base){
     return val;
 }
 
-void getLDSamples2D(float samples[][2], const unsigned int& count){
+void getLDSamples2D(float* samples, const unsigned int& count){
     const float invN = 1.f / (float)count;
 
     for(unsigned int i=0; i<count; ++i){
-        samples[i][0] = (float)i * invN;
-        samples[i][1] = radicalInverse(i, primes[0]);
+        samples[2*i] = (float)i * invN;
+        samples[2*i+1] = radicalInverse(i, primes[0]);
     }
 }

@@ -7,11 +7,14 @@
 #include "geometry/triangle.hpp"
 #include "materials/bsdf.hpp"
 
+#include <omp.h>
+
 const rgbColor whittedRayTracer::L(const ray& r) const{
     ray r2(r);
 	return _L(r2);
 }
 
+const unsigned int nsamp = 512*512*16*2;
 const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(depth > MAXDEPTH){
 		return 0.f;
@@ -57,15 +60,12 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             L += c * dot(normal, lightDir) * Li;
         }else{
             // Area Sampling
-            const unsigned int areaSamples = 16;
-            float samples[areaSamples][2];
-            getLDSamples2D(samples, areaSamples);
-
             rgbColor areaContrib(0.f);
             for(unsigned int i=0; i<areaSamples; ++i){
                 vec3 lightDir;
                 float pdf;
-                const rgbColor Li = li->sampleL(r.origin, lightDir, samples[i][0], samples[i][1], pdf);
+
+                const rgbColor Li = li->sampleL(r.origin, lightDir, 0, 0, pdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
                 shadowRay.tMax = lightDir.length();
@@ -82,20 +82,6 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             L += areaContrib / (float)areaSamples;
         }
 	}
-
-    // Area Sampling
-    /*
-    const unsigned int areaSamples = 4;
-    float samples[areaSamples][2];
-    getLDSamples2D(samples, areaSamples);
-
-    rgbColor areaContrib(0.f);
-    for(unsigned int i=0; i<areaSamples; ++i){
-        vec3 areaDir;
-        float pdf;
-        const rgbColor Li = 
-    }
-    */
 
     // Trace specular rays.
     vec3 specDir;

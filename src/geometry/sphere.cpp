@@ -31,7 +31,7 @@ const intersection sphere::intersect(ray& r) const {
 		return noIntersect;
 	}
 
-    const float q = (B < EPSILON) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
+    const float q = (B < 0) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
 	const float t0 = q / A;
 	const float t1 = C / q;
 

@@ -21,5 +21,7 @@
 
 static const float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};
 static const float PS_NEG_INF[4] = {NEG_INF, NEG_INF, NEG_INF, NEG_INF};
+static const float PS_ONES[4] = {1,1,1,1};
+static const float PS_ZEROES[4] = {0,0,0,0};
 
 #endif

@@ -17,6 +17,6 @@ void sampleRectangle(point3& p, const vec3& a, const vec3& b, const point3& pos,
 void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point3& A);
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1);
 const float radicalInverse(unsigned int n, const int& base);
-void getLDSamples2D(float samples[][2], const unsigned int& count);
+void getLDSamples2D(float* samples, const unsigned int& count);
 
 #endif

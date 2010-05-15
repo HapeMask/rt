@@ -2,6 +2,7 @@
 #include <omp.h>
 #endif
 
+#include "mathlib/SFMT.h"
 #include <cmath>
 #include <iostream>
 using namespace std;
@@ -88,7 +89,10 @@ int main(int argc, char* args[]){
 	rgbColor blue(0,0,1);
 
 	whittedRayTracer rt(&s);
-	srand(time(NULL));
+	//srand(time(NULL));
+    // SFMT
+    init_gen_rand(time(NULL));
+
 
     /*
     ray r0 = c.getRay(400,400);
@@ -103,7 +107,9 @@ int main(int argc, char* args[]){
 
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
+
     draw(height, width, c, f, rt);
+
 	gettimeofday(&end, NULL);
 
 	float sec = end.tv_sec - start.tv_sec;
@@ -163,7 +169,7 @@ int main(int argc, char* args[]){
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt){
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 #endif
 	for(int y=0; y<height; y++){
 		for(int x=0; x<width; x++){
