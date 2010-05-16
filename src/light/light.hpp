@@ -13,7 +13,7 @@ using tr1::shared_ptr;
 
 class light {
 	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : lightColor(c), position(p), power(pow) {}
+		light(const point3& p, const float& pow, const rgbColor& c) : position(p), lightColor(c), power(pow) {}
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
         virtual const bool intersect(const ray& r) const {

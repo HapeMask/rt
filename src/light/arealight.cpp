@@ -17,6 +17,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     //uniformSampleRectangle(samplePoint, a, b, position);
     wi = samplePoint - p;
     const float cosTheta = -dot(wi, normal);
+
     // P(wi) = r^2 / cosTheta * A
     pdf = (wi.length2() / cosTheta) * invArea;
     return (cosTheta > 0.f) ? L(p) : 0.f;

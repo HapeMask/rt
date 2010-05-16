@@ -23,12 +23,14 @@ class rayTracer {
         unsigned int imgWidth, imgHeight;
 };
 
+
 static unsigned int sampleIndex[8];
 class whittedRayTracer : public rayTracer {
 	public:
 		whittedRayTracer(scene* p) : rayTracer(p) {
             samples = new float[imgWidth*imgHeight*areaSamples*2];
             getLDSamples2D(samples, imgWidth*imgHeight*areaSamples);
+
             for(int i=0;i<8;++i){
                 sampleIndex[i] = (imgWidth*imgHeight*areaSamples*2*i) / 8;
             }
@@ -42,11 +44,16 @@ class whittedRayTracer : public rayTracer {
 
 	private:
         inline void getNextSample(float sample[2]) const {
+#ifdef RT_MULTITHREADED
             const unsigned int tid = omp_get_thread_num();
+#else
+            const unsigned int tid = 0;
+#endif
             sample[0] = samples[sampleIndex[tid]];
             sample[1] = samples[sampleIndex[tid]+1];
             sampleIndex[tid] += 2;
         }
+
         float* samples;
 
 		const rgbColor _L(ray& r, const int& depth = 0) const;

@@ -180,7 +180,32 @@ bsdfPtr sceneParser::bd(){
 	}else if(is(PHONG)){
 		match(BRDF);
 		match(LPAREN);
+		float rd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float gd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float bd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float rs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float gs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float bs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float n = curFloat();
+		match(FLOAT);
 		match(RPAREN);
+
+        bsdfPtr p(new bsdf());
+        p->addBxdf(new lambertianBrdf(rgbColor(rd,gd,bd)));
+        p->addBxdf(new phongBrdf(rgbColor(rs,gs,bs), n));
+        return p;
 	}else if(is(MICROFACET)){
 		match(BRDF);
 		match(LPAREN);

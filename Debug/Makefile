@@ -6,7 +6,7 @@ SDL_LDFLAGS= $(shell sdl-config --libs)
 
 WIN_CXXFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
-CXXFLAGS= -O0 -Wall -g -DDEBUG -I$(SRCDIR) -msse
+CXXFLAGS= -pg -O0 -Wall -g -DDEBUG -I$(SRCDIR) -msse
 LDFLAGS= -lboost_regex
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)

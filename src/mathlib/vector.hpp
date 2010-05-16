@@ -8,7 +8,6 @@
 
 using namespace std;
 
-//nothing
 class point3;
 class point2;
 
@@ -306,38 +305,61 @@ class vec4 {
 		float values[4] ALIGN_16;
 };
 
-inline const vec3 vecMax(const vec3& a, const vec3& b){
+inline float dot(const vec2& u, const vec2& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y());
+}
+
+inline float dot(const vec3& u, const vec3& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y()) +
+		(u.z() * v.z());
+}
+
+inline float dot(const vec4& u, const vec4& v){
+	return
+		(u.x() * v.x()) +
+		(u.y() * v.y()) +
+		(u.z() * v.z()) +
+		(u.w() * v.w());
+}
+
+inline vec3 cross(const vec3& u, const vec3& v){
 	return vec3(
-			max(a(0),b(0)),
-			max(a(1),b(1)),
-			max(a(2),b(2))
+			(u(1) * v(2)) - (u(2) * v(1)),
+			(u(2) * v(0)) - (u(0) * v(2)),
+			(u(0) * v(1)) - (u(1) * v(0))
 		);
 }
 
-inline const vec3 vecMin(const vec3& a, const vec3& b){
-	return vec3(
-			min(a(0),b(0)),
-			min(a(1),b(1)),
-			min(a(2),b(2))
-		);
+inline const vec2 normalize(const vec2& u){
+	return u / u.length();
 }
 
-float dot(const vec4& u, const vec4& v);
-float dot(const vec3& u, const vec3& v);
-float dot(const vec2& u, const vec2& v);
-vec3 cross(const vec3& u, const vec3& v);
+inline const vec3 normalize(const vec3& u){
+	return u / u.length();
+}
 
-const vec2 normalize(const vec2& u);
-const vec3 normalize(const vec3& u);
-const vec4 normalize(const vec4& u);
+inline const vec4 normalize(const vec4& u){
+	return u / u.length();
+}
+
+inline const vec3 operator*(const float& x, const vec3& u){
+	return u * x;
+}
+
+inline vec3& operator*=(const float& x, vec3& u){
+	return (u *= x);
+}
+
+inline const vec3 operator/(const float& x, const vec3& v){
+	return vec3(x / v(0), x / v(1), x / v(2));
+}
 
 ostream& operator<<(ostream& out, const vec2& x);
 ostream& operator<<(ostream& out, const vec3& x);
 ostream& operator<<(ostream& out, const vec4& x);
-
-const vec3 operator*(const float& x, const vec3& u);
-vec3& operator*=(const float& x, vec3& u);
-
-const vec3 operator/(const float& x, const vec3& v);
 
 #endif

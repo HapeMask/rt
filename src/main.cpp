@@ -93,9 +93,8 @@ int main(int argc, char* args[]){
     // SFMT
     init_gen_rand(time(NULL));
 
-
     /*
-    ray r0 = c.getRay(400,400);
+    ray r0 = c.getRay(256,280);
     cerr << rt.L(r0) << endl;
     return 0;
     */

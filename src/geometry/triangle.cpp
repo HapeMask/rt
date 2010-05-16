@@ -18,7 +18,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
                     vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
                     vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
                 )
-            ), hasVertNormals(false), B(b-a), C(c-a) {
+            ), B(b-a), C(c-a), hasVertNormals(false) {
 
 	points[0] = a;
 	points[1] = b;
@@ -56,15 +56,16 @@ const intersection triangle::intersect(ray& r) const {
 	}
 
 	r.origin = r.origin + t * r.direction;
+
     intersection isect(parent, this, t);
     isect.normal = normal_;
     makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
-    if(!hasVertNormals){
-        isect.shadingNormal = normal_;
-    }else{
+    if(hasVertNormals){
         const float alpha = 1.f - (beta + gamma);
         isect.shadingNormal = alpha * vertNormals[0] + beta * vertNormals[1] + gamma * vertNormals[2];
         makeCoordinateSystem(isect.shadingNormal, isect.dsdu, isect.dsdv);
+    }else{
+        isect.shadingNormal = normal_;
     }
 	return isect;
 }

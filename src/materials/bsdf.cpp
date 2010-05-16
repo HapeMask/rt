@@ -144,10 +144,12 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         if(isSupertype(DIFFUSE, type) && diffRef){
             f += diffRef->f(wo, wi);
             pdf += diffRef->pdf(wo, wi);
-        }else if(isSupertype(SPECULAR, type) && specRef){
+        }
+        if(isSupertype(SPECULAR, type) && specRef){
             f = specRef->sampleF(u1, u2, wo, wi, pdf);
             pdf += specRef->pdf(wo, wi);
-        }else if(isSupertype(GLOSSY, type) && glossRef){
+        }
+        if(isSupertype(GLOSSY, type) && glossRef){
             f += glossRef->f(wo, wi);
             pdf += glossRef->pdf(wo, wi);
         }
@@ -155,10 +157,12 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         if(isSupertype(DIFFUSE, type) && diffTra) {
             f += diffTra->f(wo, wi);
             pdf += diffTra->pdf(wo, wi);
-        }else if(isSupertype(SPECULAR, type) && specTra) {
+        }
+        if(isSupertype(SPECULAR, type) && specTra) {
             f = specTra->sampleF(u1, u2, wo, wi, pdf);
             pdf += specTra->pdf(wo, wi);
-        }else if(isSupertype(GLOSSY, type) && glossTra) {
+        }
+        if(isSupertype(GLOSSY, type) && glossTra) {
             f += glossTra->f(wo, wi);
             pdf += glossTra->pdf(wo, wi);
         }
@@ -207,4 +211,15 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     wi = normalize(wi);
 
     return 1.f;
+}
+
+const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+    return rgbColor(1.f,0.f,0.f);
+    //return f(wo, wi);
+}
+
+const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
+    // -wo.z = cos(perfect specular reflection dir)
+    return ks * ((float)(n+2)/TWOPI) *
+        pow(abs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
 }

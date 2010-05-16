@@ -161,7 +161,7 @@ const float vec3::length() const {
 }
 
 const float vec3::length2() const {
-	return dot(*this, *this);
+    return x()*x() + y()*y() + z()*z();
 }
 
 const vec4 vec4::operator+(const vec4& v) const {
@@ -241,36 +241,10 @@ const float vec4::length() const {
 }
 
 const float vec4::length2() const {
-	return dot(*this, *this);
-}
-
-float dot(const vec2& u, const vec2& v){
-	return
-		(u.x() * v.x()) +
-		(u.y() * v.y());
-}
-
-float dot(const vec3& u, const vec3& v){
-	return
-		(u.x() * v.x()) +
-		(u.y() * v.y()) +
-		(u.z() * v.z());
-}
-
-float dot(const vec4& u, const vec4& v){
-	return
-		(u.x() * v.x()) +
-		(u.y() * v.y()) +
-		(u.z() * v.z()) +
-		(u.w() * v.w());
-}
-
-vec3 cross(const vec3& u, const vec3& v){
-	return vec3(
-			(u(1) * v(2)) - (u(2) * v(1)),
-			(u(2) * v(0)) - (u(0) * v(2)),
-			(u(0) * v(1)) - (u(1) * v(0))
-		);
+	return values[0]*values[0] +
+        values[1]*values[1] +
+        values[2]*values[2] +
+        values[3]*values[3];
 }
 
 ostream& operator<<(ostream& out, const vec2& x){
@@ -286,28 +260,4 @@ ostream& operator<<(ostream& out, const vec3& x){
 ostream& operator<<(ostream& out, const vec4& x){
 	out << "vec4(" << x(0) << ", " << x(1) << ", " << x(2) << ", " << x(3) <<  ")";
 	return out;
-}
-
-const vec2 normalize(const vec2& u){
-	return u / u.length();
-}
-
-const vec3 normalize(const vec3& u){
-	return u / u.length();
-}
-
-const vec4 normalize(const vec4& u){
-	return u / u.length();
-}
-
-const vec3 operator*(const float& x, const vec3& u){
-	return u * x;
-}
-
-vec3& operator*=(const float& x, vec3& u){
-	return (u *= x);
-}
-
-const vec3 operator/(const float& x, const vec3& v){
-	return vec3(x / v(0), x / v(1), x / v(2));
 }

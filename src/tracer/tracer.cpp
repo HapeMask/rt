@@ -31,6 +31,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     const vec3& normal = isect.shadingNormal;
     const bsdf& b = isect.s->getMaterial()->getBsdf();
     const material& mat = *isect.s->getMaterial().get();
+    const vec3 bsdfSpaceRDir = worldToBsdf(-r.direction, normal, isect.dsdu, isect.dsdv);
     rgbColor L(0.f);
 
 	if(isect.s->getMaterial()->isEmissive()){
@@ -56,7 +57,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                 continue;
             }
 
-            const rgbColor c = mat.sample(r.origin, -r.direction, lightDir, bxdfType(DIFFUSE | REFLECTION));;
+            rgbColor c = mat.sample(r.origin, bsdfSpaceRDir, worldToBsdf(lightDir, normal, isect.dsdu, isect.dsdv),
+                    bxdfType(DIFFUSE | GLOSSY | REFLECTION));
             L += c * dot(normal, lightDir) * Li;
         }else{
             // Area Sampling
@@ -78,7 +80,10 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                 }
 
                 lightDir = normalize(lightDir);
-                const rgbColor c = mat.sample(r.origin, -r.direction, lightDir, bxdfType(DIFFUSE | REFLECTION));;
+
+                // TODO: PROBABLY REMOVE THE PI!!
+                const rgbColor c = mat.sample(r.origin, bsdfSpaceRDir, worldToBsdf(lightDir, normal, isect.dsdu, isect.dsdv),
+                        bxdfType(DIFFUSE | GLOSSY | REFLECTION)) * PI;
                 areaContrib += ((Li * dot(normal, lightDir)) / pdf) * c;
             }
 
@@ -89,7 +94,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     // Trace specular rays.
     vec3 specDir;
     const rgbColor fr =
-        b.sampleF(0, 0, 0, worldToBsdf(-r.direction, normal, isect.dsdu, isect.dsdv), specDir, bxdfType(SPECULAR | REFLECTION));
+        b.sampleF(0, 0, 0, bsdfSpaceRDir, specDir, bxdfType(SPECULAR | REFLECTION));
     specDir = bsdfToWorld(specDir, normal, isect.dsdu, isect.dsdv);
 
     if(!fr.isBlack()){
@@ -98,7 +103,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     }
 
     const rgbColor ft =
-        b.sampleF(0, 0, 0, worldToBsdf(-r.direction, normal, isect.dsdu, isect.dsdv), specDir, bxdfType(SPECULAR | TRANSMISSION));
+        b.sampleF(0, 0, 0, bsdfSpaceRDir, specDir, bxdfType(SPECULAR | TRANSMISSION));
     specDir = bsdfToWorld(specDir, normal, isect.dsdu, isect.dsdv);
 
     if(!ft.isBlack()){
