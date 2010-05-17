@@ -18,5 +18,6 @@ void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1);
 const float radicalInverse(unsigned int n, const int& base);
 void getLDSamples2D(float* samples, const unsigned int& count);
+const float powerHeuristic(int nf, float fPdf, int ng, float gPdf);
 
 #endif

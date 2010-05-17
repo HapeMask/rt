@@ -7,11 +7,14 @@
 using std::tr1::shared_ptr;
 
 enum bxdfType {
-    REFLECTION =    1<<0,
-    TRANSMISSION =  1<<1,
-    DIFFUSE =       1<<2,
-    GLOSSY =        1<<3,
-    SPECULAR =      1<<4
+    REFLECTION =        1<<0,
+    TRANSMISSION =      1<<1,
+    DIFFUSE =           1<<2,
+    GLOSSY =            1<<3,
+    SPECULAR =          1<<4,
+    ALL_REFLECTION =    DIFFUSE | GLOSSY | SPECULAR | REFLECTION,
+    ALL_TRANSMISSION =  DIFFUSE | GLOSSY | SPECULAR | TRANSMISSION,
+    ALL =               ALL_REFLECTION | ALL_TRANSMISSION
 };
 
 enum fresnelType {
@@ -27,7 +30,7 @@ class bsdf {
         glossTra(NULL), glossRef(NULL) {}
         ~bsdf();
 
-        virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
                 const vec3& wo, vec3& wi, bxdfType type) const;
 
@@ -35,6 +38,8 @@ class bsdf {
                 const vec3& wo, vec3& wi, bxdfType type, float& pd) const;
 
         void addBxdf(bxdf* b);
+
+        const float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
         inline static const bool isSupertype(bxdfType a, bxdfType b) {
             return (a & b);

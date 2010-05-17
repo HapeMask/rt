@@ -19,5 +19,9 @@ const rgbColor material::sample(const point3& p, const vec3& wo, const vec3& wi,
 }
 
 const rgbColor material::Le() const {
-	return emitColor * emitPower;
+    if(emissive){
+        return emitColor * emitPower;
+    }else{
+        return 0.f;
+    }
 }

@@ -14,8 +14,8 @@ class pathTracer : public rayTracer {
 
 	private:
 		const rgbColor _L(ray& r, const int& depth = 0) const;
-        const rgbColor sampleOneLight(const point3& p, const vec3& wo, const vec3& normal, const bsdf& bsdf) const;
-        const rgbColor sampleDirect(const point3& p, const vec3& wo, const vec3& normal,
+        const rgbColor sampleOneLight(const point3& p, const vec3& wo, const intersection& isect, const bsdf& bsdf) const;
+        const rgbColor sampleDirect(const point3& p, const vec3& wo, const intersection& isect,
                 const bsdf& bsdf, const light& light) const;
 };
 

@@ -83,3 +83,9 @@ void getLDSamples2D(float* samples, const unsigned int& count){
         samples[2*i+1] = radicalInverse(i, primes[0]);
     }
 }
+
+const float powerHeuristic(int nf, float fPdf, int ng, float gPdf){
+    const float f = nf*fPdf;
+    const float g = ng*gPdf;
+    return (f*f) / (f*f + g*g);
+}

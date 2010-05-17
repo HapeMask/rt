@@ -38,6 +38,10 @@ class light {
 			return lightColor;
 		}
 
+        virtual const float pdf() const{
+            return 0.f;
+        }
+
 	protected:
         point3 position;
 		rgbColor lightColor;
@@ -52,16 +56,24 @@ class pointLight : public light {
         }
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
+        inline virtual const float pdf() const{
+            return 0.f;
+        }
 };
 
 class areaLight : public light {
     public:
         areaLight(const point3& p, const float& pow, const rgbColor& c,
-                const vec3& A, const vec3& B);
+                const vec3& vA, const vec3& vB);
 
         virtual const bool intersect(const ray& r) const;
+
         inline virtual const bool isPointSource() const {
             return false;
+        }
+
+        inline virtual const float pdf() const {
+            return invArea;
         }
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
@@ -69,6 +81,7 @@ class areaLight : public light {
 
     private:
         vec3 a, b, normal;
+        vec3 A, B, C;
         float invArea;
 };
 

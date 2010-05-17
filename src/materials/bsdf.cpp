@@ -9,8 +9,8 @@
 #include <cmath>
 
 const rgbColor bxdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
-    //cosineSampleHemisphere(wi, sampleUniform(), sampleUniform());
-    cosineSampleHemisphere(wi, u0, u1);
+    cosineSampleHemisphere(wi, sampleUniform(), sampleUniform());
+    //cosineSampleHemisphere(wi, u0, u1);
     pd = pdf(wo, wi);
     return f(wo, wi);
 }
@@ -127,44 +127,69 @@ const rgbColor bsdf::f(const vec3& wi, const vec3& wo, bxdfType type) const{
     return f;
 }
 
-const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type) const{
-    float pdf;
-    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, pdf);
-    return (pdf > 0.f) ? f / pdf : f;
-    return f;
+const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
+    float p = 0;
+    if(isSupertype(REFLECTION, type)){
+        if(isSupertype(DIFFUSE, type) && diffRef){
+            p += diffRef->pdf(wo, wi);
+        }
+        if(isSupertype(SPECULAR, type) && specRef){
+            p += specRef->pdf(wo, wi);
+        }
+        if(isSupertype(GLOSSY, type) && glossRef){
+            p += glossRef->pdf(wo, wi);
+        }
+    }else{
+        if(isSupertype(DIFFUSE, type) && diffTra) {
+            p += diffTra->pdf(wo, wi);
+        }
+        if(isSupertype(SPECULAR, type) && specTra) {
+            p += specTra->pdf(wo, wi);
+        }
+        if(isSupertype(GLOSSY, type) && glossTra) {
+            p += glossTra->pdf(wo, wi);
+        }
+    }
+    return p;
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, float& pdf) const{
-    pdf = 0.f;
+        const vec3& wo, vec3& wi, bxdfType type) const{
+    float p;
+    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, p);
+    return (p > 0.f) ? f / p : f;
+}
+
+const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
+        const vec3& wo, vec3& wi, bxdfType type, float& p) const{
+    p = 0.f;
     rgbColor f(0.f);
 
     if(isSupertype(REFLECTION, type)){
         if(isSupertype(DIFFUSE, type) && diffRef){
-            f += diffRef->f(wo, wi);
-            pdf += diffRef->pdf(wo, wi);
+            f += diffRef->sampleF(u1, u2, wo, wi, p);
+            //p += diffRef->pdf(wo, wi);
         }
         if(isSupertype(SPECULAR, type) && specRef){
-            f = specRef->sampleF(u1, u2, wo, wi, pdf);
-            pdf += specRef->pdf(wo, wi);
+            f = specRef->sampleF(u1, u2, wo, wi, p);
+            //p += specRef->pdf(wo, wi);
         }
         if(isSupertype(GLOSSY, type) && glossRef){
-            f += glossRef->f(wo, wi);
-            pdf += glossRef->pdf(wo, wi);
+            f += glossRef->sampleF(u1, u2, wo, wi, p);
+            //p += glossRef->pdf(wo, wi);
         }
     }else{
         if(isSupertype(DIFFUSE, type) && diffTra) {
-            f += diffTra->f(wo, wi);
-            pdf += diffTra->pdf(wo, wi);
+            f += diffTra->sampleF(u1, u2, wo, wi, p);
+            //p += diffTra->pdf(wo, wi);
         }
         if(isSupertype(SPECULAR, type) && specTra) {
-            f = specTra->sampleF(u1, u2, wo, wi, pdf);
-            pdf += specTra->pdf(wo, wi);
+            f = specTra->sampleF(u1, u2, wo, wi, p);
+            //p += specTra->pdf(wo, wi);
         }
         if(isSupertype(GLOSSY, type) && glossTra) {
-            f += glossTra->f(wo, wi);
-            pdf += glossTra->pdf(wo, wi);
+            f += glossTra->sampleF(u1, u2, wo, wi, p);
+            //p += glossTra->pdf(wo, wi);
         }
     }
 

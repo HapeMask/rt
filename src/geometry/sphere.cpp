@@ -55,7 +55,6 @@ const intersection sphere::intersect(ray& r) const {
     intersection isect(parent, this, t);
     isect.normal = normalize(r.origin - location);
     makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
-    makeCoordinateSystem(isect.normal, isect.dsdu, isect.dsdv);
     isect.shadingNormal = isect.normal;
 	return isect;
 }

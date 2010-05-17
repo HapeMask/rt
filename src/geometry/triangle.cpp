@@ -63,7 +63,7 @@ const intersection triangle::intersect(ray& r) const {
     if(hasVertNormals){
         const float alpha = 1.f - (beta + gamma);
         isect.shadingNormal = alpha * vertNormals[0] + beta * vertNormals[1] + gamma * vertNormals[2];
-        makeCoordinateSystem(isect.shadingNormal, isect.dsdu, isect.dsdv);
+        makeCoordinateSystem(isect.shadingNormal, isect.dpdu, isect.dpdv);
     }else{
         isect.shadingNormal = normal_;
     }
