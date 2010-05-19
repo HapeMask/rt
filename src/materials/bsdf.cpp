@@ -7,6 +7,8 @@
 #include "samplers/samplers.hpp"
 
 #include <cmath>
+#include <vector>
+using std::vector;
 
 const rgbColor bxdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
     cosineSampleHemisphere(wi, sampleUniform(), sampleUniform());
@@ -36,6 +38,7 @@ bsdf::~bsdf(){
         delete glossRef;
     }
 }
+
 void bsdf::addBxdf(bxdf* b){
     switch(b->getType()){
         case (SPECULAR | TRANSMISSION):
@@ -154,42 +157,71 @@ const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type) const{
+        const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType) const{
     float p;
-    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, p);
+    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, matchedType, p);
     return (p > 0.f) ? f / p : f;
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, float& p) const{
+        const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType, float& p) const{
     p = 0.f;
     rgbColor f(0.f);
+    vector<bxdf*> matches;
 
+    // Find all matching bxdfs.
     if(isSupertype(REFLECTION, type)){
         if(isSupertype(DIFFUSE, type) && diffRef){
-            f += diffRef->sampleF(u1, u2, wo, wi, p);
-            //p += diffRef->pdf(wo, wi);
+            matches.push_back(diffRef);
         }
         if(isSupertype(SPECULAR, type) && specRef){
-            f = specRef->sampleF(u1, u2, wo, wi, p);
-            //p += specRef->pdf(wo, wi);
+            matches.push_back(specRef);
         }
         if(isSupertype(GLOSSY, type) && glossRef){
-            f += glossRef->sampleF(u1, u2, wo, wi, p);
-            //p += glossRef->pdf(wo, wi);
+            matches.push_back(glossRef);
         }
-    }else{
+    }
+    if(isSupertype(TRANSMISSION, type)){
         if(isSupertype(DIFFUSE, type) && diffTra) {
-            f += diffTra->sampleF(u1, u2, wo, wi, p);
-            //p += diffTra->pdf(wo, wi);
+            matches.push_back(diffTra);
         }
         if(isSupertype(SPECULAR, type) && specTra) {
-            f = specTra->sampleF(u1, u2, wo, wi, p);
-            //p += specTra->pdf(wo, wi);
+            matches.push_back(specTra);
         }
         if(isSupertype(GLOSSY, type) && glossTra) {
-            f += glossTra->sampleF(u1, u2, wo, wi, p);
-            //p += glossTra->pdf(wo, wi);
+            matches.push_back(glossTra);
+        }
+    }
+
+    // Select and sample a random bxdf component to find wi.
+    if(matches.size() == 0){
+        return 0.f;
+    }
+
+    const unsigned int index = sampleRange(0, matches.size()-1);
+    f = matches[index]->sampleF(u1, u2, wo, wi, p);
+    matchedType = matches[index]->getType();
+
+    // If it was a specular bxdf, then we just take the value from f
+    // and ignore the others as well as the pdfs, as the specular components
+    // have delta distributions for the pdfs.
+    if(!isSupertype(SPECULAR, matchedType)){
+        // p currently contains the pdf for the sampled bxdf,
+        // we still need to add the other contributions.
+        //
+        // Also evaluate and add the bsdf component values.
+
+        f = 0.f;
+        for(size_t i=0; i<matches.size(); ++i){
+            if(i != index){
+                p += matches[i]->pdf(wo, wi);
+            }
+
+            f += matches[i]->f(wo, wi);
+        }
+
+        if(matches.size() > 0){
+            p /= (float)matches.size();
         }
     }
 
@@ -233,18 +265,28 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     wi.x() = nr * -wo.x();
     wi.y() = cosThetaT;
     wi.z() = nr * -wo.z();
-    wi = normalize(wi);
 
     return 1.f;
 }
 
 const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
-    return rgbColor(1.f,0.f,0.f);
-    //return f(wo, wi);
+    const float sinAlpha = sqrtf(1.f - pow(u0, 2.f / (float)(n+1)));
+    const float phi = TWOPI * u1;
+
+    wi.x() = sinAlpha * cosf(phi);
+    wi.y() = pow(u1, (1.f / (float)(n+1)));
+    wi.z() = sinAlpha * sinf(phi);
+
+    pd = pdf(wo, wi);
+    return f(wo, wi);
 }
 
 const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
     // -wo.z = cos(perfect specular reflection dir)
-    return ks * ((float)(n+2)/TWOPI) *
+    return ks * (float)(n+2) * INVTWOPI *
         pow(abs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+}
+
+const float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
+    return ((float)(n+1)/TWOPI) * pow(abs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
 }

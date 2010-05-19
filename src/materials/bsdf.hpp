@@ -32,10 +32,10 @@ class bsdf {
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type) const;
+                const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType) const;
 
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type, float& pd) const;
+                const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType, float& pd) const;
 
         void addBxdf(bxdf* b);
 
@@ -150,13 +150,8 @@ class phongBrdf : public bxdf {
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const; 
-        /*
-        const float pdf(const vec3& wo, const vec3& wi) const;
-        */
 
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
-            return 0.f;
-        }
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
         rgbColor ks;

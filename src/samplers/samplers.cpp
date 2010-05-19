@@ -14,12 +14,12 @@ const float sampleUniform(){
     return genrand_real1();
 }
 
-const int sampleRange(const int& a, const int& b){
-    return a + (rand() % (b-a+1));
+const int sampleRange(const unsigned int& a, const unsigned int& b){
+    return a + (gen_rand32() % (b-a+1));
 }
 
-void uniformSampleDisk(vec3& v, const float& u0, const float& u1){
-	const float r = sqrt(u0);
+void sampleDisk(vec3& v, const float& u0, const float& u1){
+	const float r = sqrtf(u0);
 	const float theta = u1 * TWOPI;
 	v.x() = cos(theta) * r;
 	v.z() = sin(theta) * r;
@@ -30,7 +30,7 @@ void uniformSampleHemisphere(vec3& v){
     const float u1 = sampleUniform();
 
 	v.y() = u0;
-	const float r = sqrt(max(0.f, 1.f - u0*u0));
+	const float r = sqrtf(max(0.f, 1.f - u0*u0));
 	const float phi = TWOPI * u1;
 	v.x() = r * cos(phi);
 	v.z() = r * sin(phi);
@@ -58,8 +58,8 @@ void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point
 }
 
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1){
-	uniformSampleDisk(v, u0, u1);
-	v.y() = sin(acos(sqrt(v.x()*v.x() + v.z()*v.z())));
+	sampleDisk(v, u0, u1);
+    v.y() = sqrtf(max(0.f, 1.f - v.x()*v.x() - v.z()*v.z()));
 }
 
 const float radicalInverse(unsigned int n, const int& base){

@@ -93,8 +93,9 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
     // Trace specular rays.
     vec3 specDir;
+    bxdfType sampleType;
     const rgbColor fr =
-        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | REFLECTION));
+        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType);
     specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
 
     if(!fr.isBlack()){
@@ -103,7 +104,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     }
 
     const rgbColor ft =
-        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | TRANSMISSION));
+        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType);
     specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
 
     if(!ft.isBlack()){

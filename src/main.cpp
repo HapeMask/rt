@@ -97,7 +97,7 @@ int main(int argc, char* args[]){
     init_gen_rand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,280);
+    ray r0 = c.getRay(256,15);
     cerr << rt.L(r0) << endl;
     return 0;
     */
@@ -171,7 +171,7 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 64;
+    const unsigned int spp = 16;
     const float invspp = 1.f / (float)spp;
 #ifdef RT_MULTITHREADED
 #pragma omp parallel for collapse(2) schedule(dynamic, blockSize)
