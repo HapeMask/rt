@@ -155,25 +155,40 @@ bsdfPtr sceneParser::bd(){
         p->addBxdf(new lambertianBrdf(rgbColor(r,g,b)));
         return p;
 	}else if(is(RE_SPECULAR)){
+        float ior = 1.f, k = 0.f;
+        float r = 0.f, g = 0.f, b = 0.f;
+
 		match(BRDF);
 		match(LPAREN);
         string type(currentToken);
         match(SPECTYPE);
-        float ior = 1.f;
-        if(type == "dielectric"){
+        match(COMMA);
+        r = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        g = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        b = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        ior = curFloat();
+        match(FLOAT);
+        if(type == "conductor"){
             match(COMMA);
-            ior = curFloat();
+            k = curFloat();
             match(FLOAT);
         }
 		match(RPAREN);
 
         if(type == "conductor"){
             bsdfPtr p(new bsdf());
-            p->addBxdf(new specularBrdf(ior, CONDUCTOR));
+            p->addBxdf(new specularBrdf(ior, k, CONDUCTOR, rgbColor(r,g,b)));
             return p;
         }else{
             bsdfPtr p(new bsdf());
-            p->addBxdf(new specularBtdf(ior, DIELECTRIC));
+            p->addBxdf(new specularBrdf(ior, k, DIELECTRIC, rgbColor(1.f,1.f,1.f)));
+            p->addBxdf(new specularBtdf(ior, rgbColor(r,g,b)));
 
             return p;
         }

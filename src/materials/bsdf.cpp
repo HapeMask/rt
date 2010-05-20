@@ -11,8 +11,7 @@
 using std::vector;
 
 const rgbColor bxdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
-    cosineSampleHemisphere(wi, sampleUniform(), sampleUniform());
-    //cosineSampleHemisphere(wi, u0, u1);
+    cosineSampleHemisphere(wi, u0, u1);
     pd = pdf(wo, wi);
     return f(wo, wi);
 }
@@ -80,48 +79,23 @@ void bsdf::addBxdf(bxdf* b){
     }
 }
 
-const rgbColor bsdf::f(const vec3& wi, const vec3& wo, bxdfType type) const{
-    /*
-    switch(type){
-        case (SPECULAR | TRANSMISSION):
-            if(specTra != NULL){
-                return specTra->f(wo, wi);
-            }
-            break;
-        case (SPECULAR | REFLECTION):
-            if(specRef != NULL){
-                return specRef->f(wo, wi);
-            }
-            break;
-        case (DIFFUSE | TRANSMISSION):
-            if(diffTra != NULL){
-                return diffTra->f(wo, wi);
-            }
-            break;
-        case (DIFFUSE | REFLECTION):
-            if(diffRef != NULL){
-                return diffRef->f(wo, wi);
-            }
-            break;
-        case (GLOSSY | TRANSMISSION):
-            if(glossTra != NULL){
-                return glossTra->f(wo, wi);
-            }
-            break;
-        case (GLOSSY | REFLECTION):
-            if(glossRef != NULL){
-                return glossRef->f(wo, wi);
-            }
-            break;
-    }
-    */
-
+const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     rgbColor f(0.f);
+
+    // Ignore BTDFs if the vectors are on the same side of the surface. 
+    if(wo.y() * wi.y() > 0){
+        type = bxdfType(type & ~TRANSMISSION);
+    }else{
+        type = bxdfType(type & ~REFLECTION);
+    }
+
     if(isSupertype(REFLECTION, type)){
         if(isSupertype(DIFFUSE, type) && diffRef) f += diffRef->f(wo, wi);
         if(isSupertype(SPECULAR, type) && specRef) f += specRef->f(wo, wi);
         if(isSupertype(GLOSSY, type) && glossRef) f += glossRef->f(wo, wi);
-    }else{
+    }
+
+    if(isSupertype(TRANSMISSION, type)){
         if(isSupertype(DIFFUSE, type) && diffTra) f += diffTra->f(wo, wi);
         if(isSupertype(SPECULAR, type) && specTra) f += specTra->f(wo, wi);
         if(isSupertype(GLOSSY, type) && glossTra) f += glossTra->f(wo, wi);
@@ -205,7 +179,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     // If it was a specular bxdf, then we just take the value from f
     // and ignore the others as well as the pdfs, as the specular components
     // have delta distributions for the pdfs.
-    if(!isSupertype(SPECULAR, matchedType)){
+    if(!isSupertype(SPECULAR, matchedType) && matches.size() > 1){
         // p currently contains the pdf for the sampled bxdf,
         // we still need to add the other contributions.
         //
@@ -220,9 +194,10 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
             f += matches[i]->f(wo, wi);
         }
 
-        if(matches.size() > 0){
-            p /= (float)matches.size();
-        }
+    }
+
+    if(matches.size() > 1){
+        p /= (float)matches.size();
     }
 
     return f;
@@ -235,11 +210,12 @@ const rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
 const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
     wi = vec3(-wo.x(), wo.y(), -wo.z());
-    return 1.f;
+
+    const float F = rescaledSchlickFresnel(ior, k, fabs(bsdf::cosTheta(wo)));
+    return F * kR / fabs(bsdf::cosTheta(wi));
 }
 
 const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
-
     pd = 1.f;
     const bool entering = (bsdf::cosTheta(wo) > 0.f);
 
@@ -249,9 +225,10 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     //
     // Swaps IOR accordingly and generates a refraction normal
     // that always points in the same direction as the ray.
-    const float nr = entering ? (1.f / ior) : ior;
+    const float eta = entering ? (1.f / ior) : ior;
+    const float eta2 = eta*eta;
 
-    const float sin2ThetaT = nr * nr * bsdf::sin2Theta(wo);
+    const float sin2ThetaT = eta2 * bsdf::sin2Theta(wo);
     // Total Internal Reflection
     if(sin2ThetaT > 1.f){
         return 0.f;
@@ -262,19 +239,21 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
         -sqrtf(max(0.f, 1.f - sin2ThetaT)) :
         sqrtf(max(0.f, 1.f - sin2ThetaT));
 
-    wi.x() = nr * -wo.x();
+    wi.x() = eta * -wo.x();
     wi.y() = cosThetaT;
-    wi.z() = nr * -wo.z();
+    wi.z() = eta * -wo.z();
 
-    return 1.f;
+    // abs(cosTheta) "flips the normal" for us.
+    const float Fr = rescaledSchlickFresnel(ior, 0.f, fabs(bsdf::cosTheta(wo)));
+    return (1.f/eta2) * (1.f - Fr) * kT / fabs(bsdf::cosTheta(wi));
 }
 
 const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
-    const float sinAlpha = sqrtf(1.f - pow(u0, 2.f / (float)(n+1)));
+    const float sinAlpha = sqrtf(1.f - powf(u0, 2.f / (float)(n+1)));
     const float phi = TWOPI * u1;
 
     wi.x() = sinAlpha * cosf(phi);
-    wi.y() = pow(u1, (1.f / (float)(n+1)));
+    wi.y() = powf(u1, (1.f / (float)(n+1)));
     wi.z() = sinAlpha * sinf(phi);
 
     pd = pdf(wo, wi);
@@ -284,9 +263,9 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
 const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
     // -wo.z = cos(perfect specular reflection dir)
     return ks * (float)(n+2) * INVTWOPI *
-        pow(abs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+        powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
 }
 
 const float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
-    return ((float)(n+1)/TWOPI) * pow(abs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+    return ((float)(n+1)/TWOPI) * powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
 }

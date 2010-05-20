@@ -23,7 +23,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const material& mat = *isect.s->getMaterial().get();
         if(pathLength == 0 || lastBounceWasSpecular){
             L += mat.Le() * throughput;
-            if(parent->getLight(0)->intersect(r)){
+            if(parent->numLights() > 0 && parent->getLight(0)->intersect(r)){
                 L += parent->getLight(0)->L(r.origin);
             }
         }
@@ -32,7 +32,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect.shadingNormal, isect.dpdu, isect.dpdv);
 
-        L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
+        L += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
 
         vec3 wi;
         float pdf = 0.f;
@@ -45,7 +45,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         }
 
         wi = normalize(bsdfToWorld(wi, normal, isect.dpdu, isect.dpdv));
-        throughput *= f * abs(dot(wi, normal)) / pdf;
+        throughput *= f * fabs(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampleType & SPECULAR) != 0;
 
         if(pathLength > 3){
@@ -84,7 +84,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
     //float sample[2];
     //getNextSample(sample);
     //rgbColor Li = li.sampleL(p, wi, sample[0], sample[1], lightPdf);
-    rgbColor Li = li.sampleL(p, wi, 0, 0, lightPdf);
+    rgbColor Li = li.sampleL(p, wi, sampleUniform(), sampleUniform(), lightPdf);
     const float lightDist = wi.length();
     wi = normalize(wi);
 
@@ -97,13 +97,13 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
             const intersection isect2 = parent->intersect(shadowRay);
             if(!isect2.hit){
                 if(li.isPointSource()){
-                    Ld += f * Li * abs(dot(wi, isect.shadingNormal)) / lightPdf;
+                    Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
                     const float weight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
-                    Ld += f * Li * abs(dot(wi, isect.shadingNormal)) * weight / lightPdf;
+                    Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / lightPdf;
 
-                    //Ld += f * Li * abs(dot(wi, isect.shadingNormal)) / lightPdf;
+                    //Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }
             }
         }
@@ -129,7 +129,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
                         Li = li.L(p);
 
                         if(!Li.isBlack()){
-                            Ld += f * Li * abs(dot(wi, isect.shadingNormal)) * weight / bsdfPdf;
+                            Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / bsdfPdf;
                         }
                     }
                 }

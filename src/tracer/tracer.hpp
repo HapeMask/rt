@@ -7,7 +7,7 @@
 #include "scene/scene.hpp"
 
 const unsigned int MAXDEPTH = 20;
-const unsigned int areaSamples = 64;
+const unsigned int areaSamples = 16;
 
 static unsigned int sampleIndex[8];
 class rayTracer {

@@ -38,6 +38,17 @@ class rgbColor : public color {
 		const rgbColor operator/(const float& f) const;
 		rgbColor& operator/=(const float& f);
 
+		inline const rgbColor operator/(const rgbColor& c) const{
+            return rgbColor(*this) /= c;
+        }
+
+		inline rgbColor& operator/=(const rgbColor& c){
+            r /= c.r;
+            g /= c.g;
+            b /= c.b;
+            return (*this);
+        }
+
 		const rgbColor operator-(const rgbColor& f) const;
 		rgbColor& operator-=(const rgbColor& f);
 		const rgbColor operator+(const rgbColor& f) const;
@@ -68,6 +79,17 @@ class rgbColor : public color {
 		float g;
 		float b;
 };
+
+inline rgbColor& operator*=(const float& f, rgbColor& c){
+    c.r *= f;
+    c.g *= f;
+    c.b *= f;
+    return c;
+}
+
+inline const rgbColor operator*(const float& f, const rgbColor& c){
+    return rgbColor(f*c.r, f*c.g, f*c.b);
+}
 
 ostream& operator<<(ostream& out, const color& c);
 #endif

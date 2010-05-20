@@ -85,10 +85,6 @@ int main(int argc, char* args[]){
 
 	sdlFramebuffer f(width, height, 32);
 
-	rgbColor white(1,1,1);
-	rgbColor black(0,0,0);
-	rgbColor blue(0,0,1);
-
 	pathTracer rt(&s);
 	//whittedRayTracer rt(&s);
 
@@ -171,7 +167,7 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 16;
+    const unsigned int spp = 32;
     const float invspp = 1.f / (float)spp;
 #ifdef RT_MULTITHREADED
 #pragma omp parallel for collapse(2) schedule(dynamic, blockSize)
@@ -183,6 +179,7 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
             rgbColor L(0.f);
             for(int i=0; i<spp; ++i){
                 L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
+                //L += rt.L(c.getRay(x,y));
             }
             f.drawPixel(x, y, L*invspp);
 		}

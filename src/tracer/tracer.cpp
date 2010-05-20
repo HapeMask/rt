@@ -83,7 +83,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
                 // TODO: PROBABLY REMOVE THE PI!!
                 const rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, normal, isect.dpdu, isect.dpdv),
-                        bxdfType(DIFFUSE | GLOSSY | REFLECTION)) * PI + mat.Le();
+                        bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
                 areaContrib += ((Li * dot(normal, lightDir)) / pdf) * c;
             }
 

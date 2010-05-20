@@ -97,7 +97,7 @@ class bxdf {
 
 class lambertianBrdf : public bxdf {
     public:
-        lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(REFLECTION | DIFFUSE)), rOverPi(r / PI) {}
+        lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r / PI) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
@@ -107,7 +107,7 @@ class lambertianBrdf : public bxdf {
 
 class specularBrdf : public bxdf {
     public:
-        specularBrdf(const float& i, const fresnelType ft) : bxdf(bxdfType(TRANSMISSION | SPECULAR)), fType(ft), ior(i)
+        specularBrdf(const float& i, const float& K, const fresnelType ft, rgbColor kr) : bxdf(bxdfType(SPECULAR | REFLECTION)), fType(ft), ior(i), k(K), kR(kr)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
@@ -121,12 +121,13 @@ class specularBrdf : public bxdf {
 
     private:
         fresnelType fType;
-        float ior;
+        float ior, k;
+        rgbColor kR;
 };
 
 class specularBtdf : public bxdf {
     public:
-        specularBtdf(const float& i, const fresnelType ft) : bxdf(bxdfType(TRANSMISSION | SPECULAR)), fType(ft), ior(i)
+        specularBtdf(const float& i, const rgbColor& kt) : bxdf(bxdfType(SPECULAR | TRANSMISSION)), ior(i), kT(kt)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
@@ -139,13 +140,13 @@ class specularBtdf : public bxdf {
         }
 
     private:
-        fresnelType fType;
         float ior;
+        rgbColor kT;
 };
 
 class phongBrdf : public bxdf {
     public:
-        phongBrdf(const rgbColor& k, const float& N) : bxdf(bxdfType(REFLECTION | GLOSSY)), ks(k), n(N)
+        phongBrdf(const rgbColor& k, const float& N) : bxdf(bxdfType(GLOSSY | REFLECTION)), ks(k), n(N)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
@@ -157,6 +158,47 @@ class phongBrdf : public bxdf {
         rgbColor ks;
         float n;
 };
+
+//
+// Utility Functions
+//
+inline const float fresnelConductor(const vec3& w, const float& eta, const float& k){
+    const float cosTheta = bsdf::cosTheta(w);
+    const float cosTheta2 = cosTheta*cosTheta;
+
+    const float tmp = eta*eta + k*k;
+    const float tmp2 = tmp * cosTheta2;
+
+    const float rpar =
+        (tmp2 - (2.f * eta * cosTheta) + 1.f) /
+        (tmp2 + (2.f * eta * cosTheta) + 1.f);
+
+    const float rper =
+        (tmp - (2.f * eta * cosTheta) + cosTheta2) /
+        (tmp + (2.f * eta * cosTheta) + cosTheta2);
+
+    return (rpar + rper) / 2.f;
+
+}
+
+inline const float realFresnelDielectric(const vec3& w, const vec3& h, const float& eta){
+    const float c = dot(w, h);
+    const float g = sqrtf(eta*eta - 1.f + c*c);
+    const float gmc = g - c;
+    const float gpc = g + c;
+
+    return 0.5f * ((gmc*gmc)/(gpc*gpc)) *
+        (1.f + (((c*gpc - 1.f)*(c*gpc - 1.f)) / ((c*gmc + 1.f)*(c*gmc + 1.f))));
+}
+
+inline const float rescaledSchlickFresnel(const float& eta, const float& k, const float& cosTheta){
+    return ((eta-1.f)*(eta-1.f) + (4 * eta * pow(1.f - cosTheta, 5) + k*k)) /
+        ((eta+1.f)*(eta+1.f) + k*k);
+}
+
+inline const vec3 halfVector(const vec3& wo, const vec3& wi){
+    return normalize(wo + wi);
+}
 
 typedef shared_ptr<bsdf> bsdfPtr;
 typedef shared_ptr<bxdf> bxdfPtr;
