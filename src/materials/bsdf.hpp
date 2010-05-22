@@ -172,7 +172,7 @@ class specularBtdf : public specularBxdf {
 
 class phongBrdf : public bxdf {
     public:
-        phongBrdf(const rgbColor& k, const float& N) : bxdf(bxdfType(GLOSSY | REFLECTION)), ks(k), n(N)
+        phongBrdf(const rgbColor& k, const float& N) : bxdf(N < 1000 ? bxdfType(GLOSSY | REFLECTION) : bxdfType(SPECULAR | REFLECTION)), ks(k), n(N)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
