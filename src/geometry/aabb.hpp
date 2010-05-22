@@ -91,7 +91,18 @@ class aabb {
              updateMid();
         }
 
+        inline void setMax(const float& f, unsigned int axis){
+            _max(axis) = f;
+            updateMid();
+        }
+
+        inline void setMin(const float& f, unsigned int axis){
+            _min(axis) = f;
+            updateMid();
+        }
+
         const bool intersect(const ray& r, float& tmin, float& tmax) const;
+        const bool intersect(const aabb& box) const;
 
     private:
         inline void updateMid() {

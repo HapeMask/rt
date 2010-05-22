@@ -70,7 +70,7 @@ int main(int argc, char* args[]){
 	ifstream in(filename.c_str());
     if(!in.is_open()){
         cerr << "Error opening file: " << filename << endl;
-        exit(1);
+        return 1;
     }
 
 	sceneParser p;
@@ -93,11 +93,11 @@ int main(int argc, char* args[]){
     init_gen_rand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,15);
+    ray r0 = c.getRay(256,256);
     cerr << rt.L(r0) << endl;
     return 0;
-    */
 
+    */
 #ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
@@ -167,22 +167,24 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 32;
+    const unsigned int spp = 8;
     const float invspp = 1.f / (float)spp;
+    for(int i=0; i<spp; ++i){
 #ifdef RT_MULTITHREADED
 #pragma omp parallel for collapse(2) schedule(dynamic, blockSize)
 #endif
-	for(int y=0; y<height; y++){
-		for(int x=0; x<width; x++){
-            //f.drawPixel(x, y, rt.L(c.getRay(x,y)));
-            ///*
-            rgbColor L(0.f);
-            for(int i=0; i<spp; ++i){
-                L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
-                //L += rt.L(c.getRay(x,y));
+        for(int y=0; y<height; y++){
+            for(int x=0; x<width; x++){
+                //f.drawPixel(x, y, rt.L(c.getRay(x,y)));
+                ///*
+                rgbColor L(0.f);
+                    L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
+                    //L += rt.L(c.getRay(x,y));
+
+                const color& prev = f.getPixel(x, y);
+                f.drawPixel(x, y, rgbColor(prev.red(),prev.green(),prev.blue()) + L*invspp);
             }
-            f.drawPixel(x, y, L*invspp);
-		}
+        }
+        f.flip();
 	}
-    f.flip();
 }

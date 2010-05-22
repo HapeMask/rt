@@ -47,3 +47,18 @@ const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
 
     return ret;
 }
+
+const bool aabb::intersect(const aabb& box) const {
+    const __m128 aMin = _min.getSIMD();
+    const __m128 aMax = _max.getSIMD();
+
+    const __m128 bMin = box.min().getSIMD();
+    const __m128 bMax = box.max().getSIMD();
+
+    const __m128 test1 = _mm_cmpge_ps(aMax, bMin);
+    const __m128 test2 = _mm_cmpge_ps(bMax, aMin);
+    const int res1 = _mm_movemask_ps(test1);
+    const int res2 = _mm_movemask_ps(test2);
+
+    return (res1 | res2) != 0;
+}

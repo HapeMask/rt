@@ -1,39 +1,46 @@
-scene(bvh){
-	camera<384,384>(45, 0,0,20, 0,0,0, 0,1,0)
-    light<area>(0,5.8,0, 0,0,-2, 2,0,0, 1,1,1, 4)
-    //light<point>(0,5,0, 1,1,1, 16.0)
+scene(default){
+	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
+    light<area>(0,2.8,0, 0,0,-2, 2,0,0, 1,1,1, 2.5)
+    //light<point>(0,2.8,0, 1,1,1, 32.0)
 
 	shape{
-        triangle(-6,-6,-6, -6,6,-6, -6,-6,6)
-        triangle(-6,6,-6, -6,6,6, -6,-6,6)
+        triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
+        triangle(-3,3,-3, -3,3,3, -3,-3,3)
 		material(lambert(0,0.75,0))
 	}
 
 	shape{
-        triangle(6,-6,6, 6,6,-6, 6,-6,-6)
-        triangle(6,-6,6, 6,6,6, 6,6,-6)
+        triangle(3,-3,3, 3,3,-3, 3,-3,-3)
+        triangle(3,-3,3, 3,3,3, 3,3,-3)
 		material(lambert(0,0,0.75))
 	}
 
 	shape{
-        triangle(-6,6,-6, 6,-6,-6, 6,6,-6)
-        triangle(-6,6,-6, -6,-6,-6, 6,-6,-6)
+        triangle(-3,3,-3, 3,-3,-3, 3,3,-3)
+        triangle(-3,3,-3, -3,-3,-3, 3,-3,-3)
 
-        triangle(6,6,-6, 6,6,6, -6,6,-6)
-        triangle(6,6,6, -6,6,6, -6,6,-6)
+        triangle(3,3,-3, 3,3,3, -3,3,-3)
+        triangle(3,3,3, -3,3,3, -3,3,-3)
 
-        triangle(-6,-6,-6, 6,-6,6, 6,-6,-6)
-        triangle(-6,-6,-6, -6,-6,6, 6,-6,6)
+        triangle(-3,-3,-3, 3,-3,3, 3,-3,-3)
+        triangle(-3,-3,-3, -3,-3,3, 3,-3,3)
 
 		material(lambert(0.75,0.75,0.75))
 	}
 
     shape{
-        sphere(0,-3,0, 2)
-        material(phong(0,0,0, 1.0,1.0,1.0, 50))
-        //material(specular(conductor, 1,1,1, 0.177, 3.68))
-        //material(specular(dielectric, 1,1,1, 1.6))
-        //material(lambert(0.75,0.75,0.75))
+        sphere(-1,-2,0, 1)
+        material(specular(conductor, 1,1,1, 2.177, 3.68))
+    }
+
+    shape{
+        sphere(1,-2,0, 1)
+        material(specular(dielectric, 1,1,1, 2.0))
+    }
+
+    shape{
+        sphere(0,-0.3,0, 1)
+        material(phong(0.2,0.2,0.2, 0.8,0.8,0.8, 20))
     }
 }
 

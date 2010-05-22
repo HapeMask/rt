@@ -11,7 +11,6 @@ using namespace std;
 
 enum {LEFT=0, RIGHT=1};
 const unsigned short BVH_MAX_PRIMS_PER_LEAF = 4;
-enum AXIS{AXIS_X=0,AXIS_Y=1,AXIS_Z=2,AXIS_LEAF=3};
 
 inline AXIS nextAxis(AXIS axis){
     switch(axis){
@@ -67,8 +66,4 @@ class bvh : public accelerator {
         bvhNode* nodes;
         vector<primitivePtr> primitives;
 };
-
-inline bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
-inline bool aabbCmpY(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
-inline bool aabbCmpZ(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
 #endif

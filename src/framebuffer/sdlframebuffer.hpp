@@ -24,6 +24,9 @@ class sdlFramebuffer : public framebuffer {
         ~sdlFramebuffer();
 
         void drawPixel(const int& x, const int& y, const color& c);
+        inline virtual const color& getPixel(const int& x, const int& y) const{
+            return buffer[(y * width()) + x];
+        }
 
 		const bool readyForDrawing() const{
 			return didInit;

@@ -10,6 +10,8 @@
 using namespace std;
 using tr1::shared_ptr;
 
+enum AXIS{AXIS_X=0,AXIS_Y=1,AXIS_Z=2,AXIS_LEAF=3};
+
 class scene;
 class accelerator {
 	public:
@@ -22,4 +24,8 @@ class accelerator {
 };
 
 typedef shared_ptr<accelerator> acceleratorPtr;
+
+inline bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
+inline bool aabbCmpY(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
+inline bool aabbCmpZ(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
 #endif

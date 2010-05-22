@@ -15,24 +15,38 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
     bool lastBounceWasSpecular = false;
 
     for(unsigned int pathLength = 0; ; ++pathLength){
+        // Copy the ray since we need the original for the light test below and
+        // scene::intersect() modifies it.
+        const ray rCopy(r);
+
         const intersection isect = parent->intersect(r);
+
+        // Make area lights visible to the camera and in reflections by tracing
+        // a ray to them if this is the first path component or we bounced off
+        // a specular surface.
+        if((pathLength == 0 || lastBounceWasSpecular) && parent->numLights() > 0){
+            for(unsigned int i=0; i<parent->numLights(); ++i){
+                const float lightDist = (parent->getLight(i)->getPosition() - r.origin).length();
+                ray lightRay(rCopy, EPSILON, lightDist);
+
+                if(parent->getLight(i)->intersect(rCopy) && !parent->intersectB(lightRay)){
+                    L += parent->getLight(i)->L(r.origin);
+                }
+            }
+        }
+
+        // Break here on a miss and not above since we can hit a light without
+        // hitting scene geometry.
         if(!isect.hit){
             break;
         }
 
         const material& mat = *isect.s->getMaterial().get();
-        if(pathLength == 0 || lastBounceWasSpecular){
-            L += mat.Le() * throughput;
-            if(parent->numLights() > 0 && parent->getLight(0)->intersect(r)){
-                L += parent->getLight(0)->L(r.origin);
-            }
-        }
-
         const vec3& normal = isect.shadingNormal;
         const bsdf& bsdf = mat.getBsdf();
-        const vec3 wo = worldToBsdf(-r.direction, isect.shadingNormal, isect.dpdu, isect.dpdv);
+        const vec3 wo = worldToBsdf(-r.direction, normal, isect.dpdu, isect.dpdv);
 
-        L += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
+        L += throughput * (mat.Le() + sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
 
         vec3 wi;
         float pdf = 0.f;
@@ -45,6 +59,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         }
 
         wi = normalize(bsdfToWorld(wi, normal, isect.dpdu, isect.dpdv));
+
         throughput *= f * fabs(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampleType & SPECULAR) != 0;
 
@@ -94,16 +109,13 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         if(!f.isBlack()){
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;
-            const intersection isect2 = parent->intersect(shadowRay);
-            if(!isect2.hit){
+            if(!parent->intersect(shadowRay).hit){
                 if(li.isPointSource()){
                     Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
                     const float weight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
                     Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / lightPdf;
-
-                    //Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }
             }
         }
@@ -118,17 +130,16 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         if(!f.isBlack() && bsdfPdf > 0.f){
             lightPdf = li.pdf();
             if(lightPdf > 0.f){
-                const float weight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
                 ray lightRay(p, wi);
                 if(li.intersect(lightRay)){
                     const float lightDist = lightRay.tMax;
                     lightRay = ray(p, wi);
                     lightRay.tMax = lightDist;
-                    const intersection isectL = parent->intersect(lightRay);
-                    if(!isectL.hit){
+                    if(!parent->intersect(lightRay).hit){
                         Li = li.L(p);
 
                         if(!Li.isBlack()){
+                            const float weight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
                             Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / bsdfPdf;
                         }
                     }

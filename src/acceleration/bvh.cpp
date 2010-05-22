@@ -77,7 +77,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     const bvhNode& node = nodes[index];
 
     if(!node.box.intersect(r, tLeftMin, tLeftMax)){
-        return intersection(false);
+        return noIntersect;
     }else if(node.axis == AXIS_LEAF){
         return leafTest(node, r);
     }
@@ -92,11 +92,11 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     if(didIntersectLeft && didIntersectRight){
         const intersection isectLeft = _intersect(node.children[LEFT], r);
         // Early exit if the intersection is closer than the other box.
-        if(isectLeft.t <= tRightMin){
+        if(isectLeft.t <= tRightMin && isectLeft.hit){
             return isectLeft;
         }else{
             const intersection isectRight = _intersect(node.children[RIGHT], r);
-            if(isectLeft.t <= isectRight.t){
+            if(isectLeft.t <= isectRight.t && isectLeft.hit){
                 return isectLeft;
             }else{
                 return isectRight;
@@ -107,7 +107,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     }else if(didIntersectRight){
         return _intersect(node.children[RIGHT], r);
     }else{
-        return intersection(false);
+        return noIntersect;
     }
 }
 
@@ -145,7 +145,7 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
     }else if(didIntersectLeft){
         return _intersectB(node.children[LEFT], r);
     }else if(didIntersectRight){
-        return _intersectB(node.children[LEFT], r);
+        return _intersectB(node.children[RIGHT], r);
     }else{
         return false;
     }
@@ -219,22 +219,12 @@ void bvh::_build(const aabb& box,
             return;
     }
 
-    // Avoid potential integer overflow that:
-    //  mid = (start+end)/2
-    // would cause.
-    //
     // Rounding ensures that the leaves are well-filled.
     // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
-    const unsigned int mid =
-        roundUpToMultiple(start + (end-start)/2, BVH_MAX_PRIMS_PER_LEAF);
-    //const unsigned int mid = (start+end)/2;
+    const unsigned int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
 
     aabb leftBox(prims[start]->getBounds());
     aabb rightBox(prims[mid]->getBounds());
-
-    // TODO: Find a more efficient way of doing this.
-    // See r288-ish for one way that almost worked but
-    // not quite.
     for(unsigned int i=start; i<mid; ++i){
         leftBox = mergeAabb(leftBox, prims[i]->getBounds());
     }

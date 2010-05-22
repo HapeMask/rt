@@ -4,6 +4,7 @@
 #include "samplers/samplers.hpp"
 #include "aabb.hpp"
 #include "mathlib/point.hpp"
+#include "mathlib/ray.hpp"
 
 #include <vector>
 #include <tr1/memory>
@@ -41,6 +42,8 @@ class primitive {
 		shape* getParent() const {
 			return parent;
 		}
+
+        ray* lastRayTested;
 
 	protected:
 		shape* parent;

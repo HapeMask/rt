@@ -11,6 +11,7 @@
 using std::vector;
 
 const rgbColor bxdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
+    //uniformSampleHemisphere(wi);
     cosineSampleHemisphere(wi, u0, u1);
     pd = pdf(wo, wi);
     return f(wo, wi);
@@ -167,11 +168,11 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         }
     }
 
-    // Select and sample a random bxdf component to find wi.
     if(matches.size() == 0){
         return 0.f;
     }
 
+    // Select and sample a random bxdf component to find wi.
     const unsigned int index = sampleRange(0, matches.size()-1);
     f = matches[index]->sampleF(u1, u2, wo, wi, p);
     matchedType = matches[index]->getType();
@@ -194,6 +195,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
             f += matches[i]->f(wo, wi);
         }
 
+        p /= (float)matches.size();
     }
 
     if(matches.size() > 1){
@@ -211,8 +213,8 @@ const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec
     pd = 1.f;
     wi = vec3(-wo.x(), wo.y(), -wo.z());
 
-    const float F = rescaledSchlickFresnel(ior, k, fabs(bsdf::cosTheta(wo)));
-    return F * kR / fabs(bsdf::cosTheta(wi));
+    const float Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
+    return Fr * kR / fabs(bsdf::cosTheta(wi));
 }
 
 const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
@@ -244,7 +246,7 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     wi.z() = eta * -wo.z();
 
     // abs(cosTheta) "flips the normal" for us.
-    const float Fr = rescaledSchlickFresnel(ior, 0.f, fabs(bsdf::cosTheta(wo)));
+    const float Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
     return (1.f/eta2) * (1.f - Fr) * kT / fabs(bsdf::cosTheta(wi));
 }
 
@@ -256,8 +258,14 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
     wi.y() = powf(u1, (1.f / (float)(n+1)));
     wi.z() = sinAlpha * sinf(phi);
 
-    pd = pdf(wo, wi);
-    return f(wo, wi);
+    // Treat N<1000 as glossy, N>=1000 as specular.
+    if(n < 1000){
+        pd = pdf(wo, wi);
+        return f(wo, wi);
+    }else{
+        pd = 1.f;
+        return 1.f;
+    }
 }
 
 const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{

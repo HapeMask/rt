@@ -88,7 +88,7 @@ class vec2 {
 class vec3 {
 	public:
 		vec3(){
-            memset(values, 0, 12);
+            memset(values, 0, 16);
 		}
 
 		vec3(const float& x, const float& y, const float& z){
@@ -192,7 +192,7 @@ class vec3 {
 		const float length2() const;
 
 	private:
-		float values[3] ALIGN_16;
+		float values[4] ALIGN_16;
 };
 
 class vec4 {
