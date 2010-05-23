@@ -30,6 +30,6 @@ scene(default){
 
     shape{
         sphere(-1,-2,0, 1)
-        material(specular(conductor, 1,1,1, 0.177, 3.4))
+        material(specular(conductor, 0.8,0.5,0.2, 0.23, 2.9))
     }
 }

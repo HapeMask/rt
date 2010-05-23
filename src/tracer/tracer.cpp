@@ -101,7 +101,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
     if(!fr.isBlack()){
         ray r2(r.origin, specDir);
-        L += fr * _L(r2, depth+1);;
+        L += fr * _L(r2, depth+1) * dot(-r.direction, normal);;
     }
 
     const rgbColor ft =
