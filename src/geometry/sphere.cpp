@@ -54,8 +54,19 @@ const intersection sphere::intersect(ray& r) const {
 	r.origin += t * r.direction;
     intersection isect(parent, this, t);
     isect.normal = normalize(r.origin - location);
-    makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
     isect.shadingNormal = isect.normal;
+
+    isect.binormal = normalize(vec3(
+            -TWOPI * isect.normal.z(),
+            0,
+            TWOPI * isect.normal.x()
+            ));
+
+    const float u = atan2f(isect.normal.z(), isect.normal.x()) * INVTWOPI;
+    const float v = acosf(sqrtf(isect.normal.x()*isect.normal.x()+isect.normal.z()*isect.normal.z()) / radius);
+    isect.uv = vec2(u,v);
+
+    isect.tangent = cross(isect.normal, isect.binormal);
 	return isect;
 }
 

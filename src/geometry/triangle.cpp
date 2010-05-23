@@ -18,7 +18,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
                     vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
                     vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
                 )
-            ), B(b-a), C(c-a), hasVertNormals(false) {
+            ), B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
 
 	points[0] = a;
 	points[1] = b;
@@ -59,14 +59,29 @@ const intersection triangle::intersect(ray& r) const {
 
     intersection isect(parent, this, t);
     isect.normal = normal_;
-    makeCoordinateSystem(isect.normal, isect.dpdu, isect.dpdv);
+
+    const float alpha = 1.f - (beta + gamma);
     if(hasVertNormals){
-        const float alpha = 1.f - (beta + gamma);
         isect.shadingNormal = alpha * vertNormals[0] + beta * vertNormals[1] + gamma * vertNormals[2];
-        makeCoordinateSystem(isect.shadingNormal, isect.dpdu, isect.dpdv);
     }else{
         isect.shadingNormal = normal_;
     }
+
+    if(hasUVs){
+        isect.uv = alpha * uvs[0] + beta * uvs[1] + gamma * uvs[2];
+
+        // Compute partial derivatives in u/v for the hit.
+        const float du1 = uvs[0].x() - uvs[2].x();
+        const float du2 = uvs[1].x() - uvs[2].x();
+        const float dv1 = uvs[0].y() - uvs[2].y();
+        const float dv2 = uvs[1].y() - uvs[2].y();
+
+        const float invDet = 1.f / (du1*dv2 - dv1*du2);
+        isect.binormal = (dv2*B - dv1*C) * invDet;
+    }else{
+        makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
+    }
+
 	return isect;
 }
 

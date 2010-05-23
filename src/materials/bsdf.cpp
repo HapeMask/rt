@@ -275,5 +275,5 @@ const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
 }
 
 const float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
-    return ((float)(n+1)/TWOPI) * powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+    return ((float)(n+1) * INVTWOPI) * powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
 }

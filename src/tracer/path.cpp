@@ -44,7 +44,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const material& mat = *isect.s->getMaterial().get();
         const vec3& normal = isect.shadingNormal;
         const bsdf& bsdf = mat.getBsdf();
-        const vec3 wo = worldToBsdf(-r.direction, normal, isect.dpdu, isect.dpdv);
+        const vec3 wo = worldToBsdf(-r.direction, isect);
 
         L += throughput * (mat.Le() + sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
 
@@ -58,7 +58,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
             break;
         }
 
-        wi = normalize(bsdfToWorld(wi, normal, isect.dpdu, isect.dpdv));
+        wi = normalize(bsdfToWorld(wi, isect));
 
         throughput *= f * fabs(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampleType & SPECULAR) != 0;
@@ -104,7 +104,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
     wi = normalize(wi);
 
     if(lightPdf > 0 && !Li.isBlack()){
-        const vec3 bsdfSpaceLightDir = worldToBsdf(wi, isect.shadingNormal, isect.dpdu, isect.dpdv);
+        const vec3 bsdfSpaceLightDir = worldToBsdf(wi, isect);
         const rgbColor f = bsdf.f(wo, bsdfSpaceLightDir);
         if(!f.isBlack()){
             ray shadowRay(p, wi);
@@ -125,7 +125,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
     if(!li.isPointSource()){
         bxdfType sampleType;
         const rgbColor f = bsdf.sampleF(0,sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampleType, bsdfPdf);
-        wi = normalize(bsdfToWorld(wi, isect.shadingNormal, isect.dpdu, isect.dpdv));
+        wi = normalize(bsdfToWorld(wi, isect));
 
         if(!f.isBlack() && bsdfPdf > 0.f){
             lightPdf = li.pdf();

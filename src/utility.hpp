@@ -4,6 +4,7 @@
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
+#include "acceleration/intersection.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -61,15 +62,15 @@ inline void makeCoordinateSystem(const vec3& u, vec3& v, vec3& w){
     w = normalize(cross(u,v));
 }
 
-inline const vec3 worldToBsdf(const vec3& v, const vec3& n, const vec3& dpdu, const vec3& dpdv){
-    return vec3(dot(v, dpdu), dot(v, n), dot(v, dpdv));
+inline const vec3 worldToBsdf(const vec3& v, const intersection& isect){
+    return vec3(dot(v, isect.binormal), dot(v, isect.shadingNormal), dot(v, isect.tangent));
 }
 
-inline const vec3 bsdfToWorld(const vec3& v, const vec3& n, const vec3& dpdu, const vec3& dpdv){
+inline const vec3 bsdfToWorld(const vec3& v, const intersection& isect){
     return vec3(
-            dpdu.x() * v.x() + n.x() * v.y() + dpdv.x() * v.z(),
-            dpdu.y() * v.x() + n.y() * v.y() + dpdv.y() * v.z(),
-            dpdu.z() * v.x() + n.z() * v.y() + dpdv.z() * v.z());
+        isect.binormal.x() * v.x() + isect.shadingNormal.x() * v.y() + isect.tangent.x() * v.z(),
+        isect.binormal.y() * v.x() + isect.shadingNormal.y() * v.y() + isect.tangent.y() * v.z(),
+        isect.binormal.z() * v.x() + isect.shadingNormal.z() * v.y() + isect.tangent.z() * v.z());
 }
 
 inline void debugPrint(string s){

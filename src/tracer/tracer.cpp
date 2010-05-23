@@ -31,7 +31,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     const vec3& normal = isect.shadingNormal;
     const bsdf& b = isect.s->getMaterial()->getBsdf();
     const material& mat = *isect.s->getMaterial().get();
-    const vec3 wo = worldToBsdf(-r.direction, normal, isect.dpdu, isect.dpdv);
+    const vec3 wo = worldToBsdf(-r.direction, isect);
     rgbColor L(0.f);
 
 	if(isect.s->getMaterial()->isEmissive()){
@@ -57,7 +57,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                 continue;
             }
 
-            rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, normal, isect.dpdu, isect.dpdv),
+            rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, isect),
                     bxdfType(DIFFUSE | GLOSSY | REFLECTION));
             L += c * dot(normal, lightDir) * Li;
         }else{
@@ -83,7 +83,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                 lightDir = normalize(lightDir);
 
                 // TODO: PROBABLY REMOVE THE PI!!
-                const rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, normal, isect.dpdu, isect.dpdv),
+                const rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, isect),
                         bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
                 areaContrib += ((Li * dot(normal, lightDir)) / pdf) * c;
             }
@@ -97,7 +97,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     bxdfType sampleType;
     const rgbColor fr =
         b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType);
-    specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
+    specDir = bsdfToWorld(specDir, isect);
 
     if(!fr.isBlack()){
         ray r2(r.origin, specDir);
@@ -106,11 +106,11 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
     const rgbColor ft =
         b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType);
-    specDir = bsdfToWorld(specDir, normal, isect.dpdu, isect.dpdv);
+    specDir = bsdfToWorld(specDir, isect);
 
     if(!ft.isBlack()){
         ray r2(r.origin, specDir);
-        L += ft * _L(r2, depth+1);
+        L += ft * _L(r2, depth+1) * dot(-r.direction, normal);
     }
 
     return clamp(L);

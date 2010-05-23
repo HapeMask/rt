@@ -350,6 +350,10 @@ inline const vec3 operator*(const float& x, const vec3& u){
 	return u * x;
 }
 
+inline const vec2 operator*(const float& x, const vec2& u){
+	return u * x;
+}
+
 inline vec3& operator*=(const float& x, vec3& u){
 	return (u *= x);
 }

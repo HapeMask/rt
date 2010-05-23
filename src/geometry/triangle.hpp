@@ -63,11 +63,12 @@ class triangle : public primitive {
 	private:
 		point3 points[3];
         vec3 vertNormals[3];
+        vec2 uvs[3];
 		vec3 normal_;
         vec3 B, C;
 
         float area_;
-        bool hasVertNormals;
+        bool hasVertNormals, hasUVs;
 };
 
 typedef std::tr1::shared_ptr<triangle> trianglePtr;
