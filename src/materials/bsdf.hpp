@@ -124,9 +124,11 @@ class specularBxdf : public bxdf {
 
 class lambertianBrdf : public bxdf {
     public:
-        lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r / PI) {}
+        lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
 
-        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const{
+            return rOverPi;
+        }
 
     private:
         rgbColor rOverPi;
