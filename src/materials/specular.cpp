@@ -12,7 +12,7 @@ const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec
     pd = 1.f;
     wi = vec3(-wo.x(), wo.y(), -wo.z());
 
-    const float Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
+    const rgbColor Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
     return Fr * kR / fabs(bsdf::cosTheta(wi));
 }
 
@@ -45,6 +45,6 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     wi.z() = eta * -wo.z();
 
     // abs(cosTheta) "flips the normal" for us.
-    const float Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
-    return (1.f/eta2) * (1.f - Fr) * kT / fabs(bsdf::cosTheta(wi));
+    const rgbColor Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
+    return (1.f/eta2) * (rgbColor(1.f) - Fr) * kT / fabs(bsdf::cosTheta(wi));
 }

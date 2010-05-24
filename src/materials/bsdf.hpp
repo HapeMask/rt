@@ -26,9 +26,13 @@ enum fresnelType {
 // Utility Functions
 //
 
-inline const float rescaledSchlickFresnel(const float& eta, const float& k, const float& cosTheta){
+inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, const float& cosTheta){
     return ((eta-1.f)*(eta-1.f) + (4 * eta * pow(1.f - cosTheta, 5) + k*k)) /
         ((eta+1.f)*(eta+1.f) + k*k);
+}
+
+inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
+	return r0 + (rgbColor(1.f) - r0) * pow(1.f - cosTheta, 5);
 }
 
 inline const vec3 halfVector(const vec3& wo, const vec3& wi){
@@ -113,8 +117,9 @@ class specularBxdf : public bxdf {
         specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
             bxdf(type), fType(ft), ior(eta), k(K) {}
 
-        const float evalFresnel(const float& cosTheta) const {
-            return rescaledSchlickFresnel(ior, k, cosTheta);
+        const rgbColor evalFresnel(const float& cosTheta) const {
+            //return rescaledApproxFresnel(ior, k, cosTheta);
+			return schlickFresnel(1.f, cosTheta);
         }
 
     protected:
