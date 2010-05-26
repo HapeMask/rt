@@ -18,26 +18,20 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
         const ray rCopy(r);
-
         const intersection isect = parent->intersect(r);
 
-        // Make area lights visible to the camera and in reflections by tracing
-        // a ray to them if this is the first path component or we bounced off
-        // a specular surface.
-        if((pathLength == 0 || lastBounceWasSpecular) && parent->numLights() > 0){
-            for(unsigned int i=0; i<parent->numLights(); ++i){
-                const float lightDist = (parent->getLight(i)->getPosition() - r.origin).length();
-                ray lightRay(rCopy, EPSILON, lightDist);
+        if(!isect.hit || isect.p == NULL){
+            if(pathLength == 0){
+                for(unsigned int i=0; i<parent->numLights(); ++i){
+                    const float lightDist = (parent->getLight(i)->getPosition() - r.origin).length();
+                    ray lightRay(rCopy, EPSILON, lightDist);
 
-                if(parent->getLight(i)->intersect(rCopy) && !parent->intersectB(lightRay)){
-                    L += parent->getLight(i)->L(r.origin);
+                    const intersection isectL = parent->getLight(i)->intersect(rCopy);
+                    if(isectL.hit && !parent->intersectB(lightRay)){
+                        L += isectL.li->L(rCopy.origin);
+                    }
                 }
             }
-        }
-
-        // Break here on a miss and not above since we can hit a light without
-        // hitting scene geometry.
-        if(!isect.hit){
             break;
         }
 
@@ -46,14 +40,14 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect);
 
-        L += throughput * (mat.Le() + sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
+        L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
 
         vec3 wi;
         float pdf = 0.f;
 
-        bxdfType sampleType;
+        bxdfType sampledType;
 
-        const rgbColor f = bsdf.sampleF(0,sampleUniform(),sampleUniform(),wo, wi, ALL, sampleType, pdf);
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, ALL, sampledType, pdf);
         if(f.isBlack() || pdf == 0.f){
             break;
         }
@@ -61,7 +55,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         wi = normalize(bsdfToWorld(wi, isect));
 
         throughput *= f * fabs(dot(wi, normal)) / pdf;
-        lastBounceWasSpecular = (sampleType & SPECULAR) != 0;
+        lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         if(pathLength > 3){
             const float continueProbability = 0.5f;
@@ -85,7 +79,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
 const rgbColor pathTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
     if(parent->numLights() > 0){
-        const unsigned int i = sampleRange(0, parent->numLights()-1);
+        const unsigned int i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
         return sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
     }
 }
@@ -123,19 +117,19 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
 
     ///*
     if(!li.isPointSource()){
-        bxdfType sampleType;
-        const rgbColor f = bsdf.sampleF(0,sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampleType, bsdfPdf);
+        bxdfType sampledType;
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
         wi = normalize(bsdfToWorld(wi, isect));
 
         if(!f.isBlack() && bsdfPdf > 0.f){
             lightPdf = li.pdf();
             if(lightPdf > 0.f){
                 ray lightRay(p, wi);
-                if(li.intersect(lightRay)){
-                    const float lightDist = lightRay.tMax;
+                const intersection isectL = li.intersect(lightRay);
+                if(isectL.hit){
                     lightRay = ray(p, wi);
-                    lightRay.tMax = lightDist;
-                    if(!parent->intersect(lightRay).hit){
+                    lightRay.tMax = isectL.t;
+                    if(!parent->intersectB(lightRay)){
                         Li = li.L(p);
 
                         if(!Li.isBlack()){

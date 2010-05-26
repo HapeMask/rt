@@ -7,17 +7,18 @@
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "color/color.hpp"
+#include "acceleration/intersection.hpp"
 
 using namespace std;
 using tr1::shared_ptr;
 
 class light {
 	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : position(p), lightColor(c), power(pow) {}
+		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {}
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
-        virtual const bool intersect(const ray& r) const {
-            return false;
+        virtual const intersection intersect(const ray& r) const {
+            return noIntersect;
         }
 
 		inline virtual const rgbColor L(const point3& p) const {
@@ -51,6 +52,7 @@ class light {
 class pointLight : public light {
 	public:
 		pointLight(const point3& p, const float& pow, const rgbColor& c);
+
         inline virtual const bool isPointSource() const {
             return true;
         }
@@ -66,7 +68,7 @@ class areaLight : public light {
         areaLight(const point3& p, const float& pow, const rgbColor& c,
                 const vec3& vA, const vec3& vB);
 
-        virtual const bool intersect(const ray& r) const;
+        virtual const intersection intersect(const ray& r) const;
 
         inline virtual const bool isPointSource() const {
             return false;

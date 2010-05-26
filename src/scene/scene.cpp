@@ -32,7 +32,18 @@ void scene::setAccelerator(acceleratorPtr a){
 }
 
 const intersection scene::intersect(ray& r) const{
-	return accel->intersect(r);
+    const ray rCopy(r);
+	const intersection isectG = accel->intersect(r);
+    intersection closestIsect = isectG;
+
+    for(unsigned int i=0; i<numLights(); ++i){
+        const intersection isectL = lights[i]->intersect(rCopy);
+        if(isectL.hit && isectL.t < closestIsect.t){
+            closestIsect = isectL;
+        }
+    }
+
+    return closestIsect;
 }
 
 const bool scene::intersectB(const ray& r) const{

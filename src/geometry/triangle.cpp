@@ -57,7 +57,7 @@ const intersection triangle::intersect(ray& r) const {
 
 	r.origin = r.origin + t * r.direction;
 
-    intersection isect(parent, this, t);
+    intersection isect(this, t);
     isect.normal = normal_;
 
     const float alpha = 1.f - (beta + gamma);

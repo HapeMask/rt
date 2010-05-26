@@ -39,6 +39,10 @@ inline const vec3 halfVector(const vec3& wo, const vec3& wi){
     return normalize(wo + wi);
 }
 
+inline const vec3 reflect(const vec3& wo){
+    return vec3(-wo.x(), wo.y(), -wo.z());
+}
+
 class bxdf;
 class bsdf {
     public:
@@ -49,10 +53,10 @@ class bsdf {
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType) const;
+                const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType) const;
 
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType, float& pd) const;
+                const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& pd) const;
 
         void addBxdf(bxdf* b);
 
@@ -109,7 +113,7 @@ class bxdf {
         }
 
     private:
-        bxdfType type;
+        const bxdfType type;
 };
 
 class specularBxdf : public bxdf {
@@ -117,14 +121,34 @@ class specularBxdf : public bxdf {
         specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
             bxdf(type), fType(ft), ior(eta), k(K) {}
 
-        const rgbColor evalFresnel(const float& cosTheta) const {
-            //return rescaledApproxFresnel(ior, k, cosTheta);
-			return schlickFresnel(1.f, cosTheta);
+        const rgbColor evalFresnel(const float& cosThetaI) const {
+            return rescaledApproxFresnel(ior, k, cosThetaI);
+            /*
+            const bool entering = cosThetaI > 0.f;
+            const float eta = entering ? (1.f / ior) : ior;
+
+            const float sinThetaT = eta * sqrtf(max(0.f, 1.f-cosThetaI*cosThetaI));
+            if(sinThetaT > 1.f){
+                return 1.f;
+            }
+
+            const float cosThetaT = sqrtf(max(0.f, 1.f-sinThetaT*sinThetaT));
+            const float ei = entering ? 1.f : ior;
+            const float et = entering ? ior : 1.f;
+
+            const rgbColor rpar = ((et*cosThetaI) - (ei * cosThetaT)) /
+                ((et * cosThetaI) + (ei * cosThetaT));
+            const rgbColor rper = ((ei*cosThetaI) - (et * cosThetaT)) /
+                ((ei * cosThetaI) + (et * cosThetaT));
+
+            return (rpar*rpar + rper*rper) / 2.f;
+            */
         }
 
     protected:
-        fresnelType fType;
-        float ior, k;
+        const fresnelType fType;
+        const float ior;
+        const float k;
 };
 
 class lambertianBrdf : public bxdf {
@@ -136,7 +160,7 @@ class lambertianBrdf : public bxdf {
         }
 
     private:
-        rgbColor rOverPi;
+        const rgbColor rOverPi;
 };
 
 class specularBrdf : public specularBxdf {
@@ -155,7 +179,7 @@ class specularBrdf : public specularBxdf {
         }
 
     private:
-        rgbColor kR;
+        const rgbColor kR;
 };
 
 class specularBtdf : public specularBxdf {
@@ -174,12 +198,12 @@ class specularBtdf : public specularBxdf {
         }
 
     private:
-        rgbColor kT;
+        const rgbColor kT;
 };
 
 class phongBrdf : public bxdf {
     public:
-        phongBrdf(const rgbColor& k, const float& N) : bxdf(N < 1000 ? bxdfType(GLOSSY | REFLECTION) : bxdfType(SPECULAR | REFLECTION)), ks(k), n(N)
+        phongBrdf(const rgbColor& s, const float& N) : bxdf(bxdfType(GLOSSY | REFLECTION)), ks(s), n(N)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
@@ -188,8 +212,79 @@ class phongBrdf : public bxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        rgbColor ks;
-        float n;
+        const rgbColor ks;
+        const float n;
+};
+
+class microfacetBxdf : public bxdf {
+    public:
+        microfacetBxdf(const rgbColor r, const float& e, const float& K, const bxdfType type) : bxdf(type), Rs(r), eta(e), k(K) {}
+
+        virtual const float microfacetDistrib(const vec3& wh) const = 0;
+
+        const float attenuation(const vec3& wo, const vec3& wi, const vec3& wh) const {
+            const float ndotwo = fabs(bsdf::cosTheta(wo));
+            const float ndotwi = fabs(bsdf::cosTheta(wi));
+            const float ndotwh = fabs(bsdf::cosTheta(wh));
+            const float wodotwh = fabs(dot(wo, wh));
+            return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
+                        2.f * ndotwh * ndotwi / wodotwh));
+        }
+
+        //virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const = 0;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
+            const vec3 wh = halfVector(wo, wi);
+            const float cosThetaO = bsdf::cosTheta(wo);
+            const float cosThetaI = bsdf::cosTheta(wi);
+            const rgbColor Fr = rescaledApproxFresnel(eta, k, cosThetaO);
+
+            return
+                (Rs * microfacetDistrib(wh) * attenuation(wo, wi, wh) * Fr) /
+                (4.f * cosThetaO * cosThetaI);
+        }
+
+        virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
+
+    private:
+        const rgbColor Rs;
+        const float eta, k;
+};
+
+class anisoPhongBrdf : public microfacetBxdf {
+    public:
+        anisoPhongBrdf(const rgbColor& r, const float& eta, const float& k,
+                const float& nU, const float& nV) :
+            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(nU), nv(nV)
+        {}
+
+        virtual const float microfacetDistrib(const vec3& wh) const {
+            const float energyCons = sqrtf(((nu+1.f)*(nv+1.f))/(4.f*TWOPI));
+            const float ndoth = fabs(bsdf::cosTheta(wh));
+            const float ex = (nu * wh.x()*wh.x() + nv * wh.z()*wh.z()) / (1.f - ndoth*ndoth);
+            return energyCons * powf(ndoth, ex);
+        }
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        //virtual const rgbColor f(const vec3& wo, const vec3& wi) const; 
+
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+    private:
+        const float nu;
+        const float nv;
+
+        void sampleFirstQuadrant(const float& u1, const float& u2, float& phi, float& costheta) const {
+            if (nu == nv){
+                phi = PI * u1 * 0.5f;
+            }else{
+                phi = atanf(sqrtf((nu+1)/(nv+1)) *
+                    tanf(PI * u1 * 0.5f));
+            }
+
+            const float cosphi = cosf(phi), sinphi = sinf(phi);
+            costheta = powf(u2, 1.f/(nu * cosphi * cosphi +
+                nv * sinphi * sinphi + 1.f));
+        }
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

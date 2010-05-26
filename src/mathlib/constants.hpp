@@ -1,6 +1,7 @@
 #ifndef __CONSTS__
 #define __CONSTS__
 #include <cmath>
+#include <limits>
 
 static const float POS_INF = -logf(0);
 static const float NEG_INF = logf(0);
@@ -9,6 +10,7 @@ static const float TWOPI = 2.0f*PI;
 static const float HALFPI = PI/2.0f;
 static const float INVPI = 1.f/PI;
 static const float INVTWOPI = 1.f/TWOPI;
+static const unsigned int MAX_UINT = std::numeric_limits<unsigned int>::max();
 
 // Bigger than real machine epsilon usually.
 static const float EPSILON = 5e-5f;

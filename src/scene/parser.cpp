@@ -221,10 +221,34 @@ bsdfPtr sceneParser::bd(){
         p->addBxdf(new lambertianBrdf(rgbColor(rd,gd,bd)));
         p->addBxdf(new phongBrdf(rgbColor(rs,gs,bs), n));
         return p;
-	}else if(is(MICROFACET)){
+	}else if(is(ANISO)){
 		match(BRDF);
 		match(LPAREN);
+		float r = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float g = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float b = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float eta = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float k = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float nu = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float nv = curFloat();
+		match(FLOAT);
 		match(RPAREN);
+		match(RPAREN);
+        bsdfPtr p(new bsdf());
+        p->addBxdf(new anisoPhongBrdf(rgbColor(r,g,b), eta, k, nu, nv));
+        return p;
 	}
 }
 

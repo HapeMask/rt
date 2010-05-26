@@ -31,19 +31,25 @@ const rgbColor areaLight::L(const point3& p) const{
 	return lightColor * power;
 }
 
-const bool areaLight::intersect(const ray& r) const {
+const intersection areaLight::intersect(const ray& r) const {
     ray rorig(r);
     // Backface Culling.
     if(dot(r.direction, normal) > 0){
-        return false;
+        return noIntersect;
     }
 
-    const intersection isect1 = triangle(A, B, C).intersect(rorig);
+    intersection isect1 = triangle(A, B, C).intersect(rorig);
     if(isect1.hit){
-        return true;
+        isect1.s = NULL;
+        isect1.p = NULL;
+        isect1.li = this;
+        return isect1;
     }else{
         rorig = r;
-        const intersection isect2 = triangle(B, D, C).intersect(rorig);
-        return isect2.hit;
+        intersection isect2 = triangle(B, D, C).intersect(rorig);
+        isect2.s = NULL;
+        isect2.p = NULL;
+        isect2.li = this;
+        return isect2;
     }
 }

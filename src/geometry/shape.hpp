@@ -30,7 +30,7 @@ class shape {
 		}
 
         const point3 sampleSurface(vec3& normal, const float& u0, const float& u1) const {
-            const primitive& prim = *prims[sampleRange(0,prims.size()-1)].get();
+            const primitive& prim = *prims[sampleRange(sampleUniform(), 0,prims.size()-1)].get();
             const point3& p = prim.sampleSurface(u0, u1);
             normal = prim.getNormal(p);
             return p;

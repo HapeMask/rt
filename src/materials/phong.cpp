@@ -16,22 +16,22 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
     wi.y() = powf(u1, (1.f / (float)(n+1)));
     wi.z() = sinAlpha * sinf(phi);
 
-    // Treat N<1000 as glossy, N>=1000 as specular.
-    if(n < 1000){
-        pd = pdf(wo, wi);
-        return f(wo, wi);
-    }else{
-        pd = 1.f;
-        return 1.f;
-    }
+    pd = pdf(wo, wi);
+    return f(wo, wi);
 }
 
 const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
-    // -wo.z = cos(perfect specular reflection dir)
-    return ks * (float)(n+2) * INVTWOPI *
-        powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+    const float cosAlpha = dot(wo, reflect(wi));
+    if(cosAlpha < 0){
+        return 0.f;
+    }
+    return ks * (float)(n+2) * INVTWOPI * powf(cosAlpha, n);
 }
 
 const float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
-    return ((float)(n+1) * INVTWOPI) * powf(fabs(dot(wo, vec3(-wi.x(), wi.y(), -wi.z()))), n);
+    const float cosAlpha = dot(wo, reflect(wi));
+    if(cosAlpha < 0){
+        return 0.f;
+    }
+    return ((float)(n+1) * INVTWOPI) * powf(cosAlpha, n);
 }

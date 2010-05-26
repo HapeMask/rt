@@ -1,4 +1,5 @@
 #include "samplers.hpp"
+#include "utility.hpp"
 #include "mathlib/SFMT.h"
 
 #include "mathlib/vector.hpp"
@@ -14,8 +15,9 @@ const float sampleUniform(){
     return genrand_real1();
 }
 
-const int sampleRange(const unsigned int& a, const unsigned int& b){
-    return a + (gen_rand32() % (b-a+1));
+const int sampleRange(const float& u0, const int& a, const int& b){
+    //return min((int)floor(u0*(b-a+1)), b-a);
+    return a + min(Floor2Int(u0*(b-a+1)), b-a);
 }
 
 void sampleDisk(vec3& v, const float& u0, const float& u1){

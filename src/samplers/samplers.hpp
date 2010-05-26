@@ -7,7 +7,7 @@
 
 class triangle;
 const float sampleUniform();
-const int sampleRange(const unsigned int& a, const unsigned int& b);
+const int sampleRange(const float& u0, const int& a, const int& b);
 void uniformSampleDisk(vec3& v);
 void uniformSampleHemisphere(vec3& v);
 void sampleTriangle(point3& p, const triangle& t, const float& u0, const float& u1);

@@ -52,7 +52,7 @@ const intersection sphere::intersect(ray& r) const {
     }
 
 	r.origin += t * r.direction;
-    intersection isect(parent, this, t);
+    intersection isect(this, t);
     isect.normal = normalize(r.origin - location);
     isect.shadingNormal = isect.normal;
 

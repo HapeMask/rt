@@ -73,6 +73,30 @@ inline const vec3 bsdfToWorld(const vec3& v, const intersection& isect){
         isect.binormal.z() * v.x() + isect.shadingNormal.z() * v.y() + isect.tangent.z() * v.z());
 }
 
+/**
+ * Fast Float/Int conversion from PBRT.
+ */
+const double doublemagic = 6755399441055744.0;
+const double doublemagicroundeps = .5-1.4e-11;
+inline int Round2Int(double val) {
+	//2^52 * 1.5, uses limited precision to floor.
+	val	= val + doublemagic;
+	return (reinterpret_cast<long*>(&val))[0];
+}
+
+inline int Float2Int(const double val) {
+	return (val<0) ?  Round2Int(val+doublemagicroundeps) :
+		   Round2Int(val-doublemagicroundeps);
+}
+
+inline int Floor2Int(const double val) {
+	return Round2Int(val - doublemagicroundeps);
+}
+
+inline int Ceil2Int(const double val) {
+	return Round2Int(val + doublemagicroundeps);
+}
+
 inline void debugPrint(string s){
 #ifdef DEBUG
 	cout << s << endl;

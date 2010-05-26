@@ -107,39 +107,50 @@ const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
 
 const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
     float p = 0;
+    int matches = 0;
+
     if(isSupertype(REFLECTION, type)){
         if(isSupertype(DIFFUSE, type) && diffRef){
             p += diffRef->pdf(wo, wi);
+            ++matches;
         }
         if(isSupertype(SPECULAR, type) && specRef){
             p += specRef->pdf(wo, wi);
+            ++matches;
         }
         if(isSupertype(GLOSSY, type) && glossRef){
             p += glossRef->pdf(wo, wi);
+            ++matches;
         }
-    }else{
+    }
+
+    if(isSupertype(TRANSMISSION, type)){
         if(isSupertype(DIFFUSE, type) && diffTra) {
             p += diffTra->pdf(wo, wi);
+            ++matches;
         }
         if(isSupertype(SPECULAR, type) && specTra) {
             p += specTra->pdf(wo, wi);
+            ++matches;
         }
         if(isSupertype(GLOSSY, type) && glossTra) {
             p += glossTra->pdf(wo, wi);
+            ++matches;
         }
     }
-    return p;
+
+    return matches > 0 ? p / (float)matches : 0.f;
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType) const{
+        const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType) const{
     float p;
-    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, matchedType, p);
+    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, sampledType, p);
     return (p > 0.f) ? f / p : f;
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, bxdfType& matchedType, float& p) const{
+        const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;
     rgbColor f(0.f);
     vector<bxdf*> matches;
@@ -156,6 +167,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
             matches.push_back(glossRef);
         }
     }
+
     if(isSupertype(TRANSMISSION, type)){
         if(isSupertype(DIFFUSE, type) && diffTra) {
             matches.push_back(diffTra);
@@ -169,37 +181,39 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     }
 
     if(matches.size() == 0){
+        p = 0.f;
         return 0.f;
     }
 
     // Select and sample a random bxdf component to find wi.
-    const unsigned int index = sampleRange(0, matches.size()-1);
+    const unsigned int index = sampleRange(u0, 0, matches.size()-1);
     f = matches[index]->sampleF(u1, u2, wo, wi, p);
-    matchedType = matches[index]->getType();
+    sampledType = matches[index]->getType();
 
     // If it was a specular bxdf, then we just take the value from f
     // and ignore the others as well as the pdfs, as the specular components
     // have delta distributions for the pdfs.
-    if(!isSupertype(SPECULAR, matchedType) && matches.size() > 1){
+
+    if(!isSupertype(SPECULAR, sampledType) && matches.size() > 1){
         // p currently contains the pdf for the sampled bxdf,
         // we still need to add the other contributions.
-        //
-        // Also evaluate and add the bsdf component values.
-
-        f = 0.f;
         for(size_t i=0; i<matches.size(); ++i){
             if(i != index){
                 p += matches[i]->pdf(wo, wi);
             }
-
-            f += matches[i]->f(wo, wi);
         }
-
-        p /= (float)matches.size();
     }
 
     if(matches.size() > 1){
         p /= (float)matches.size();
+    }
+
+    // Evaluate and add the bsdf component values.
+    if(!isSupertype(SPECULAR, sampledType)){
+        f = 0.f;
+        for(size_t i=0; i<matches.size(); ++i){
+            f += matches[i]->f(wo, wi);
+        }
     }
 
     return f;

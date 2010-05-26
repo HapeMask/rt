@@ -93,11 +93,11 @@ int main(int argc, char* args[]){
     init_gen_rand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,256);
+    ray r0 = c.getRay(384/2,384/2);
     cerr << rt.L(r0) << endl;
     return 0;
-
     */
+
 #ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
