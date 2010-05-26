@@ -1,4 +1,4 @@
-scene(default){
+scene(bvh){
 	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
     //light<area>(0,2.8,0, 0,0,-2, 2,0,0, 1,1,1, 3.0)
     light<point>(0,2.8,0, 1,1,1, 16.0)
@@ -25,20 +25,18 @@ scene(default){
         triangle(-3,-3,-3, 3,-3,3, 3,-3,-3)
         triangle(-3,-3,-3, -3,-3,3, 3,-3,3)
 
-		//material(lambert(0.75,0.75,0.75))
-        material(anisotropic(0.9,0.0,0.0, 1.4, 3.7, 400, 400))
+		material(lambert(0.75,0.75,0.75))
 	}
 
-    shape{
-        sphere(0,-2,0, 1)
-        //material(specular(dielectric, 1,1,1, 1.40))
-        //material(specular(conductor, 1,1,1, 1.4, 7.7))
-        //material(phong(0.8,0.8,0.8, 0.2,0.2,0.2, 1))
-        material(lambert(0.75,0.75,0.75))
-    }
+    //shape{
+    //    sphere(0,-2,0, 1)
+    //    material(blinn(0.4,0.6,0.9, 1.0, 3.0, 20))
+    //}
 
     shape{
-        sphere(0, -2, -2, 0.5)
-        material(lambert(0.2,0.2,0.2))
+        translate(0,-2.5,0)
+        scale(0.8)
+        objfile("../models/bunny_hp.obj")
+        material(specular(dielectric, 1,1,1, 1.4))
     }
 }

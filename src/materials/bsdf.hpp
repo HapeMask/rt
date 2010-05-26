@@ -27,12 +27,12 @@ enum fresnelType {
 //
 
 inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, const float& cosTheta){
-    return ((eta-1.f)*(eta-1.f) + (4 * eta * pow(1.f - cosTheta, 5) + k*k)) /
+    return ((eta-1.f)*(eta-1.f) + (4 * eta * powf(1.f - cosTheta, 5) + k*k)) /
         ((eta+1.f)*(eta+1.f) + k*k);
 }
 
 inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
-	return r0 + (rgbColor(1.f) - r0) * pow(1.f - cosTheta, 5);
+	return r0 + (rgbColor(1.f) - r0) * powf(1.f - cosTheta, 5);
 }
 
 inline const vec3 halfVector(const vec3& wo, const vec3& wi){
@@ -250,41 +250,21 @@ class microfacetBxdf : public bxdf {
         const float eta, k;
 };
 
-class anisoPhongBrdf : public microfacetBxdf {
+class blinnMicrofacet : public microfacetBxdf {
     public:
-        anisoPhongBrdf(const rgbColor& r, const float& eta, const float& k,
-                const float& nU, const float& nV) :
-            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(nU), nv(nV)
+        blinnMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& e) :
+            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), exp(e)
         {}
 
         virtual const float microfacetDistrib(const vec3& wh) const {
-            const float energyCons = sqrtf(((nu+1.f)*(nv+1.f))/(4.f*TWOPI));
-            const float ndoth = fabs(bsdf::cosTheta(wh));
-            const float ex = (nu * wh.x()*wh.x() + nv * wh.z()*wh.z()) / (1.f - ndoth*ndoth);
-            return energyCons * powf(ndoth, ex);
+            return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
         }
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
-        //virtual const rgbColor f(const vec3& wo, const vec3& wi) const; 
-
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const float nu;
-        const float nv;
-
-        void sampleFirstQuadrant(const float& u1, const float& u2, float& phi, float& costheta) const {
-            if (nu == nv){
-                phi = PI * u1 * 0.5f;
-            }else{
-                phi = atanf(sqrtf((nu+1)/(nv+1)) *
-                    tanf(PI * u1 * 0.5f));
-            }
-
-            const float cosphi = cosf(phi), sinphi = sinf(phi);
-            costheta = powf(u2, 1.f/(nu * cosphi * cosphi +
-                nv * sinphi * sinphi + 1.f));
-        }
+        const float exp;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

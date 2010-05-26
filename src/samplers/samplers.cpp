@@ -91,3 +91,16 @@ const float powerHeuristic(int nf, float fPdf, int ng, float gPdf){
     const float g = ng*gPdf;
     return (f*f) / (f*f + g*g);
 }
+
+void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, const float& nv, float& phi, float& costheta){
+    if (nu == nv){
+        phi = PI * u0 * 0.5f;
+    }else{
+        phi = atanf(sqrtf((nu+1)/(nv+1)) *
+            tanf(PI * u0 * 0.5f));
+    }
+
+    const float cosphi = cosf(phi), sinphi = sinf(phi);
+    costheta = powf(u1, 1.f/(nu * cosphi * cosphi +
+        nv * sinphi * sinphi + 1.f));
+}

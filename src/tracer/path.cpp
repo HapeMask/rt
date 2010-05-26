@@ -19,6 +19,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         // scene::intersect() modifies it.
         const ray rCopy(r);
         const intersection isect = parent->intersect(r);
+        //return rgbColor(isect.debugInfo / 2400.f, 0,0);
 
         if(!isect.hit || isect.p == NULL){
             if(pathLength == 0){
@@ -32,6 +33,8 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
                     }
                 }
             }
+
+            L += throughput * rgbColor(0.5f);
             break;
         }
 
@@ -71,6 +74,9 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         }
 
         r.direction = wi;
+        r.invDir = 1.f/wi;
+        r.tMax = MAX_FLOAT;
+        r.tMin = EPSILON;
     }
 
     return clamp(L);

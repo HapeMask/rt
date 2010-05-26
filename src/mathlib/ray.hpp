@@ -11,6 +11,7 @@ class ray {
 		ray() : tMin(EPSILON), tMax(numeric_limits<float>::max())
 		{}
 
+        ray(const ray& r) : origin(r.origin), direction(r.direction), invDir(r.invDir), tMin(r.tMin), tMax(r.tMax) {}
 		ray(const point3& o, const vec3& d) :
 			origin(o), direction(d), invDir(1.f/d), tMin(EPSILON), tMax(numeric_limits<float>::max())
 		{}

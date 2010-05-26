@@ -27,6 +27,7 @@ const intersection bvh::intersect(ray& r) const{
         r.origin += isect.t * r.direction;
     }
 
+    //DBG
     //isect.debugInfo = boxesTested;
     //boxesTested = 0;
     return isect;
@@ -91,6 +92,8 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
         const intersection isectLeft = _intersect(node.children[LEFT], r);
+        const intersection isectRight = _intersect(node.children[RIGHT], r);
+
         // Early exit if the intersection is closer than the other box.
         if(isectLeft.t <= tRightMin && isectLeft.hit){
             return isectLeft;

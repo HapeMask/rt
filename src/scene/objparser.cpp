@@ -1,5 +1,6 @@
 #include "objparser.hpp"
 #include "geometry/triangle.hpp"
+#include "mathlib/vector.hpp"
 
 #include <fstream>
 #include <vector>
@@ -12,7 +13,7 @@ typedef struct tps{
     int c;
 } trianglePointSet;
 
-const vector<trianglePtr> objParser::parse(const string& filename){
+const vector<trianglePtr> objParser::parse(const string& filename, const vec3& offset, const float& scale){
     ifstream file(filename.c_str());
     vector<trianglePtr> tris(0);
 
@@ -59,7 +60,7 @@ const vector<trianglePtr> objParser::parse(const string& filename){
             return tris;
         }
 
-        points.push_back(point3(x, y, z));
+        points.push_back(point3(x*scale, y*scale, z*scale) + offset);
     }
 
     if(file.eof()){

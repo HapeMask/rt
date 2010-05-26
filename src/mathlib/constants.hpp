@@ -11,6 +11,7 @@ static const float HALFPI = PI/2.0f;
 static const float INVPI = 1.f/PI;
 static const float INVTWOPI = 1.f/TWOPI;
 static const unsigned int MAX_UINT = std::numeric_limits<unsigned int>::max();
+static const float MAX_FLOAT = std::numeric_limits<float>::max();
 
 // Bigger than real machine epsilon usually.
 static const float EPSILON = 5e-5f;

@@ -96,7 +96,6 @@ vector<shapePtr> sceneParser::shapeList(){
 
 shapePtr sceneParser::shp(){
 	shapePtr p(new shape());
-
 	vector<primitivePtr> prims = primitiveList();
 
 	for(size_t i=0; i<prims.size(); i++){
@@ -221,7 +220,7 @@ bsdfPtr sceneParser::bd(){
         p->addBxdf(new lambertianBrdf(rgbColor(rd,gd,bd)));
         p->addBxdf(new phongBrdf(rgbColor(rs,gs,bs), n));
         return p;
-	}else if(is(ANISO)){
+	}else if(is(BLINN)){
 		match(BRDF);
 		match(LPAREN);
 		float r = curFloat();
@@ -239,15 +238,13 @@ bsdfPtr sceneParser::bd(){
 		float k = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float nu = curFloat();
-		match(FLOAT);
-		match(COMMA);
-		float nv = curFloat();
+		float exp = curFloat();
 		match(FLOAT);
 		match(RPAREN);
 		match(RPAREN);
+
         bsdfPtr p(new bsdf());
-        p->addBxdf(new anisoPhongBrdf(rgbColor(r,g,b), eta, k, nu, nv));
+        p->addBxdf(new blinnMicrofacet(rgbColor(r,g,b), eta, k, exp));
         return p;
 	}
 }
@@ -380,6 +377,30 @@ lightPtr sceneParser::li(){
 vector<primitivePtr> sceneParser::primitiveList(){
 	vector<primitivePtr> prims;
 
+    float x=0.f, y=0.f, z=0.f;
+    float s = 1.f;
+    if(is(TRANSLATE)){
+        match(TRANSLATE);
+        match(LPAREN);
+        x = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        y = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        z = curFloat();
+        match(FLOAT);
+        match(RPAREN);
+    }
+
+    if(is(SCALE)){
+        match(SCALE);
+        match(LPAREN);
+        s = curFloat();
+        match(FLOAT);
+        match(RPAREN);
+    }
+
     // primitiveList : primitive primitiveList
     if(is(PRIMITIVE)){
         prims.push_back(prim());
@@ -393,7 +414,7 @@ vector<primitivePtr> sceneParser::primitiveList(){
 
         match(FILEPATH);
         match(RPAREN);
-        const vector<trianglePtr> tris = objParser::parse(filename);
+        const vector<trianglePtr> tris = objParser::parse(filename, vec3(x,y,z), s);
         for(unsigned int i=0; i<tris.size(); i++){
             prims.push_back(tris[i]);
         }
@@ -525,6 +546,10 @@ void sceneParser::match(const regex& token){
 		}else if(regex_search(textC, m, LANGLE, match_continuous)){
 			currentToken = m.str();
 		}else if(regex_search(textC, m, RANGLE, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, TRANSLATE, match_continuous)){
+			currentToken = m.str();
+		}else if(regex_search(textC, m, SCALE, match_continuous)){
 			currentToken = m.str();
 		}
 
