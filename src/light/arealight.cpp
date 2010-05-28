@@ -24,10 +24,10 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
 
     // P(wi) = r^2 / cosTheta * A
     pdf = (wi.length2() / cosTheta) * invArea;
-    return (cosTheta > 0.f) ? L(p) : 0.f;
+    return (cosTheta > 0.f) ? (lightColor*power) : 0.f;
 }
 
-const rgbColor areaLight::L(const point3& p) const{
+const rgbColor areaLight::L(const ray& r) const{
 	return lightColor * power;
 }
 

@@ -22,19 +22,19 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         //return rgbColor(0, isect.debugInfo / 2400.f, 0);
 
         if(!isect.hit || isect.p == NULL){
-            if(pathLength == 0){
+            if(pathLength == 0 || lastBounceWasSpecular){
                 for(unsigned int i=0; i<parent->numLights(); ++i){
                     const float lightDist = (parent->getLight(i)->getPosition() - r.origin).length();
                     ray lightRay(rCopy, EPSILON, lightDist);
 
                     const intersection isectL = parent->getLight(i)->intersect(rCopy);
                     if(isectL.hit && !parent->intersectB(lightRay)){
-                        L += isectL.li->L(rCopy.origin);
+                        L += throughput * isectL.li->L(rCopy);
                     }
                 }
             }
 
-            L += throughput * rgbColor(0.5f);
+            //L += throughput * rgbColor(0.5f);
             break;
         }
 
@@ -138,7 +138,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
                     lightRay = ray(p, wi);
                     lightRay.tMax = isectL.t;
                     if(!parent->intersectB(lightRay)){
-                        Li = li.L(p);
+                        Li = li.L(lightRay);
 
                         if(!Li.isBlack()){
                             const float weight = powerHeuristic(1, bsdfPdf, 1, lightPdf);

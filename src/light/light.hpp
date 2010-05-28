@@ -20,8 +20,8 @@ class light {
             return noIntersect;
         }
 
-		inline virtual const rgbColor L(const point3& p) const {
-            return lightColor * power * (1.f / (position - p).length2());
+		inline virtual const rgbColor L(const ray& r) const {
+            return lightColor * power * (1.f / (position - r.origin).length2());
         }
 
         virtual const bool isPointSource() const = 0;
@@ -78,7 +78,7 @@ class areaLight : public light {
         }
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
-		virtual const rgbColor L(const point3& p) const;
+		virtual const rgbColor L(const ray& r) const;
 
     private:
         vec3 a, b, normal;
