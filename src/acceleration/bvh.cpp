@@ -13,13 +13,13 @@
 #include "mathlib/sse.hpp"
 
 #include <sys/time.h>
-#include <vector>
 #include <algorithm>
 
+#include "datastructs/arraylist.hpp"
 using namespace std;
 
 //DBG
-//int boxesTested = 0;
+int boxesTested = 0;
 
 const intersection bvh::intersect(ray& r) const{
     intersection isect = _intersect(0, r);
@@ -28,8 +28,8 @@ const intersection bvh::intersect(ray& r) const{
     }
 
     //DBG
-    //isect.debugInfo = boxesTested;
-    //boxesTested = 0;
+    isect.debugInfo = boxesTested;
+    boxesTested = 0;
     return isect;
 }
 
@@ -41,7 +41,7 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     const unsigned int numPrims = node.prims[1] - node.prims[0];
 
     // Check each hit and find the closest.
-    primitivePtr closestPrim;
+    primitive* closestPrim;
     ray closestRay;
     intersection closestIsect;
     bool didHit = false;
@@ -87,7 +87,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
 
     //DBG
-    //boxesTested += 2;
+    boxesTested += 2;
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
@@ -157,20 +157,30 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
 void bvh::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();
 
+    numPrims = 0;
+    for(size_t i=0; i<shapes.size(); ++i){
+        numPrims += shapes[i]->getPrimitives().size();
+    }
+
+    // Allocate primitive array.
+    //primitives = new primitive*[numPrims];
+    primitives = arraylist<primitive*>(numPrims);
+
     // Fill the list of primitives.
+    unsigned int k = 0;
     for(size_t i=0; i<shapes.size(); ++i){
         const vector<primitivePtr>& p = shapes[i]->getPrimitives();
         for(size_t j=0; j<p.size(); ++j){
-            primitives.push_back(p[j]);
+            primitives[k] = p[j].get();
+            ++k;
         }
     }
-
-    const unsigned int numPrims = primitives.size();
 
     // Allocate space for the trees.
     // A binary tree with N leaves has 2N-1 total nodes.
     numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
     //numNodes = 2 * numPrims - 1;
+
     nodes = new bvhNode[numNodes];
 
     int index = 0;
@@ -178,7 +188,7 @@ void bvh::build(const scene& s){
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-    _build(s.getBounds(), 0, primitives.size(), primitives, nodes, AXIS_X, index);
+    _build(s.getBounds(), 0, numPrims, AXIS_X, index);
 
 	gettimeofday(&end, NULL);
 	float sec = end.tv_sec - start.tv_sec;
@@ -188,8 +198,6 @@ void bvh::build(const scene& s){
 
 void bvh::_build(const aabb& box,
         unsigned int start, unsigned int end,
-        vector<primitivePtr>& prims,
-        bvhNode* nodes,
         AXIS axis, int& index){
 
     if(start == end){
@@ -207,15 +215,31 @@ void bvh::_build(const aabb& box,
     }
 
     // Sort the current chunk of the list.
+    /*
     switch(axis){
         case AXIS_X:
-            sort(prims.begin()+start, prims.begin()+end, aabbCmpX);
+            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpX);
             break;
         case AXIS_Y:
-            sort(prims.begin()+start, prims.begin()+end, aabbCmpY);
+            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpY);
             break;
         case AXIS_Z:
-            sort(prims.begin()+start, prims.begin()+end, aabbCmpZ);
+            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpZ);
+            break;
+        case AXIS_LEAF:
+            cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
+            return;
+    }
+    */
+    switch(axis){
+        case AXIS_X:
+            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpX);
+            break;
+        case AXIS_Y:
+            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpY);
+            break;
+        case AXIS_Z:
+            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpZ);
             break;
         case AXIS_LEAF:
             cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
@@ -226,14 +250,15 @@ void bvh::_build(const aabb& box,
     // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
     const unsigned int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
 
-    aabb leftBox(prims[start]->getBounds());
-    aabb rightBox(prims[mid]->getBounds());
+    aabb leftBox(primitives[start]->getBounds());
+    aabb rightBox(primitives[mid]->getBounds());
+
     for(unsigned int i=start; i<mid; ++i){
-        leftBox = mergeAabb(leftBox, prims[i]->getBounds());
+        leftBox = mergeAabb(leftBox, primitives[i]->getBounds());
     }
 
     for(unsigned int i=mid; i<end; ++i){
-        rightBox = mergeAabb(rightBox, prims[i]->getBounds());
+        rightBox = mergeAabb(rightBox, primitives[i]->getBounds());
     }
 
     // Put the node into the storage array.
@@ -248,11 +273,11 @@ void bvh::_build(const aabb& box,
 
     // The left side will be built in DFS order, after which index will point to the next
     // free node.
-    _build(leftBox, start, mid, prims, nodes, nextAxis(axis), index);
+    _build(leftBox, start, mid, nextAxis(axis), index);
 
     // Set the next free position.
     ++index;
     nodes[savedIndex].children[1] = index;
 
-    _build(rightBox, mid, end, prims, nodes, nextAxis(axis), index);
+    _build(rightBox, mid, end, nextAxis(axis), index);
 }

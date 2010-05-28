@@ -1,5 +1,4 @@
-#ifndef __RT_UTILITY__
-#define __RT_UTILITY__
+#pragma once
 
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
@@ -102,5 +101,3 @@ inline void debugPrint(string s){
 	cout << s << endl;
 #endif
 }
-
-#endif

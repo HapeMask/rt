@@ -1,5 +1,4 @@
-#ifndef __RT_SCENE__
-#define __RT_SCENE__
+#pragma once
 
 #include <vector>
 #include <tr1/memory>
@@ -77,4 +76,3 @@ class scene {
 };
 
 typedef shared_ptr<scene> scenePtr;
-#endif

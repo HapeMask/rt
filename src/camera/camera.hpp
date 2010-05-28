@@ -1,5 +1,4 @@
-#ifndef __RT_CAMERA__
-#define __RT_CAMERA__
+#pragma once
 
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
@@ -38,4 +37,3 @@ class camera {
 };
 
 typedef shared_ptr<camera> cameraPtr;
-#endif

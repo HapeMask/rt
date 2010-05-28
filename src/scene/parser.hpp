@@ -1,5 +1,4 @@
-#ifndef __RT_PARSER__
-#define __RT_PARSER__
+#pragma once
 
 #include "scene.hpp"
 #include "geometry/primitive.hpp"
@@ -79,4 +78,3 @@ static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
 static const regex LANGLE("<");
 static const regex RANGLE(">");
 static const regex COMMA(",");
-#endif

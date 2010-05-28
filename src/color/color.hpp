@@ -1,5 +1,4 @@
-#ifndef __COLORRT__
-#define __COLORRT__
+#pragma once
 
 #include <stdint.h>
 #include <iostream>
@@ -92,4 +91,3 @@ inline const rgbColor operator*(const float& f, const rgbColor& c){
 }
 
 ostream& operator<<(ostream& out, const color& c);
-#endif

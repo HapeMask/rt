@@ -1,5 +1,4 @@
-#ifndef __RT_INTERSECT__
-#define __RT_INTERSECT__
+#pragma once
 
 #include "geometry/shape.hpp"
 #include "geometry/primitive.hpp"
@@ -26,4 +25,3 @@ class intersection {
 };
 
 static const intersection noIntersect(false);
-#endif

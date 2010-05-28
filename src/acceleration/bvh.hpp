@@ -1,16 +1,13 @@
-#ifndef __RT_BVH__
-#define __RT_BVH__
+#pragma once
 
 #include "accelerator.hpp"
 #include "intersection.hpp"
 #include "geometry/primitive.hpp"
 #include "mathlib/ray.hpp"
-
-#include <vector>
-using namespace std;
+#include "datastructs/arraylist.hpp"
 
 enum {LEFT=0, RIGHT=1};
-const unsigned short BVH_MAX_PRIMS_PER_LEAF = 2;
+const unsigned short BVH_MAX_PRIMS_PER_LEAF = 16;
 
 inline AXIS nextAxis(AXIS axis){
     switch(axis){
@@ -51,11 +48,8 @@ class bvh : public accelerator {
 		virtual void build(const scene& s);
 
     private:
-        //bvhNode* _build(const aabb& box, unsigned int start, unsigned int end, vector<primitivePtr>& prims, AXIS axis = AXIS_X);
         void _build(const aabb& box,
                 unsigned int start, unsigned int end,
-                vector<primitivePtr>& prims,
-                bvhNode* nodes,
                 AXIS axis, int& index);
 
         const intersection _intersect(const int& index, const ray& r) const;
@@ -63,7 +57,8 @@ class bvh : public accelerator {
         const intersection leafTest(const bvhNode& node, const ray& r) const;
 
         unsigned int numNodes;
+        unsigned int numPrims;
         bvhNode* nodes;
-        vector<primitivePtr> primitives;
+        //primitive** primitives;
+        arraylist<primitive*> primitives;
 };
-#endif

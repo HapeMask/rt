@@ -1,5 +1,4 @@
-#ifndef __MAT__
-#define __MAT__
+#pragma once
 
 #include <iostream>
 #include "vector.hpp"
@@ -97,5 +96,3 @@ class mat4 {
 };
 
 ostream& operator<<(ostream& out, const mat4& m);
-
-#endif

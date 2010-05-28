@@ -1,5 +1,4 @@
-#ifndef __RT_MATERIAL_
-#define __RT_MATERIAL_
+#pragma once
 
 #include <tr1/memory>
 
@@ -35,4 +34,3 @@ class material {
 };
 
 typedef shared_ptr<material> materialPtr;
-#endif

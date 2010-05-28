@@ -1,5 +1,4 @@
-#ifndef __RT_PRIM__
-#define __RT_PRIM__
+#pragma once
 
 #include "samplers/samplers.hpp"
 #include "aabb.hpp"
@@ -51,4 +50,3 @@ class primitive {
 };
 
 typedef shared_ptr<primitive> primitivePtr;
-#endif

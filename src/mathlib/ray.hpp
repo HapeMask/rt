@@ -1,5 +1,4 @@
-#ifndef __RAY__
-#define __RAY__
+#pragma once
 
 #include "point.hpp"
 #include "vector.hpp"
@@ -30,5 +29,3 @@ class ray {
 		float tMin, tMax;
         int debugInfo;
 };
-
-#endif

@@ -1,8 +1,10 @@
-#ifndef __RT_ACCEL__
-#define __RT_ACCEL__
+#pragma once
+//#warning "TEST"
 
 #include "intersection.hpp"
 #include "geometry/primitive.hpp"
+
+#include <typeinfo>
 
 #include <vector>
 #include <tr1/memory>
@@ -25,7 +27,47 @@ class accelerator {
 
 typedef shared_ptr<accelerator> acceleratorPtr;
 
-inline bool aabbCmpX(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
-inline bool aabbCmpY(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
-inline bool aabbCmpZ(primitivePtr a, primitivePtr b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
-#endif
+inline bool aabbCmpX(primitive* a, primitive* b) { return (a->getBounds().mid().x() < b->getBounds().mid().x()); }
+inline bool aabbCmpY(primitive* a, primitive* b) { return (a->getBounds().mid().y() < b->getBounds().mid().y()); }
+inline bool aabbCmpZ(primitive* a, primitive* b) { return (a->getBounds().mid().z() < b->getBounds().mid().z()); }
+
+/*
+inline int aabbCmpX(const void* a, const void* b) {
+    const primitive* pa = *((primitive**)a);
+    const primitive* pb = *((primitive**)b);
+
+    if(pa->getBounds().mid().x() > pb->getBounds().mid().x()){
+        return 1;
+    }else if(pa->getBounds().mid().x() < pb->getBounds().mid().x()){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+inline int aabbCmpY(const void* a, const void* b) {
+    const primitive* pa = *((primitive**)a);
+    const primitive* pb = *((primitive**)b);
+
+    if(pa->getBounds().mid().y() > pb->getBounds().mid().y()){
+        return 1;
+    }else if(pa->getBounds().mid().y() < pb->getBounds().mid().y()){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
+inline int aabbCmpZ(const void* a, const void* b) {
+    const primitive* pa = *((primitive**)a);
+    const primitive* pb = *((primitive**)b);
+
+    if(pa->getBounds().mid().z() > pb->getBounds().mid().z()){
+        return 1;
+    }else if(pa->getBounds().mid().z() < pb->getBounds().mid().z()){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+*/

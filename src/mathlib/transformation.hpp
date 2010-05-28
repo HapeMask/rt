@@ -1,5 +1,4 @@
-#ifndef __RT_TRANS__
-#define __RT_TRANS__
+#pragma once
 
 #include "matrix.hpp"
 #include "vector.hpp"
@@ -47,5 +46,3 @@ const transform3d translate(const float& dx, const float& dy, const float& dz);
 const transform3d scale(const float& sx, const float& sy, const float& sz);
 const transform3d lookAt(const point3& pos, const point3& look, const vec3& up);
 const transform3d perspective(const float& fov, const float& near, const float& far);
-
-#endif

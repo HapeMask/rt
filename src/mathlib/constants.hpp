@@ -1,5 +1,4 @@
-#ifndef __CONSTS__
-#define __CONSTS__
+#pragma once
 #include <cmath>
 #include <limits>
 
@@ -10,8 +9,10 @@ static const float TWOPI = 2.0f*PI;
 static const float HALFPI = PI/2.0f;
 static const float INVPI = 1.f/PI;
 static const float INVTWOPI = 1.f/TWOPI;
+
 static const unsigned int MAX_UINT = std::numeric_limits<unsigned int>::max();
 static const float MAX_FLOAT = std::numeric_limits<float>::max();
+static const float MIN_FLOAT = std::numeric_limits<float>::min();
 
 // Bigger than real machine epsilon usually.
 static const float EPSILON = 5e-5f;
@@ -146,4 +147,3 @@ const float primes[128] = {
 709,
 719
 };
-#endif

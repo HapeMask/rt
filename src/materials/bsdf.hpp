@@ -1,5 +1,4 @@
-#ifndef __RT_BRDF_
-#define __RT_BRDF_
+#pragma once
 
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
@@ -269,4 +268,3 @@ class blinnMicrofacet : public microfacetBxdf {
 
 typedef shared_ptr<bsdf> bsdfPtr;
 typedef shared_ptr<bxdf> bxdfPtr;
-#endif

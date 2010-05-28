@@ -1,5 +1,4 @@
-#ifndef __RT_PATHTRACER__
-#define __RT_PATHTRACER__
+#pragma once
 
 #include "color/color.hpp"
 #include "mathlib/ray.hpp"
@@ -18,5 +17,3 @@ class pathTracer : public rayTracer {
         const rgbColor sampleDirect(const point3& p, const vec3& wo, const intersection& isect,
                 const bsdf& bsdf, const light& light) const;
 };
-
-#endif

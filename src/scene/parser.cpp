@@ -45,6 +45,7 @@ void sceneParser::parse(scene& s, istream& in){
 	}catch(const ParseException& e){
 		cerr << "Syntax error. Expected token: " << e.expectedToken << endl;
 		cerr << "Actual token was: " << currentToken << endl;
+        cerr << "Current text: " << text << endl;
 	}
 #endif
 }
@@ -241,10 +242,10 @@ bsdfPtr sceneParser::bd(){
 		float exp = curFloat();
 		match(FLOAT);
 		match(RPAREN);
-		match(RPAREN);
 
         bsdfPtr p(new bsdf());
         p->addBxdf(new blinnMicrofacet(rgbColor(r,g,b), eta, k, exp));
+        p->addBxdf(new lambertianBrdf(rgbColor(0.2f,0.2f,0.2f)));
         return p;
 	}
 }

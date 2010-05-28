@@ -1,5 +1,4 @@
-#ifndef __RT_OCTREE__
-#define __RT_OCTREE__
+#pragma once
 
 #include "intersection.hpp" 
 #include "accelerator.hpp"
@@ -37,4 +36,3 @@ class octree : public accelerator {
         octreeNode* root;
         vector<primitivePtr> prims;
 };
-#endif

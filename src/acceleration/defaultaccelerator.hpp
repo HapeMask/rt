@@ -1,5 +1,4 @@
-#ifndef __RT_DEFAULTACCEL__
-#define __RT_DEFAULTACCEL__
+#pragma once
 
 #include <vector>
 #include <tr1/memory>
@@ -26,6 +25,3 @@ class defaultAccelerator : public accelerator {
 	private:
 		vector<primitivePtr> shapes;
 };
-
-#endif
-

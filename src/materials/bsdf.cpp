@@ -40,7 +40,7 @@ bsdf::~bsdf(){
 }
 
 void bsdf::addBxdf(bxdf* b){
-    switch(b->getType()){
+    switch((int)b->getType()){
         case (SPECULAR | TRANSMISSION):
             if(specTra){
                 delete specTra;
@@ -76,6 +76,9 @@ void bsdf::addBxdf(bxdf* b){
                 delete glossRef;
             }
             glossRef = b;
+            break;
+        default:
+            cerr << "Invalid type added." << endl;
             break;
     }
 }

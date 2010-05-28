@@ -1,5 +1,4 @@
-#ifndef __RT_SDLFRAMEBUFFER__
-#define __RT_SDLFRAMEBUFFER__
+#pragma once
 
 #include <SDL.h>
 
@@ -50,4 +49,3 @@ class sdlFramebuffer : public framebuffer {
 		bool didInit;
         rgbColor* buffer;
 };
-#endif

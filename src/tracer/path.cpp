@@ -19,7 +19,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         // scene::intersect() modifies it.
         const ray rCopy(r);
         const intersection isect = parent->intersect(r);
-        //return rgbColor(isect.debugInfo / 2400.f, 0,0);
+        //return rgbColor(0, isect.debugInfo / 2400.f, 0);
 
         if(!isect.hit || isect.p == NULL){
             if(pathLength == 0){
@@ -87,6 +87,8 @@ const rgbColor pathTracer::sampleOneLight(const point3& p, const vec3& wo, const
     if(parent->numLights() > 0){
         const unsigned int i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
         return sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
+    }else{
+        return 0.f;
     }
 }
 

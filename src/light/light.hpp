@@ -1,5 +1,4 @@
-#ifndef __RT_LIGHT__
-#define __RT_LIGHT__
+#pragma once
 
 #include <tr1/memory>
 
@@ -45,8 +44,8 @@ class light {
 
 	protected:
         point3 position;
-		rgbColor lightColor;
 		float power;
+		rgbColor lightColor;
 };
 
 class pointLight : public light {
@@ -88,4 +87,3 @@ class areaLight : public light {
 };
 
 typedef shared_ptr<light> lightPtr;
-#endif

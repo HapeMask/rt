@@ -1,5 +1,4 @@
-#ifndef __RT_POINT__
-#define __RT_POINT__
+#pragma once
 
 #include <iostream>
 #include <cassert>
@@ -150,4 +149,3 @@ class point3 {
 };
 
 ostream& operator<<(ostream& out, const point3& p);
-#endif

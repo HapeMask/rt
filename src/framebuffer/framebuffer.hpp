@@ -1,5 +1,4 @@
-#ifndef __RT_FRAMEBUFFER__
-#define __RT_FRAMEBUFFER__
+#pragma once
 
 #include "color/color.hpp"
 
@@ -34,5 +33,3 @@ class framebuffer {
 		int height_;
 		int bpp_;
 };
-
-#endif

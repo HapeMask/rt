@@ -1,5 +1,4 @@
-#ifndef __RT_SAMPLERS__
-#define __RT_SAMPLERS__
+#pragma once
 
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
@@ -20,5 +19,3 @@ const float radicalInverse(unsigned int n, const int& base);
 void getLDSamples2D(float* samples, const unsigned int& count);
 const float powerHeuristic(int nf, float fPdf, int ng, float gPdf);
 void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, const float& nv, float& phi, float& costheta);
-
-#endif

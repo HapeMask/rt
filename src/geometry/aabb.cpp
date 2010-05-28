@@ -16,9 +16,6 @@ ostream& operator<<(ostream& out, const aabb& b){
 }
 
 const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
-    const __m128 pos_inf = loadps(PS_POS_INF);
-    const __m128 neg_inf = loadps(PS_NEG_INF);
-
     const __m128 boxMin = _min.getSIMD();
     const __m128 boxMax = _max.getSIMD();
     const __m128 pos = r.origin.getSIMD();

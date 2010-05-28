@@ -1,5 +1,4 @@
-#ifndef __RT_SPHERE__
-#define __RT_SPHERE__
+#pragma once
 
 #include "mathlib/constants.hpp"
 #include "mathlib/point.hpp"
@@ -25,4 +24,3 @@ class sphere : public primitive {
 		point3 location;
 		float radius, radius2;
 };
-#endif

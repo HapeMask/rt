@@ -1,5 +1,4 @@
-#ifndef __RT_TRACER__
-#define __RT_TRACER__
+#pragma once
 
 #include <omp.h>
 
@@ -13,37 +12,13 @@ const unsigned int areaSamples = 16;
 class rayTracer {
 	public:
 		rayTracer(scene* p) : parent(p), imgWidth(p->getCamera()->width()),
-        imgHeight(p->getCamera()->height()){
-            /*
-            samples = new float[imgWidth*imgHeight*areaSamples*2];
-            getLDSamples2D(samples, imgWidth*imgHeight*areaSamples);
-
-            for(int i=0;i<8;++i){
-                sampleIndex[i] = (imgWidth*imgHeight*areaSamples*2*i) / 8;
-            }
-            */
-        }
+        imgHeight(p->getCamera()->height())
+        {}
 
 		virtual const rgbColor L(const ray& r) const = 0;
-        virtual ~rayTracer() {
-            //delete[] samples;
-        }
+        virtual ~rayTracer() {}
 
 	protected:
-        /*
-        inline void getNextSample(float sample[2]) const {
-#ifdef RT_MULTITHREADED
-            const unsigned int tid = omp_get_thread_num();
-#else
-            const unsigned int tid = 0;
-#endif
-            sample[0] = samples[sampleIndex[tid]];
-            sample[1] = samples[sampleIndex[tid]+1];
-            sampleIndex[tid] += 2;
-        }
-
-        float* samples;
-        */
 		scene* parent;
         unsigned int imgWidth, imgHeight;
 };
@@ -55,6 +30,5 @@ class whittedRayTracer : public rayTracer {
 		virtual const rgbColor L(const ray& r) const;
 
 	private:
-		const rgbColor _L(ray& r, const int& depth = 0) const;
+		const rgbColor _L(ray& r, const unsigned int& depth = 0) const;
 };
-#endif

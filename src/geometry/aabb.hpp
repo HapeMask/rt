@@ -1,5 +1,4 @@
-#ifndef __RT_AABB__
-#define __RT_AABB__
+#pragma once
 
 #include "mathlib/sse.hpp"
 #include "mathlib/ray.hpp"
@@ -13,7 +12,10 @@
  */
 class aabb {
 	public:
-        aabb() : _min(vec3(POS_INF)), _max(vec3(NEG_INF)) {}
+        aabb(const aabb& a) : _min(a.min()), _max(a.max()), _mid(a.mid())
+        {}
+
+        aabb() : _min(vec3(MAX_FLOAT)), _max(vec3(MIN_FLOAT)), _mid((vec3(MAX_FLOAT) + vec3(MIN_FLOAT))/2.f) {}
 
         aabb(const vec3& mi, const vec3& mx) : _min(mi), _max(mx), _mid((_min+_max)/2.f) {}
 
@@ -108,6 +110,7 @@ class aabb {
         inline void updateMid() {
              _mid = (_min+_max)/2.f;
         }
+
         vec3 _min;
         vec3 _max;
         vec3 _mid;
@@ -124,5 +127,3 @@ inline const aabb mergeAabb(const aabb& a, const aabb& b){
             vec3(
                 maxps(a.max().getSIMD(), b.max().getSIMD())));
 }
-
-#endif

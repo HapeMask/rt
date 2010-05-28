@@ -1,5 +1,4 @@
-#ifndef __RT_TRIANGLE__
-#define __RT_TRIANGLE__
+#pragma once
 
 #include <cmath>
 
@@ -72,4 +71,3 @@ class triangle : public primitive {
 };
 
 typedef std::tr1::shared_ptr<triangle> trianglePtr;
-#endif

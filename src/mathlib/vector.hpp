@@ -1,5 +1,4 @@
-#ifndef __RT_VEC__
-#define __RT_VEC__
+#pragma once
 
 #include <iostream>
 #include <cassert>
@@ -365,5 +364,3 @@ inline const vec3 operator/(const float& x, const vec3& v){
 ostream& operator<<(ostream& out, const vec2& x);
 ostream& operator<<(ostream& out, const vec3& x);
 ostream& operator<<(ostream& out, const vec4& x);
-
-#endif
