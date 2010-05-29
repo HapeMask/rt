@@ -7,5 +7,6 @@ using namespace std;
 
 class objParser{
     public:
-        static const vector<trianglePtr> parse(const string& filename, const vec3& offset, const float& scale);
+        static const vector<trianglePtr> parse(const string& filename, const vec3& offset, const float& scale,
+                point3* pointHeap, vec3* vertNormalheap);
 };

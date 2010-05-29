@@ -215,22 +215,6 @@ void bvh::_build(const aabb& box,
     }
 
     // Sort the current chunk of the list.
-    /*
-    switch(axis){
-        case AXIS_X:
-            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpX);
-            break;
-        case AXIS_Y:
-            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpY);
-            break;
-        case AXIS_Z:
-            qsort(primitives+start, end-start, sizeof(primitive*), aabbCmpZ);
-            break;
-        case AXIS_LEAF:
-            cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
-            return;
-    }
-    */
     switch(axis){
         case AXIS_X:
             sort(primitives.begin() + start, primitives.begin() + end, aabbCmpX);
@@ -248,7 +232,8 @@ void bvh::_build(const aabb& box,
 
     // Rounding ensures that the leaves are well-filled.
     // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
-    const unsigned int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
+    //const unsigned int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
+    const unsigned int mid = (start+end)/2;
 
     aabb leftBox(primitives[start]->getBounds());
     aabb rightBox(primitives[mid]->getBounds());

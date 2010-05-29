@@ -59,6 +59,5 @@ class bvh : public accelerator {
         unsigned int numNodes;
         unsigned int numPrims;
         bvhNode* nodes;
-        //primitive** primitives;
         arraylist<primitive*> primitives;
 };
