@@ -112,6 +112,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;
             if(!parent->intersect(shadowRay).hit){
+            //if(!parent->intersectB(shadowRay)){
                 if(li.isPointSource()){
                     Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{

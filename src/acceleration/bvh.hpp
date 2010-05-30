@@ -25,8 +25,8 @@ inline AXIS nextAxis(AXIS axis){
 typedef struct bn {
     aabb box;
     union{
-        unsigned int children[2];
         unsigned int prims[2];
+        unsigned int rightChild;
     };
 
     AXIS axis;

@@ -1,12 +1,15 @@
 #pragma once
 
-#include "geometry/triangle.hpp"
+#include "geometry/meshtriangle.hpp"
+#include "geometry/trianglemesh.hpp"
+#include "geometry/shape.hpp"
+
 #include "mathlib/vector.hpp"
 #include <vector>
 using namespace std;
 
 class objParser{
     public:
-        static const vector<trianglePtr> parse(const string& filename, const vec3& offset, const float& scale,
-                point3* pointHeap, vec3* vertNormalheap);
+        static const void parse(const string& filename, const vec3& offset, const float& scale,
+                triangleMesh* p);
 };

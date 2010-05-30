@@ -3,20 +3,16 @@ using namespace std;
 
 #include "sdlframebuffer.hpp"
 #include "color/color.hpp"
-#include "utility.hpp"
 
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
 	framebuffer(width, height, bpp){
 
-	debugPrint("Loading SDL video...");
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		cerr << "Error loading SDL video:" << endl;
 		cerr << SDL_GetError() << endl;
 		didInit = false;
 		return;
 	}
-
-	debugPrint("SDL video loaded.");
 
 	screen = SDL_SetVideoMode(width, height, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if(screen == NULL){

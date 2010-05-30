@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include "datastructs/arraylist.hpp"
+#include "datastructs/linkedlist.hpp"
 using namespace std;
 
 //DBG
@@ -83,32 +84,32 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
         return leafTest(node, r);
     }
 
-    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
-    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
+    const bool didIntersectLeft = nodes[index+1].box.intersect(r, tLeftMin, tLeftMax);
+    const bool didIntersectRight = nodes[node.rightChild].box.intersect(r, tRightMin, tRightMax);
 
     //DBG
     boxesTested += 2;
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
-        const intersection isectLeft = _intersect(node.children[LEFT], r);
-        const intersection isectRight = _intersect(node.children[RIGHT], r);
+        const intersection isectLeft = _intersect(index+1, r);
 
         // Early exit if the intersection is closer than the other box.
-        if(isectLeft.t <= tRightMin && isectLeft.hit){
+        if(isectLeft.hit && isectLeft.t <= tRightMin){
             return isectLeft;
         }else{
-            const intersection isectRight = _intersect(node.children[RIGHT], r);
-            if(isectLeft.t <= isectRight.t && isectLeft.hit){
+            const intersection isectRight = _intersect(node.rightChild, r);
+
+            if(isectLeft.hit && isectLeft.t <= isectRight.t){
                 return isectLeft;
             }else{
                 return isectRight;
             }
         }
     }else if(didIntersectLeft){
-        return _intersect(node.children[LEFT], r);
+        return _intersect(index+1, r);
     }else if(didIntersectRight){
-        return _intersect(node.children[RIGHT], r);
+        return _intersect(node.rightChild, r);
     }else{
         return noIntersect;
     }
@@ -137,18 +138,18 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
         return false;
     }
 
-    const bool didIntersectLeft = nodes[node.children[LEFT]].box.intersect(r, tLeftMin, tLeftMax);
-    const bool didIntersectRight = nodes[node.children[RIGHT]].box.intersect(r, tRightMin, tRightMax);
+    const bool didIntersectLeft = nodes[index+1].box.intersect(r, tLeftMin, tLeftMax);
+    const bool didIntersectRight = nodes[node.rightChild].box.intersect(r, tRightMin, tRightMax);
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
         return
-            (_intersectB(node.children[LEFT], r) ||
-             _intersectB(node.children[RIGHT], r));
+            (_intersectB(index+1, r) ||
+             _intersectB(node.rightChild, r));
     }else if(didIntersectLeft){
-        return _intersectB(node.children[LEFT], r);
+        return _intersectB(index+1, r);
     }else if(didIntersectRight){
-        return _intersectB(node.children[RIGHT], r);
+        return _intersectB(node.rightChild, r);
     }else{
         return false;
     }
@@ -178,8 +179,8 @@ void bvh::build(const scene& s){
 
     // Allocate space for the trees.
     // A binary tree with N leaves has 2N-1 total nodes.
-    numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
-    //numNodes = 2 * numPrims - 1;
+    //numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
+    numNodes = 2 * numPrims - 1;
 
     nodes = new bvhNode[numNodes];
 
@@ -248,7 +249,6 @@ void bvh::_build(const aabb& box,
 
     // Put the node into the storage array.
     node.axis = axis;
-    node.children[LEFT] = index+1;
     nodes[index] = node;
 
     const int savedIndex(index);
@@ -262,7 +262,7 @@ void bvh::_build(const aabb& box,
 
     // Set the next free position.
     ++index;
-    nodes[savedIndex].children[1] = index;
+    nodes[savedIndex].rightChild = index;
 
     _build(rightBox, mid, end, nextAxis(axis), index);
 }

@@ -5,6 +5,7 @@
 #include "geometry/primitive.hpp"
 #include "geometry/shape.hpp"
 #include "geometry/triangle.hpp"
+#include "geometry/trianglemesh.hpp"
 #include "geometry/sphere.hpp"
 
 #include "camera/camera.hpp"
@@ -65,28 +66,28 @@ void sceneParser::scn(scene& s){
         s.setAccelerator(acceleratorPtr(new defaultAccelerator));
     }
 
-	s.setCamera(cam());
+	s.setCamera(cam(s));
     while(is(LIGHT)){
-        s.addLight(li());
+        s.addLight(li(s));
     }
 
 	vector<shapePtr> shapes;
-	shapes = shapeList();
+	shapes = shapeList(s);
 	match(RBRACE);
 	for(size_t i=0; i<shapes.size(); i++){
         s.addShape(shapes[i]);
 	}
 }
 
-vector<shapePtr> sceneParser::shapeList(){
+vector<shapePtr> sceneParser::shapeList(scene& s){
 	vector<shapePtr> shapes;
 
 	match(SHAPE);
 	match(LBRACE);
-	shapes.push_back(shp());
+	shapes.push_back(shp(s));
 	match(RBRACE);
 	if(is(SHAPE)){
-		vector<shapePtr> sh2 = shapeList();
+		vector<shapePtr> sh2 = shapeList(s);
 		for(size_t i=0; i<sh2.size(); i++){
 			shapes.push_back(sh2[i]);
 		}
@@ -95,19 +96,58 @@ vector<shapePtr> sceneParser::shapeList(){
 	return shapes;
 }
 
-shapePtr sceneParser::shp(){
-	shapePtr p(new shape());
-	vector<primitivePtr> prims = primitiveList();
+shapePtr sceneParser::shp(scene& s){
+    shapePtr p;
 
-	for(size_t i=0; i<prims.size(); i++){
-		p->addPrimitive(prims[i]);
-	}
+    float x=0.f, y=0.f, z=0.f;
+    float scale = 1.f;
+    if(is(TRANSLATE)){
+        match(TRANSLATE);
+        match(LPAREN);
+        x = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        y = curFloat();
+        match(FLOAT);
+        match(COMMA);
+        z = curFloat();
+        match(FLOAT);
+        match(RPAREN);
+    }
 
-	p->setMaterial(mat());
-	return p;
+    if(is(SCALE)){
+        match(SCALE);
+        match(LPAREN);
+        scale = curFloat();
+        match(FLOAT);
+        match(RPAREN);
+    }
+
+    if(is(OBJFILE)){
+        p.reset(new triangleMesh());
+        match(OBJFILE);
+        match(LPAREN);
+
+        // Strip quotes.
+        string filename(currentToken.substr(1,currentToken.length() - 2));
+
+        match(FILEPATH);
+        match(RPAREN);
+        objParser::parse(filename, vec3(x,y,z), scale, (triangleMesh*)p.get());
+    }else{
+        p.reset(new shape());
+        vector<primitivePtr> prims = primitiveList(s);
+
+        for(size_t i=0; i<prims.size(); i++){
+            p->addPrimitive(prims[i]);
+        }
+    }
+
+    p->setMaterial(mat(s));
+    return p;
 }
 
-materialPtr sceneParser::mat(){
+materialPtr sceneParser::mat(scene& s){
 	match(MATERIAL);
 	match(LPAREN);
     if(is(EMISSIVE)){
@@ -130,14 +170,14 @@ materialPtr sceneParser::mat(){
         const materialPtr m(new material(rgbColor(r,g,b), intensity));
         return m;
     }else{
-        bsdfPtr br = bd();
+        bsdfPtr br = bd(s);
         match(RPAREN);
         const materialPtr m(new material(br));
         return m;
     }
 }
 
-bsdfPtr sceneParser::bd(){
+bsdfPtr sceneParser::bd(scene& s){
 	if(is(LAMBERT)){
 		match(BRDF);
 		match(LPAREN);
@@ -250,7 +290,7 @@ bsdfPtr sceneParser::bd(){
 	}
 }
 
-cameraPtr sceneParser::cam(){
+cameraPtr sceneParser::cam(scene& s){
 	match(CAMERA);
 	match(LANGLE);
 	float w, h;
@@ -296,7 +336,7 @@ cameraPtr sceneParser::cam(){
     return c;
 }
 
-lightPtr sceneParser::li(){
+lightPtr sceneParser::li(scene& s){
 	match(LIGHT);
 	match(LANGLE);
 	string type(currentToken);
@@ -375,11 +415,11 @@ lightPtr sceneParser::li(){
     }
 }
 
-vector<primitivePtr> sceneParser::primitiveList(){
+vector<primitivePtr> sceneParser::primitiveList(scene& s){
 	vector<primitivePtr> prims;
 
     float x=0.f, y=0.f, z=0.f;
-    float s = 1.f;
+    float scale = 1.f;
     if(is(TRANSLATE)){
         match(TRANSLATE);
         match(LPAREN);
@@ -397,32 +437,17 @@ vector<primitivePtr> sceneParser::primitiveList(){
     if(is(SCALE)){
         match(SCALE);
         match(LPAREN);
-        s = curFloat();
+        scale = curFloat();
         match(FLOAT);
         match(RPAREN);
     }
 
     // primitiveList : primitive primitiveList
     if(is(PRIMITIVE)){
-        prims.push_back(prim());
-    // primitiveList : objfile primitiveList
-    }else if(is(OBJFILE)){
-        match(OBJFILE);
-        match(LPAREN);
-
-        // Strip quotes.
-        string filename(currentToken.substr(1,currentToken.length() - 2));
-
-        match(FILEPATH);
-        match(RPAREN);
-        const vector<trianglePtr> tris = objParser::parse(filename, vec3(x,y,z), s);
-        for(unsigned int i=0; i<tris.size(); i++){
-            prims.push_back(tris[i]);
-        }
+        prims.push_back(prim(s));
     }
-
     if(is(PRIMITIVE) || is(OBJFILE)){
-        vector<primitivePtr> pr2 = primitiveList();
+        vector<primitivePtr> pr2 = primitiveList(s);
         for(size_t i=0; i<pr2.size(); i++){
             prims.push_back(pr2[i]);
         }
@@ -430,7 +455,7 @@ vector<primitivePtr> sceneParser::primitiveList(){
     return prims;
 }
 
-primitivePtr sceneParser::prim(){
+primitivePtr sceneParser::prim(scene& s){
 	primitivePtr p;
 	if(is(TRIANGLE)){
 		match(PRIMITIVE);
@@ -506,55 +531,21 @@ void sceneParser::match(const regex& token){
 		match_results<const char*> m;
 		const char* textC = text.c_str();
 
-		if(regex_search(textC, m, FLOAT, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, PRIMITIVE, match_continuous)){
-			currentToken = m.str();
-        }else if(regex_search(textC, m, SPECTYPE, match_continuous)){
-            currentToken = m.str();
-		}else if(regex_search(textC, m, BRDF, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, MATERIAL, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, ACCELTYPE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, EMISSIVE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, CAMERA, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, FILEPATH, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, OBJFILE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, SCENE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, LIGHTTYPE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, SHAPE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, LIGHT, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, LPAREN, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, RPAREN, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, LBRACE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, RBRACE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, COMMA, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, LANGLE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, RANGLE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, TRANSLATE, match_continuous)){
-			currentToken = m.str();
-		}else if(regex_search(textC, m, SCALE, match_continuous)){
-			currentToken = m.str();
-		}
+        arraylist<string> matches;
+        for(unsigned int i=0;i<numRegexes; ++i){
+            if(regex_search(textC, m, regexes[i], match_continuous)){
+                matches.add(m.str());
+            }
+        }
 
-		return;
+        if(matches.size() > 0){
+            currentToken = matches[0];
+            for(unsigned int i=1; i<matches.size(); ++i){
+                if(matches[i].length() > currentToken.length()){
+                    currentToken = matches[i];
+                }
+            }
+        }
 	}
 
 #ifndef RT_NO_EXCEPTIONS

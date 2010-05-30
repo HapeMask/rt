@@ -16,31 +16,16 @@ class triangle : public primitive {
 		virtual ~triangle() {}
 
 		virtual const intersection intersect(ray& r) const;
-        static const intersection* intersect4(
-                const ray& r, const triangle* t1, const triangle* t2,
-                const triangle* t3, const triangle* t4);
 
-		const point3& a() const {
+		virtual const point3& a() const{
 			return points[0];
 		}
 
-		const point3& b() const {
+		virtual const point3& b() const{
 			return points[1];
 		}
 
-		const point3& c() const {
-			return points[2];
-		}
-
-		point3& a(){
-			return points[0];
-		}
-
-		point3& b(){
-			return points[1];
-		}
-
-		point3& c(){
+		virtual const point3& c() const{
 			return points[2];
 		}
 
@@ -52,7 +37,7 @@ class triangle : public primitive {
             return normal_;
         }
 
-        void setVertNormals(const vec3& an, const vec3& bn, const vec3& cn);
+        virtual void setVertNormals(const vec3& an, const vec3& bn, const vec3& cn);
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
         inline virtual const float area() const {

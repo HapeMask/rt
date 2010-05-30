@@ -1,8 +1,8 @@
 #include "triangle.hpp"
 #include "shape.hpp"
-
 #include "utility.hpp"
 
+#include "scene/scene.hpp"
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
@@ -24,7 +24,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 	points[1] = b;
 	points[2] = c;
 
-    normal_ = cross(b - a, c - a);
+    normal_ = cross(b-a, c-a);
     area_ = 0.5 * normal_.length();
 	normal_ = normalize(normal_);
 }

@@ -1,5 +1,4 @@
-#ifndef __RT_SHAPE__
-#define __RT_SHAPE__
+#pragma once
 
 #include "primitive.hpp"
 #include "materials/material.hpp"
@@ -14,6 +13,8 @@ using tr1::shared_ptr;
 
 class shape {
 	public:
+		virtual ~shape() {}
+
 		void setMaterial(materialPtr m);
 		void addPrimitive(primitivePtr p);
 
@@ -52,4 +53,3 @@ class shape {
 };
 
 typedef shared_ptr<shape> shapePtr;
-#endif

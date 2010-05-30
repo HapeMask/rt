@@ -1,5 +1,10 @@
 #include "objparser.hpp"
-#include "geometry/triangle.hpp"
+
+#include "geometry/meshtriangle.hpp"
+#include "geometry/trianglemesh.hpp"
+#include "geometry/shape.hpp"
+
+#include "mathlib/vector.hpp"
 #include "mathlib/vector.hpp"
 
 #include <fstream>
@@ -7,19 +12,12 @@
 #include <algorithm>
 using namespace std;
 
-typedef struct tps{
-    int a;
-    int b;
-    int c;
-} trianglePointSet;
-
-const vector<trianglePtr> objParser::parse(const string& filename, const vec3& offset, const float& scale){
+const void objParser::parse(const string& filename, const vec3& offset, const float& scale, triangleMesh* p){
     ifstream file(filename.c_str());
-    vector<trianglePtr> tris(0);
+    vector<meshTrianglePtr> tris(0);
 
     if(!file.is_open() || !file.good()){
         cerr << "Unable to open SMF file for reading: " << filename.c_str() << endl;
-        return tris;
     }
 
     string chunk("");
@@ -32,7 +30,6 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
     if(file.eof()){
         cerr << "End of file reached before finding any valid data." << endl;
         file.close();
-        return tris;
     }
 
     vector<point3> points;
@@ -43,29 +40,31 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
         file >> chunk;
         if(file.eof()){
             cerr << "End of file reached before making any faces." << endl;
-            return tris;
         }
         float y = (float)strtod(chunk.c_str(), NULL);
 
         file >> chunk;
         if(file.eof()){
             cerr << "End of file reached before making any faces." << endl;
-            return tris;
         }
         float z = (float)strtod(chunk.c_str(), NULL);
 
         file >> chunk;
         if(file.eof()){
             cerr << "End of file reached before making any faces." << endl;
-            return tris;
         }
 
         points.push_back(point3(x*scale, y*scale, z*scale) + offset);
     }
 
+    // Fill in the scene's point heap.
+    p->pointHeap = new point3[points.size()];
+    for(size_t i=0;i<points.size(); ++i){
+        p->pointHeap[i] = points[i];
+    }
+
     if(file.eof()){
         cerr << "End of file reached before making any faces." << endl;
-        return tris;
     }
 
     // Consume any intermediate info.
@@ -73,8 +72,7 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
         file >> chunk;
     }
 
-    vector<vector<trianglePtr> > vertPolys(points.size());
-    vector<trianglePointSet> triPoints;
+    vector<vector<meshTrianglePtr> > vertPolys(points.size());
     // Read in the faces and construct the polys.
     while(!file.eof() && chunk == "f"){
         file >> chunk;
@@ -87,22 +85,17 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
         file >> chunk;
         if(file.eof()){
             cerr << "End of face reached before making a triangle." << endl;
-            return tris;
         }
         const unsigned int vert2 = strtol(chunk.c_str(), NULL, 10);
 
         file >> chunk;
         if(file.eof()){
             cerr << "End of face reached before making a triangle." << endl;
-            return tris;
         }
         const unsigned int vert3 = strtol(chunk.c_str(), NULL, 10);
 
-        trianglePtr tri(new triangle(points[vert1-1], points[vert2-1], points[vert3-1]));
+        meshTrianglePtr tri(new meshTriangle(vert1-1, vert2-1, vert3-1, p));
         tris.push_back(tri);
-
-        const trianglePointSet tps = {vert1-1, vert2-1, vert3-1};
-        triPoints.push_back(tps);
 
         vertPolys[vert1-1].push_back(tri);
         vertPolys[vert2-1].push_back(tri);
@@ -115,8 +108,8 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
     // then store the vertex normal.
     vector<vec3> vertNormals;
     for(size_t i=0; i<points.size(); ++i){
-        const vector<trianglePtr>& vps = vertPolys[i];
-        vec3 normal(0.f,0.f,0.f);
+        const vector<meshTrianglePtr>& vps = vertPolys[i];
+        vec3 normal(0.f);
 
         vector<vec3> addedNorms;
         for(size_t j=0; j<vps.size(); ++j){
@@ -131,13 +124,20 @@ const vector<trianglePtr> objParser::parse(const string& filename, const vec3& o
         vertNormals.push_back(normalize(normal));
     }
 
+    // Fill in the scene's vert normal heap.
+    p->vertexNormalHeap = new vec3[vertNormals.size()];
+    for(size_t i=0;i<vertNormals.size(); ++i){
+        p->vertexNormalHeap[i] = vertNormals[i];
+    }
+
     for(size_t i=0; i<tris.size(); ++i){
-        const trianglePointSet& tp = triPoints[i];
-        tris[i]->setVertNormals(vertNormals[tp.a], vertNormals[tp.b], vertNormals[tp.c]);
+        tris[i]->setVertNormals(tris[i]->aIndex(),
+                tris[i]->bIndex(),
+                tris[i]->cIndex());
+        p->addPrimitive(tris[i]);
     }
 
     file.close();
 
     cerr << "Loaded " << tris.size() << " polygons from " << filename << endl;
-    return tris;
 }

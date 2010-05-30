@@ -36,14 +36,14 @@ class sceneParser {
 		bool is(const regex& token);
 
 		void scn(scene& s);
-		vector<shapePtr> shapeList();
-		shapePtr shp();
-		vector<primitivePtr> primitiveList();
-		primitivePtr prim();
-		materialPtr mat();
-		bsdfPtr bd();
-		lightPtr li();
-		cameraPtr cam();
+		vector<shapePtr> shapeList(scene& s);
+		shapePtr shp(scene& s);
+		vector<primitivePtr> primitiveList(scene& s);
+		primitivePtr prim(scene& s);
+		materialPtr mat(scene& s);
+		bsdfPtr bd(scene& s);
+		lightPtr li(scene& s);
+		cameraPtr cam(scene& s);
 };
 
 static const regex COMMENTLINE("//[^\\n\\r]*(\\n|\\r|\\r\\n)");
@@ -78,3 +78,39 @@ static const regex FLOAT("-{0,1}[0-9]+(\\.[0-9]*){0,1}");
 static const regex LANGLE("<");
 static const regex RANGLE(">");
 static const regex COMMA(",");
+
+static const unsigned int numRegexes = 32;
+static const regex regexes[numRegexes] = {
+regex("//[^\\n\\r]*(\\n|\\r|\\r\\n)"),
+regex("\\s+"),
+regex("\\("),
+regex("\\)"),
+regex("\\{"),
+regex("\\}"),
+regex("\"[a-zA-Z0-9._/-]+\""),
+regex("scene"),
+regex("camera"),
+regex("lambert|specular|phong|anisotropic|blinn"),
+regex("lambert"),
+regex("blinn"),
+regex("specular"),
+regex("phong"),
+regex("anisotropic"),
+regex("emissive"),
+regex("default|grid|kdtree|bvh|bih"),
+regex("triangle|sphere"),
+regex("triangle"),
+regex("point|spot|area"),
+regex("sphere"),
+regex("shape"),
+regex("light"),
+regex("conductor|dielectric"),
+regex("material"),
+regex("objfile"),
+regex("translate"),
+regex("scale"),
+regex("-{0,1}[0-9]+(\\.[0-9]*){0,1}"),
+regex("<"),
+regex(">"),
+regex(",")
+};

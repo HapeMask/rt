@@ -6,12 +6,15 @@
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
 
+#include "light/light.hpp"
 #include "camera/camera.hpp"
+
+#include "mathlib/vector.hpp"
+#include "mathlib/point.hpp"
 
 #include "geometry/shape.hpp"
 #include "geometry/aabb.hpp"
 #include "geometry/primitive.hpp"
-#include "light/light.hpp"
 
 using namespace std;
 using tr1::shared_ptr;

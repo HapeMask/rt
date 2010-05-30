@@ -95,9 +95,3 @@ inline int Floor2Int(const double val) {
 inline int Ceil2Int(const double val) {
 	return Round2Int(val + doublemagicroundeps);
 }
-
-inline void debugPrint(string s){
-#ifdef DEBUG
-	cout << s << endl;
-#endif
-}
