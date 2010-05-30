@@ -43,7 +43,8 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect);
 
-        L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
+        //L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
+        L += throughput * sampleAllLights(r.origin, wo, isect, bsdf);
 
         vec3 wi;
         float pdf = 0.f;
@@ -78,7 +79,6 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         r.tMax = MAX_FLOAT;
         r.tMin = EPSILON;
     }
-
     return clamp(L);
 }
 
@@ -87,6 +87,20 @@ const rgbColor pathTracer::sampleOneLight(const point3& p, const vec3& wo, const
     if(parent->numLights() > 0){
         const unsigned int i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
         return sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
+    }else{
+        return 0.f;
+    }
+}
+
+const rgbColor pathTracer::sampleAllLights(const point3& p, const vec3& wo, const intersection& isect,
+        const bsdf& bsdf) const{
+    if(parent->numLights() > 0){
+        rgbColor L(0.f);
+        for(unsigned int i=0;i<parent->numLights(); ++i){
+            L += sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
+        }
+
+        return L / parent->numLights();
     }else{
         return 0.f;
     }
@@ -111,8 +125,8 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         if(!f.isBlack()){
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;
-            if(!parent->intersect(shadowRay).hit){
-            //if(!parent->intersectB(shadowRay)){
+
+            if(!parent->intersectB(shadowRay)){
                 if(li.isPointSource()){
                     Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{
@@ -124,7 +138,6 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         }
     }
 
-    ///*
     if(!li.isPointSource()){
         bxdfType sampledType;
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
@@ -150,7 +163,6 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
             }
         }
     }
-    //*/
 
     return Ld;
 }

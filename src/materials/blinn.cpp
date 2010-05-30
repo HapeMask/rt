@@ -14,14 +14,22 @@ const rgbColor blinnMicrofacet::sampleF(const float& u0, const float& u1, const 
     const float sinThetaH = sqrtf(max(0.f, 1.f - cosThetaH*cosThetaH));
 
     // Convert from spherical coords to BSDF xyz coords.
-    const vec3 wh = vec3(sinThetaH*cosThetaH, cosf(phiH), sinThetaH*sinThetaH);
-    wi = -wo + 2.f * dot(wo, wh) * wh;
+    const vec3 wh = vec3(sinThetaH*cosf(phiH), cosThetaH, sinThetaH*sinf(phiH));
+    if(wh.y() > 0){
+        wi = -wo + 2.f * dot(wo, wh) * wh;
 
-    pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * dot(wo, wh));
-    return f(wo, wi);
+        pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * dot(wo, wh));
+        return f(wo, wi);
+    }else{
+        return 0.f;
+    }
 }
 
 const float blinnMicrofacet::pdf(const vec3& wo, const vec3& wi) const {
     const vec3 wh = halfVector(wo, wi);
-    return ((exp + 2.f) * powf(bsdf::cosTheta(wh), exp)) / (4.f * TWOPI * dot(wo, wh));
+    if(wh.y() > 0){
+        return ((exp + 2.f) * powf(bsdf::cosTheta(wh), exp)) / (4.f * TWOPI * dot(wo, wh));
+    }else{
+        return 0.f;
+    }
 }

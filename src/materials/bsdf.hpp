@@ -122,26 +122,6 @@ class specularBxdf : public bxdf {
 
         const rgbColor evalFresnel(const float& cosThetaI) const {
             return rescaledApproxFresnel(ior, k, cosThetaI);
-            /*
-            const bool entering = cosThetaI > 0.f;
-            const float eta = entering ? (1.f / ior) : ior;
-
-            const float sinThetaT = eta * sqrtf(max(0.f, 1.f-cosThetaI*cosThetaI));
-            if(sinThetaT > 1.f){
-                return 1.f;
-            }
-
-            const float cosThetaT = sqrtf(max(0.f, 1.f-sinThetaT*sinThetaT));
-            const float ei = entering ? 1.f : ior;
-            const float et = entering ? ior : 1.f;
-
-            const rgbColor rpar = ((et*cosThetaI) - (ei * cosThetaT)) /
-                ((et * cosThetaI) + (ei * cosThetaT));
-            const rgbColor rper = ((ei*cosThetaI) - (et * cosThetaT)) /
-                ((ei * cosThetaI) + (et * cosThetaT));
-
-            return (rpar*rpar + rper*rper) / 2.f;
-            */
         }
 
     protected:

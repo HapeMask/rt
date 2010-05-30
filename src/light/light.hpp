@@ -24,6 +24,10 @@ class light {
             return lightColor * power * (1.f / (position - r.origin).length2());
         }
 
+		inline virtual const rgbColor L(const point3& p) const {
+            return lightColor * power * (1.f / (position - p).length2());
+        }
+
         virtual const bool isPointSource() const = 0;
 
         const point3& getPosition() const{

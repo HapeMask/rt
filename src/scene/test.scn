@@ -28,8 +28,9 @@ scene(bvh){
 		material(lambert(0.75,0.75,0.75))
 	}
 
-//    shape{
-//        sphere(0,-2,-2, 1)
-//        material(phong(0.0,0.2,0.2, 0.8,0.8,0.8, 20))
-//    }
+    shape{
+        sphere(0,-2,0, 1)
+        //material(phong(0.0,0.2,0.2, 0.8,0.8,0.8, 20))
+        material(specular(dielectric, 1,1,1, 1.4))
+    }
 }
