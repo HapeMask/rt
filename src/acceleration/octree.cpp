@@ -20,15 +20,6 @@ void octree::build(const scene& s){
         }
     }
 
-    /*
-    const aabb& box = s.getBounds();
-    root = new octreeNode();
-
-    for(int i=0;i<3;++i){
-        root->splitPlanes[i] = box.mid()(i);
-    }
-    */
-
     root = _build(0, s.getBounds(), prims);
 }
 
@@ -50,7 +41,6 @@ octreeNode* octree::_build(const int depth, const aabb& box,
     }
 
     octreeNode* node = new octreeNode();
-    node->box = box;
 
     // Make a leaf.
     if(boxPrims.size() <= OCTREE_MAX_PRIMS_PER_LEAF || depth >= OCTREE_MAX_DEPTH){
@@ -59,15 +49,33 @@ octreeNode* octree::_build(const int depth, const aabb& box,
         return node;
     }
 
-    /*
-    for(unsigned int i=0;i<3;++i){
-        node->splitPlanes[i] = box.mid()(i);
-    }
-    */
-
     // TOOD: Make this less dumb.
-    const aabb boxes[8] = {
-    };
+    aabb boxes[8];
+    for(int i=0; i<8; ++i){
+        if(i & 1){
+            boxes[i].setFront(box.mid().z());
+            boxes[i].setBack(box.max().z());
+        }else{
+            boxes[i].setFront(box.min().z());
+            boxes[i].setBack(box.mid().z());
+        }
+
+        if(i & 2){
+            boxes[i].setTop(box.max().y());
+            boxes[i].setBottom(box.mid().y());
+        }else{
+            boxes[i].setTop(box.mid().y());
+            boxes[i].setBottom(box.min().y());
+        }
+
+        if(i & 4){
+            boxes[i].setLeft(box.mid().x());
+            boxes[i].setRight(box.max().x());
+        }else{
+            boxes[i].setLeft(box.min().x());
+            boxes[i].setRight(box.mid().x());
+        }
+    }
 
     for(int i=0;i<8;++i){
         node->children[i] = _build(depth+1, boxes[i], boxPrims);
@@ -81,6 +89,7 @@ const intersection octree::intersect(ray& r) const{
 }
 
 const bool octree::intersectB(const ray& r) const{
+    return _intersectB(root, r);
 }
 
 const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
@@ -118,18 +127,6 @@ const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
 const intersection octree::_intersect(const octreeNode* node, ray& r) const{
     if(node->isLeaf){
         return leafTest(*node, r);
-    }
-
-    // TODO: Make this test more intelligent.
-    arraylist<intersection> isects;
-    float tMin = 0, tMax = 0;
-    for(unsigned int i=0; i<8; ++i){
-        if(node->children[i] && node->children[i]->box.intersect(r, tMin, tMax)){
-            const intersection isectC = _intersect(node->children[i], r);
-            if(isectC.hit){
-                isects.add(isectC);
-            }
-        }
     }
 }
 

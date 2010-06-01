@@ -13,7 +13,7 @@ const unsigned int OCTREE_MAX_DEPTH = 64;
 
 typedef struct on{
     bool isLeaf;
-    aabb box;
+    float splitPlanes[3];
 
     on* children[8];
     arraylist<primitive*> contents;
