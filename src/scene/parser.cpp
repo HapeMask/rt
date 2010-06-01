@@ -546,6 +546,8 @@ void sceneParser::match(const regex& token){
                 }
             }
         }
+
+		return;
 	}
 
 #ifndef RT_NO_EXCEPTIONS
