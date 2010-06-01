@@ -92,6 +92,10 @@ const float powerHeuristic(int nf, float fPdf, int ng, float gPdf){
     return (f*f) / (f*f + g*g);
 }
 
+const float balanceHeuristic(int nf, float fPdf, int ng, float gPdf){
+    return (nf * fPdf) / (nf * fPdf + ng * gPdf);
+}
+
 void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, const float& nv, float& phi, float& costheta){
     if (nu == nv){
         phi = PI * u0 * 0.5f;

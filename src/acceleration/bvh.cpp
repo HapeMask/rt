@@ -199,7 +199,7 @@ void bvh::build(const scene& s){
 
 void bvh::_build(const aabb& box,
         unsigned int start, unsigned int end,
-        AXIS axis, int& index){
+        uint8_t axis, int& index){
 
     if(start == end){
         return;

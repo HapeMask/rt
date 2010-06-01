@@ -110,15 +110,20 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         const intersection& isect, const bsdf& bsdf, const light& li) const {
     vec3 wi;
     float bsdfPdf, lightPdf;
-    rgbColor Ld(0.f);
+    rgbColor lightSample(0.f), bsdfSample(0.f);
+    float lightWeight, bsdfWeight;
 
     //float sample[2];
     //getNextSample(sample);
     //rgbColor Li = li.sampleL(p, wi, sample[0], sample[1], lightPdf);
+
+    // Sample the light to find a point on the surface and the emission
+    // at that point.
     rgbColor Li = li.sampleL(p, wi, sampleUniform(), sampleUniform(), lightPdf);
     const float lightDist = wi.length();
     wi = normalize(wi);
 
+    // Evaluate the BSDF using the direction sampled from the light.
     if(lightPdf > 0 && !Li.isBlack()){
         const vec3 bsdfSpaceLightDir = worldToBsdf(wi, isect);
         const rgbColor f = bsdf.f(wo, bsdfSpaceLightDir);
@@ -128,19 +133,22 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
 
             if(!parent->intersectB(shadowRay)){
                 if(li.isPointSource()){
-                    Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
+                    return f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
-                    const float weight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
-                    Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / lightPdf;
+
+                    lightWeight = balanceHeuristic(1, lightPdf, 1, bsdfPdf);
+                    lightSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }
             }
         }
     }
 
+    // Evaluate the BSDF using a direction sampled from the BSDF.
     if(!li.isPointSource()){
         bxdfType sampledType;
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
+
         wi = normalize(bsdfToWorld(wi, isect));
 
         if(!f.isBlack() && bsdfPdf > 0.f){
@@ -149,14 +157,13 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
                 ray lightRay(p, wi);
                 const intersection isectL = li.intersect(lightRay);
                 if(isectL.hit){
-                    lightRay = ray(p, wi);
                     lightRay.tMax = isectL.t;
                     if(!parent->intersectB(lightRay)){
                         Li = li.L(lightRay);
 
                         if(!Li.isBlack()){
-                            const float weight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
-                            Ld += f * Li * fabs(dot(wi, isect.shadingNormal)) * weight / bsdfPdf;
+                            bsdfWeight = balanceHeuristic(1, bsdfPdf, 1, lightPdf);
+                            bsdfSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / bsdfPdf;
                         }
                     }
                 }
@@ -164,5 +171,6 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
         }
     }
 
-    return Ld;
+    // Combine the samples based on the weight from the chosen heuristic.
+    return lightWeight * lightSample + bsdfWeight * bsdfSample;
 }

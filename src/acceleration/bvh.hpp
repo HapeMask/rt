@@ -9,7 +9,7 @@
 enum {LEFT=0, RIGHT=1};
 const unsigned short BVH_MAX_PRIMS_PER_LEAF = 16;
 
-inline AXIS nextAxis(AXIS axis){
+inline uint8_t nextAxis(uint8_t axis){
     switch(axis){
         case AXIS_X:
           return AXIS_Y;
@@ -29,7 +29,7 @@ typedef struct bn {
         unsigned int rightChild;
     };
 
-    AXIS axis;
+    uint8_t axis;
 } bvhNode;
 
 class bvh : public accelerator {
@@ -50,7 +50,7 @@ class bvh : public accelerator {
     private:
         void _build(const aabb& box,
                 unsigned int start, unsigned int end,
-                AXIS axis, int& index);
+                uint8_t axis, int& index);
 
         const intersection _intersect(const int& index, const ray& r) const;
         const bool _intersectB(const int& index, const ray& r) const;

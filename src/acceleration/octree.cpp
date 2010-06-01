@@ -6,6 +6,7 @@
 #include "geometry/aabb.hpp"
 
 void octree::build(const scene& s){
+    /*
     const vector<shapePtr>& shapes = s.getShapes();
 
     // Fill the list of primitives.
@@ -19,6 +20,7 @@ void octree::build(const scene& s){
     root = new octreeNode();
     root->box = s.getBounds();
     _build(root);
+    */
 }
 
 void octree::_build(octreeNode* node){

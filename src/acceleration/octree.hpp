@@ -2,21 +2,32 @@
 
 #include "intersection.hpp" 
 #include "accelerator.hpp"
+
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
+#include "datastructs/linkedlist.hpp"
+
 const unsigned int OCTREE_MAX_PRIMS_PER_LEAF = 4;
 typedef struct on{
-    aabb box;
+    uint8_t axis;
+    float splitPlane;
+
     on* leftChild;
     on* rightChild;
 
-    int nPrims;
-    unsigned int primIndices[OCTREE_MAX_PRIMS_PER_LEAF];
+    linkedlist<primitivePtr>* contents;
+
+    on() :
+        leftChild(NULL),
+        rightChild(NULL),
+        contents(new linkedlist<primitivePtr>())
+    {}
 
     ~on(){
         if(leftChild) delete leftChild;
         if(rightChild) delete rightChild;
+        if(contents) delete contents;
     }
 
 } octreeNode;
@@ -24,6 +35,9 @@ typedef struct on{
 class octree : public accelerator {
     public:
         octree() {}
+        virtual ~octree() {
+            delete root;
+        }
 
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
@@ -34,5 +48,4 @@ class octree : public accelerator {
         void _build(octreeNode* node);
 
         octreeNode* root;
-        vector<primitivePtr> prims;
 };
