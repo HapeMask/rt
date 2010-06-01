@@ -15,7 +15,7 @@ using namespace std;
 
 class triangleMesh : public shape {
 	public:
-		triangleMesh() : vertexNormalHeap(NULL), pointHeap(NULL), uvHeap(NULL) {};
+		triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL) {};
         ~triangleMesh(){
             if(pointHeap) delete[] pointHeap;
             if(vertexNormalHeap) delete[] vertexNormalHeap;

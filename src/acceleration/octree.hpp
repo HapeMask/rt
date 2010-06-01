@@ -6,28 +6,24 @@
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
-#include "datastructs/linkedlist.hpp"
+#include "datastructs/arraylist.hpp"
 
-const unsigned int OCTREE_MAX_PRIMS_PER_LEAF = 4;
+const unsigned int OCTREE_MAX_PRIMS_PER_LEAF = 16;
+const unsigned int OCTREE_MAX_DEPTH = 64;
+
 typedef struct on{
-    uint8_t axis;
-    float splitPlane;
+    bool isLeaf;
+    aabb box;
 
-    on* leftChild;
-    on* rightChild;
+    on* children[8];
+    arraylist<primitive*> contents;
 
-    linkedlist<primitivePtr>* contents;
-
-    on() :
-        leftChild(NULL),
-        rightChild(NULL),
-        contents(new linkedlist<primitivePtr>())
-    {}
+    on() : isLeaf(false) {
+        for(int i=0;i<8;++i) children[i] = NULL;
+    }
 
     ~on(){
-        if(leftChild) delete leftChild;
-        if(rightChild) delete rightChild;
-        if(contents) delete contents;
+        for(int i=0;i<8;++i) if(children[i]) delete children[i];
     }
 
 } octreeNode;
@@ -45,7 +41,12 @@ class octree : public accelerator {
 		virtual void build(const scene& s);
 
     private:
-        void _build(octreeNode* node);
+        octreeNode* _build(const int depth, const aabb& box,
+                const arraylist<primitive*>& prims);
+
+        const intersection _intersect(const octreeNode* node, ray& r) const;
+        const bool _intersectB(const octreeNode* node, const ray& r) const;
+        const intersection leafTest(const octreeNode& node, const ray& r) const;
 
         octreeNode* root;
 };

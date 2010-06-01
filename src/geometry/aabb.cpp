@@ -52,10 +52,12 @@ const bool aabb::intersect(const aabb& box) const {
     const __m128 bMin = box.min().getSIMD();
     const __m128 bMax = box.max().getSIMD();
 
-    const __m128 test1 = _mm_cmpge_ps(aMax, bMin);
-    const __m128 test2 = _mm_cmpge_ps(bMax, aMin);
-    const int res1 = _mm_movemask_ps(test1);
-    const int res2 = _mm_movemask_ps(test2);
+    const __m128 test1 = _mm_cmple_ps(aMin, bMax);
+    const __m128 test2 = _mm_cmpge_ps(aMax, bMin);
 
-    return (res1 | res2) != 0;
+    // Strip off the 4th component since it'll always be -nan.
+    const int res1 = _mm_movemask_ps(test1) & 0x7;
+    const int res2 = _mm_movemask_ps(test2) & 0x7;
+
+    return (res1 && res2);
 }

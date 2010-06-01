@@ -83,6 +83,7 @@ vec3::vec3(const point3& p){
 	values[0] = p.x();
 	values[1] = p.y();
 	values[2] = p.z();
+    values[3] = 0;
 }
 
 const vec3 vec3::operator+(const vec3& v) const {

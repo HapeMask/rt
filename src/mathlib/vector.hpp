@@ -94,30 +94,35 @@ class vec3 {
 			values[0] = x;
 			values[1] = y;
 			values[2] = z;
+            values[3] = 0;
 		}
 
 		vec3(const vec3& x){
 			values[0] = x(0);
 			values[1] = x(1);
 			values[2] = x(2);
+            values[3] = 0;
 		}
 
 		vec3(const vec2& u, const float& x){
 			values[0] = u(0);
 			values[1] = u(1);
 			values[2] = x;
+            values[3] = 0;
 		}
 
 		vec3(const float& x, const vec2& u){
 			values[0] = x;
 			values[1] = u(0);
 			values[2] = u(1);
+            values[3] = 0;
 		}
 
 		vec3(const float& x){
 			values[0] = x;
 			values[1] = x;
 			values[2] = x;
+            values[3] = 0;
 		}
 
         vec3(const __m128 v){

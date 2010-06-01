@@ -44,11 +44,10 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
 
 int main(int argc, char* args[]){
     /*
-    const sphere sph(point3(0,0,0), 1);
-    ray rr(point3(-10,0,11), normalize(vec3(1,0,-1)));
-    const intersection isect = sph.intersect(rr);
-    cerr << -rr.direction << endl;
-    cerr << worldToBsdf(-rr.direction, isect.normal, isect.dpdu, isect.dpdv) << endl;
+    aabb x(vec3(-3,-3,-3), vec3(3,3,3));
+    aabb y(vec3(-4,-4,-4), vec3(-2.1,-2.1,-2.1));
+
+    cerr << x.intersect(y) << endl;
     return 0;
     */
 

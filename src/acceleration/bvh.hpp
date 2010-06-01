@@ -19,6 +19,8 @@ inline uint8_t nextAxis(uint8_t axis){
           return AXIS_X;
         case AXIS_LEAF:
           return AXIS_LEAF;
+        default:
+          return AXIS_LEAF;
     }
 }
 

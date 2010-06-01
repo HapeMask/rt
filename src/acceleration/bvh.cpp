@@ -218,13 +218,13 @@ void bvh::_build(const aabb& box,
     // Sort the current chunk of the list.
     switch(axis){
         case AXIS_X:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpX);
+            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpX);
             break;
         case AXIS_Y:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpY);
+            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpY);
             break;
         case AXIS_Z:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbCmpZ);
+            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpZ);
             break;
         case AXIS_LEAF:
             cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
