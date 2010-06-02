@@ -17,7 +17,7 @@ class intersection;
 class primitive {
 	public:
         primitive(const aabb& box) : boundingBox(box) {}
-        primitive(const aabb& box, shape* p) : boundingBox(box), parent(p) {}
+        primitive(const aabb& box, shape* p) : parent(p), boundingBox(box) {}
 
 		virtual ~primitive() {}
 

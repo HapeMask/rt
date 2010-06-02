@@ -12,6 +12,7 @@
 
 #include "acceleration/defaultaccelerator.hpp"
 #include "acceleration/bvh.hpp"
+#include "acceleration/octree.hpp"
 
 #include "color/color.hpp"
 #include "materials/material.hpp"
@@ -61,9 +62,11 @@ void sceneParser::scn(scene& s){
 	match(LBRACE);
 
     if(accel == "bvh"){
-        s.setAccelerator(acceleratorPtr(new bvh));
+        s.setAccelerator(acceleratorPtr(new bvh()));
+    }else if(accel == "octree"){
+        s.setAccelerator(acceleratorPtr(new octree()));
     }else{
-        s.setAccelerator(acceleratorPtr(new defaultAccelerator));
+        s.setAccelerator(acceleratorPtr(new defaultAccelerator()));
     }
 
 	s.setCamera(cam(s));
@@ -167,12 +170,12 @@ materialPtr sceneParser::mat(scene& s){
         match(RPAREN);
         match(RPAREN);
 
-        const materialPtr m(new material(rgbColor(r,g,b), intensity));
+        materialPtr m(new material(rgbColor(r,g,b), intensity));
         return m;
     }else{
         bsdfPtr br = bd(s);
         match(RPAREN);
-        const materialPtr m(new material(br));
+        materialPtr m(new material(br));
         return m;
     }
 }
@@ -264,13 +267,22 @@ bsdfPtr sceneParser::bd(scene& s){
 	}else if(is(BLINN)){
 		match(BRDF);
 		match(LPAREN);
-		float r = curFloat();
+		float rd = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float g = curFloat();
+		float gd = curFloat();
 		match(FLOAT);
 		match(COMMA);
-		float b = curFloat();
+		float bd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float rs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float gs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float bs = curFloat();
 		match(FLOAT);
 		match(COMMA);
 		float eta = curFloat();
@@ -284,10 +296,51 @@ bsdfPtr sceneParser::bd(scene& s){
 		match(RPAREN);
 
         bsdfPtr p(new bsdf());
-        p->addBxdf(new blinnMicrofacet(rgbColor(r,g,b), eta, k, exp));
-        p->addBxdf(new lambertianBrdf(rgbColor(0.2f,0.2f,0.2f)));
+        p->addBxdf(new blinnMicrofacet(rgbColor(rs,gs,bs), eta, k, exp));
+        p->addBxdf(new lambertianBrdf(rgbColor(rd, gd, bd)));
         return p;
-	}
+	}else if(is(ANISO)){
+        match(ANISO);
+        match(LPAREN);
+		float rd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float gd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float bd = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float rs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float gs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float bs = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float nu = curFloat();
+		match(FLOAT);
+		match(COMMA);
+		float nv = curFloat();
+		match(FLOAT);
+		match(RPAREN);
+
+        const rgbColor Rd = rgbColor(rd, gd, bd);
+        const rgbColor Rs = rgbColor(rs, gs, bs);
+
+        bsdfPtr p(new bsdf());
+        p->addBxdf(new asPhong(Rs, Rd, nu, nv));
+        return p;
+    }else{
+#ifndef RT_NO_EXCEPTIONS
+	throw ParseException(token.str());
+#else
+    cerr << "Invalid material type specified: " << currentToken << endl;
+    exit(1);
+#endif
+    }
 }
 
 cameraPtr sceneParser::cam(scene& s){
@@ -552,5 +605,8 @@ void sceneParser::match(const regex& token){
 
 #ifndef RT_NO_EXCEPTIONS
 	throw ParseException(token.str());
+#else
+    cerr << "Expected token: " << token.str() << endl << "Got: " << currentToken << endl;
+    exit(1);
 #endif
 }

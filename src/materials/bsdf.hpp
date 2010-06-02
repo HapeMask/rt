@@ -120,7 +120,7 @@ class specularBxdf : public bxdf {
         specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
             bxdf(type), fType(ft), ior(eta), k(K) {}
 
-        const rgbColor evalFresnel(const float& cosThetaI) const {
+        virtual const rgbColor evalFresnel(const float& cosThetaI) const {
             return rescaledApproxFresnel(ior, k, cosThetaI);
         }
 
@@ -195,6 +195,9 @@ class phongBrdf : public bxdf {
         const float n;
 };
 
+/**
+ * Torrance/Sparrow microfacet BRDF model.
+ */
 class microfacetBxdf : public bxdf {
     public:
         microfacetBxdf(const rgbColor r, const float& e, const float& K, const bxdfType type) : bxdf(type), Rs(r), eta(e), k(K) {}
@@ -229,6 +232,9 @@ class microfacetBxdf : public bxdf {
         const float eta, k;
 };
 
+/**
+ * Bilnn microfacet distribution + Torrance/Sparrow evaluation model.
+ */
 class blinnMicrofacet : public microfacetBxdf {
     public:
         blinnMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& e) :
@@ -244,6 +250,41 @@ class blinnMicrofacet : public microfacetBxdf {
 
     private:
         const float exp;
+};
+
+/**
+ * Ashikmin-Shirley Anisotropic Phong BRDF Components
+ */
+class asPhong : public specularBxdf {
+    public:
+        asPhong(const rgbColor& rs, const rgbColor& rd, const float& Nu, const float& Nv) :
+            specularBxdf(bxdfType(GLOSSY | REFLECTION), 1.f, 0.f, CONDUCTOR), Rs(rs), Rd(rd), nu(Nu), nv(Nv), ecTermS(sqrt((Nu+1.f)*(Nv+1.f)) / (8.f*PI)),
+            ecTermD(((28.f * rd) / (23.f * PI)) * rs.inverse()), pdfTerm(sqrt((nu+1.f)*(nv+1.f)) * INVTWOPI) 
+        {}
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+        virtual const rgbColor evalFresnel(const float& cosThetaI) const {
+            return schlickFresnel(Rs, cosThetaI);
+        }
+
+    private:
+        const rgbColor rhoS(const vec3& wo, const vec3& wi, const vec3& wh) const;
+        const rgbColor rhoD(const vec3& wo, const vec3& wi) const;
+
+        inline const float exponent(const vec3& wh) const{
+            return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
+        }
+
+        const rgbColor Rs, Rd;
+        const float nu, nv;
+
+        // Energy conservation terms.
+        const float ecTermS, pdfTerm;
+        const rgbColor ecTermD;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

@@ -5,6 +5,7 @@
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
+#include <sys/time.h>
 #include <algorithm>
 using namespace std;
 
@@ -20,7 +21,16 @@ void octree::build(const scene& s){
         }
     }
 
+    cerr << "Building octree..." << endl;
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
+
     root = _build(0, s.getBounds(), prims);
+
+	gettimeofday(&end, NULL);
+	float sec = end.tv_sec - start.tv_sec;
+	sec += (end.tv_usec - start.tv_usec) / 1e6;
+	cerr << "Built octree in " << sec << "s." << endl;
 }
 
 octreeNode* octree::_build(const int depth, const aabb& box,
@@ -41,6 +51,7 @@ octreeNode* octree::_build(const int depth, const aabb& box,
     }
 
     octreeNode* node = new octreeNode();
+    node->box = box;
 
     // Make a leaf.
     if(boxPrims.size() <= OCTREE_MAX_PRIMS_PER_LEAF || depth >= OCTREE_MAX_DEPTH){
@@ -85,7 +96,9 @@ octreeNode* octree::_build(const int depth, const aabb& box,
 }
 
 const intersection octree::intersect(ray& r) const{
-    return _intersect(root, r);
+    intersection s = _intersect(root, r);
+    cerr << "sh: " << s.hit << endl;
+    return s;
 }
 
 const bool octree::intersectB(const ray& r) const{
@@ -125,10 +138,42 @@ const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
 }
 
 const intersection octree::_intersect(const octreeNode* node, ray& r) const{
-    if(node->isLeaf){
+    float tMin = 0, tMax = 0;
+    const aabb& box = node->box;
+
+    if(!box.intersect(r, tMin, tMax)){
+        return noIntersect;
+    }else if(node->isLeaf){
         return leafTest(*node, r);
     }
+
+    const float tMid = (tMin+tMax)/2.f;
+    point3 p = r.origin + tMin*r.direction;
+    intersection isect;
+    int curBox, i = 0;
+
+    // Check the boxes that the ray hits in the order that it hits them.
+    while(!isect.hit && i < 3){
+        curBox = 0;
+        if(p.x() > box.mid().x()){
+            curBox |= 4;
+        }
+        if(p.y() > box.mid().y()){
+            curBox |= 2;
+        }
+        if(p.z() > box.mid().z()){
+            curBox |= 1;
+        }
+
+        isect = _intersect(node->children[curBox], r);
+
+        p += tMid*r.direction;
+        ++i;
+    }
+
+    return isect;
 }
 
 const bool octree::_intersectB(const octreeNode* node, const ray& r) const{
+    return false;
 }

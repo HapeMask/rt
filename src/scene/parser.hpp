@@ -62,7 +62,7 @@ static const regex RE_SPECULAR("specular");
 static const regex PHONG("phong");
 static const regex ANISO("anisotropic");
 static const regex EMISSIVE("emissive");
-static const regex ACCELTYPE("default|grid|kdtree|bvh|bih");
+static const regex ACCELTYPE("default|grid|kdtree|octree|bvh|bih");
 static const regex PRIMITIVE("triangle|sphere");
 static const regex TRIANGLE("triangle");
 static const regex LIGHTTYPE("point|spot|area");
@@ -97,7 +97,7 @@ regex("specular"),
 regex("phong"),
 regex("anisotropic"),
 regex("emissive"),
-regex("default|grid|kdtree|bvh|bih"),
+regex("default|grid|kdtree|octree|bvh|bih"),
 regex("triangle|sphere"),
 regex("triangle"),
 regex("point|spot|area"),
