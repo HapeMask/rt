@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 #include "sdlframebuffer.hpp"
@@ -41,7 +42,13 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
 		}
 	}
 
-	uint32_t color = SDL_MapRGB(screen->format, c.R(), c.G(), c.B());
+    const float gamma = 1.f/2.2f;
+    const rgbColor gammaC = rgbColor(
+            powf(c.red(), gamma),
+            powf(c.green(), gamma),
+            powf(c.blue(), gamma));
+
+	const uint32_t color = SDL_MapRGB(screen->format, gammaC.R(), gammaC.G(), gammaC.B());
 	switch(screen->format->BytesPerPixel){
 		case 1:
 			{

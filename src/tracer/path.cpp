@@ -34,7 +34,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
                 }
             }
 
-            //L += throughput * rgbColor(0.5f);
+            L += throughput * rgbColor(0.5f);
             break;
         }
 

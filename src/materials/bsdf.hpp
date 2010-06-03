@@ -253,7 +253,7 @@ class blinnMicrofacet : public microfacetBxdf {
 };
 
 /**
- * Ashikmin-Shirley Anisotropic Phong BRDF Components
+ * Ashikhmin-Shirley Anisotropic Phong BRDF Components
  */
 class asPhong : public specularBxdf {
     public:
