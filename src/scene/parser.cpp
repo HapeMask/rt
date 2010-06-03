@@ -330,8 +330,14 @@ bsdfPtr sceneParser::bd(scene& s){
         const rgbColor Rd = rgbColor(rd, gd, bd);
         const rgbColor Rs = rgbColor(rs, gs, bs);
 
+
         bsdfPtr p(new bsdf());
-        p->addBxdf(new asPhong(Rs, Rd, nu, nv));
+        /*
+        p->addBxdf(new asMicrofacet(Rs, eta, k, nu, nv));
+        p->addBxdf(new lambertianBrdf(Rd));
+        */
+
+        p->addBxdf(new substrate(Rd, Rs, new asMicrofacet(Rs, 0, 0, nu, nv)));
         return p;
     }else{
 #ifndef RT_NO_EXCEPTIONS

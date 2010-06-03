@@ -42,7 +42,11 @@ class light {
 			return lightColor;
 		}
 
-        virtual const float pdf() const{
+        virtual const float pdf(const point3& p) const{
+            return 0.f;
+        }
+
+        virtual const float pdf(const point3& p, const vec3& wi) const{
             return 0.f;
         }
 
@@ -61,9 +65,6 @@ class pointLight : public light {
         }
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
-        inline virtual const float pdf() const{
-            return 0.f;
-        }
 };
 
 class areaLight : public light {
@@ -77,17 +78,19 @@ class areaLight : public light {
             return false;
         }
 
-        inline virtual const float pdf() const {
+        inline virtual const float pdf(const point3& p) const {
             return invArea;
         }
 
-        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const;
+        virtual const float pdf(const point3& p, const vec3& wi) const;
+
+        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const;
 		virtual const rgbColor L(const ray& r) const;
 
     private:
         vec3 a, b, normal;
         vec3 A, B, C, D;
-        float invArea;
+        const float area, invArea;
 };
 
 typedef shared_ptr<light> lightPtr;

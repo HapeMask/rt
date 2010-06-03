@@ -8,7 +8,7 @@ WIN_CXXFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
 CXXFLAGS= -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
-	-fexpensive-optimizations \
+	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937
 LDFLAGS= -lboost_regex -fwhole-program
 

@@ -12,19 +12,34 @@ areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
     light(p, pow, c), a(vA), b(vB), normal(normalize(cross(vA,vB))),
     A(p - 0.5*vA - 0.5*vB), B(p + 0.5*vA - 0.5*vB), C(p + 0.5*vB - 0.5*vA), D(A + (B-A) + (C-A)),
-    invArea(1.f/abs(cross(A,B).length()))
+    area(fabs(cross(vA,vB).length())), invArea(1.f/fabs(cross(vA,vB).length()))
 {}
 
-const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const{
+const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const{
     point3 samplePoint;
     sampleRectangle(samplePoint, a, b, position, u0, u1);
-    //uniformSampleRectangle(samplePoint, a, b, position);
-    wi = samplePoint - p;
-    const float cosTheta = -dot(wi, normal);
 
+    wi = samplePoint - p;
+    const float cosTheta = fabs(dot(-wi, normal));
+    if(cosTheta > 0.f){
+        pd = pdf(p, wi);
+        return (cosTheta > 0.f) ? (lightColor*power) : 0.f;
+    }else{
+        pd = 0.f;
+        return 0.f;
+    }
+}
+
+const float areaLight::pdf(const point3& p, const vec3& wi) const {
     // P(wi) = r^2 / cosTheta * A
-    pdf = (wi.length2() / cosTheta) * invArea;
-    return (cosTheta > 0.f) ? (lightColor*power) : 0.f;
+    const float cosTheta = fabs(dot(-wi, normal));
+    const intersection isect = intersect(ray(p, normalize(wi)));
+
+    if(cosTheta > 0.f && isect.hit){
+        return (isect.t*isect.t / cosTheta) * area;
+    }else{
+        return 0.f;
+    }
 }
 
 const rgbColor areaLight::L(const ray& r) const{

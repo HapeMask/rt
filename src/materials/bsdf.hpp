@@ -252,39 +252,54 @@ class blinnMicrofacet : public microfacetBxdf {
         const float exp;
 };
 
+//, pdfTerm(sqrt((nu+1.f)*(nv+1.f)) * INVTWOPI) 
+
 /**
- * Ashikhmin-Shirley Anisotropic Phong BRDF Components
+ * Ashikhmin-Shirley anisotropic microfacet distribution.
  */
-class asPhong : public specularBxdf {
+class asMicrofacet : public microfacetBxdf {
     public:
-        asPhong(const rgbColor& rs, const rgbColor& rd, const float& Nu, const float& Nv) :
-            specularBxdf(bxdfType(GLOSSY | REFLECTION), 1.f, 0.f, CONDUCTOR), Rs(rs), Rd(rd), nu(Nu), nv(Nv), ecTermS(sqrt((Nu+1.f)*(Nv+1.f)) / (8.f*PI)),
-            ecTermD(((28.f * rd) / (23.f * PI)) * rs.inverse()), pdfTerm(sqrt((nu+1.f)*(nv+1.f)) * INVTWOPI) 
+        asMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& Nu, const float& Nv) :
+            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
         {}
+
+        virtual const float microfacetDistrib(const vec3& wh) const {
+            return ecTerm * powf(bsdf::cosTheta(wh), exponent(wh));
+        }
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+    private:
+        inline const float exponent(const vec3& wh) const{
+            return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
+        }
+
+        const float nu, nv;
+
+        // Energy conservation terms.
+        const float ecTerm;
+};
+
+class substrate : public bxdf {
+    public:
+        substrate(const rgbColor& rd, const rgbColor& rs, microfacetBxdf* rhos) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), rhoS(rhos),
+        ecTerm(((28.f * rd) / (23.f * PI)) * rs.inverse())
+        {}
+
+        ~substrate(){
+            delete rhoS;
+        }
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
-        virtual const rgbColor evalFresnel(const float& cosThetaI) const {
-            return schlickFresnel(Rs, cosThetaI);
-        }
-
     private:
-        const rgbColor rhoS(const vec3& wo, const vec3& wi, const vec3& wh) const;
-        const rgbColor rhoD(const vec3& wo, const vec3& wi) const;
-
-        inline const float exponent(const vec3& wh) const{
-            return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
-        }
-
-        const rgbColor Rs, Rd;
-        const float nu, nv;
-
-        // Energy conservation terms.
-        const float ecTermS, pdfTerm;
-        const rgbColor ecTermD;
+        const rgbColor Rd, Rs;
+        const rgbColor ecTerm;
+        microfacetBxdf* rhoS;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

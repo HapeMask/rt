@@ -34,7 +34,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
                 }
             }
 
-            L += throughput * rgbColor(0.5f);
+            //L += throughput * rgbColor(0.f, 0.1f, 0.2f);
             break;
         }
 
@@ -137,7 +137,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
                 }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
 
-                    lightWeight = balanceHeuristic(1, lightPdf, 1, bsdfPdf);
+                    lightWeight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
                     lightSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }
             }
@@ -148,23 +148,22 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
     if(!li.isPointSource()){
         bxdfType sampledType;
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
-
         wi = normalize(bsdfToWorld(wi, isect));
 
         if(!f.isBlack() && bsdfPdf > 0.f){
-            lightPdf = li.pdf();
+            lightPdf = li.pdf(p, wi);
+
             if(lightPdf > 0.f){
                 ray lightRay(p, wi);
-                const intersection isectL = li.intersect(lightRay);
-                if(isectL.hit){
-                    lightRay.tMax = isectL.t;
-                    if(!parent->intersectB(lightRay)){
-                        Li = li.L(lightRay);
 
-                        if(!Li.isBlack()){
-                            bsdfWeight = balanceHeuristic(1, bsdfPdf, 1, lightPdf);
-                            bsdfSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / bsdfPdf;
-                        }
+                const intersection isectL = li.intersect(lightRay);
+                lightRay.tMax = isectL.t;
+                if(!parent->intersectB(lightRay)){
+                    Li = li.L(lightRay);
+
+                    if(!Li.isBlack()){
+                        bsdfWeight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
+                        bsdfSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / bsdfPdf;
                     }
                 }
             }
