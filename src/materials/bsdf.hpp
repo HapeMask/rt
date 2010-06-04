@@ -43,6 +43,7 @@ inline const vec3 reflect(const vec3& wo){
 }
 
 class bxdf;
+class specularBxdf;
 class bsdf {
     public:
         bsdf() : specTra(NULL), specRef(NULL),
@@ -84,9 +85,10 @@ class bsdf {
         }
 
     private:
-        bxdf *specTra, *specRef,
-             *diffTra, *diffRef,
+        bxdf *diffTra, *diffRef,
              *glossTra, *glossRef;
+
+        specularBxdf *specRef, *specTra;
 };
 
 class bxdf {
@@ -226,6 +228,10 @@ class microfacetBxdf : public bxdf {
         }
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
+
+        inline const rgbColor& rs() const {
+            return Rs;
+        }
 
     private:
         const rgbColor Rs;

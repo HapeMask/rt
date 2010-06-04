@@ -27,6 +27,9 @@ class scene {
 		void addShape(shapePtr s);
 		void addLight(lightPtr p);
 
+		void addShape(shape* s);
+		void addLight(light* p);
+
 		/**
 		 * NOTE: Destroys the previous accelerator.
 		 */

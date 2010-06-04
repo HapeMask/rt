@@ -18,6 +18,9 @@ class shape {
 		void setMaterial(materialPtr m);
 		void addPrimitive(primitivePtr p);
 
+		void setMaterial(material* m);
+		void addPrimitive(primitive* p);
+
 		materialPtr getMaterial() const {
 			return mat;
 		}

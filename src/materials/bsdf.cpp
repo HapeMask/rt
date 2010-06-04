@@ -45,13 +45,13 @@ void bsdf::addBxdf(bxdf* b){
             if(specTra){
                 delete specTra;
             }
-            specTra = b;
+            specTra = (specularBxdf*)b;
             break;
         case (SPECULAR | REFLECTION):
             if(specRef){
                 delete specRef;
             }
-            specRef = b;
+            specRef = (specularBxdf*)b;
             break;
         case (DIFFUSE | TRANSMISSION):
             if(diffTra){
@@ -188,6 +188,30 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         return 0.f;
     }
 
+    /*
+     * Specular Importance Sampling
+     * Is this even correct? I made it up.
+     */
+    /*
+    if(specRef && specTra){
+        const rgbColor F = specRef->evalFresnel(fabs(bsdf::cosTheta(wo)));
+        const float Fr = (F.red() + F.blue() + F.green())/3.f;
+        const float Ft = 1.f - Fr;
+
+        if(u0 < Ft){
+            f = specTra->sampleF(u1, u2, wo, wi, p);
+            sampledType = specTra->getType();
+            p = Ft;
+        }else{
+            f = specRef->sampleF(u1, u2, wo, wi, p);
+            sampledType = specRef->getType();
+            p = 1.f - Ft;
+        }
+
+        return f;
+    }
+    */
+
     // Select and sample a random bxdf component to find wi.
     const unsigned int index = sampleRange(u0, 0, matches.size()-1);
     f = matches[index]->sampleF(u1, u2, wo, wi, p);
@@ -205,10 +229,10 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
                 p += matches[i]->pdf(wo, wi);
             }
         }
-    }
 
-    if(matches.size() > 1){
-        p /= (float)matches.size();
+        if(matches.size() > 1){
+            p /= (float)matches.size();
+        }
     }
 
     // Evaluate and add the bsdf component values.

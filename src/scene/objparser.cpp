@@ -12,7 +12,7 @@
 #include <algorithm>
 using namespace std;
 
-const void objParser::parse(const string& filename, const vec3& offset, const float& scale, triangleMesh* p){
+const void objParser::parse(const string& filename, triangleMesh* p){
     ifstream file(filename.c_str());
     vector<meshTrianglePtr> tris(0);
 
@@ -54,7 +54,7 @@ const void objParser::parse(const string& filename, const vec3& offset, const fl
             cerr << "End of file reached before making any faces." << endl;
         }
 
-        points.push_back(point3(x*scale, y*scale, z*scale) + offset);
+        points.push_back(point3(x, y, z));
     }
 
     // Fill in the scene's point heap.

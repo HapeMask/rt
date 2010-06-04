@@ -9,7 +9,11 @@ class sceneloader{
         static void load(istream& in, scene& s){
             scanner scan(&in);
             Bison::Parser parser(scan, s);
-            parser.parse();
+            int result = parser.parse();
+            if(result != 0){
+                cerr << "Parse error. Exiting." << endl;
+                exit(result);
+            }
         }
     private:
         sceneloader();

@@ -44,7 +44,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         const vec3 wo = worldToBsdf(-r.direction, isect);
 
         //L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
-        L += throughput * sampleAllLights(r.origin, wo, isect, bsdf);
+        L += throughput * (sampleAllLights(r.origin, wo, isect, bsdf) + mat.Le());
 
         vec3 wi;
         float pdf = 0.f;
@@ -127,6 +127,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
     if(lightPdf > 0 && !Li.isBlack()){
         const vec3 bsdfSpaceLightDir = worldToBsdf(wi, isect);
         const rgbColor f = bsdf.f(wo, bsdfSpaceLightDir);
+
         if(!f.isBlack()){
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;

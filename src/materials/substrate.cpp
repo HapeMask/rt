@@ -9,12 +9,12 @@
 #include <cmath>
 
 const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
-    if(u1 < 0.5f){
-        const float u = 2.f * u1;
+    if(u0 < 0.5f){
+        const float u = 2.f * u0;
 
         cosineSampleHemisphere(wi, u, u1);
     }else{
-        const float u = 2.f * (u1 - 0.5f);
+        const float u = 2.f * (u0 - 0.5f);
         rhoS->sampleF(u, u1, wo, wi, pd);
 
         if(wo.y() * wi.y() < 0){

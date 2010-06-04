@@ -48,14 +48,6 @@ using namespace std;
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize);
 
 int main(int argc, char* args[]){
-    /*
-    aabb x(vec3(-3,-3,-3), vec3(3,3,3));
-    aabb y(vec3(-4,-4,-4), vec3(-2.1,-2.1,-2.1));
-
-    cerr << x.intersect(y) << endl;
-    return 0;
-    */
-
 	scene s;
 
     string filename;
@@ -78,11 +70,7 @@ int main(int argc, char* args[]){
     }
 
     sceneloader::load(in, s);
-    return 0;
-
-	//sceneParser p;
-	//p.parse(s, in);
-	//in.close();
+	in.close();
 
 	s.build();
 

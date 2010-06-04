@@ -44,6 +44,6 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     wi.y() = cosThetaT;
     wi.z() = eta * -wo.z();
 
-    const rgbColor Fr = evalFresnel(entering ? bsdf::cosTheta(wo) : -bsdf::cosTheta(wo));
+    const rgbColor Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
     return eta2 * (rgbColor(1.f) - Fr) * kT / fabs(bsdf::cosTheta(wi));
 }
