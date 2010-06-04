@@ -1,15 +1,5 @@
-#ifdef RT_MULTITHREADED
-#include <omp.h>
-#endif
-
 #include "mathlib/SFMT.h"
-#include <cmath>
-#include <iostream>
-using namespace std;
 
-#include <SDL.h>
-
-#include <sys/time.h>
 #include "utility.hpp"
 
 #include "mathlib/point.hpp"
@@ -26,14 +16,29 @@ using namespace std;
 
 #include "materials/material.hpp"
 #include "materials/bsdf.hpp"
+
 #include "color/color.hpp"
+
 #include "light/light.hpp"
 
 #include "tracer/tracer.hpp"
 #include "tracer/path.hpp"
+
 #include "samplers/samplers.hpp"
-#include "scene/parser.hpp"
-#include "acceleration/bvh.hpp"
+
+#include "scene/sceneloader.hpp"
+
+#ifdef RT_MULTITHREADED
+#include <omp.h>
+#endif
+
+#include <cmath>
+#include <iostream>
+#include <fstream>
+
+#include <sys/time.h>
+#include <SDL.h>
+using namespace std;
 
 // Default to 8 threads.
 #ifndef RT_OMP_THREADS
@@ -72,9 +77,12 @@ int main(int argc, char* args[]){
         return 1;
     }
 
-	sceneParser p;
-	p.parse(s, in);
-	in.close();
+    sceneloader::load(in, s);
+    return 0;
+
+	//sceneParser p;
+	//p.parse(s, in);
+	//in.close();
 
 	s.build();
 

@@ -10,15 +10,27 @@ CXXFLAGS= -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -funsafe-math-optimizations \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937
-LDFLAGS= -lboost_regex -fwhole-program
+LDFLAGS= -fwhole-program
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
 LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
 
 SRC = $(shell find $(SRCDIR) -name '*.cpp')
 OBJS=$(SRC:.cpp=.o)
+OBJS+=$(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 
-all: rt
+all: $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o rt
+
+$(SRCDIR)/scene/parser.o : $(SRCDIR)/scene/sceneparser.y
+	bison $(SRCDIR)/scene/sceneparser.y
+	mv *.hh $(SRCDIR)/scene/
+	mv sceneparser.tab.* $(SRCDIR)/scene/
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/sceneparser.tab.c 
+
+$(SRCDIR)/scene/scanner.o : $(SRCDIR)/scene/sceneparser.y $(SRCDIR)/scene/sceneparser.l $(SRCDIR)/scene/scanner.hpp
+	flex $(SRCDIR)/scene/sceneparser.l
+	mv lex.yy.cc $(SRCDIR)/scene/
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $(SRCDIR)/scene/scanner.o $(SRCDIR)/scene/lex.yy.cc
 
 #include  deps
 
@@ -35,6 +47,8 @@ clean:
 	-rm $(shell find $(SRCDIR) -name '*.o')
 	-rm deps
 	-rm rt
+	-rm $(SRCDIR)/scene/*.hh
+	-rm $(SRCDIR)/scene/lex.yy.cc $(SRCDIR)/scene/sceneparser.tab.*
 
 run: rt
 	./rt
