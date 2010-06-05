@@ -239,7 +239,7 @@ class microfacetBxdf : public bxdf {
 };
 
 /**
- * Bilnn microfacet distribution + Torrance/Sparrow evaluation model.
+ * Bilnn microfacet distribution.
  */
 class blinnMicrofacet : public microfacetBxdf {
     public:

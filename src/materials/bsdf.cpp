@@ -207,7 +207,6 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
             sampledType = specRef->getType();
             p = 1.f - Ft;
         }
-
         return f;
     }
     */
@@ -229,10 +228,10 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
                 p += matches[i]->pdf(wo, wi);
             }
         }
+    }
 
-        if(matches.size() > 1){
-            p /= (float)matches.size();
-        }
+    if(matches.size() > 1){
+        p /= (float)matches.size();
     }
 
     // Evaluate and add the bsdf component values.

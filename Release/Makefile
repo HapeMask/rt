@@ -1,4 +1,4 @@
-.PHONY: all clean run compile link
+.PHONY: all clean run compile link parser
 SRCDIR=../src
 
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
@@ -19,7 +19,9 @@ SRC = $(shell find $(SRCDIR) -name '*.cpp')
 OBJS=$(SRC:.cpp=.o)
 OBJS+=$(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 
-all: $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o rt
+all : parser rt
+
+parser: $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 
 $(SRCDIR)/scene/parser.o : $(SRCDIR)/scene/sceneparser.y
 	bison $(SRCDIR)/scene/sceneparser.y
@@ -32,20 +34,11 @@ $(SRCDIR)/scene/scanner.o : $(SRCDIR)/scene/sceneparser.y $(SRCDIR)/scene/scenep
 	mv lex.yy.cc $(SRCDIR)/scene/
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $(SRCDIR)/scene/scanner.o $(SRCDIR)/scene/lex.yy.cc
 
-#include  deps
-
 rt: $(OBJS)
 	$(CXX) $^ $(LDFLAGS) $(CXXFLAGS) -o $@
 
-deps:
-	-rm deps;
-	for f in $(SRC); do\
-		cpp -MM $(CXXFLAGS) $$f >> deps;\
-	done
-
 clean:
 	-rm $(shell find $(SRCDIR) -name '*.o')
-	-rm deps
 	-rm rt
 	-rm $(SRCDIR)/scene/*.hh
 	-rm $(SRCDIR)/scene/lex.yy.cc $(SRCDIR)/scene/sceneparser.tab.*

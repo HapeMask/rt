@@ -10,5 +10,5 @@ using namespace std;
 
 class objParser{
     public:
-        static const void parse(const string& filename, triangleMesh* p);
+        static const void parse(const string& filename, triangleMesh* p, const bool smooth = true);
 };

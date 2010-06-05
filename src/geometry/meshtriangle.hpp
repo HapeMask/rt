@@ -50,6 +50,7 @@ class meshTriangle : public primitive {
         }
 
         void setVertNormals(const unsigned int& an, const unsigned int& bn, const unsigned int& cn);
+        void setUVs(const unsigned int& an, const unsigned int& bn, const unsigned int& cn);
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
         inline virtual const float area() const {

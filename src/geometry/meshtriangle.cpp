@@ -115,3 +115,10 @@ void meshTriangle::setVertNormals(const unsigned int& an, const unsigned int& bn
     vertNormals[2] = cn;
     hasVertNormals = true;
 }
+
+void meshTriangle::setUVs(const unsigned int& an, const unsigned int& bn, const unsigned int& cn){
+    uvs[0] = an;
+    uvs[1] = bn;
+    uvs[2] = cn;
+    hasUVs = true;
+}

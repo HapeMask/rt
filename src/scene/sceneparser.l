@@ -27,6 +27,8 @@
 "sphere"                                { return Bison::Parser::token::SPHERE; }
 "objfile"                               { return Bison::Parser::token::OBJFILE; }
 \"[a-zA-Z0-9._/-]+\"                    { yylval->sval = strdup(yytext); return Bison::Parser::token::FILEPATH; }
+"smooth"                                { return Bison::Parser::token::SMOOTH; }
+"flat"                                  { return Bison::Parser::token::FLAT; }
 
 "material"                              { return Bison::Parser::token::MATERIAL; }
 "emissive"                              { return Bison::Parser::token::EMISSIVE; }

@@ -12,7 +12,7 @@
 #include <algorithm>
 using namespace std;
 
-const void objParser::parse(const string& filename, triangleMesh* p){
+const void objParser::parse(const string& filename, triangleMesh* p, const bool smooth){
     ifstream file(filename.c_str());
     vector<meshTrianglePtr> tris(0);
 
@@ -34,25 +34,12 @@ const void objParser::parse(const string& filename, triangleMesh* p){
 
     vector<point3> points;
     while(!file.eof() && chunk == "v"){
-        file >> chunk;
-        float x = (float)strtod(chunk.c_str(), NULL);
+        float x, y, z;
 
+        file >> x;
+        file >> y;
+        file >> z;
         file >> chunk;
-        if(file.eof()){
-            cerr << "End of file reached before making any faces." << endl;
-        }
-        float y = (float)strtod(chunk.c_str(), NULL);
-
-        file >> chunk;
-        if(file.eof()){
-            cerr << "End of file reached before making any faces." << endl;
-        }
-        float z = (float)strtod(chunk.c_str(), NULL);
-
-        file >> chunk;
-        if(file.eof()){
-            cerr << "End of file reached before making any faces." << endl;
-        }
 
         points.push_back(point3(x, y, z));
     }
@@ -68,33 +55,65 @@ const void objParser::parse(const string& filename, triangleMesh* p){
     }
 
     // Consume any intermediate info.
-    while(!file.eof() && chunk != "f"){
+    while(!file.eof() && chunk != "f" && chunk != "vt"){
         file >> chunk;
     }
 
+    vector<vec2> uvs;
+    // Read in texture coords.
+    while(!file.eof() && chunk == "vt"){
+        float u,v;
+
+        file >> u;
+        file >> v;
+        file >> chunk;
+
+        uvs.push_back(vec2(u, v));
+    }
+
+    if(uvs.size() > 0){
+        p->uvHeap = new vec2[uvs.size()];
+        for(size_t i=0; i<uvs.size(); ++i){
+            p->uvHeap[i] = uvs[i];
+        }
+    }
+
     vector<vector<meshTrianglePtr> > vertPolys(points.size());
+
     // Read in the faces and construct the polys.
     while(!file.eof() && chunk == "f"){
-        file >> chunk;
-        if(file.eof()){
-            break;
-        }
-
-        const unsigned int vert1 = strtol(chunk.c_str(), NULL, 10);
+        unsigned int vert1, vert2, vert3;
+        unsigned int uv1, uv2, uv3;
 
         file >> chunk;
-        if(file.eof()){
-            cerr << "End of face reached before making a triangle." << endl;
+        if(uvs.size() > 0){
+            vert1 = strtol(chunk.substr(0, chunk.find('/')).c_str(), NULL, 10);
+            uv1 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
+        }else{
+            vert1 = strtol(chunk.c_str(), NULL, 10);
         }
-        const unsigned int vert2 = strtol(chunk.c_str(), NULL, 10);
 
         file >> chunk;
-        if(file.eof()){
-            cerr << "End of face reached before making a triangle." << endl;
+        if(uvs.size() > 0){
+            vert2 = strtol(chunk.substr(0, chunk.find('/')).c_str(), NULL, 10);
+            uv2 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
+        }else{
+            vert2 = strtol(chunk.c_str(), NULL, 10);
         }
-        const unsigned int vert3 = strtol(chunk.c_str(), NULL, 10);
+
+        file >> chunk;
+        if(uvs.size() > 0){
+            vert3 = strtol(chunk.substr(0, chunk.find('/')).c_str(), NULL, 10);
+            uv3 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
+        }else{
+            vert3 = strtol(chunk.c_str(), NULL, 10);
+        }
 
         meshTrianglePtr tri(new meshTriangle(vert1-1, vert2-1, vert3-1, p));
+        if(uvs.size() > 0){
+            tri->setUVs(uv1, uv2, uv3);
+        }
+
         tris.push_back(tri);
 
         vertPolys[vert1-1].push_back(tri);
@@ -104,36 +123,41 @@ const void objParser::parse(const string& filename, triangleMesh* p){
         file >> chunk;
     }
 
-    // Sum the normals for all faces adjacent to each vert,
-    // then store the vertex normal.
-    vector<vec3> vertNormals;
-    for(size_t i=0; i<points.size(); ++i){
-        const vector<meshTrianglePtr>& vps = vertPolys[i];
-        vec3 normal(0.f);
+    if(smooth){
+        // Sum the normals for all faces adjacent to each vert,
+        // then store the vertex normal.
+        vector<vec3> vertNormals;
+        for(size_t i=0; i<points.size(); ++i){
+            const vector<meshTrianglePtr>& vps = vertPolys[i];
+            vec3 normal(0.f);
 
-        vector<vec3> addedNorms;
-        for(size_t j=0; j<vps.size(); ++j){
-            // TODO: THIS SUCKS...
-            if(find(addedNorms.begin(), addedNorms.end(), vps[j]->normal()) == addedNorms.end()){
-                addedNorms.push_back(vps[j]->normal());
-                normal += addedNorms[addedNorms.size() - 1];
+            vector<vec3> addedNorms;
+            for(size_t j=0; j<vps.size(); ++j){
+                // TODO: THIS SUCKS...
+                if(find(addedNorms.begin(), addedNorms.end(), vps[j]->normal()) == addedNorms.end()){
+                    addedNorms.push_back(vps[j]->normal());
+                    normal += addedNorms[addedNorms.size() - 1];
+                }
             }
+            //addedNorms.clear();
+
+            vertNormals.push_back(normalize(normal));
         }
-        //addedNorms.clear();
 
-        vertNormals.push_back(normalize(normal));
-    }
+        // Fill in the scene's vert normal heap.
+        p->vertexNormalHeap = new vec3[vertNormals.size()];
+        for(size_t i=0;i<vertNormals.size(); ++i){
+            p->vertexNormalHeap[i] = vertNormals[i];
+        }
 
-    // Fill in the scene's vert normal heap.
-    p->vertexNormalHeap = new vec3[vertNormals.size()];
-    for(size_t i=0;i<vertNormals.size(); ++i){
-        p->vertexNormalHeap[i] = vertNormals[i];
+        for(size_t i=0; i<tris.size(); ++i){
+            tris[i]->setVertNormals(tris[i]->aIndex(),
+                    tris[i]->bIndex(),
+                    tris[i]->cIndex());
+        }
     }
 
     for(size_t i=0; i<tris.size(); ++i){
-        tris[i]->setVertNormals(tris[i]->aIndex(),
-                tris[i]->bIndex(),
-                tris[i]->cIndex());
         p->addPrimitive(tris[i]);
     }
 

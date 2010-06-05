@@ -63,6 +63,7 @@
 %token BVH OCTREE DEFAULT
 %token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE
 %token DIELECTRIC CONDUCTOR
+%token SMOOTH FLAT
 %token AREATYPE POINTTYPE
 
 %token <fval> FLOAT
@@ -148,8 +149,10 @@ shape :
        ;
 
 objfile :
-        OBJFILE '(' FILEPATH ')'
-        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($3).substr(1, std::string($3).length() - 2), tm); $$ = tm; }
+        OBJFILE '<' SMOOTH '>' '(' FILEPATH ')'
+        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm); $$ = tm; } |
+        OBJFILE '<' FLAT '>' '(' FILEPATH ')'
+        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
         ;
 
 primitive_list : primitive primitive_list { $2->add($1); $$ = $2; } |

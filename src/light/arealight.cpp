@@ -23,7 +23,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     const float cosTheta = fabs(dot(-wi, normal));
     if(cosTheta > 0.f){
         pd = pdf(p, wi);
-        return (cosTheta > 0.f) ? (lightColor*power) : 0.f;
+        return lightColor * power;
     }else{
         pd = 0.f;
         return 0.f;
@@ -36,7 +36,7 @@ const float areaLight::pdf(const point3& p, const vec3& wi) const {
     const intersection isect = intersect(ray(p, normalize(wi)));
 
     if(cosTheta > 0.f && isect.hit){
-        return (isect.t*isect.t / cosTheta) * area;
+        return (isect.t * isect.t) / (cosTheta * area);
     }else{
         return 0.f;
     }

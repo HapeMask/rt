@@ -119,7 +119,13 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
 
     // Sample the light to find a point on the surface and the emission
     // at that point.
-    rgbColor Li = li.sampleL(p, wi, sampleUniform(), sampleUniform(), lightPdf);
+
+    //float sample[2];
+    //getNextSample(sample);
+    //rgbColor Li = li.sampleL(p, wi, sample[0], sample[1], lightPdf);
+
+    const rgbColor Li = li.sampleL(p, wi, sampleUniform(), sampleUniform(), lightPdf);
+
     const float lightDist = wi.length();
     wi = normalize(wi);
 
@@ -153,14 +159,13 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
 
         if(!f.isBlack() && bsdfPdf > 0.f){
             lightPdf = li.pdf(p, wi);
-
             if(lightPdf > 0.f){
                 ray lightRay(p, wi);
 
                 const intersection isectL = li.intersect(lightRay);
                 lightRay.tMax = isectL.t;
                 if(!parent->intersectB(lightRay)){
-                    Li = li.L(lightRay);
+                    const rgbColor Li(li.L(lightRay));
 
                     if(!Li.isBlack()){
                         bsdfWeight = powerHeuristic(1, bsdfPdf, 1, lightPdf);

@@ -24,13 +24,15 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
     //return rgbColor((float)isect.debugInfo / 300.f, 0.f,0.f);
 
 	if(!isect.hit){
-		return rgbColor(0.2,0.3,1.f);
-	}
+        return 0.f;
+	}else if(isect.li != NULL){
+        return isect.li->L(r);
+    }
 
     // Handle emissive and specular materials.
     const vec3& normal = isect.shadingNormal;
-    const bsdf& b = isect.s->getMaterial()->getBsdf();
     const material& mat = *isect.s->getMaterial().get();
+    const bsdf& b = mat.getBsdf();
     const vec3 wo = worldToBsdf(-r.direction, isect);
     rgbColor L(0.f);
 
@@ -44,7 +46,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
         if(li->isPointSource()){
             vec3 lightDir;
             float pdf;
-            const rgbColor Li = li->sampleL(r.origin, lightDir, 0.f, 0.f, pdf);
+            const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), pdf);
             const float lightDist = lightDir.length();
             lightDir = normalize(lightDir);
 
@@ -68,9 +70,6 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
                 vec3 lightDir;
                 float pdf;
 
-                //float sample[2];
-                //getNextSample(sample);
-                //const rgbColor Li = li->sampleL(r.origin, lightDir, sample[0], sample[1], pdf);
                 const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), pdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
@@ -96,21 +95,21 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
     vec3 specDir;
     bxdfType sampleType;
     const rgbColor fr =
-        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType);
+        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType);
     specDir = bsdfToWorld(specDir, isect);
 
     if(!fr.isBlack()){
         ray r2(r.origin, specDir);
-        L += fr * _L(r2, depth+1) * dot(-r.direction, normal);;
+        L += fr * _L(r2, depth+1) * fabs(dot(specDir, normal));
     }
 
     const rgbColor ft =
-        b.sampleF(0, 0, 0, wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType);
+        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType);
     specDir = bsdfToWorld(specDir, isect);
 
     if(!ft.isBlack()){
         ray r2(r.origin, specDir);
-        L += ft * _L(r2, depth+1) * dot(-r.direction, normal);
+        L += ft * _L(r2, depth+1) * fabs(dot(specDir, normal));
     }
 
     return clamp(L);
