@@ -54,7 +54,8 @@ const intersection scene::intersect(ray& r) const{
 
     for(unsigned int i=0; i<numLights(); ++i){
         const intersection isectL = lights[i]->intersect(rCopy);
-        if(isectL.hit && isectL.t < closestIsect.t){
+
+        if(isectL.hit && isectL.t <= closestIsect.t){
             closestIsect = isectL;
         }
     }

@@ -17,19 +17,19 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
     for(unsigned int pathLength = 0; ; ++pathLength){
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
-        const ray rCopy(r);
+        const ray rOrig(r);
         const intersection isect = parent->intersect(r);
         //return rgbColor(0, isect.debugInfo / 2400.f, 0);
 
-        if(!isect.hit || isect.p == NULL){
+        if(!isect.hit){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(unsigned int i=0; i<parent->numLights(); ++i){
-                    const float lightDist = (parent->getLight(i)->getPosition() - r.origin).length();
-                    ray lightRay(rCopy, EPSILON, lightDist);
+                    const float lightDist = (parent->getLight(i)->getPosition() - rOrig.origin).length();
+                    ray lightRay(rOrig, EPSILON, lightDist);
 
-                    const intersection isectL = parent->getLight(i)->intersect(rCopy);
+                    const intersection isectL = parent->getLight(i)->intersect(rOrig);
                     if(isectL.hit && !parent->intersectB(lightRay)){
-                        L += throughput * isectL.li->L(rCopy);
+                        L += throughput * isectL.li->L(rOrig);
                     }
                 }
             }
@@ -38,12 +38,16 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
             break;
         }
 
-        const material& mat = *isect.s->getMaterial().get();
+        if((pathLength == 0 || lastBounceWasSpecular) && isect.li){
+            L += throughput * isect.li->L(rOrig);
+        }
+
+        const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
         const vec3& normal = isect.shadingNormal;
         const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect);
 
-        //L += throughput * sampleOneLight(r.origin, wo, isect, bsdf);
+        //L += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
         L += throughput * (sampleAllLights(r.origin, wo, isect, bsdf) + mat.Le());
 
         vec3 wi;
@@ -62,7 +66,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         if(pathLength > 3){
-            const float continueProbability = 0.5f;
+            const float continueProbability = 0.8f;
             if(sampleUniform() > continueProbability){
                 break;
             }
@@ -79,7 +83,7 @@ const rgbColor pathTracer::_L(ray& r, const int& depth) const {
         r.tMax = MAX_FLOAT;
         r.tMin = EPSILON;
     }
-    return clamp(L);
+    return L;
 }
 
 const rgbColor pathTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
@@ -138,14 +142,14 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;
 
-            if(!parent->intersectB(shadowRay)){
+            if(!parent->intersectB(shadowRay) && dot(-wi, li.getNormal()) < 0.f){
                 if(li.isPointSource()){
                     return f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
 
                     lightWeight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
-                    lightSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
+                    lightSample = (Li / lightPdf) * f * fabs(dot(wi, isect.shadingNormal));
                 }
             }
         }
@@ -169,7 +173,7 @@ const rgbColor pathTracer::sampleDirect(const point3& p, const vec3& wo,
 
                     if(!Li.isBlack()){
                         bsdfWeight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
-                        bsdfSample = f * Li * fabs(dot(wi, isect.shadingNormal)) / bsdfPdf;
+                        bsdfSample = Li * (f / bsdfPdf) * fabs(dot(wi, isect.shadingNormal));
                     }
                 }
             }

@@ -7,13 +7,18 @@
 #include "mathlib/ray.hpp"
 #include "color/color.hpp"
 #include "acceleration/intersection.hpp"
+#include "materials/material.hpp"
 
 using namespace std;
 using tr1::shared_ptr;
 
 class light {
 	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {}
+		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {
+            bsdfPtr b(new bsdf());
+            b->addBxdf(new lambertianBrdf(1.f));
+            mat = materialPtr(new material(b));
+        }
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
         virtual const intersection intersect(const ray& r) const {
@@ -50,10 +55,20 @@ class light {
             return 0.f;
         }
 
+        const materialPtr getMaterial() const {
+            return mat;
+        }
+
+        virtual const vec3& getNormal() const {
+            cerr << "ERROR: light::getNormal() not implemented." << endl;
+            exit(1);
+        }
+
 	protected:
         point3 position;
 		float power;
 		rgbColor lightColor;
+        materialPtr mat;
 };
 
 class pointLight : public light {
@@ -86,6 +101,10 @@ class areaLight : public light {
 
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const;
 		virtual const rgbColor L(const ray& r) const;
+
+        virtual const vec3& getNormal() const {
+            return normal;
+        }
 
     private:
         vec3 a, b, normal;

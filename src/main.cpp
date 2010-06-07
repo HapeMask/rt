@@ -88,7 +88,7 @@ int main(int argc, char* args[]){
     init_gen_rand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,256);
+    ray r0 = c.getRay(256,460);
     cerr << rt.L(r0) << endl;
     return 0;
     */
@@ -112,6 +112,7 @@ int main(int argc, char* args[]){
 
     SDL_EnableKeyRepeat(3,3);
 
+    float linTmScale = 1.f;
 	SDL_Event e;
 	while(true){
 		SDL_WaitEvent(&e);
@@ -148,6 +149,16 @@ int main(int argc, char* args[]){
                             c.move(vec3(0.3f,0.f,0.f));
                             draw(height, width, c, f, rt, blockSize);
                             break;
+                        case '-':
+                            linTmScale -= 0.25f;
+                            f.setLinearTonemapScale(linTmScale);
+                            f.tonemapAndFlip();
+                            break;
+                        case '=':
+                            linTmScale += 0.25f;
+                            f.setLinearTonemapScale(linTmScale);
+                            f.tonemapAndFlip();
+                            break;
                         default:
                             break;
                     }
@@ -162,7 +173,7 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 8;
+    const unsigned int spp = 32;
     const float invspp = 1.f / (float)spp;
     for(unsigned int i=0; i<spp; ++i){
 #ifdef RT_MULTITHREADED
@@ -180,6 +191,6 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
                 f.drawPixel(x, y, rgbColor(prev.red(),prev.green(),prev.blue()) + L*invspp);
             }
         }
-        f.flip();
+        f.tonemapAndFlip();
 	}
 }

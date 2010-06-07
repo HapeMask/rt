@@ -22,7 +22,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     wi = samplePoint - p;
     const float cosTheta = fabs(dot(-wi, normal));
     if(cosTheta > 0.f){
-        pd = pdf(p, wi);
+        pd = wi.length2() / (cosTheta * area);
         return lightColor * power;
     }else{
         pd = 0.f;
@@ -49,7 +49,7 @@ const rgbColor areaLight::L(const ray& r) const{
 const intersection areaLight::intersect(const ray& r) const {
     ray rorig(r);
     // Backface Culling.
-    if(dot(r.direction, normal) > 0){
+    if(dot(-r.direction, normal) > 0){
         return noIntersect;
     }
 

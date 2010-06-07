@@ -78,20 +78,16 @@ const intersection meshTriangle::intersect(ray& r) const {
     }
 
     if(hasUVs){
-        isect.uv = alpha * meshParent->uvLookup(uvs[0]) + beta * meshParent->uvLookup(uvs[1]) + gamma * meshParent->uvLookup(uvs[2]);
-        const vec2& u = meshParent->uvLookup(uvs[0]);
-        const vec2& v = meshParent->uvLookup(uvs[1]);
-        const vec2& w = meshParent->uvLookup(uvs[2]);
+        const vec2& uv1 = meshParent->uvLookup(uvs[0]);
+        const vec2& uv2 = meshParent->uvLookup(uvs[1]);
+        const vec2& uv3 = meshParent->uvLookup(uvs[2]);
 
-        // Compute partial derivatives in u/v for the hit.
-        const float du1 = u.x() - w.x();
-        const float du2 = v.x() - w.x();
-        const float dv1 = u.y() - w.y();
-        const float dv2 = v.y() - w.y();
+        // Interpolate the UV coordinates using the barycentric hitpoint
+        // coordinates.
+        isect.uv = alpha * uv1 + beta * uv2 + gamma * uv3;
 
-        const float invDet = 1.f / (du1*dv2 - dv1*du2);
-        isect.binormal = (dv2*B - dv1*C) * invDet;
-        isect.tangent = cross(isect.shadingNormal, isect.binormal);
+        isect.binormal = binormal_;
+        isect.tangent = normalize(cross(isect.shadingNormal, binormal_));
     }else{
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
     }
@@ -116,9 +112,21 @@ void meshTriangle::setVertNormals(const unsigned int& an, const unsigned int& bn
     hasVertNormals = true;
 }
 
-void meshTriangle::setUVs(const unsigned int& an, const unsigned int& bn, const unsigned int& cn){
-    uvs[0] = an;
-    uvs[1] = bn;
-    uvs[2] = cn;
+void meshTriangle::setUVs(const unsigned int& auv, const unsigned int& buv, const unsigned int& cuv){
+    uvs[0] = auv;
+    uvs[1] = buv;
+    uvs[2] = cuv;
     hasUVs = true;
+
+    const vec2& uv1 = meshParent->uvLookup(auv);
+    const vec2& uv2 = meshParent->uvLookup(buv);
+    const vec2& uv3 = meshParent->uvLookup(cuv);
+
+    // Compute partial derivatives in u/v for the hit.
+    du1 = uv1.x() - uv3.x();
+    du2 = uv2.x() - uv3.x();
+    dv1 = uv1.y() - uv3.y();
+    dv2 = uv2.y() - uv3.y();
+    invDetUV = 1.f / (du1*dv2 - dv1*du2);
+    binormal_ = normalize((dv2*B - dv1*C) * invDetUV);
 }

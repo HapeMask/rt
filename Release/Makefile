@@ -1,4 +1,4 @@
-.PHONY: all clean run compile link parser
+.PHONY: all clean run parser parserclean
 SRCDIR=../src
 
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
@@ -40,6 +40,8 @@ rt: $(OBJS)
 clean:
 	-rm $(shell find $(SRCDIR) -name '*.o')
 	-rm rt
+
+parserclean:
 	-rm $(SRCDIR)/scene/*.hh
 	-rm $(SRCDIR)/scene/lex.yy.cc $(SRCDIR)/scene/sceneparser.tab.*
 

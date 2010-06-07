@@ -69,15 +69,8 @@ const intersection triangle::intersect(ray& r) const {
 
     if(hasUVs){
         isect.uv = alpha * uvs[0] + beta * uvs[1] + gamma * uvs[2];
-
-        // Compute partial derivatives in u/v for the hit.
-        const float du1 = uvs[0].x() - uvs[2].x();
-        const float du2 = uvs[1].x() - uvs[2].x();
-        const float dv1 = uvs[0].y() - uvs[2].y();
-        const float dv2 = uvs[1].y() - uvs[2].y();
-
-        const float invDet = 1.f / (du1*dv2 - dv1*du2);
-        isect.binormal = (dv2*B - dv1*C) * invDet;
+        isect.tangent = cross(isect.shadingNormal, binormal_);
+        isect.binormal = cross(isect.tangent, isect.shadingNormal);
     }else{
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
     }
@@ -96,4 +89,24 @@ void triangle::setVertNormals(const vec3& an, const vec3& bn, const vec3& cn){
     vertNormals[1] = bn;
     vertNormals[2] = cn;
     hasVertNormals = true;
+}
+
+void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
+    uvs[0] = auv;
+    uvs[1] = buv;
+    uvs[2] = cuv;
+    hasUVs = true;
+
+    // Compute partial derivatives in u/v for the hit.
+    const float du1 = uvs[0].x() - uvs[2].x();
+    const float du2 = uvs[1].x() - uvs[2].x();
+    const float dv1 = uvs[0].y() - uvs[2].y();
+    const float dv2 = uvs[1].y() - uvs[2].y();
+    const float invDetUV = 1.f / (du1*dv2 - dv1*du2);
+
+    const vec3 dp1 = points[0] - points[2];
+    const vec3 dp2 = points[1] - points[2];
+
+    binormal_ = normalize((dv2 *  dp1 - dv1 * dp2) * invDetUV);
+    tangent_ = normalize((-du2 *  dp1 + du1 * dp2) * invDetUV);
 }

@@ -1,7 +1,7 @@
 scene<bvh>{
-	camera<512,512>(45, 0, 0,10, 0,0,0, 0,1,0)
-    //light<area>(0,2.99,0, 0,0,-1, 1,0,0, 1,1,1, 16)
-    light<point>(0,2.9,0, 1,1,1, 16.0)
+	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
+    light<area>(0,2.8,0, 0,0,2, 2,0,0, 1,1,1, 8)
+    //light<point>(0,2.0,0, 1,1,1, 8.0)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
@@ -29,12 +29,8 @@ scene<bvh>{
 	}
 
     shape{
-        objfile<smooth>("../models/cyl.obj")
-        material(lambert(1,1,1))
+        sphere(-1,-1.5,0, 1.5)
+        //material(specular<dielectric>(0.8,0.8,0.8, 1.8))
+        material(substrate(0.05,0.05,0.05, aniso(0.9,0.9,0.9, 1.5, 1, 10, 100)));
     }
-
-    //shape{
-    //    sphere(0,-2,0, 1)
-    //    material(substrate(0,0,0, aniso(0.9,0.9,0.9, 1.5, 0, 5, 50)))
-    //}
 }

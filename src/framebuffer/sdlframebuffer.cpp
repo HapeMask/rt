@@ -2,11 +2,12 @@
 #include <cmath>
 using namespace std;
 
+#include "mathlib/constants.hpp"
 #include "sdlframebuffer.hpp"
 #include "color/color.hpp"
 
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
-	framebuffer(width, height, bpp){
+	framebuffer(width, height, bpp), linearTonemapScale(1.f){
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		cerr << "Error loading SDL video:" << endl;
@@ -24,11 +25,13 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 	}
 
     buffer = new rgbColor[width*height];
+    tempBuffer = new rgbColor[width*height];
 	didInit = true;
 }
 
 sdlFramebuffer::~sdlFramebuffer(){
     delete[] buffer;
+    delete[] tempBuffer;
 }
 
 void sdlFramebuffer::drawPixel(const int& x, const int& y, const color& c){
@@ -87,4 +90,42 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
 	if(SDL_MUSTLOCK(screen)){
 		SDL_UnlockSurface(screen);
 	}
+}
+
+void sdlFramebuffer::tonemapAndFlip(){
+    memcpy((void*)tempBuffer, (void*)buffer, width()*height()*sizeof(rgbColor));
+    /*
+    float cMax = MIN_FLOAT;
+
+    for(int y=0; y<height(); y++){
+        for(int x=0; x<width(); x++){
+            const unsigned int i = y * width() + x;
+            const rgbColor& c = tempBuffer[i];
+
+            const float cm = max(max(c.r, c.g), c.b);
+            if(cm > cMax) cMax = cm;
+        }
+    }
+
+    for(int y=0; y<height(); y++){
+        for(int x=0; x<width(); x++){
+            tempBuffer[y * width() + x] /= cMax;
+        }
+    }
+    */
+
+    for(int y=0; y<height(); y++){
+        for(int x=0; x<width(); x++){
+            tempBuffer[y * width() + x] /= linearTonemapScale;
+        }
+    }
+
+    for(int y=0; y<height(); y++){
+        for(int x=0; x<width(); x++){
+            setPixel(x, y, tempBuffer[(y * width()) + x]);
+        }
+    }
+
+    SDL_UpdateRect(screen, 1, 1, width_, height_);
+    SDL_Flip(screen);
 }

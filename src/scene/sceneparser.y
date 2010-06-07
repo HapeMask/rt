@@ -150,9 +150,11 @@ shape :
 
 objfile :
         OBJFILE '<' SMOOTH '>' '(' FILEPATH ')'
-        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm); $$ = tm; } |
+        { shape* s = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), s); $$ = s; } |
+        //{ triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm); $$ = tm; } |
         OBJFILE '<' FLAT '>' '(' FILEPATH ')'
-        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
+        { shape* s = new shape(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), s); $$ = s; }
+        //{ triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
         ;
 
 primitive_list : primitive primitive_list { $2->add($1); $$ = $2; } |

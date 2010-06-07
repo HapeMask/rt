@@ -42,10 +42,16 @@ class sdlFramebuffer : public framebuffer {
 			SDL_Flip(screen);
 		}
 
+        void setLinearTonemapScale(const float& scale){
+            linearTonemapScale = scale;
+        }
+
+        void tonemapAndFlip();
 	private:
 		void setPixel(const int& x, const int& y, const color& c);
 
 		SDL_Surface* screen;
 		bool didInit;
-        rgbColor* buffer;
+        rgbColor* buffer, *tempBuffer;
+        float linearTonemapScale;
 };

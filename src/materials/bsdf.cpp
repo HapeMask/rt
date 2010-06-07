@@ -201,11 +201,9 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         if(u0 < Ft){
             f = specTra->sampleF(u1, u2, wo, wi, p);
             sampledType = specTra->getType();
-            p = Ft;
         }else{
             f = specRef->sampleF(u1, u2, wo, wi, p);
             sampledType = specRef->getType();
-            p = 1.f - Ft;
         }
         return f;
     }
