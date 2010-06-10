@@ -23,6 +23,7 @@
 
 #include "tracer/tracer.hpp"
 #include "tracer/path.hpp"
+#include "tracer/bidir.hpp"
 
 #include "samplers/samplers.hpp"
 
@@ -80,6 +81,7 @@ int main(int argc, char* args[]){
 
 	sdlFramebuffer f(width, height, 32);
 
+	//bdpt rt(&s);
 	pathTracer rt(&s);
 	//whittedRayTracer rt(&s);
 
@@ -173,7 +175,7 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 32;
+    const unsigned int spp = 8;
     const float invspp = 1.f / (float)spp;
     for(unsigned int i=0; i<spp; ++i){
 #ifdef RT_MULTITHREADED

@@ -6,6 +6,8 @@ using namespace std;
 #include "sdlframebuffer.hpp"
 #include "color/color.hpp"
 
+#include "utility.hpp"
+
 sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
 	framebuffer(width, height, bpp), linearTonemapScale(1.f){
 
@@ -116,7 +118,8 @@ void sdlFramebuffer::tonemapAndFlip(){
 
     for(int y=0; y<height(); y++){
         for(int x=0; x<width(); x++){
-            tempBuffer[y * width() + x] /= linearTonemapScale;
+            //tempBuffer[y * width() + x] /= linearTonemapScale;
+            tempBuffer[y * width() + x] = clamp(tempBuffer[y*width() + x]);
         }
     }
 

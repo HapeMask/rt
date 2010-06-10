@@ -35,7 +35,7 @@ class light {
 
         virtual const bool isPointSource() const = 0;
 
-        const point3& getPosition() const{
+        const point3& getPosition() const {
             return position;
         }
 
@@ -43,15 +43,15 @@ class light {
 			return power;
 		}
 
-		const rgbColor& getColor() const{
+		const rgbColor& getColor() const {
 			return lightColor;
 		}
 
-        virtual const float pdf(const point3& p) const{
+        virtual const float pdf(const point3& p) const {
             return 0.f;
         }
 
-        virtual const float pdf(const point3& p, const vec3& wi) const{
+        virtual const float pdf(const point3& p, const vec3& wi) const {
             return 0.f;
         }
 
@@ -61,6 +61,11 @@ class light {
 
         virtual const vec3& getNormal() const {
             cerr << "ERROR: light::getNormal() not implemented." << endl;
+            exit(1);
+        }
+
+        virtual const point3 uniformSampleSurface() const {
+            cerr << "ERROR: light::uniformSampleSurface() not implemented." << endl;
             exit(1);
         }
 
@@ -104,6 +109,12 @@ class areaLight : public light {
 
         virtual const vec3& getNormal() const {
             return normal;
+        }
+
+        inline virtual const point3 uniformSampleSurface() const {
+            point3 samplePoint;
+            sampleRectangle(samplePoint, a, b, position, sampleUniform(), sampleUniform());
+            return samplePoint;
         }
 
     private:

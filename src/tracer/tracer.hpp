@@ -11,41 +11,18 @@ const unsigned int areaSamples = 16;
 //static unsigned int sampleIndex[8];
 class rayTracer {
 	public:
-		rayTracer(scene* p) : parent(p), imgWidth(p->getCamera()->width()),
-        imgHeight(p->getCamera()->height()){
-            /*
-            samples = new float[imgWidth*imgHeight*areaSamples*2];
-            getLDSamples2D(samples, imgWidth*imgHeight*areaSamples);
-
-            for(int i=0;i<8;++i){
-                sampleIndex[i] = 0;
-            }
-            */
-        }
+		rayTracer(scene* p) : parent(p) {}
 
 		virtual const rgbColor L(const ray& r) const = 0;
-        virtual ~rayTracer() {
-            //delete[] samples;
-        }
+        virtual ~rayTracer() {}
 
 	protected:
-        /*
-        inline void getNextSample(float sample[2]) const {
-#ifdef RT_MULTITHREADED
-            const unsigned int tid = omp_get_thread_num();
-#else
-            const unsigned int tid = 0;
-#endif
-            sample[0] = samples[sampleIndex[tid]];
-            sample[1] = samples[sampleIndex[tid]+1];
-            sampleIndex[tid] += 2;
-        }
-
-        float* samples;
-        */
+        const rgbColor sampleOneLight(const point3& p, const vec3& wo, const intersection& isect, const bsdf& bsdf) const;
+        const rgbColor sampleAllLights(const point3& p, const vec3& wo, const intersection& isect, const bsdf& bsdf) const;
+        const rgbColor sampleDirect(const point3& p, const vec3& wo, const intersection& isect,
+                const bsdf& bsdf, const light& light) const;
 
 		scene* parent;
-        unsigned int imgWidth, imgHeight;
 };
 
 class whittedRayTracer : public rayTracer {

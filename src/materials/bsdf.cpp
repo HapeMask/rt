@@ -217,7 +217,6 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     // If it was a specular bxdf, then we just take the value from f
     // and ignore the others as well as the pdfs, as the specular components
     // have delta distributions for the pdfs.
-
     if(!isSupertype(SPECULAR, sampledType) && matches.size() > 1){
         // p currently contains the pdf for the sampled bxdf,
         // we still need to add the other contributions.

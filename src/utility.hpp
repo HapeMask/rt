@@ -72,6 +72,17 @@ inline const vec3 bsdfToWorld(const vec3& v, const intersection& isect){
         isect.binormal.z() * v.x() + isect.shadingNormal.z() * v.y() + isect.tangent.z() * v.z());
 }
 
+inline const vec3 worldToBsdf(const vec3& v, const vec3& normal, const vec3& binormal, const vec3& tangent){
+    return vec3(dot(v, binormal), dot(v, normal), dot(v, tangent));
+}
+
+inline const vec3 bsdfToWorld(const vec3& v, const vec3& normal, const vec3& binormal, const vec3& tangent){
+    return vec3(
+        binormal.x() * v.x() + normal.x() * v.y() + tangent.x() * v.z(),
+        binormal.y() * v.x() + normal.y() * v.y() + tangent.y() * v.z(),
+        binormal.z() * v.x() + normal.z() * v.y() + tangent.z() * v.z());
+}
+
 /**
  * Fast Float/Int conversion from PBRT.
  */
