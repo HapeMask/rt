@@ -57,7 +57,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
                 }else if(dot(-wi, li.getNormal()) < 0.f){
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
 
-                    lightWeight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
+                    lightWeight = balanceHeuristic(1, lightPdf, 1, bsdfPdf);
                     lightSample = (Li / lightPdf) * f * fabs(dot(wi, isect.shadingNormal));
                 }
             }
@@ -81,7 +81,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
                     const rgbColor Li(li.L(lightRay));
 
                     if(!Li.isBlack()){
-                        bsdfWeight = powerHeuristic(1, bsdfPdf, 1, lightPdf);
+                        bsdfWeight = balanceHeuristic(1, bsdfPdf, 1, lightPdf);
                         bsdfSample = Li * (f / bsdfPdf) * fabs(dot(wi, isect.shadingNormal));
                     }
                 }

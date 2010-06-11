@@ -54,7 +54,6 @@ const rgbColor pathTracer::_L(ray& r) const {
         float pdf = 0.f;
 
         bxdfType sampledType;
-
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, ALL, sampledType, pdf);
         if(f.isBlack() || pdf == 0.f){
             break;

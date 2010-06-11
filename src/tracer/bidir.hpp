@@ -11,8 +11,10 @@
 
 struct pathPoint{
     point3 p;
-    rgbColor L, throughput;
+    rgbColor f;
     float pdf;
+    intersection isect;
+    bxdfType sampledType;
 };
 
 class bdpt : public rayTracer {
@@ -22,4 +24,5 @@ class bdpt : public rayTracer {
 
 	private:
 		void createPath(ray& r, vector<pathPoint>& points) const;
+        const rgbColor tracePath(const vector<pathPoint>& points) const;
 };

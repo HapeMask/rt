@@ -42,34 +42,19 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     const unsigned int numPrims = node.prims[1] - node.prims[0];
 
     // Check each hit and find the closest.
-    primitive* closestPrim;
-    ray closestRay;
-    intersection closestIsect;
-    bool didHit = false;
-    float minDist = POS_INF;
+    intersection closestIsect = noIntersect;
 
     for(unsigned int i=0; i<numPrims; ++i){
         ray rCopy(r);
         const intersection isect = primitives[node.prims[0]+i]->intersect(rCopy);
         if(isect.hit){
-            didHit = true;
-
-            if(isect.t < minDist){
-                closestPrim = primitives[node.prims[0]+i];
-                minDist = isect.t;
-                closestRay = rCopy;
+            if(isect.t < closestIsect.t){
                 closestIsect = isect;
             }
         }
     }
 
-    // If we missed all the primitives in the leaf,
-    // return no hit, otherwise return the hitpoint.
-    if(didHit){
-        return closestIsect;
-    }else{
-        return noIntersect;
-    }
+    return closestIsect;
 }
 
 const intersection bvh::_intersect(const int& index, const ray& r) const{

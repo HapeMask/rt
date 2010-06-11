@@ -90,7 +90,7 @@ int main(int argc, char* args[]){
     init_gen_rand(time(NULL));
 
     /*
-    ray r0 = c.getRay(256,460);
+    ray r0 = c.getRay(256,75);
     cerr << rt.L(r0) << endl;
     return 0;
     */
