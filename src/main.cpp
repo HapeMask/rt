@@ -103,7 +103,8 @@ int main(int argc, char* args[]){
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-    const unsigned int blockSize = (width/numThreads)*(height/numThreads);
+    static const unsigned int blockSize = (width/numThreads)*(height/numThreads);
+
     draw(height, width, c, f, rt, blockSize);
 
 	gettimeofday(&end, NULL);
@@ -126,30 +127,6 @@ int main(int argc, char* args[]){
                             if((e.key.keysym.mod & KMOD_CTRL) || (e.key.keysym.mod & KMOD_META)){
                                 return 0;
                             }
-                            break;
-                        case 'w':
-                            c.move(vec3(0.f,0.f,-0.3f));
-                            draw(height, width, c, f, rt, blockSize);
-                            break;
-                        case 'z':
-                            c.move(vec3(0.f,-0.3f,0.f));
-                            draw(height, width, c, f, rt, blockSize);
-                            break;
-                        case 's':
-                            c.move(vec3(0.f,0.f,0.3f));
-                            draw(height, width, c, f, rt, blockSize);
-                            break;
-                        case 'x':
-                            c.move(vec3(0.f,0.3f,0.f));
-                            draw(height, width, c, f, rt, blockSize);
-                            break;
-                        case 'a':
-                            c.move(vec3(-0.3f,0.f,0.f));
-                            draw(height, width, c, f, rt, blockSize);
-                            break;
-                        case 'd':
-                            c.move(vec3(0.3f,0.f,0.f));
-                            draw(height, width, c, f, rt, blockSize);
                             break;
                         case '-':
                             linTmScale -= 0.25f;

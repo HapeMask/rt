@@ -17,7 +17,7 @@ static const float MIN_FLOAT = std::numeric_limits<float>::min();
 // Bigger than real machine epsilon usually.
 static const float EPSILON = 5e-5f;
 
-const float primes[128] = {
+static const float primes[128] = {
 2,
 3,
 5,
