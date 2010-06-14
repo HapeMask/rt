@@ -10,7 +10,7 @@ CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ff
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937 \
-	-fgcse-sm -fgcse-las
+	-fgcse-sm -fgcse-las -fsingle-precision-constant
 LDFLAGS= -fwhole-program
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
