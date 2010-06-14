@@ -10,7 +10,20 @@ CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ff
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937 \
-	-fgcse-sm -fgcse-las -fsingle-precision-constant
+	-fgcse-sm -fgcse-las
+
+#
+# MAC FLAGS
+#
+
+#CXX=/opt/local/bin/g++-mp-4.5
+#CC=/opt/local/bin/gcc-mp-4.5
+#CXXFLAGS= -I$(SRCDIR) -march=prescott -O3 -mmmx -msse -msse2 -ffast-math \
+#	-mfpmath=sse -fomit-frame-pointer -ftree-vectorize -pipe \
+#	-fexpensive-optimizations -funsafe-math-optimizations -funsafe-loop-optimizations \
+#	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937 \
+#	-fgcse-sm -fgcse-las -fno-finite-math-only
+
 LDFLAGS= -fwhole-program
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
