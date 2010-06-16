@@ -191,7 +191,7 @@ class phongBrdf : public bxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const rgbColor ks;
+        rgbColor ks;
         const float n;
 };
 
@@ -232,7 +232,7 @@ class microfacetBxdf : public bxdf {
         }
 
     private:
-        const rgbColor Rs;
+        rgbColor Rs;
         const float eta, k;
 };
 
@@ -253,7 +253,7 @@ class blinnMicrofacet : public microfacetBxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const float exp;
+        float exp;
 };
 
 //, pdfTerm(sqrt((nu+1.f)*(nv+1.f)) * INVTWOPI) 
@@ -279,10 +279,10 @@ class asMicrofacet : public microfacetBxdf {
             return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
         }
 
-        const float nu, nv;
+        float nu, nv;
 
         // Energy conservation terms.
-        const float ecTerm;
+        float ecTerm;
 };
 
 class substrate : public bxdf {
@@ -301,8 +301,8 @@ class substrate : public bxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const rgbColor Rd, Rs;
-        const rgbColor ecTerm;
+        rgbColor Rd, Rs;
+        rgbColor ecTerm;
         microfacetBxdf* rhoS;
 };
 

@@ -30,10 +30,12 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
     }
 
     // Handle emissive and specular materials.
-    const vec3& normal = isect.shadingNormal;
-    const material& mat = *isect.s->getMaterial().get();
-    const bsdf& b = mat.getBsdf();
+	const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
+	const vec3& normal = isect.shadingNormal;
+	const bsdf& bsdf = mat.getBsdf();
     const vec3 wo = worldToBsdf(-r.direction, isect);
+
+	bxdfType sampledType;
     rgbColor L(0.f);
 
 	if(isect.s->getMaterial()->isEmissive()){
@@ -41,12 +43,12 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 	}
 
     // Diffuse calculations.
+	float lightPdf = 0.f;
 	for(unsigned int i=0; i<parent->numLights(); ++i){
         const lightPtr li = parent->getLight(i);
         if(li->isPointSource()){
             vec3 lightDir;
-            float pdf;
-            const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), pdf);
+            const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
             const float lightDist = lightDir.length();
             lightDir = normalize(lightDir);
 
@@ -59,18 +61,17 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
                 continue;
             }
 
-            rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, isect),
-                    bxdfType(DIFFUSE | GLOSSY | REFLECTION));
-            L += c * dot(normal, lightDir) * Li;
+			const vec3 wi = worldToBsdf(lightDir, isect);
+			const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
+            L += f * dot(normal, lightDir) * (Li / lightPdf);
         }else{
             // Area Sampling
             rgbColor areaContrib(0.f);
 
             for(unsigned int i=0; i<areaSamples; ++i){
                 vec3 lightDir;
-                float pdf;
 
-                const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), pdf);
+                const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
                 shadowRay.tMax = lightDir.length();
@@ -80,11 +81,10 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
                 }
 
                 lightDir = normalize(lightDir);
+				const vec3 wi = worldToBsdf(lightDir, isect);
 
-                // TODO: PROBABLY REMOVE THE PI!!
-                const rgbColor c = mat.sample(r.origin, wo, worldToBsdf(lightDir, isect),
-                        bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
-                areaContrib += ((Li * dot(normal, lightDir)) / pdf) * c;
+				const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
+                areaContrib += f * dot(normal, lightDir) * (Li / lightPdf);
             }
 
             L += areaContrib / (float)areaSamples;
@@ -93,10 +93,9 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 
     // Trace specular rays.
     vec3 specDir;
-    bxdfType sampleType;
 	float pdf;
     const rgbColor fr =
-        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType, pdf);
+        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
 
     if(!fr.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
@@ -105,7 +104,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
     }
 
     const rgbColor ft =
-        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType, pdf);
+        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
 
     if(!ft.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);

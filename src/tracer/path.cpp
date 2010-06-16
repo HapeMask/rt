@@ -7,7 +7,7 @@
 
 const rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
-    return _L<false>(r2);
+    return _L<true>(r2);
 }
 
 template <bool recursiveSpecular>
@@ -112,5 +112,6 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         r.tMax = MAX_FLOAT;
         r.tMin = EPSILON;
     }
+
     return L;
 }

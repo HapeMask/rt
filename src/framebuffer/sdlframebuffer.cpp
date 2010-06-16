@@ -108,14 +108,14 @@ void sdlFramebuffer::tonemapAndFlip(){
             if(cm > cMax) cMax = cm;
         }
     }
-
     */
 
     for(int y=0; y<height(); y++){
         for(int x=0; x<width(); x++){
+			const rgbColor c = tempBuffer[y * width() + x];
 			//tempBuffer[y * width() + x] /= cMax;
             //tempBuffer[y * width() + x] /= linearTonemapScale;
-            tempBuffer[y * width() + x] = clamp(tempBuffer[y*width() + x]);
+			tempBuffer[y * width() + x] = clamp(c);
         }
     }
 
