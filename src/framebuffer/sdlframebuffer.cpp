@@ -109,15 +109,11 @@ void sdlFramebuffer::tonemapAndFlip(){
         }
     }
 
-    for(int y=0; y<height(); y++){
-        for(int x=0; x<width(); x++){
-            tempBuffer[y * width() + x] /= cMax;
-        }
-    }
     */
 
     for(int y=0; y<height(); y++){
         for(int x=0; x<width(); x++){
+			//tempBuffer[y * width() + x] /= cMax;
             //tempBuffer[y * width() + x] /= linearTonemapScale;
             tempBuffer[y * width() + x] = clamp(tempBuffer[y*width() + x]);
         }

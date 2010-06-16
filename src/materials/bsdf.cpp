@@ -146,13 +146,6 @@ const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType) const{
-    float p;
-    const rgbColor f = sampleF(u0, u1, u2, wo, wi, type, sampledType, p);
-    return (p > 0.f) ? f / p : f;
-}
-
-const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;
     rgbColor f(0.f);
@@ -192,8 +185,8 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
      * Specular Importance Sampling
      * Is this even correct? I made it up.
      */
-    /*
-    if(specRef && specTra){
+	///*
+    if(specRef && specTra && matches.size() > 1){
         const rgbColor F = specRef->evalFresnel(fabs(bsdf::cosTheta(wo)));
         const float Fr = (F.red() + F.blue() + F.green())/3.f;
         const float Ft = 1.f - Fr;
@@ -201,13 +194,15 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         if(u0 < Ft){
             f = specTra->sampleF(u1, u2, wo, wi, p);
             sampledType = specTra->getType();
+			p = Ft;
         }else{
             f = specRef->sampleF(u1, u2, wo, wi, p);
             sampledType = specRef->getType();
+			p = Fr;
         }
         return f;
     }
-    */
+	//*/
 
     // Select and sample a random bxdf component to find wi.
     const unsigned int index = sampleRange(u0, 0, matches.size()-1);
@@ -217,7 +212,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     // If it was a specular bxdf, then we just take the value from f
     // and ignore the others as well as the pdfs, as the specular components
     // have delta distributions for the pdfs.
-    if(!isSupertype(SPECULAR, sampledType) && matches.size() > 1){
+    if(!(sampledType & SPECULAR) && matches.size() > 1){
         // p currently contains the pdf for the sampled bxdf,
         // we still need to add the other contributions.
         for(size_t i=0; i<matches.size(); ++i){
@@ -232,10 +227,11 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     }
 
     // Evaluate and add the bsdf component values.
-    if(!isSupertype(SPECULAR, sampledType)){
-        f = 0.f;
+    if(!(sampledType & SPECULAR)){
         for(size_t i=0; i<matches.size(); ++i){
-            f += matches[i]->f(wo, wi);
+			if(i != index){
+				f += matches[i]->f(wo, wi);
+			}
         }
     }
 

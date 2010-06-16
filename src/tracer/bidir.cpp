@@ -12,8 +12,12 @@ const rgbColor bdpt::L(const ray& r) const {
     ray eyeRay(r);
     vector<pathPoint> eyePath, lightPath;
 
+	if(parent->getLight(0)->intersect(r).hit){
+		return parent->getLight(0)->L(r);
+	}
+
     // Add the eye point first.
-    pathPoint p0 = {r.origin, 0.f, 0.f, noIntersect};
+    const pathPoint p0 = {r.origin, 0.f, 0.f, noIntersect};
     eyePath.push_back(p0);
     createPath(eyeRay, eyePath);
 
@@ -30,25 +34,30 @@ const rgbColor bdpt::L(const ray& r) const {
     vec3 wi;
     uniformSampleHemisphere(wi);
 
-    // Make up a coordinate system just to convert the sampled direction from
+    // Make up a coordinate system to convert the sampled direction from
     // light normal space -> world space.
     vec3 binormal, tangent;
     makeCoordinateSystem(normal, binormal, tangent);
     wi = normalize(bsdfToWorld(wi, normal, binormal, tangent));
 
+	// Add the sampled point on the light as the start of the light path.
+	intersection iL(noIntersect);
+	iL.li = parent->getLight(i).get();
+	const pathPoint lp0 = {p, 0.f, 0.f, iL};
+	lightPath.push_back(lp0);
+
     ray lightRay(p, wi);
     createPath(lightRay, lightPath);
-
-    if(lightPath.size() < 1){
-        return 0.f;
-    }
 
     ray rConnector(eyePath.back().p, normalize(lightPath.back().p - eyePath.back().p));
     rConnector.tMax = (lightPath.back().p - eyePath.back().p).length() - EPSILON;
 
     // Connect the paths with a visibility ray (if possible).
     if(!parent->intersectB(rConnector)){
-        //Merge the paths, then trace it (TODO: use MIS).
+        // Merge the paths, then trace it (TODO: use MIS).
+
+		// This loop adds the light points in reverse order because the tracing
+		// starts from the light.
         for(int j=0; j<lightPath.size(); ++j){
             eyePath.push_back(lightPath[(lightPath.size()-1)-j]);
         }
@@ -119,18 +128,15 @@ const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
     rgbColor throughput = 1.f, L = 0.f;
     bool lastBounceWasSpecular = false;
 
-    for(size_t i=1; i<points.size()-1; ++i){
-        // Construct the incident and outgoing directions.
-        const vec3 wo = worldToBsdf(normalize(points[i-1].p - points[i].p), points[i].isect);
-        vec3 wi;
-        if(i < points.size()-2){
-            wi = normalize(points[i+1].p - points[i].p);
-        }
-
+    for(size_t i=1; i<points.size()-2; ++i){
         const intersection& isect = points[i].isect;
-
         const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
         const bsdf& b = mat.getBsdf();
+
+        // Construct the incident and outgoing directions.
+        const vec3 wo = worldToBsdf(normalize(points[i-1].p - points[i].p), isect);
+        vec3 wi;
+		wi = normalize(points[i+1].p - points[i].p);
 
         if((i == 0 || lastBounceWasSpecular) && isect.li){
             L += throughput * isect.li->L(ray(points[i].p, wo));
@@ -138,9 +144,15 @@ const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
 
         L += throughput * (sampleAllLights(points[i].p, wo, isect, b) + mat.Le());
         throughput *= points[i].f * fabs(dot(wi, isect.shadingNormal)) / points[i].pdf;
-        //throughput /= 0.8;
+        //throughput /= 0.5f;
         lastBounceWasSpecular = (points[i].sampledType & SPECULAR) != 0;
     }
 
-    return L + ((points[1].isect.li) ? points[1].isect.li->L(ray(points[1].p, vec3(0,0,0))) : rgbColor(0.f));
+	const intersection& isect = points.back().isect;
+	const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
+	const bsdf& b = mat.getBsdf();
+	const vec3 wo = worldToBsdf(normalize(points[points.size()-2].p - points.back().p), isect);
+
+	L += throughput * (sampleAllLights(points.back().p, wo, isect, b) + mat.Le());
+	return L;
 }

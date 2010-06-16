@@ -89,11 +89,11 @@ int main(int argc, char* args[]){
     // SFMT
     init_gen_rand(time(NULL));
 
-    /*
-    ray r0 = c.getRay(256,75);
+	/*
+    ray r0 = c.getRay(width/2, height/2);
     cerr << rt.L(r0) << endl;
     return 0;
-    */
+	*/
 
 #ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
@@ -160,11 +160,9 @@ void draw(const int height, const int width, const camera& c, sdlFramebuffer& f,
 #endif
         for(int y=0; y<height; y++){
             for(int x=0; x<width; x++){
-                //f.drawPixel(x, y, rt.L(c.getRay(x,y)));
-                ///*
                 rgbColor L(0.f);
-                    L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
-                    //L += rt.L(c.getRay(x,y));
+
+				L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
 
                 const color& prev = f.getPixel(x, y);
                 f.drawPixel(x, y, rgbColor(prev.red(),prev.green(),prev.blue()) + L*invspp);

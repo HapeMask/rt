@@ -12,5 +12,6 @@ class pathTracer : public rayTracer {
 		virtual const rgbColor L(const ray& r) const;
 
 	private:
-		const rgbColor _L(ray& r) const;
+		template <bool recursiveSpecular>
+		const rgbColor _L(ray& r, const int depth = 0) const;
 };

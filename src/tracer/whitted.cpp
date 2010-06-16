@@ -94,22 +94,23 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
     // Trace specular rays.
     vec3 specDir;
     bxdfType sampleType;
+	float pdf;
     const rgbColor fr =
-        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType);
-    specDir = bsdfToWorld(specDir, isect);
+        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampleType, pdf);
 
     if(!fr.isBlack()){
+		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += fr * _L(r2, depth+1) * fabs(dot(specDir, normal));
+        L += (fr / pdf) * _L(r2, depth+1) * fabs(dot(specDir, normal));
     }
 
     const rgbColor ft =
-        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType);
-    specDir = bsdfToWorld(specDir, isect);
+        b.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampleType, pdf);
 
     if(!ft.isBlack()){
+		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += ft * _L(r2, depth+1) * fabs(dot(specDir, normal));
+        L += (ft / pdf) * _L(r2, depth+1) * fabs(dot(specDir, normal));
     }
 
     return clamp(L);

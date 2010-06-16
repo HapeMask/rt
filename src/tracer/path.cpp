@@ -7,10 +7,11 @@
 
 const rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
-    return _L(r2);
+    return _L<false>(r2);
 }
 
-const rgbColor pathTracer::_L(ray& r) const {
+template <bool recursiveSpecular>
+const rgbColor pathTracer::_L(ray& r, const int depth) const {
     rgbColor throughput = 1.f, L = 0.f;
     bool lastBounceWasSpecular = false;
 
@@ -34,10 +35,12 @@ const rgbColor pathTracer::_L(ray& r) const {
                 }
             }
 
-            //L += throughput * rgbColor(0.f, 0.1f, 0.2f);
+            //L += throughput * rgbColor(0.5f, 0.5f, 0.5f);
             break;
         }
 
+		// Handle direct light bounces from a specular surface (also if a ray
+		// hits a light source on the first bounce).
         if((pathLength == 0 || lastBounceWasSpecular) && isect.li){
             L += throughput * isect.li->L(rOrig);
         }
@@ -54,9 +57,36 @@ const rgbColor pathTracer::_L(ray& r) const {
         float pdf = 0.f;
 
         bxdfType sampledType;
-        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, ALL, sampledType, pdf);
+
+		// Only sample non-specular reflection on the first bounce, leave the
+		// 1st-bounce specular hits for the recursive step below.
+		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ? bxdfType(ALL & ~SPECULAR) : ALL;
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, reflectionType, sampledType, pdf);
+
         if(f.isBlack() || pdf == 0.f){
-            break;
+			// Trace both specular reflection and refraction recursively.
+			if(recursiveSpecular && pathLength == 0 && depth < 4){
+				vec3 specDir;
+
+				const rgbColor fr =
+					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
+
+				if(!fr.isBlack()){
+					specDir = bsdfToWorld(specDir, isect);
+					ray r2(r.origin, specDir);
+					L += fr * _L<true>(r2, depth+1) * fabs(dot(specDir, normal)) / pdf;
+				}
+
+				const rgbColor ft =
+					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
+
+				if(!ft.isBlack()){
+					specDir = bsdfToWorld(specDir, isect);
+					ray r2(r.origin, specDir);
+					L += ft * _L<true>(r2, depth+1) * fabs(dot(specDir, normal)) / pdf;
+				}
+			}
+			break;
         }
 
         wi = normalize(bsdfToWorld(wi, isect));

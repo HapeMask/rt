@@ -52,8 +52,6 @@ class bsdf {
         ~bsdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
-        const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType) const;
 
         const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
                 const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& pd) const;

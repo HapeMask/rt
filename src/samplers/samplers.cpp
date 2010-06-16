@@ -16,8 +16,7 @@ const float sampleUniform(){
 }
 
 const int sampleRange(const float& u0, const int& a, const int& b){
-    //return min((int)floor(u0*(b-a+1)), b-a);
-    return a + min(Floor2Int(u0*(b-a+1)), b-a);
+    return a + min((u0*(b-a+1)), (float)b-a);
 }
 
 void sampleDisk(vec3& v, const float& u0, const float& u1){
