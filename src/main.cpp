@@ -152,7 +152,7 @@ int main(int argc, char* args[]){
 }
 
 void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 8;
+    const unsigned int spp = 64;
     const float invspp = 1.f / (float)spp;
     for(unsigned int i=0; i<spp; ++i){
 #ifdef RT_MULTITHREADED

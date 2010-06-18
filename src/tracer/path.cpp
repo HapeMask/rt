@@ -50,6 +50,13 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect);
 
+		// Perform explicit direct lighting computations.
+		//
+		// This is why the above test for specular bounces is needed.  If a ray
+		// hits a light after bouncing from a specular object, only then do we
+		// need to add in the light contribution as explicit lighting handles
+		// non-specular surfaces.
+
         //L += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
         L += throughput * (sampleAllLights(r.origin, wo, isect, bsdf) + mat.Le());
 
