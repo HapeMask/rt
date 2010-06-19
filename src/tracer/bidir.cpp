@@ -144,7 +144,6 @@ const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
 
         L += throughput * (sampleAllLights(points[i].p, wo, isect, b) + mat.Le());
         throughput *= points[i].f * fabs(dot(wi, isect.shadingNormal)) / points[i].pdf;
-        //throughput /= 0.5f;
         lastBounceWasSpecular = (points[i].sampledType & SPECULAR) != 0;
     }
 

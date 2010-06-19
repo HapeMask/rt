@@ -102,7 +102,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         if(pathLength > 4){
-            const float continueProbability = 0.8f;
+            const float continueProbability = 0.5f;
             if(sampleUniform() > continueProbability){
                 break;
             }

@@ -42,10 +42,6 @@ const float areaLight::pdf(const point3& p, const vec3& wi) const {
     }
 }
 
-const rgbColor areaLight::L(const ray& r) const{
-	return lightColor * power;
-}
-
 const intersection areaLight::intersect(const ray& r) const {
     ray rorig(r);
     // Backface Culling.
