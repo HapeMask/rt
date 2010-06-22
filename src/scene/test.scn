@@ -1,18 +1,18 @@
 scene<bvh>{
-	camera<256,256>(45, 0,0,10, 0,0,1, 0,1,0)
-    light<area>(0,2.9,0, 0,0,2, 2,0,0, 1,1,1, 8)
-    //light<point>(0,2.9,0, 1,1,1, 8.0)
+	camera<512,512>(45, 0,0,10, 0,0,0, 0,1,0)
+    light<area>(0,2.8,0, 0,0,2, 2,0,0, 1,1,1, 2)
+    //light<point>(0,2.8,0, 1,1,1, 8)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
         triangle(-3,3,-3, -3,3,3, -3,-3,3)
-		material(lambert(0,0.75,0))
+		material(lambert(0.01,0.8,0.01))
 	}
 
 	shape{
         triangle(3,-3,3, 3,3,-3, 3,-3,-3)
         triangle(3,-3,3, 3,3,3, 3,3,-3)
-		material(lambert(0,0,0.75))
+		material(lambert(0.01,0.01,0.8))
 	}
 
 	shape{
@@ -29,7 +29,8 @@ scene<bvh>{
 	}
 
 	shape{
-		sphere(0,0,0,1.5)
-		material(specular<dielectric>(0.1,0.1,1, 1.6))
+		//sphere(0,0,0,1.5)
+        objfile<smooth>("../models/wave.obj")
+		material(specular<dielectric>(1,1,1, 1.6))
 	}
 }

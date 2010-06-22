@@ -110,10 +110,6 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
             throughput /= continueProbability;
         }
 
-        if(pathLength == MAXDEPTH){
-            break;
-        }
-
         r.direction = wi;
         r.invDir = 1.f/wi;
         r.tMax = MAX_FLOAT;
