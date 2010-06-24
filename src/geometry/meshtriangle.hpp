@@ -16,6 +16,7 @@ class meshTriangle : public primitive {
 		meshTriangle(const unsigned int& a, const unsigned int& b, const unsigned int& c, triangleMesh* parent);
 
 		virtual const intersection intersect(ray& r) const;
+		virtual const bool intersectB(const ray& r) const;
 
 		const unsigned int& aIndex() const{
 			return points[0];

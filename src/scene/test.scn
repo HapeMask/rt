@@ -29,8 +29,7 @@ scene<bvh>{
 	}
 
 	shape{
-		//sphere(0,0,0,1.5)
-        objfile<smooth>("../models/wave.obj")
+		sphere(0,0,0,1.5)
 		material(specular<dielectric>(1,1,1, 1.6))
 	}
 }

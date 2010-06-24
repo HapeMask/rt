@@ -13,6 +13,8 @@ class sphere : public primitive {
 		virtual ~sphere() {}
 
 		virtual const intersection intersect(ray& r) const;
+		virtual const bool intersectB(const ray& r) const;
+
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
         virtual const vec3 getNormal(const point3& p) const;
 

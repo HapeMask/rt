@@ -16,6 +16,7 @@ class triangle : public primitive {
 		virtual ~triangle() {}
 
 		virtual const intersection intersect(ray& r) const;
+		virtual const bool intersectB(const ray& r) const;
 
 		const point3& a() const{
 			return points[0];

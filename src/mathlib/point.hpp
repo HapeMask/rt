@@ -3,11 +3,9 @@
 #include <iostream>
 #include <cassert>
 #include "sse.hpp"
+#include "vector.hpp" 
 
 using namespace std;
-
-class vec3;
-class vec2;
 
 class point2 {
 	public:
@@ -58,14 +56,34 @@ class point2 {
 			return coords[1];
 		}
 
-		const point2 operator+(const vec2& u) const;
-		point2& operator+=(const vec2& u);
+        inline const point2 operator+(const vec2& u) const {
+            return point2(*this) += u;
+        }
 
-		const point2 operator-(const vec2& u) const;
-		point2& operator-=(const vec2& u);
-		const vec2 operator-(const point2& p) const;
+        inline point2& operator+=(const vec2& u) {
+            x() += u.x();
+            y() += u.y();
+            return (*this);
+        }
 
-		const bool operator==(const point2& p) const;
+        inline const point2 operator-(const vec2& u) const {
+            return point2(*this) -= u;
+        }
+
+        inline point2& operator-=(const vec2& u) {
+            (*this) += -u;
+            return (*this);
+        }
+
+        inline const vec2 operator-(const point2& p) const {
+            return vec2(x(), y()) - vec2(p.x(), p.y());
+        }
+
+        inline const bool operator==(const point2& p) const {
+            return
+                (x() == p.x()) &&
+                (y() == p.y());
+        }
 
 	private:
 		float coords[2];
@@ -132,20 +150,49 @@ class point3 {
 		}
 
         inline const __m128 getSIMD() const {
-            return loadps(coords);
+            //return loadps(coords);
+            return vector;
         }
 
-		const point3 operator+(const vec3& u) const;
-		point3& operator+=(const vec3& u);
+        inline const point3 operator+(const vec3& u) const {
+            return point3(*this) += u;
+        }
 
-		const point3 operator-(const vec3& u) const;
-		point3& operator-=(const vec3& u);
-		const vec3 operator-(const point3& p) const;
+        inline point3& operator+=(const vec3& u) {
+            //x() += u.x();
+            //y() += u.y();
+            //z() += u.z();
+            vector = addps(vector, u.vector);
+            return (*this);
+        }
 
-		const bool operator==(const point3& p) const;
+        inline const point3 operator-(const vec3& u) const {
+            return point3(*this) -= u;
+        }
+
+        inline point3& operator-=(const vec3& u) {
+            //(*this) += -u;
+            vector = subps(vector, u.vector);
+            return (*this);
+        }
+
+        inline const vec3 operator-(const point3& p) const {
+            //return vec3(subps(getSIMD(), p.getSIMD()));
+            return vec3(subps(vector, p.vector));
+        }
+
+        inline const bool operator==(const point3& p) const {
+            return
+                (x() == p.x()) &&
+                (y() == p.y()) &&
+                (z() == p.z());
+        }
 
 	private:
-        float coords[3] ALIGN_16;
+        union{
+            float coords[4];
+            __m128 vector;
+        };
 };
 
 ostream& operator<<(ostream& out, const point3& p);

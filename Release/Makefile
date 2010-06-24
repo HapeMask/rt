@@ -38,15 +38,21 @@ all : parser rt
 
 parser: $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 
-$(SRCDIR)/scene/parser.o : $(SRCDIR)/scene/sceneparser.y
+$(SRCDIR)/scene/sceneparser.tab.h : $(SRCDIR)/scene/sceneparser.tab.c
+
+$(SRCDIR)/scene/sceneparser.tab.c : $(SRCDIR)/scene/sceneparser.y
 	bison $(SRCDIR)/scene/sceneparser.y
 	mv *.hh $(SRCDIR)/scene/
 	mv sceneparser.tab.* $(SRCDIR)/scene/
+
+$(SRCDIR)/scene/parser.o : $(SRCDIR)/scene/sceneparser.tab.c $(SRCDIR)/scene/sceneparser.tab.h
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/sceneparser.tab.c 
 
-$(SRCDIR)/scene/scanner.o : $(SRCDIR)/scene/sceneparser.y $(SRCDIR)/scene/sceneparser.l $(SRCDIR)/scene/scanner.hpp
+$(SRCDIR)/scene/lex.yy.cc : $(SRCDIR)/scene/sceneparser.y $(SRCDIR)/scene/sceneparser.l $(SRCDIR)/scene/scanner.hpp
 	flex $(SRCDIR)/scene/sceneparser.l
 	mv lex.yy.cc $(SRCDIR)/scene/
+
+$(SRCDIR)/scene/scanner.o : $(SRCDIR)/scene/lex.yy.cc
 	$(CXX) $(CXXFLAGS) $(CFLAGS) -c -o $(SRCDIR)/scene/scanner.o $(SRCDIR)/scene/lex.yy.cc
 
 rt: $(OBJS)

@@ -115,11 +115,11 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
 
         // Find the intersection points for each primitive in the leaf.
         for(unsigned int i=0; i<numPrims; ++i){
-            ray rCopy(r);
-            if(primitives[node.prims[0]+i]->intersect(rCopy).hit){
+            if(primitives[node.prims[0]+i]->intersectB(r)){
                 return true;
             }
         }
+
         return false;
     }
 

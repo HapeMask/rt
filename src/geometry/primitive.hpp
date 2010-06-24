@@ -22,6 +22,7 @@ class primitive {
 		virtual ~primitive() {}
 
 		virtual const intersection intersect(ray& r) const = 0;
+		virtual const bool intersectB(const ray& r) const = 0;
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const = 0;
         virtual const point3 uniformSampleSurface() const {

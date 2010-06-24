@@ -8,7 +8,6 @@
 using namespace std;
 
 class point3;
-class point2;
 
 class vec2 {
 	public:
@@ -57,37 +56,90 @@ class vec2 {
 			return values[1];
 		}
 
-		const vec2 operator+(const vec2& v) const;
-		vec2& operator+=(const vec2& v);
+        inline const vec2 operator+(const vec2& v) const {
+            return vec2(*this) += v;
+        }
 
-		const vec2 operator-(const vec2& v) const;
-		vec2& operator-=(const vec2& v);
+        inline vec2& operator+=(const vec2& v){
+            values[0] += v(0);
+            values[1] += v(1);
+            return (*this);
+        }
 
-		const vec2 operator-() const;
+        inline const vec2 operator-(const vec2& v) const {
+            return vec2(*this) -= v;
+        }
 
-		const vec2 operator*(const float& x) const;
-		vec2& operator*=(const float& x);
-		const vec2 operator*(const vec2& v) const;
-		vec2& operator*=(const vec2& v);
+        inline vec2& operator-=(const vec2& v){
+            return (*this) += -v;
+        }
 
-		const vec2 operator/(const float& x) const;
-		vec2& operator/=(const float& x);
-		const vec2 operator/(const vec2& v) const;
-		vec2& operator/=(const vec2& v);
+        inline const vec2 operator-() const {
+            return vec2(-x(), -y());
+        }
 
-		const bool operator==(const vec2& v) const;
+        inline const vec2 operator*(const float& x) const {
+            return vec2(*this) *= x;
+        }
 
-		const float length() const;
-		const float length2() const;
+        inline vec2& operator*=(const float& x){
+            values[0] *= x;
+            values[1] *= x;
+            return (*this);
+        }
+
+        inline const vec2 operator*(const vec2& v) const {
+            return vec2(*this) *= v;
+        }
+
+        inline vec2& operator*=(const vec2& v){
+            values[0] *= v(0);
+            values[1] *= v(1);
+            return (*this);
+        }
+
+        inline const vec2 operator/(const float& x) const {
+            return vec2(*this) *= 1.f / x;
+        }
+
+        inline vec2& operator/=(const float& x){
+            return (*this) *= 1.f / x;
+        }
+
+        inline const vec2 operator/(const vec2& v) const {
+            return vec2(*this) /= v;
+        }
+
+        inline vec2& operator/=(const vec2& v){
+            values[0] /= v(0);
+            values[1] /= v(1);
+            return (*this);
+        }
+
+        inline const bool operator==(const vec2& v) const {
+            return (x() == v.x()) && (y() == v.y());
+        }
+
+        inline const float length() const {
+            return sqrtf(length2());
+        }
+
+        inline const float length2() const {
+            return values[0]*values[0] + values[1]*values[1];
+        }
 
 	private:
 		float values[2];
 };
 
 class vec3 {
+    friend class point3;
 	public:
 		vec3(){
-            memset(values, 0, 16);
+            values[0] = 0.f;
+            values[1] = 0.f;
+            values[2] = 0.f;
+            values[3] = 0.f;
 		}
 
 		vec3(const float& x, const float& y, const float& z){
@@ -98,31 +150,32 @@ class vec3 {
 		}
 
 		vec3(const vec3& x){
-			values[0] = x(0);
-			values[1] = x(1);
-			values[2] = x(2);
-            values[3] = 0;
+			//values[0] = x(0);
+			//values[1] = x(1);
+			//values[2] = x(2);
+            //values[3] = 0.f;
+            memcpy(values, x.values, 16);
 		}
 
 		vec3(const vec2& u, const float& x){
 			values[0] = u(0);
 			values[1] = u(1);
 			values[2] = x;
-            values[3] = 0;
+            values[3] = 0.f;
 		}
 
 		vec3(const float& x, const vec2& u){
 			values[0] = x;
 			values[1] = u(0);
 			values[2] = u(1);
-            values[3] = 0;
+            values[3] = 0.f;
 		}
 
 		vec3(const float& x){
 			values[0] = x;
 			values[1] = x;
 			values[2] = x;
-            values[3] = 0;
+            values[3] = 0.f;
 		}
 
         vec3(const __m128 v){
@@ -169,34 +222,110 @@ class vec3 {
 			return values[2];
 		}
 
-		inline const __m128 getSIMD() const{
-            return loadps(values);
+		inline const __m128& getSIMD() const{
+            //return loadps(values);
+            return vector;
 		}
 
-		const vec3 operator+(const vec3& v) const;
-		vec3& operator+=(const vec3& v);
-		const vec3 operator-(const vec3& v) const;
-		vec3& operator-=(const vec3& v);
+        inline const vec3 operator+(const vec3& v) const {
+            //return vec3(*this) += v;
+            return vec3(addps(vector, v.vector));
+        }
 
-		const vec3 operator-() const;
+        inline vec3& operator+=(const vec3& v){
+            //values[0] += v(0);
+            //values[1] += v(1);
+            //values[2] += v(2);
+            vector = addps(vector, v.vector);
+            return (*this);
+        }
 
-		const vec3 operator*(const float& x) const;
-		vec3& operator*=(const float& x);
-		const vec3 operator*(const vec3& v) const;
-		vec3& operator*=(const vec3& v);
+        inline const vec3 operator-(const vec3& v) const {
+            //return vec3(*this) -= v;
+            return vec3(subps(vector, v.vector));
+        }
 
-		const vec3 operator/(const float& x) const;
-		vec3& operator/=(const float& x);
-		const vec3 operator/(const vec3& v) const;
-		vec3& operator/=(const vec3& v);
+        inline vec3& operator-=(const vec3& v){
+            //return (*this) += -v;
+            vector = subps(vector, v.vector);
+            return (*this);
+        }
 
-		const bool operator==(const vec3& v) const;
+        inline const vec3 operator-() const {
+            //return vec3(-x(), -y(), -z());
+            return vec3(subps(_mm_setzero_ps(), vector));
+        }
 
-		const float length() const;
-		const float length2() const;
+        inline const vec3 operator*(const float& x) const {
+            //return vec3(*this) *= x;
+            return vec3(mulps(vector, _mm_load1_ps(&x)));
+        }
+
+        inline vec3& operator*=(const float& x){
+            //values[0] *= x;
+            //values[1] *= x;
+            //values[2] *= x;
+            vector = mulps(vector, _mm_load1_ps(&x));
+            return (*this);
+        }
+
+        inline const vec3 operator*(const vec3& v) const {
+            //return vec3(*this) *= v;
+            return vec3(mulps(vector, v.vector));
+        }
+
+        inline vec3& operator*=(const vec3& v){
+            //values[0] *= v(0);
+            //values[1] *= v(1);
+            //values[2] *= v(2);
+            vector = mulps(vector, v.vector);
+            return (*this);
+        }
+
+        inline const vec3 operator/(const float& x) const {
+            //return vec3(*this) *= 1.f / x;
+            return vec3(divps(vector, _mm_load1_ps(&x)));
+        }
+
+        inline vec3& operator/=(const float& x){
+            //return (*this) *= 1.f / x;
+            vector = divps(vector, _mm_load1_ps(&x));
+            return (*this);
+        }
+
+        inline const vec3 operator/(const vec3& v) const {
+            //return vec3(*this) /= v;
+            return vec3(divps(vector, v.vector));
+        }
+
+        inline vec3& operator/=(const vec3& v){
+            //values[0] /= v(0);
+            //values[1] /= v(1);
+            //values[2] /= v(2);
+            vector = divps(vector, v.vector);
+            return (*this);
+        }
+
+        inline const bool operator==(const vec3& v) const {
+            return
+                (x() == v.x()) &&
+                (y() == v.y()) &&
+                (z() == v.z());
+        }
+
+        inline const float length() const {
+            return sqrtf(length2());
+        }
+
+        inline const float length2() const {
+            return x()*x() + y()*y() + z()*z();
+        }
 
 	private:
-		float values[4] ALIGN_16;
+        union{
+            float values[4];
+            __m128 vector;
+        };
 };
 
 class vec4 {
@@ -279,34 +408,98 @@ class vec4 {
 			return values[3];
 		}
 
-        inline const __m128 getSIMD() const{
-            return loadps(values);
+        inline const __m128& getSIMD() const{
+            return vector;
         }
 
-		const vec4 operator+(const vec4& v) const;
-		vec4& operator+=(const vec4& v);
-		const vec4 operator-(const vec4& v) const;
-		vec4& operator-=(const vec4& v);
+        inline const vec4 operator+(const vec4& v) const {
+            return vec4(*this) += v;
+        }
 
-		const vec4 operator-() const;
+        inline vec4& operator+=(const vec4& v){
+            values[0] += v(0);
+            values[1] += v(1);
+            values[2] += v(2);
+            values[3] += v(3);
+            return (*this);
+        }
 
-		const vec4 operator*(const float& x) const;
-		vec4& operator*=(const float& x);
-		const vec4 operator*(const vec4& v) const;
-		vec4& operator*=(const vec4& v);
+        inline const vec4 operator-(const vec4& v) const {
+            return vec4(*this) -= v;
+        }
 
-		const vec4 operator/(const float& x) const;
-		vec4& operator/=(const float& x);
-		const vec4 operator/(const vec4& v) const;
-		vec4& operator/=(const vec4& v);
+        inline vec4& operator-=(const vec4& v){
+            return (*this) += -v;
+        }
 
-		const bool operator==(const vec4& v) const;
+        inline const vec4 operator-() const {
+            return vec4(-x(), -y(), -z(), -w());
+        }
 
-		const float length() const;
-		const float length2() const;
+        inline const vec4 operator*(const float& x) const {
+            return vec4(*this) *= x;
+        }
+
+        inline vec4& operator*=(const float& x){
+            values[0] *= x;
+            values[1] *= x;
+            values[2] *= x;
+            values[3] *= x;
+            return (*this);
+        }
+
+        inline const vec4 operator*(const vec4& v) const {
+            return vec4(*this) *= v;
+        }
+
+        inline vec4& operator*=(const vec4& v){
+            return (*this);
+        }
+
+        inline const vec4 operator/(const float& x) const {
+            return vec4(*this) *= 1.f / x;
+        }
+
+        inline vec4& operator/=(const float& x){
+            return (*this) *= 1.f / x;
+        }
+
+        inline const vec4 operator/(const vec4& v) const {
+            return vec4(*this) /= v;
+        }
+
+        inline vec4& operator/=(const vec4& v){
+            values[0] /= v(0);
+            values[1] /= v(1);
+            values[2] /= v(2);
+            values[3] /= v(3);
+            return (*this);
+        }
+
+        inline const bool operator==(const vec4& v) const {
+            return
+                (x() == v.x()) &&
+                (y() == v.y()) &&
+                (z() == v.z()) &&
+                (w() == v.w());
+        }
+
+        inline const float length() const {
+            return sqrtf(length2());
+        }
+
+        inline const float length2() const {
+            return values[0]*values[0] +
+                values[1]*values[1] +
+                values[2]*values[2] +
+                values[3]*values[3];
+        }
 
 	private:
-		float values[4] ALIGN_16;
+        union{
+            float values[4];
+            __m128 vector;
+        };
 };
 
 inline float dot(const vec2& u, const vec2& v){

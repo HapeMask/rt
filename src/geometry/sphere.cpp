@@ -70,6 +70,29 @@ const intersection sphere::intersect(ray& r) const {
 	return isect;
 }
 
+const bool sphere::intersectB(const ray& r) const {
+	const vec3 dir(r.origin - location);
+	const float A = dot(r.direction, r.direction);
+	const float B = dot(2.f*dir, r.direction);
+	const float C = dot(dir, dir) - (radius*radius);
+	const float s = (B*B - 4*A*C);
+
+	if(s < 0.f){
+		return false;
+	}
+
+    const float q = (B < 0) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
+	const float t0 = q / A;
+	const float t1 = C / q;
+
+	if( (t0 <= r.tMin || t0 >= r.tMax) &&
+		(t1 <= r.tMin || t1 >= r.tMax)){
+        return false;
+    }
+
+    return true;
+}
+
 const vec3 sphere::getNormal(const point3& p) const{
     return normalize(p - location);
 }

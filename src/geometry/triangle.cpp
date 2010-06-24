@@ -78,6 +78,35 @@ const intersection triangle::intersect(ray& r) const {
 	return isect;
 }
 
+const bool triangle::intersectB(const ray& r) const {
+    const vec3 s1 = cross(C, r.direction);
+    const float D = dot(s1, B);
+    if(abs(D) < EPSILON){
+        return false;
+    }
+
+    const float invD = 1.f / D;
+
+    const vec3 dir = r.origin - points[0];
+    const float beta = dot(dir, s1) * invD;
+    if(beta < 0.f || beta > 1.f){
+        return false;
+    }
+
+    const vec3 s2 = cross(B, dir);
+    const float gamma = dot(r.direction, s2) * invD;
+    if(gamma < 0.f || beta + gamma > 1.f){
+        return false;
+    }
+
+    const float t = dot(C, s2) * invD;
+	if(t < r.tMin || t >= r.tMax){
+		return false;
+	}
+
+	return true;
+}
+
 const point3 triangle::sampleSurface(const float& u0, const float& u1) const {
     point3 ret;
     sampleTriangle(ret, *this, u0, u1);
