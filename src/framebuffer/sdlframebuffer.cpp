@@ -1,15 +1,19 @@
-#include <iostream>
-#include <cmath>
-using namespace std;
-
 #include "mathlib/constants.hpp"
 #include "sdlframebuffer.hpp"
 #include "color/color.hpp"
 
 #include "utility.hpp"
 
-sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& bpp):
-	framebuffer(width, height, bpp), linearTonemapScale(1.f){
+#include <iostream>
+#include <cmath>
+#include <sys/time.h>
+
+#include "omp.h"
+
+using namespace std;
+
+sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
+	framebuffer(sc.getCamera().width(), sc.getCamera().height(), bpp), samplesTaken(0), scn(sc), linearTonemapScale(1.f){
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
 		cerr << "Error loading SDL video:" << endl;
@@ -18,26 +22,24 @@ sdlFramebuffer::sdlFramebuffer(const int& width, const int& height, const int& b
 		return;
 	}
 
-	screen = SDL_SetVideoMode(width, height, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	screen = SDL_SetVideoMode(width_, height_, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if(screen == NULL){
 		cerr << "Unable to obtain a screen context w/dimensions "
-			<< width << "x" << height << "@" << bpp << "bpp." << endl;
+			<< width_ << "x" << height_ << "@" << bpp << "bpp." << endl;
 		didInit = false;
 		return;
 	}
 
-    buffer = new rgbColor[width*height];
-    tempBuffer = new rgbColor[width*height];
+    buffer = new vector<rgbColor>[width_*height_];
 	didInit = true;
 }
 
 sdlFramebuffer::~sdlFramebuffer(){
     delete[] buffer;
-    delete[] tempBuffer;
 }
 
-void sdlFramebuffer::drawPixel(const int& x, const int& y, const color& c){
-    buffer[(width() * y) + x] = c;
+void sdlFramebuffer::addSample(const int& x, const int& y, const color& c){
+    buffer[(width() * y) + x].push_back(c);
 }
 
 void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
@@ -94,34 +96,51 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
 	}
 }
 
+void sdlFramebuffer::render(){
+    struct timeval start, now;
+    gettimeofday(&start, NULL);
+
+#ifdef RT_MULTITHREADED
+#pragma omp parallel for collapse(2)
+#endif
+    for(int y=0; y<height_; y++){
+        for(int x=0; x<width_; x++){
+            float xOffset, yOffset;
+
+#pragma omp critical
+            {
+                xOffset = radicalInverse(samplesTaken, 2) - 0.5f;
+                yOffset = radicalInverse(samplesTaken, 3) - 0.5f;
+                ++samplesTaken;
+            }
+
+            addSample(x, y, scn.L((float)x + xOffset, (float)y + yOffset));
+        }
+    }
+
+    gettimeofday(&now, NULL);
+    const float timeElapsed = now.tv_sec - start.tv_sec +
+        ((now.tv_usec - start.tv_usec) / 1e6);
+
+    cerr << "SPP: " << samplesTaken / (width_*height_) << ", ";
+    cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
+
+    tonemapAndFlip();
+}
+
 void sdlFramebuffer::tonemapAndFlip(){
-    memcpy((void*)tempBuffer, (void*)buffer, width()*height()*sizeof(rgbColor));
-    /*
-    float cMax = MIN_FLOAT;
-
+#ifdef RT_MULTITHREADED
+#pragma omp parallel for collapse(2)
+#endif
     for(int y=0; y<height(); y++){
         for(int x=0; x<width(); x++){
-            const unsigned int i = y * width() + x;
-            const rgbColor& c = tempBuffer[i];
+            rgbColor pixVal(0.f);
+            for(unsigned int i=0; i<buffer[y * width() + x].size(); ++i){
+                pixVal += buffer[y * width() + x][i];
+            }
 
-            const float cm = max(max(c.r, c.g), c.b);
-            if(cm > cMax) cMax = cm;
-        }
-    }
-    */
-
-    for(int y=0; y<height(); y++){
-        for(int x=0; x<width(); x++){
-			const rgbColor c = tempBuffer[y * width() + x];
-			//tempBuffer[y * width() + x] /= cMax;
-            //tempBuffer[y * width() + x] /= linearTonemapScale;
-			tempBuffer[y * width() + x] = clamp(c);
-        }
-    }
-
-    for(int y=0; y<height(); y++){
-        for(int x=0; x<width(); x++){
-            setPixel(x, y, tempBuffer[(y * width()) + x]);
+            pixVal /= (float)(buffer[y * width() + x].size());
+            setPixel(x, y, clamp(pixVal));
         }
     }
 

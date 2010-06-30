@@ -1,35 +1,36 @@
-#include "path.hpp"
+#include "tracer.hpp"
 #include "utility.hpp"
 
 #include "color/color.hpp"
 #include "light/light.hpp"
 #include "acceleration/intersection.hpp"
+#include "scene/scene.hpp"
 
 const rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
-    return _L<true>(r2);
+    return _L<false>(r2);
 }
 
-template <bool recursiveSpecular>
+template <const bool recursiveSpecular>
 const rgbColor pathTracer::_L(ray& r, const int depth) const {
-    rgbColor throughput = 1.f, L = 0.f;
+    rgbColor throughput(1.f), L(0.f);
     bool lastBounceWasSpecular = false;
 
     for(unsigned int pathLength = 0; ; ++pathLength){
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
         const ray rOrig(r);
-        const intersection isect = parent->intersect(r);
+        const intersection isect = parent.intersect(r);
         //return rgbColor(0, isect.debugInfo / 2400.f, 0);
 
         if(!isect.hit){
             if(pathLength == 0 || lastBounceWasSpecular){
-                for(unsigned int i=0; i<parent->numLights(); ++i){
-                    const float lightDist = (parent->getLight(i)->getPosition() - rOrig.origin).length();
+                for(unsigned int i=0; i<parent.numLights(); ++i){
+                    const float lightDist = (parent.getLight(i)->getPosition() - rOrig.origin).length();
                     ray lightRay(rOrig, EPSILON, lightDist);
 
-                    const intersection isectL = parent->getLight(i)->intersect(rOrig);
-                    if(isectL.hit && !parent->intersectB(lightRay)){
+                    const intersection isectL = parent.getLight(i)->intersect(rOrig);
+                    if(isectL.hit && !parent.intersectB(lightRay)){
                         L += throughput * isectL.li->L(rOrig);
                     }
                 }
@@ -102,12 +103,11 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         if(pathLength > 4){
-            const float continueProbability = 0.5f;
-            if(sampleUniform() > continueProbability){
+            if(sampleUniform() > pathContinueProbability){
                 break;
             }
 
-            throughput /= continueProbability;
+            throughput /= pathContinueProbability;
         }
 
         r.direction = wi;

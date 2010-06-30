@@ -48,7 +48,7 @@
 /* Unqualified %code blocks.  */
 
 /* Line 317 of lalr1.cc  */
-#line 39 "../src/scene/sceneparser.y"
+#line 41 "../src/scene/sceneparser.y"
 
     // Prototype for the yylex function
     static int yylex(Bison::Parser::semantic_type * yylval,
@@ -418,73 +418,97 @@ namespace Bison {
 	  case 2:
 
 /* Line 677 of lalr1.cc  */
-#line 99 "../src/scene/sceneparser.y"
-    { scn.setAccelerator(acceleratorPtr((yysemantic_stack_[(7) - (3)].aval))); }
+#line 104 "../src/scene/sceneparser.y"
+    {
+                scn.setAccelerator(acceleratorPtr((yysemantic_stack_[(9) - (3)].aval)));
+                scn.setTracer(rayTracerPtr((yysemantic_stack_[(9) - (5)].tval)));
+            }
     break;
 
   case 3:
 
 /* Line 677 of lalr1.cc  */
-#line 103 "../src/scene/sceneparser.y"
+#line 111 "../src/scene/sceneparser.y"
     { (yyval.aval) = new bvh(); }
     break;
 
   case 4:
 
 /* Line 677 of lalr1.cc  */
-#line 104 "../src/scene/sceneparser.y"
+#line 112 "../src/scene/sceneparser.y"
     { (yyval.aval) = new octree(); }
     break;
 
   case 5:
 
 /* Line 677 of lalr1.cc  */
-#line 105 "../src/scene/sceneparser.y"
+#line 113 "../src/scene/sceneparser.y"
     { (yyval.aval) = new defaultAccelerator(); }
     break;
 
-  case 12:
+  case 6:
 
 /* Line 677 of lalr1.cc  */
 #line 117 "../src/scene/sceneparser.y"
+    { (yyval.tval) = new whittedRayTracer(scn); }
+    break;
+
+  case 7:
+
+/* Line 677 of lalr1.cc  */
+#line 118 "../src/scene/sceneparser.y"
+    { (yyval.tval) = new pathTracer(scn); }
+    break;
+
+  case 8:
+
+/* Line 677 of lalr1.cc  */
+#line 119 "../src/scene/sceneparser.y"
+    { (yyval.tval) = new bdpt(scn); }
+    break;
+
+  case 15:
+
+/* Line 677 of lalr1.cc  */
+#line 131 "../src/scene/sceneparser.y"
     {
            cameraPtr cam(new camera((float)(yysemantic_stack_[(27) - (3)].fval), (float)(yysemantic_stack_[(27) - (5)].fval), 0.1f, 100.f, (yysemantic_stack_[(27) - (8)].fval), point3((yysemantic_stack_[(27) - (10)].fval), (yysemantic_stack_[(27) - (12)].fval), (yysemantic_stack_[(27) - (14)].fval)), point3((yysemantic_stack_[(27) - (16)].fval), (yysemantic_stack_[(27) - (18)].fval), (yysemantic_stack_[(27) - (20)].fval)), vec3((yysemantic_stack_[(27) - (22)].fval), (yysemantic_stack_[(27) - (24)].fval), (yysemantic_stack_[(27) - (26)].fval))));
            scn.setCamera(cam);
        }
     break;
 
-  case 13:
-
-/* Line 677 of lalr1.cc  */
-#line 124 "../src/scene/sceneparser.y"
-    { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
-    break;
-
-  case 14:
-
-/* Line 677 of lalr1.cc  */
-#line 125 "../src/scene/sceneparser.y"
-    { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
-    break;
-
-  case 15:
-
-/* Line 677 of lalr1.cc  */
-#line 130 "../src/scene/sceneparser.y"
-    { light* l = new pointLight(point3((yysemantic_stack_[(19) - (6)].fval), (yysemantic_stack_[(19) - (8)].fval), (yysemantic_stack_[(19) - (10)].fval)), (yysemantic_stack_[(19) - (18)].fval), rgbColor((yysemantic_stack_[(19) - (12)].fval), (yysemantic_stack_[(19) - (14)].fval), (yysemantic_stack_[(19) - (16)].fval))); (yyval.lval) = l; }
-    break;
-
   case 16:
 
 /* Line 677 of lalr1.cc  */
-#line 135 "../src/scene/sceneparser.y"
-    { light* l = new areaLight(point3((yysemantic_stack_[(31) - (6)].fval), (yysemantic_stack_[(31) - (8)].fval), (yysemantic_stack_[(31) - (10)].fval)), (yysemantic_stack_[(31) - (30)].fval), rgbColor((yysemantic_stack_[(31) - (24)].fval), (yysemantic_stack_[(31) - (26)].fval), (yysemantic_stack_[(31) - (28)].fval)), vec3((yysemantic_stack_[(31) - (12)].fval), (yysemantic_stack_[(31) - (14)].fval), (yysemantic_stack_[(31) - (16)].fval)), vec3((yysemantic_stack_[(31) - (18)].fval), (yysemantic_stack_[(31) - (20)].fval), (yysemantic_stack_[(31) - (22)].fval))); (yyval.lval) = l; }
+#line 138 "../src/scene/sceneparser.y"
+    { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
     break;
 
   case 17:
 
 /* Line 677 of lalr1.cc  */
 #line 139 "../src/scene/sceneparser.y"
+    { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
+    break;
+
+  case 18:
+
+/* Line 677 of lalr1.cc  */
+#line 144 "../src/scene/sceneparser.y"
+    { light* l = new pointLight(point3((yysemantic_stack_[(19) - (6)].fval), (yysemantic_stack_[(19) - (8)].fval), (yysemantic_stack_[(19) - (10)].fval)), (yysemantic_stack_[(19) - (18)].fval), rgbColor((yysemantic_stack_[(19) - (12)].fval), (yysemantic_stack_[(19) - (14)].fval), (yysemantic_stack_[(19) - (16)].fval))); (yyval.lval) = l; }
+    break;
+
+  case 19:
+
+/* Line 677 of lalr1.cc  */
+#line 149 "../src/scene/sceneparser.y"
+    { light* l = new areaLight(point3((yysemantic_stack_[(31) - (6)].fval), (yysemantic_stack_[(31) - (8)].fval), (yysemantic_stack_[(31) - (10)].fval)), (yysemantic_stack_[(31) - (30)].fval), rgbColor((yysemantic_stack_[(31) - (24)].fval), (yysemantic_stack_[(31) - (26)].fval), (yysemantic_stack_[(31) - (28)].fval)), vec3((yysemantic_stack_[(31) - (12)].fval), (yysemantic_stack_[(31) - (14)].fval), (yysemantic_stack_[(31) - (16)].fval)), vec3((yysemantic_stack_[(31) - (18)].fval), (yysemantic_stack_[(31) - (20)].fval), (yysemantic_stack_[(31) - (22)].fval))); (yyval.lval) = l; }
+    break;
+
+  case 20:
+
+/* Line 677 of lalr1.cc  */
+#line 153 "../src/scene/sceneparser.y"
     {
            shapePtr shp(new shape());
            arraylist<primitive*>::iterator it;
@@ -496,164 +520,164 @@ namespace Bison {
        }
     break;
 
-  case 18:
-
-/* Line 677 of lalr1.cc  */
-#line 148 "../src/scene/sceneparser.y"
-    { (yysemantic_stack_[(5) - (3)].shval)->setMaterial((yysemantic_stack_[(5) - (4)].mval)); scn.addShape((yysemantic_stack_[(5) - (3)].shval)); }
-    break;
-
-  case 19:
-
-/* Line 677 of lalr1.cc  */
-#line 153 "../src/scene/sceneparser.y"
-    { shape* s = new triangleMesh(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
-    break;
-
-  case 20:
-
-/* Line 677 of lalr1.cc  */
-#line 156 "../src/scene/sceneparser.y"
-    { shape* s = new shape(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
-    break;
-
   case 21:
 
 /* Line 677 of lalr1.cc  */
-#line 160 "../src/scene/sceneparser.y"
-    { (yysemantic_stack_[(2) - (2)].listval)->add((yysemantic_stack_[(2) - (1)].pval)); (yyval.listval) = (yysemantic_stack_[(2) - (2)].listval); }
+#line 162 "../src/scene/sceneparser.y"
+    { (yysemantic_stack_[(5) - (3)].shval)->setMaterial((yysemantic_stack_[(5) - (4)].mval)); scn.addShape((yysemantic_stack_[(5) - (3)].shval)); }
     break;
 
   case 22:
 
 /* Line 677 of lalr1.cc  */
-#line 161 "../src/scene/sceneparser.y"
-    { arraylist<primitive*>* l = new arraylist<primitive*>(); l->add((yysemantic_stack_[(1) - (1)].pval)); (yyval.listval) = l; }
+#line 167 "../src/scene/sceneparser.y"
+    { shape* s = new triangleMesh(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
     break;
 
   case 23:
 
 /* Line 677 of lalr1.cc  */
-#line 165 "../src/scene/sceneparser.y"
-    { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
+#line 170 "../src/scene/sceneparser.y"
+    { shape* s = new shape(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
     break;
 
   case 24:
 
 /* Line 677 of lalr1.cc  */
-#line 166 "../src/scene/sceneparser.y"
-    { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
+#line 174 "../src/scene/sceneparser.y"
+    { (yysemantic_stack_[(2) - (2)].listval)->add((yysemantic_stack_[(2) - (1)].pval)); (yyval.listval) = (yysemantic_stack_[(2) - (2)].listval); }
     break;
 
   case 25:
 
 /* Line 677 of lalr1.cc  */
-#line 171 "../src/scene/sceneparser.y"
-    { (yyval.pval) = new triangle(point3((yysemantic_stack_[(20) - (3)].fval), (yysemantic_stack_[(20) - (5)].fval), (yysemantic_stack_[(20) - (7)].fval)), point3((yysemantic_stack_[(20) - (9)].fval), (yysemantic_stack_[(20) - (11)].fval), (yysemantic_stack_[(20) - (13)].fval)), point3((yysemantic_stack_[(20) - (15)].fval), (yysemantic_stack_[(20) - (17)].fval), (yysemantic_stack_[(20) - (19)].fval))); }
+#line 175 "../src/scene/sceneparser.y"
+    { arraylist<primitive*>* l = new arraylist<primitive*>(); l->add((yysemantic_stack_[(1) - (1)].pval)); (yyval.listval) = l; }
     break;
 
   case 26:
 
 /* Line 677 of lalr1.cc  */
-#line 176 "../src/scene/sceneparser.y"
-    { (yyval.pval) = new sphere(point3((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
+#line 179 "../src/scene/sceneparser.y"
+    { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
     break;
 
   case 27:
 
 /* Line 677 of lalr1.cc  */
 #line 180 "../src/scene/sceneparser.y"
-    { bsdfPtr p((yysemantic_stack_[(4) - (3)].bval)); material* mat = new material(p); (yyval.mval) = mat; }
+    { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
     break;
 
   case 28:
 
 /* Line 677 of lalr1.cc  */
-#line 182 "../src/scene/sceneparser.y"
-    { (yyval.mval) = new material(rgbColor((yysemantic_stack_[(13) - (6)].fval), (yysemantic_stack_[(13) - (8)].fval), (yysemantic_stack_[(13) - (10)].fval)), (yysemantic_stack_[(13) - (12)].fval)); }
+#line 185 "../src/scene/sceneparser.y"
+    { (yyval.pval) = new triangle(point3((yysemantic_stack_[(20) - (3)].fval), (yysemantic_stack_[(20) - (5)].fval), (yysemantic_stack_[(20) - (7)].fval)), point3((yysemantic_stack_[(20) - (9)].fval), (yysemantic_stack_[(20) - (11)].fval), (yysemantic_stack_[(20) - (13)].fval)), point3((yysemantic_stack_[(20) - (15)].fval), (yysemantic_stack_[(20) - (17)].fval), (yysemantic_stack_[(20) - (19)].fval))); }
     break;
 
   case 29:
 
 /* Line 677 of lalr1.cc  */
-#line 186 "../src/scene/sceneparser.y"
-    { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
+#line 190 "../src/scene/sceneparser.y"
+    { (yyval.pval) = new sphere(point3((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 30:
 
 /* Line 677 of lalr1.cc  */
-#line 187 "../src/scene/sceneparser.y"
-    { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
+#line 194 "../src/scene/sceneparser.y"
+    { bsdfPtr p((yysemantic_stack_[(4) - (3)].bval)); material* mat = new material(p); (yyval.mval) = mat; }
     break;
 
   case 31:
 
 /* Line 677 of lalr1.cc  */
-#line 188 "../src/scene/sceneparser.y"
-    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+#line 196 "../src/scene/sceneparser.y"
+    { (yyval.mval) = new material(rgbColor((yysemantic_stack_[(13) - (6)].fval), (yysemantic_stack_[(13) - (8)].fval), (yysemantic_stack_[(13) - (10)].fval)), (yysemantic_stack_[(13) - (12)].fval)); }
     break;
 
   case 32:
 
 /* Line 677 of lalr1.cc  */
-#line 189 "../src/scene/sceneparser.y"
-    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+#line 200 "../src/scene/sceneparser.y"
+    { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
     break;
 
   case 33:
 
 /* Line 677 of lalr1.cc  */
-#line 190 "../src/scene/sceneparser.y"
-    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+#line 201 "../src/scene/sceneparser.y"
+    { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
     break;
 
   case 34:
 
 /* Line 677 of lalr1.cc  */
-#line 195 "../src/scene/sceneparser.y"
-    { (yyval.bxval) = new lambertianBrdf(rgbColor((yysemantic_stack_[(8) - (3)].fval), (yysemantic_stack_[(8) - (5)].fval), (yysemantic_stack_[(8) - (7)].fval))); }
+#line 202 "../src/scene/sceneparser.y"
+    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 35:
 
 /* Line 677 of lalr1.cc  */
-#line 200 "../src/scene/sceneparser.y"
-    { (yyval.bxval) = new phongBrdf(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
+#line 203 "../src/scene/sceneparser.y"
+    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 36:
 
 /* Line 677 of lalr1.cc  */
-#line 205 "../src/scene/sceneparser.y"
-    { (yyval.mbxval) = new blinnMicrofacet(rgbColor((yysemantic_stack_[(14) - (3)].fval), (yysemantic_stack_[(14) - (5)].fval), (yysemantic_stack_[(14) - (7)].fval)), (yysemantic_stack_[(14) - (9)].fval), (yysemantic_stack_[(14) - (11)].fval), (yysemantic_stack_[(14) - (13)].fval)); }
+#line 204 "../src/scene/sceneparser.y"
+    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 37:
 
 /* Line 677 of lalr1.cc  */
-#line 210 "../src/scene/sceneparser.y"
-    { (yyval.mbxval) = new asMicrofacet(rgbColor((yysemantic_stack_[(16) - (3)].fval), (yysemantic_stack_[(16) - (5)].fval), (yysemantic_stack_[(16) - (7)].fval)), (yysemantic_stack_[(16) - (9)].fval), (yysemantic_stack_[(16) - (11)].fval), (yysemantic_stack_[(16) - (13)].fval), (yysemantic_stack_[(16) - (15)].fval)); }
+#line 209 "../src/scene/sceneparser.y"
+    { (yyval.bxval) = new lambertianBrdf(rgbColor((yysemantic_stack_[(8) - (3)].fval), (yysemantic_stack_[(8) - (5)].fval), (yysemantic_stack_[(8) - (7)].fval))); }
     break;
 
   case 38:
 
 /* Line 677 of lalr1.cc  */
-#line 213 "../src/scene/sceneparser.y"
-    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+#line 214 "../src/scene/sceneparser.y"
+    { (yyval.bxval) = new phongBrdf(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 39:
 
 /* Line 677 of lalr1.cc  */
-#line 214 "../src/scene/sceneparser.y"
-    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+#line 219 "../src/scene/sceneparser.y"
+    { (yyval.mbxval) = new blinnMicrofacet(rgbColor((yysemantic_stack_[(14) - (3)].fval), (yysemantic_stack_[(14) - (5)].fval), (yysemantic_stack_[(14) - (7)].fval)), (yysemantic_stack_[(14) - (9)].fval), (yysemantic_stack_[(14) - (11)].fval), (yysemantic_stack_[(14) - (13)].fval)); }
     break;
 
   case 40:
 
 /* Line 677 of lalr1.cc  */
-#line 219 "../src/scene/sceneparser.y"
+#line 224 "../src/scene/sceneparser.y"
+    { (yyval.mbxval) = new asMicrofacet(rgbColor((yysemantic_stack_[(16) - (3)].fval), (yysemantic_stack_[(16) - (5)].fval), (yysemantic_stack_[(16) - (7)].fval)), (yysemantic_stack_[(16) - (9)].fval), (yysemantic_stack_[(16) - (11)].fval), (yysemantic_stack_[(16) - (13)].fval), (yysemantic_stack_[(16) - (15)].fval)); }
+    break;
+
+  case 41:
+
+/* Line 677 of lalr1.cc  */
+#line 227 "../src/scene/sceneparser.y"
+    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+    break;
+
+  case 42:
+
+/* Line 677 of lalr1.cc  */
+#line 228 "../src/scene/sceneparser.y"
+    { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
+    break;
+
+  case 43:
+
+/* Line 677 of lalr1.cc  */
+#line 233 "../src/scene/sceneparser.y"
     {
                      bsdf* p = new bsdf();
                      p->addBxdf(new specularBrdf((yysemantic_stack_[(13) - (12)].fval), 0.f, DIELECTRIC, rgbColor(1.f,1.f,1.f)));
@@ -662,10 +686,10 @@ namespace Bison {
                  }
     break;
 
-  case 41:
+  case 44:
 
 /* Line 677 of lalr1.cc  */
-#line 229 "../src/scene/sceneparser.y"
+#line 243 "../src/scene/sceneparser.y"
     {
                        bsdf* p = new bsdf();
                        p->addBxdf(new specularBrdf((yysemantic_stack_[(15) - (12)].fval), (yysemantic_stack_[(15) - (14)].fval), CONDUCTOR, rgbColor((yysemantic_stack_[(15) - (6)].fval), (yysemantic_stack_[(15) - (8)].fval), (yysemantic_stack_[(15) - (10)].fval))));
@@ -673,45 +697,45 @@ namespace Bison {
                    }
     break;
 
-  case 42:
-
-/* Line 677 of lalr1.cc  */
-#line 237 "../src/scene/sceneparser.y"
-    { (yyval.mbxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
-    break;
-
-  case 43:
-
-/* Line 677 of lalr1.cc  */
-#line 238 "../src/scene/sceneparser.y"
-    { (yyval.mbxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
-    break;
-
-  case 44:
-
-/* Line 677 of lalr1.cc  */
-#line 242 "../src/scene/sceneparser.y"
-    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
-    break;
-
   case 45:
 
 /* Line 677 of lalr1.cc  */
-#line 243 "../src/scene/sceneparser.y"
-    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
+#line 251 "../src/scene/sceneparser.y"
+    { (yyval.mbxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
     break;
 
   case 46:
 
 /* Line 677 of lalr1.cc  */
-#line 244 "../src/scene/sceneparser.y"
-    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
+#line 252 "../src/scene/sceneparser.y"
+    { (yyval.mbxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
     break;
 
   case 47:
 
 /* Line 677 of lalr1.cc  */
-#line 249 "../src/scene/sceneparser.y"
+#line 256 "../src/scene/sceneparser.y"
+    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
+    break;
+
+  case 48:
+
+/* Line 677 of lalr1.cc  */
+#line 257 "../src/scene/sceneparser.y"
+    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
+    break;
+
+  case 49:
+
+/* Line 677 of lalr1.cc  */
+#line 258 "../src/scene/sceneparser.y"
+    { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
+    break;
+
+  case 50:
+
+/* Line 677 of lalr1.cc  */
+#line 263 "../src/scene/sceneparser.y"
     {
               bsdf* p = new bsdf();
               p->addBxdf(new substrate(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].mbxval)->rs(), (yysemantic_stack_[(10) - (9)].mbxval)));
@@ -719,10 +743,10 @@ namespace Bison {
           }
     break;
 
-  case 48:
+  case 51:
 
 /* Line 677 of lalr1.cc  */
-#line 258 "../src/scene/sceneparser.y"
+#line 272 "../src/scene/sceneparser.y"
     {
          bsdf* p = new bsdf();
          p->addBxdf((yysemantic_stack_[(6) - (3)].bxval));
@@ -734,7 +758,7 @@ namespace Bison {
 
 
 /* Line 677 of lalr1.cc  */
-#line 738 "sceneparser.tab.c"
+#line 762 "sceneparser.tab.c"
 	default:
           break;
       }
@@ -939,37 +963,38 @@ namespace Bison {
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const short int Parser::yypact_ninf_ = -132;
+  const short int Parser::yypact_ninf_ = -135;
   const short int
   Parser::yypact_[] =
   {
-         0,    -7,    16,     8,  -132,  -132,  -132,  -132,     4,     5,
-      17,     6,     9,    10,     3,    17,    17,  -132,  -132,    17,
-      18,    13,     1,  -132,  -132,  -132,  -132,    12,    14,    15,
-      30,    30,    23,  -132,  -132,    19,    20,    21,    22,    26,
-       7,   -29,    24,    25,  -132,    27,    28,    29,    31,    32,
-      36,    37,    35,   -15,  -132,  -132,    38,    33,    34,    42,
-      43,    39,    40,    41,    44,    45,    46,    47,    48,    49,
-    -132,  -132,  -132,  -132,  -132,  -132,  -132,    51,    50,    53,
-      54,    55,    52,    61,    56,    64,    65,    11,    66,    -6,
-    -132,    67,    68,    69,    70,    71,    72,    73,    74,    76,
-      77,    75,    81,    79,    80,    82,  -132,  -132,  -132,  -132,
-    -132,    84,    85,    86,    87,    88,    89,  -132,  -132,    90,
-      97,    98,    92,    93,   101,   102,   103,    -6,   104,   105,
-     106,   107,   108,   109,   110,   111,   112,   113,   114,   115,
-     116,    78,   117,   118,   119,   120,   121,   122,   127,   130,
-     125,   126,   133,   134,   135,  -132,   136,   137,   138,   139,
-    -132,   140,   141,   142,   143,   144,   145,   146,   147,   148,
-     149,   150,   151,   152,   159,  -132,   154,   155,    -3,   162,
-     163,   164,   165,   166,   167,   168,   161,   170,   171,   169,
-     172,   173,   174,   175,   176,   177,   178,  -132,   179,   181,
-    -132,   184,   188,   189,   190,   191,   192,  -132,   193,   194,
-     195,   196,   197,   198,   199,   200,   187,   201,   208,   209,
-     210,   211,   212,   213,  -132,   214,   215,   216,   217,   218,
-     207,   219,   220,   226,   227,   229,   230,  -132,   231,  -132,
-     224,   228,   232,   233,   225,  -132,   235,   236,   237,  -132,
-     234,   238,   239,  -132,   240,   241,   242,   243,   246,   247,
-     244,   245,  -132,   250,   248,   253,   249,  -132
+         0,   -13,    16,     8,  -135,  -135,  -135,  -135,     1,     9,
+    -135,  -135,  -135,    -8,     5,    21,     6,     3,    11,    12,
+      21,    21,  -135,  -135,    21,    22,    15,     2,  -135,  -135,
+    -135,  -135,     7,    13,    17,    28,    28,    27,  -135,  -135,
+      18,    19,    20,    25,    26,    10,   -32,    23,    24,  -135,
+      31,    29,    30,    32,    35,    36,    37,    34,   -18,  -135,
+    -135,    38,    33,    39,    43,    44,    40,    41,    42,    45,
+      46,    47,    48,    49,    50,  -135,  -135,  -135,  -135,  -135,
+    -135,  -135,    52,    51,    54,    57,    58,    61,    62,    59,
+      64,    65,    14,    67,    -9,  -135,    68,    69,    70,    71,
+      72,    66,    73,    75,    74,    76,    78,    79,    77,    80,
+      81,  -135,  -135,  -135,  -135,  -135,    82,    83,    86,    87,
+      88,    89,  -135,  -135,    90,    84,    94,    91,    92,    95,
+      96,    97,    -9,   100,   101,   102,   103,   104,   105,   106,
+     107,   108,   111,   109,   110,   112,    98,   113,   114,   115,
+     116,    99,   117,   121,   122,   120,   123,   124,   125,   127,
+    -135,   128,   129,   130,   131,  -135,   132,   133,   126,   135,
+     137,   136,   138,   139,   140,   141,   142,   143,   144,   148,
+    -135,   146,   147,    -6,   151,   152,   153,   154,   155,   156,
+     157,   150,   159,   160,   158,   161,   162,   164,   165,   166,
+     167,   163,  -135,   169,   170,  -135,   174,   175,   176,   177,
+     178,   179,  -135,   180,   181,   182,   183,   184,   185,   186,
+     187,   188,   189,   191,   193,   194,   195,   197,   198,  -135,
+     199,   200,   201,   202,   203,   192,   204,   205,   208,   209,
+     210,   211,  -135,   212,  -135,   206,   213,   214,   215,   207,
+    -135,   219,   220,   221,  -135,   216,   222,   223,  -135,   227,
+     228,   226,   229,   230,   231,   225,   232,  -135,   234,   233,
+     237,   235,  -135
   };
 
   /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -979,50 +1004,51 @@ namespace Bison {
   Parser::yydefact_[] =
   {
          0,     0,     0,     0,     1,     3,     4,     5,     0,     0,
-       0,     0,     0,     0,     0,    10,    11,    13,    14,     9,
-       0,     0,     0,     2,     6,     7,     8,     0,     0,     0,
-       0,     0,    22,    23,    24,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    21,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    18,    17,     0,     0,     0,     0,
+       6,     7,     8,     0,     0,     0,     0,     0,     0,     0,
+      13,    14,    16,    17,    12,     0,     0,     0,     2,     9,
+      10,    11,     0,     0,     0,     0,     0,    25,    26,    27,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    24,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    21,
+      20,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    32,    33,    34,    41,    42,
+      35,    36,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    30,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      29,    30,    31,    38,    39,    32,    33,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      27,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    45,    46,    42,    43,
-      44,     0,     0,     0,     0,     0,     0,    19,    20,     0,
+       0,    48,    49,    45,    46,    47,     0,     0,     0,     0,
+       0,     0,    22,    23,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    48,     0,     0,     0,     0,
-      26,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    34,     0,     0,     0,     0,
+      51,     0,     0,     0,     0,    29,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    35,     0,     0,
-      47,     0,     0,     0,     0,     0,     0,    28,     0,     0,
+      37,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    40,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    15,     0,    41,
-       0,     0,     0,     0,     0,    36,     0,     0,     0,    25,
-       0,     0,     0,    37,     0,     0,     0,     0,     0,     0,
-       0,     0,    12,     0,     0,     0,     0,    16
+       0,     0,    38,     0,     0,    50,     0,     0,     0,     0,
+       0,     0,    31,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    43,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    18,     0,    44,     0,     0,     0,     0,     0,
+      39,     0,     0,     0,    28,     0,     0,     0,    40,     0,
+       0,     0,     0,     0,     0,     0,     0,    15,     0,     0,
+       0,     0,    19
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const short int
   Parser::yypgoto_[] =
   {
-      -132,  -132,  -132,    -2,  -132,  -132,  -132,  -132,  -132,  -132,
-     252,  -132,  -132,  -132,   254,  -132,    -9,    -8,  -132,  -132,
-    -132,  -132,  -132,  -131,   -78,  -132,  -132
+      -135,  -135,  -135,  -135,    -7,  -135,  -135,  -135,  -135,  -135,
+    -135,   196,  -135,  -135,  -135,   134,  -135,   -10,    -4,  -135,
+    -135,  -135,  -135,  -135,  -134,   -72,  -135,  -135
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const signed char
   Parser::yydefgoto_[] =
   {
-        -1,     2,     8,    14,    15,    16,    17,    18,    19,    30,
-      31,    32,    33,    34,    42,    69,   106,   107,   108,   109,
-      72,    73,    74,   110,   111,    75,    76
+        -1,     2,     8,    13,    19,    20,    21,    22,    23,    24,
+      35,    36,    37,    38,    39,    47,    74,   111,   112,   113,
+     114,    77,    78,    79,   115,   116,    80,    81
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1032,70 +1058,68 @@ namespace Bison {
   const unsigned short int
   Parser::yytable_[] =
   {
-        64,    65,    52,     1,    66,    67,    68,    53,   104,    64,
-      65,   104,   105,    24,    25,   105,     4,    26,     5,     6,
-       7,    11,    12,    13,     3,    27,    28,    29,    36,    37,
-      27,    28,    50,    51,   101,   102,     9,    23,    10,    20,
-      21,    22,    35,    41,    70,    71,    40,   189,    38,   141,
-      39,    48,    46,    47,    45,    49,    56,    63,    54,    55,
-       0,     0,    78,    79,    57,    58,    59,    60,    61,    62,
-      77,    80,    81,    84,     0,    82,    83,    87,     0,     0,
-      85,    86,    96,    88,    89,    92,    90,    91,    93,    94,
-      95,    97,    98,    99,   100,   103,   112,   113,   114,   115,
-     116,     0,     0,   119,     0,     0,     0,   122,     0,   117,
-     118,   120,   121,   123,   124,   155,   125,     0,   126,   127,
-     128,   129,   130,   131,   132,   133,   134,   135,   136,   137,
-     138,   139,   140,   142,   143,   144,   145,   146,   147,     0,
-       0,   150,   151,     0,     0,   148,   149,     0,     0,   152,
-     153,   154,   156,   157,   158,   159,   162,   161,   160,   163,
-     164,   165,   166,   167,   168,   169,   170,   171,   172,   173,
-       0,     0,   176,   177,     0,     0,   174,     0,     0,   175,
-     178,   179,   180,   181,   182,   183,   184,   185,   186,   187,
-     188,   190,   191,   192,   193,   194,   195,   196,   197,   198,
-     199,     0,     0,     0,     0,     0,   200,   201,   202,   203,
-     204,   205,   206,   210,   208,   207,   209,   211,   212,   213,
-     214,   215,   216,   217,   224,     0,     0,     0,     0,     0,
-     218,   219,   220,   221,   222,   223,   225,   226,   227,   228,
-     229,   230,   231,   232,   237,     0,     0,     0,     0,     0,
-     233,   234,   235,   236,   238,   240,   241,   239,   242,   243,
-     244,   245,   249,   246,   250,   251,   252,   247,   248,   256,
-     257,   253,     0,   254,   255,   260,   261,   258,   259,   264,
-     263,   262,   266,   265,    44,    43,   267
+        69,    70,    57,     1,    71,    72,    73,    58,   109,    69,
+      70,   109,   110,    29,    30,   110,     4,    31,     5,     6,
+       7,     3,    10,    11,    12,    16,    17,    18,    14,    32,
+      33,    34,    41,    42,    32,    33,     9,    26,    55,    56,
+     106,   107,    15,    25,    46,    27,    43,    40,    75,   194,
+      28,    45,    44,    50,    76,    51,    52,    53,    54,    68,
+     146,    59,    60,    61,     0,    83,     0,    64,    62,    63,
+      65,    84,    66,    67,    82,    85,    86,     0,    89,    87,
+      88,    92,     0,     0,    90,    91,    97,    93,    94,    98,
+      95,    96,    99,   100,   101,   102,   104,   105,   103,   108,
+     117,   118,   119,   120,   121,     0,   122,   124,     0,   125,
+       0,   126,   129,   123,   127,   128,   139,   132,   133,   130,
+     131,   134,   135,   136,   137,   138,   140,   143,   144,   145,
+     141,   142,   147,   148,   149,   150,   151,   152,   160,   165,
+     155,   153,   154,   156,   157,   158,     0,   159,   161,   162,
+     163,   164,   166,   167,   168,   169,   171,   172,   170,   173,
+     174,   175,   176,   177,   178,     0,   180,   181,   179,   182,
+      48,   183,     0,   184,   185,   186,   187,   188,   189,   190,
+     191,   192,   193,   195,   196,   197,   198,   199,   200,   201,
+     202,   203,   204,     0,     0,     0,   206,   207,   205,   208,
+     209,   210,   211,   212,   213,   214,   215,   216,   217,   218,
+     219,   220,   221,   222,     0,     0,     0,   223,   224,   225,
+     226,   227,   228,   231,   230,   232,   233,   234,   229,   235,
+     236,   237,   242,    49,     0,   238,   239,   240,   241,   243,
+     245,   246,   247,   248,   249,   244,   250,   254,   251,   252,
+     253,   255,   256,   257,     0,     0,   258,   259,   260,   261,
+     262,   263,   265,   266,   264,   267,   269,   268,   270,   271,
+       0,     0,     0,     0,     0,   272
   };
 
   /* YYCHECK.  */
   const short int
   Parser::yycheck_[] =
   {
-        15,    16,    31,     3,    19,    20,    21,    36,    14,    15,
-      16,    14,    18,    15,    16,    18,     0,    19,    10,    11,
-      12,     4,     5,     6,    31,     7,     8,     9,    27,    28,
-       7,     8,    25,    26,    23,    24,    32,    34,    33,    33,
-      31,    31,    29,    13,    53,    53,    31,   178,    36,   127,
-      36,    29,    32,    32,    35,    29,    29,    22,    34,    34,
-      -1,    -1,    29,    29,    36,    36,    35,    35,    32,    32,
-      32,    29,    29,    32,    -1,    36,    36,    31,    -1,    -1,
-      36,    36,    30,    36,    36,    35,    37,    36,    35,    35,
-      35,    30,    36,    29,    29,    29,    29,    29,    29,    29,
-      29,    -1,    -1,    29,    -1,    -1,    -1,    32,    -1,    37,
-      37,    35,    35,    32,    35,    37,    36,    -1,    36,    35,
-      35,    35,    35,    35,    35,    35,    29,    29,    36,    36,
-      29,    29,    29,    29,    29,    29,    29,    29,    29,    -1,
-      -1,    29,    29,    -1,    -1,    35,    35,    -1,    -1,    35,
-      35,    35,    35,    35,    35,    35,    29,    35,    37,    29,
-      35,    35,    29,    29,    29,    29,    29,    29,    29,    29,
-      -1,    -1,    29,    29,    -1,    -1,    35,    -1,    -1,    37,
-      35,    35,    35,    35,    35,    35,    35,    35,    29,    35,
-      35,    29,    29,    29,    29,    29,    29,    29,    37,    29,
-      29,    -1,    -1,    -1,    -1,    -1,    37,    35,    35,    35,
-      35,    35,    35,    29,    35,    37,    35,    29,    29,    29,
-      29,    29,    29,    29,    37,    -1,    -1,    -1,    -1,    -1,
-      35,    35,    35,    35,    35,    35,    35,    29,    29,    29,
-      29,    29,    29,    29,    37,    -1,    -1,    -1,    -1,    -1,
-      35,    35,    35,    35,    35,    29,    29,    37,    29,    29,
-      29,    37,    37,    35,    29,    29,    29,    35,    35,    29,
-      29,    37,    -1,    35,    35,    29,    29,    35,    35,    29,
-      35,    37,    29,    35,    32,    31,    37
+        18,    19,    34,     3,    22,    23,    24,    39,    17,    18,
+      19,    17,    21,    20,    21,    21,     0,    24,    10,    11,
+      12,    34,    13,    14,    15,     4,     5,     6,    36,     7,
+       8,     9,    30,    31,     7,     8,    35,    34,    28,    29,
+      26,    27,    37,    37,    16,    34,    39,    32,    58,   183,
+      38,    34,    39,    35,    58,    36,    36,    32,    32,    25,
+     132,    38,    38,    32,    -1,    32,    -1,    35,    39,    39,
+      35,    32,    36,    36,    36,    32,    32,    -1,    36,    39,
+      39,    34,    -1,    -1,    39,    39,    35,    39,    39,    35,
+      40,    39,    35,    35,    33,    33,    32,    32,    39,    32,
+      32,    32,    32,    32,    32,    -1,    40,    32,    -1,    35,
+      -1,    35,    35,    40,    36,    36,    32,    35,    35,    39,
+      39,    35,    35,    35,    35,    35,    32,    32,    32,    32,
+      39,    39,    32,    32,    32,    32,    32,    32,    40,    40,
+      32,    35,    35,    32,    35,    35,    -1,    35,    35,    35,
+      35,    35,    35,    32,    32,    35,    32,    32,    35,    32,
+      32,    32,    32,    32,    32,    -1,    40,    32,    35,    32,
+      36,    35,    -1,    35,    35,    35,    35,    35,    35,    35,
+      32,    35,    35,    32,    32,    32,    32,    32,    32,    32,
+      40,    32,    32,    -1,    -1,    -1,    35,    35,    40,    35,
+      35,    35,    35,    40,    35,    35,    32,    32,    32,    32,
+      32,    32,    32,    32,    -1,    -1,    -1,    35,    35,    35,
+      35,    35,    35,    32,    35,    32,    32,    32,    40,    32,
+      32,    32,    40,    37,    -1,    35,    35,    35,    35,    35,
+      32,    32,    32,    32,    32,    40,    40,    40,    35,    35,
+      35,    32,    32,    32,    -1,    -1,    40,    35,    35,    32,
+      32,    35,    32,    32,    35,    40,    32,    35,    35,    32,
+      -1,    -1,    -1,    -1,    -1,    40
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1103,33 +1127,34 @@ namespace Bison {
   const unsigned char
   Parser::yystos_[] =
   {
-         0,     3,    39,    31,     0,    10,    11,    12,    40,    32,
-      33,     4,     5,     6,    41,    42,    43,    44,    45,    46,
-      33,    31,    31,    34,    41,    41,    41,     7,     8,     9,
-      47,    48,    49,    50,    51,    29,    27,    28,    36,    36,
-      31,    13,    52,    52,    48,    35,    32,    32,    29,    29,
-      25,    26,    31,    36,    34,    34,    29,    36,    36,    35,
-      35,    32,    32,    22,    15,    16,    19,    20,    21,    53,
-      54,    55,    58,    59,    60,    63,    64,    32,    29,    29,
-      29,    29,    36,    36,    32,    36,    36,    31,    36,    36,
-      37,    36,    35,    35,    35,    35,    30,    30,    36,    29,
-      29,    23,    24,    29,    14,    18,    54,    55,    56,    57,
-      61,    62,    29,    29,    29,    29,    29,    37,    37,    29,
-      35,    35,    32,    32,    35,    36,    36,    35,    35,    35,
-      35,    35,    35,    35,    29,    29,    36,    36,    29,    29,
-      29,    62,    29,    29,    29,    29,    29,    29,    35,    35,
-      29,    29,    35,    35,    35,    37,    35,    35,    35,    35,
-      37,    35,    29,    29,    35,    35,    29,    29,    29,    29,
-      29,    29,    29,    29,    35,    37,    29,    29,    35,    35,
-      35,    35,    35,    35,    35,    35,    29,    35,    35,    61,
-      29,    29,    29,    29,    29,    29,    29,    37,    29,    29,
-      37,    35,    35,    35,    35,    35,    35,    37,    35,    35,
-      29,    29,    29,    29,    29,    29,    29,    29,    35,    35,
-      35,    35,    35,    35,    37,    35,    29,    29,    29,    29,
-      29,    29,    29,    35,    35,    35,    35,    37,    35,    37,
-      29,    29,    29,    29,    29,    37,    35,    35,    35,    37,
-      29,    29,    29,    37,    35,    35,    29,    29,    35,    35,
-      29,    29,    37,    35,    29,    35,    29,    37
+         0,     3,    42,    34,     0,    10,    11,    12,    43,    35,
+      13,    14,    15,    44,    36,    37,     4,     5,     6,    45,
+      46,    47,    48,    49,    50,    37,    34,    34,    38,    45,
+      45,    45,     7,     8,     9,    51,    52,    53,    54,    55,
+      32,    30,    31,    39,    39,    34,    16,    56,    56,    52,
+      35,    36,    36,    32,    32,    28,    29,    34,    39,    38,
+      38,    32,    39,    39,    35,    35,    36,    36,    25,    18,
+      19,    22,    23,    24,    57,    58,    59,    62,    63,    64,
+      67,    68,    36,    32,    32,    32,    32,    39,    39,    36,
+      39,    39,    34,    39,    39,    40,    39,    35,    35,    35,
+      35,    33,    33,    39,    32,    32,    26,    27,    32,    17,
+      21,    58,    59,    60,    61,    65,    66,    32,    32,    32,
+      32,    32,    40,    40,    32,    35,    35,    36,    36,    35,
+      39,    39,    35,    35,    35,    35,    35,    35,    35,    32,
+      32,    39,    39,    32,    32,    32,    66,    32,    32,    32,
+      32,    32,    32,    35,    35,    32,    32,    35,    35,    35,
+      40,    35,    35,    35,    35,    40,    35,    32,    32,    35,
+      35,    32,    32,    32,    32,    32,    32,    32,    32,    35,
+      40,    32,    32,    35,    35,    35,    35,    35,    35,    35,
+      35,    32,    35,    35,    65,    32,    32,    32,    32,    32,
+      32,    32,    40,    32,    32,    40,    35,    35,    35,    35,
+      35,    35,    40,    35,    35,    32,    32,    32,    32,    32,
+      32,    32,    32,    35,    35,    35,    35,    35,    35,    40,
+      35,    32,    32,    32,    32,    32,    32,    32,    35,    35,
+      35,    35,    40,    35,    40,    32,    32,    32,    32,    32,
+      40,    35,    35,    35,    40,    32,    32,    32,    40,    35,
+      35,    32,    32,    35,    35,    32,    32,    40,    35,    32,
+      35,    32,    40
   };
 
 #if YYDEBUG
@@ -1141,7 +1166,8 @@ namespace Bison {
          0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,    60,    62,   123,   125,    44,    40,    41
+     285,   286,   287,   288,    60,    44,    62,   123,   125,    40,
+      41
   };
 #endif
 
@@ -1149,22 +1175,24 @@ namespace Bison {
   const unsigned char
   Parser::yyr1_[] =
   {
-         0,    38,    39,    40,    40,    40,    41,    41,    41,    41,
-      41,    41,    42,    43,    43,    44,    45,    46,    46,    47,
-      47,    48,    48,    49,    49,    50,    51,    52,    52,    53,
-      53,    53,    53,    53,    54,    55,    56,    57,    58,    58,
-      59,    60,    61,    61,    62,    62,    62,    63,    64
+         0,    41,    42,    43,    43,    43,    44,    44,    44,    45,
+      45,    45,    45,    45,    45,    46,    47,    47,    48,    49,
+      50,    50,    51,    51,    52,    52,    53,    53,    54,    55,
+      56,    56,    57,    57,    57,    57,    57,    58,    59,    60,
+      61,    62,    62,    63,    64,    65,    65,    66,    66,    66,
+      67,    68
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
   const unsigned char
   Parser::yyr2_[] =
   {
-         0,     2,     7,     1,     1,     1,     2,     2,     2,     1,
-       1,     1,    27,     1,     1,    19,    31,     5,     5,     7,
-       7,     2,     1,     1,     1,    20,    10,     4,    13,     1,
-       1,     1,     1,     1,     8,    10,    14,    16,     1,     1,
-      13,    15,     1,     1,     1,     1,     1,    10,     6
+         0,     2,     9,     1,     1,     1,     1,     1,     1,     2,
+       2,     2,     1,     1,     1,    27,     1,     1,    19,    31,
+       5,     5,     7,     7,     2,     1,     1,     1,    20,    10,
+       4,    13,     1,     1,     1,     1,     1,     8,    10,    14,
+      16,     1,     1,    13,    15,     1,     1,     1,     1,     1,
+      10,     6
   };
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
@@ -1174,16 +1202,16 @@ namespace Bison {
   const Parser::yytname_[] =
   {
     "$end", "error", "$undefined", "SCENE", "SHAPE", "CAMERA", "LIGHT",
-  "TRIANGLE", "SPHERE", "OBJFILE", "BVH", "OCTREE", "DEFAULT", "MATERIAL",
-  "BLINN", "PHONG", "LAMBERT", "BECKMANN", "ANISO", "SPECULAR",
-  "SUBSTRATE", "PAIR", "EMISSIVE", "DIELECTRIC", "CONDUCTOR", "SMOOTH",
-  "FLAT", "AREATYPE", "POINTTYPE", "FLOAT", "FILEPATH", "'<'", "'>'",
-  "'{'", "'}'", "','", "'('", "')'", "$accept", "scene_file",
-  "accelerator", "contents", "camera", "light", "pointlight", "arealight",
-  "shape", "objfile", "primitive_list", "primitive", "triangle", "sphere",
-  "material", "bsdf", "lambert", "phong", "blinn", "aniso", "specular",
-  "specular_dielectric", "specular_conductor", "microfacet", "bxdf",
-  "substrate", "pair", 0
+  "TRIANGLE", "SPHERE", "OBJFILE", "BVH", "OCTREE", "DEFAULT", "WHITTED",
+  "PATH", "BIDIR", "MATERIAL", "BLINN", "PHONG", "LAMBERT", "BECKMANN",
+  "ANISO", "SPECULAR", "SUBSTRATE", "PAIR", "EMISSIVE", "DIELECTRIC",
+  "CONDUCTOR", "SMOOTH", "FLAT", "AREATYPE", "POINTTYPE", "FLOAT",
+  "FILEPATH", "'<'", "','", "'>'", "'{'", "'}'", "'('", "')'", "$accept",
+  "scene_file", "accelerator", "tracer", "contents", "camera", "light",
+  "pointlight", "arealight", "shape", "objfile", "primitive_list",
+  "primitive", "triangle", "sphere", "material", "bsdf", "lambert",
+  "phong", "blinn", "aniso", "specular", "specular_dielectric",
+  "specular_conductor", "microfacet", "bxdf", "substrate", "pair", 0
   };
 #endif
 
@@ -1192,39 +1220,40 @@ namespace Bison {
   const Parser::rhs_number_type
   Parser::yyrhs_[] =
   {
-        39,     0,    -1,     3,    31,    40,    32,    33,    41,    34,
-      -1,    10,    -1,    11,    -1,    12,    -1,    42,    41,    -1,
-      43,    41,    -1,    46,    41,    -1,    46,    -1,    42,    -1,
-      43,    -1,     5,    31,    29,    35,    29,    32,    36,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    37,    -1,
-      44,    -1,    45,    -1,     6,    31,    28,    32,    36,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    37,    -1,     6,    31,    27,    32,    36,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    35,    29,    37,    -1,     4,    33,    48,    52,
-      34,    -1,     4,    33,    47,    52,    34,    -1,     9,    31,
-      25,    32,    36,    30,    37,    -1,     9,    31,    26,    32,
-      36,    30,    37,    -1,    49,    48,    -1,    49,    -1,    50,
-      -1,    51,    -1,     7,    36,    29,    35,    29,    35,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    37,    -1,     8,    36,    29,    35,    29,    35,
-      29,    35,    29,    37,    -1,    13,    36,    53,    37,    -1,
-      13,    31,    22,    32,    36,    29,    35,    29,    35,    29,
-      35,    29,    37,    -1,    54,    -1,    55,    -1,    58,    -1,
-      63,    -1,    64,    -1,    16,    36,    29,    35,    29,    35,
-      29,    37,    -1,    15,    36,    29,    35,    29,    35,    29,
-      35,    29,    37,    -1,    14,    36,    29,    35,    29,    35,
-      29,    35,    29,    35,    29,    35,    29,    37,    -1,    18,
-      36,    29,    35,    29,    35,    29,    35,    29,    35,    29,
-      35,    29,    35,    29,    37,    -1,    59,    -1,    60,    -1,
-      19,    31,    23,    32,    36,    29,    35,    29,    35,    29,
-      35,    29,    37,    -1,    19,    31,    24,    32,    36,    29,
-      35,    29,    35,    29,    35,    29,    35,    29,    37,    -1,
-      56,    -1,    57,    -1,    61,    -1,    54,    -1,    55,    -1,
-      20,    36,    29,    35,    29,    35,    29,    35,    61,    37,
-      -1,    21,    36,    62,    35,    62,    37,    -1
+        42,     0,    -1,     3,    34,    43,    35,    44,    36,    37,
+      45,    38,    -1,    10,    -1,    11,    -1,    12,    -1,    13,
+      -1,    14,    -1,    15,    -1,    46,    45,    -1,    47,    45,
+      -1,    50,    45,    -1,    50,    -1,    46,    -1,    47,    -1,
+       5,    34,    32,    35,    32,    36,    39,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    40,    -1,    48,    -1,
+      49,    -1,     6,    34,    31,    36,    39,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      40,    -1,     6,    34,    30,    36,    39,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      35,    32,    40,    -1,     4,    37,    52,    56,    38,    -1,
+       4,    37,    51,    56,    38,    -1,     9,    34,    28,    36,
+      39,    33,    40,    -1,     9,    34,    29,    36,    39,    33,
+      40,    -1,    53,    52,    -1,    53,    -1,    54,    -1,    55,
+      -1,     7,    39,    32,    35,    32,    35,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      40,    -1,     8,    39,    32,    35,    32,    35,    32,    35,
+      32,    40,    -1,    16,    39,    57,    40,    -1,    16,    34,
+      25,    36,    39,    32,    35,    32,    35,    32,    35,    32,
+      40,    -1,    58,    -1,    59,    -1,    62,    -1,    67,    -1,
+      68,    -1,    19,    39,    32,    35,    32,    35,    32,    40,
+      -1,    18,    39,    32,    35,    32,    35,    32,    35,    32,
+      40,    -1,    17,    39,    32,    35,    32,    35,    32,    35,
+      32,    35,    32,    35,    32,    40,    -1,    21,    39,    32,
+      35,    32,    35,    32,    35,    32,    35,    32,    35,    32,
+      35,    32,    40,    -1,    63,    -1,    64,    -1,    22,    34,
+      26,    36,    39,    32,    35,    32,    35,    32,    35,    32,
+      40,    -1,    22,    34,    27,    36,    39,    32,    35,    32,
+      35,    32,    35,    32,    35,    32,    40,    -1,    60,    -1,
+      61,    -1,    65,    -1,    58,    -1,    59,    -1,    23,    39,
+      32,    35,    32,    35,    32,    35,    65,    40,    -1,    24,
+      39,    66,    35,    66,    40,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1232,22 +1261,24 @@ namespace Bison {
   const unsigned short int
   Parser::yyprhs_[] =
   {
-         0,     0,     3,    11,    13,    15,    17,    20,    23,    26,
-      28,    30,    32,    60,    62,    64,    84,   116,   122,   128,
-     136,   144,   147,   149,   151,   153,   174,   185,   190,   204,
-     206,   208,   210,   212,   214,   223,   234,   249,   266,   268,
-     270,   284,   300,   302,   304,   306,   308,   310,   321
+         0,     0,     3,    13,    15,    17,    19,    21,    23,    25,
+      28,    31,    34,    36,    38,    40,    68,    70,    72,    92,
+     124,   130,   136,   144,   152,   155,   157,   159,   161,   182,
+     193,   198,   212,   214,   216,   218,   220,   222,   231,   242,
+     257,   274,   276,   278,   292,   308,   310,   312,   314,   316,
+     318,   329
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   const unsigned short int
   Parser::yyrline_[] =
   {
-         0,    98,    98,   103,   104,   105,   109,   110,   111,   112,
-     112,   112,   116,   124,   125,   129,   134,   138,   148,   152,
-     155,   160,   161,   165,   166,   170,   175,   180,   181,   186,
-     187,   188,   189,   190,   194,   199,   204,   209,   213,   214,
-     218,   228,   237,   238,   242,   243,   244,   248,   257
+         0,   103,   103,   111,   112,   113,   117,   118,   119,   123,
+     124,   125,   126,   126,   126,   130,   138,   139,   143,   148,
+     152,   162,   166,   169,   174,   175,   179,   180,   184,   189,
+     194,   195,   200,   201,   202,   203,   204,   208,   213,   218,
+     223,   227,   228,   232,   242,   251,   252,   256,   257,   258,
+     262,   271
   };
 
   // Print the state stack on the debug stream.
@@ -1291,15 +1322,15 @@ namespace Bison {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      36,    37,     2,     2,    35,     2,     2,     2,     2,     2,
+      39,    40,     2,     2,    35,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      31,     2,    32,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      34,     2,    36,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    33,     2,    34,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    37,     2,    38,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1315,7 +1346,7 @@ namespace Bison {
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30
+      25,    26,    27,    28,    29,    30,    31,    32,    33
     };
     if ((unsigned int) t <= yyuser_token_number_max_)
       return translate_table[t];
@@ -1324,15 +1355,15 @@ namespace Bison {
   }
 
   const int Parser::yyeof_ = 0;
-  const int Parser::yylast_ = 286;
-  const int Parser::yynnts_ = 27;
+  const int Parser::yylast_ = 275;
+  const int Parser::yynnts_ = 28;
   const int Parser::yyempty_ = -2;
   const int Parser::yyfinal_ = 4;
   const int Parser::yyterror_ = 1;
   const int Parser::yyerrcode_ = 256;
-  const int Parser::yyntokens_ = 38;
+  const int Parser::yyntokens_ = 41;
 
-  const unsigned int Parser::yyuser_token_number_max_ = 285;
+  const unsigned int Parser::yyuser_token_number_max_ = 288;
   const Parser::token_number_type Parser::yyundef_token_ = 2;
 
 
@@ -1341,11 +1372,11 @@ namespace Bison {
 } // Bison
 
 /* Line 1053 of lalr1.cc  */
-#line 1345 "sceneparser.tab.c"
+#line 1376 "sceneparser.tab.c"
 
 
 /* Line 1055 of lalr1.cc  */
-#line 265 "../src/scene/sceneparser.y"
+#line 279 "../src/scene/sceneparser.y"
 
 
 void Bison::Parser::error(const Bison::Parser::location_type& loc, const std::string& msg){

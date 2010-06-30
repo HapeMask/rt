@@ -47,6 +47,10 @@
 "octree"                                { return Bison::Parser::token::OCTREE; }
 "default"                               { return Bison::Parser::token::DEFAULT; }
 
+"whitted"                               { return Bison::Parser::token::WHITTED; }
+"path"                                  { return Bison::Parser::token::PATH; }
+"bidir"                                 { return Bison::Parser::token::BIDIR; }
+
 "("                                     { return yytext[0]; }
 ")"                                     { return yytext[0]; }
 "{"                                     { return yytext[0]; }

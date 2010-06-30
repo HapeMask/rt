@@ -22,8 +22,6 @@
 #include "light/light.hpp"
 
 #include "tracer/tracer.hpp"
-#include "tracer/path.hpp"
-#include "tracer/bidir.hpp"
 
 #include "samplers/samplers.hpp"
 
@@ -46,10 +44,8 @@ using namespace std;
 #define RT_OMP_THREADS 8
 #endif
 
-void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize);
-
 int main(int argc, char* args[]){
-	scene s;
+	scene scn;
 
     string filename;
 
@@ -70,55 +66,37 @@ int main(int argc, char* args[]){
         return 1;
     }
 
-    sceneloader::load(in, s);
+    sceneloader::load(in, scn);
 	in.close();
+	scn.build();
 
-	s.build();
-
-	camera& c = *s.getCamera();
-    const int width = c.width();
-    const int height = c.height();
-
-	sdlFramebuffer f(width, height, 32);
-
-	//bdpt rt(&s);
-	pathTracer rt(&s);
-	//whittedRayTracer rt(&s);
+	sdlFramebuffer f(scn, 32);
 
 	//srand(time(NULL));
     // SFMT
     init_gen_rand(time(NULL));
-
-	/*
-    ray r0 = c.getRay(width/2, height/2);
-    cerr << rt.L(r0) << endl;
-    return 0;
-	*/
 
 #ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
 #endif
 
-	struct timeval start, end;
-	gettimeofday(&start, NULL);
-
-    static const unsigned int blockSize = (width/numThreads)*(height/numThreads);
-
-    draw(height, width, c, f, rt, blockSize);
-
-	gettimeofday(&end, NULL);
-
-	float sec = end.tv_sec - start.tv_sec;
-	sec += (end.tv_usec - start.tv_usec) / 1e6;
-	cerr << sec << "s" << endl;
-
     SDL_EnableKeyRepeat(3,3);
 
     float linTmScale = 1.f;
+    struct timeval start, end;
+
 	SDL_Event e;
+    bool paused = false, dirty = false;;
 	while(true){
-		SDL_WaitEvent(&e);
+        if(paused){
+            SDL_WaitEvent(&e);
+        }else{
+            f.render();
+            dirty = true;
+            SDL_PollEvent(&e);
+        }
+
 		switch(e.type){
 			case SDL_KEYDOWN:
 				if(e.key.state == SDL_PRESSED || e.key.state == SDL_KEYDOWN){
@@ -131,12 +109,24 @@ int main(int argc, char* args[]){
                         case '-':
                             linTmScale -= 0.25f;
                             f.setLinearTonemapScale(linTmScale);
-                            f.tonemapAndFlip();
                             break;
                         case '=':
                             linTmScale += 0.25f;
                             f.setLinearTonemapScale(linTmScale);
-                            f.tonemapAndFlip();
+                            break;
+                        case 's':
+                            if(dirty){
+                                cerr << "Saving..." << endl;
+                                dirty = false;
+                            }
+                            break;
+                        case 'p':
+                            if(paused){
+                                cerr << "Resuming..." << endl;
+                            }else{
+                                cerr << "Pausing..." << endl;
+                            }
+                            paused = !paused;
                             break;
                         default:
                             break;
@@ -149,25 +139,4 @@ int main(int argc, char* args[]){
 		}
 	}
 	return 0;
-}
-
-void draw(const int height, const int width, const camera& c, sdlFramebuffer& f, const rayTracer& rt, const unsigned int blockSize){
-    const unsigned int spp = 8;
-    const float invspp = 1.f / (float)spp;
-    for(unsigned int i=0; i<spp; ++i){
-#ifdef RT_MULTITHREADED
-#pragma omp parallel for collapse(2) schedule(dynamic, blockSize)
-#endif
-        for(int y=0; y<height; y++){
-            for(int x=0; x<width; x++){
-                rgbColor L(0.f);
-
-				L += rt.L(c.getRay((float)x + sampleUniform() - 0.5, (float)y + sampleUniform() - 0.5));
-
-                const color& prev = f.getPixel(x, y);
-                f.drawPixel(x, y, rgbColor(prev.red(),prev.green(),prev.blue()) + L*invspp);
-            }
-        }
-        f.tonemapAndFlip();
-	}
 }

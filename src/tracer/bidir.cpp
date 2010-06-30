@@ -1,4 +1,4 @@
-#include "bidir.hpp"
+#include "tracer.hpp"
 #include "utility.hpp"
 
 #include "color/color.hpp"
@@ -7,29 +7,30 @@
 
 #include "mathlib/vector.hpp"
 #include "mathlib/point.hpp"
+#include "scene/scene.hpp"
 
 const rgbColor bdpt::L(const ray& r) const {
     ray eyeRay(r);
     vector<pathPoint> eyePath, lightPath;
 
-	if(parent->getLight(0)->intersect(r).hit){
-		return parent->getLight(0)->L(r);
+	if(parent.getLight(0)->intersect(r).hit){
+		return parent.getLight(0)->L(r);
 	}
 
     // Add the eye point first.
-    const pathPoint p0 = {r.origin, 0.f, 0.f, noIntersect};
+    const pathPoint p0 = {r.origin, 0.f, 1.f, noIntersect};
     eyePath.push_back(p0);
     createPath(eyeRay, eyePath);
 
     // Pick a random light and start a path on it in a random direction.
-    unsigned int i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
-    while(parent->getLight(i)->isPointSource()){
-        i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
+    unsigned int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
+    while(parent.getLight(i)->isPointSource()){
+        i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
     }
 
     // Sample the surface to find the start of the light path. 
-    const point3 p = parent->getLight(i)->uniformSampleSurface();
-    const vec3& normal = parent->getLight(i)->getNormal();
+    const point3 p = parent.getLight(i)->uniformSampleSurface();
+    const vec3& normal = parent.getLight(i)->getNormal();
 
     vec3 wi;
     uniformSampleHemisphere(wi);
@@ -42,44 +43,54 @@ const rgbColor bdpt::L(const ray& r) const {
 
 	// Add the sampled point on the light as the start of the light path.
 	intersection iL(noIntersect);
-	iL.li = parent->getLight(i).get();
-	const pathPoint lp0 = {p, 0.f, 0.f, iL};
+	iL.li = parent.getLight(i).get();
+	const pathPoint lp0 = {p, 0.f, 1.f, iL};
 	lightPath.push_back(lp0);
 
     ray lightRay(p, wi);
     createPath(lightRay, lightPath);
 
-    ray rConnector(eyePath.back().p, normalize(lightPath.back().p - eyePath.back().p));
-    rConnector.tMax = (lightPath.back().p - eyePath.back().p).length() - EPSILON;
+    float eyePdf = 1.f;
+    for(int j=0; j<eyePath.size(); ++j){
+        eyePdf *= eyePath[j].pdf;
+    }
 
-    // Connect the paths with a visibility ray (if possible).
-    if(!parent->intersectB(rConnector)){
+    rgbColor L = 0.f;
+    for(int lightIndex = lightPath.size()-1; lightIndex >= 1; --lightIndex){
+        ray rConnector(eyePath.back().p, normalize(lightPath[lightIndex].p - eyePath.back().p));
+        rConnector.tMax = (lightPath[lightIndex].p - eyePath.back().p).length() - EPSILON;
+
+        // Connect the paths with a visibility ray (if possible).
+        if(parent.intersectB(rConnector)){
+            continue;
+        }
+
         // Merge the paths, then trace it (TODO: use MIS).
 
 		// This loop adds the light points in reverse order because the tracing
 		// starts from the light.
-        for(int j=0; j<lightPath.size(); ++j){
-            eyePath.push_back(lightPath[(lightPath.size()-1)-j]);
+        vector<pathPoint> path(eyePath);
+        float lightPdf = 1.f;
+        for(int j=lightIndex; j>= 0; --j){
+            path.push_back(lightPath[j]);
+            lightPdf *= lightPath[j].pdf;
         }
 
-        // TODO: Remove this.
-        if(eyePath.size() < 2){
-            return eyePath[1].isect.li ? eyePath[1].isect.li->getColor() : 0.f;
-        }else{
-            eyePath[eyePath.size()-1].isect.li = parent->getLight(i).get();
-            return tracePath(eyePath);
-        }
-    }else{
-        return eyePath[1].isect.li ? eyePath[1].isect.li->getColor() : 0.f;
+        path.back().isect.li = parent.getLight(i).get();
+        L += tracePath(path) * powerHeuristic(1, lightPdf, 1, eyePdf);
     }
+
+    return L;
 }
 
 void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
+    float curPdf = 1.f;
+
     for(unsigned int pathLength = 0; ; ++pathLength){
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
         const ray rOrig(r);
-        const intersection isect = parent->intersect(r);
+        const intersection isect = parent.intersect(r);
 
         if(!isect.hit){
             break;
@@ -99,8 +110,9 @@ void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
         bxdfType sampledType;
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, ALL, sampledType, pdf);
 
-        pathPoint p = {r.origin, f, pdf, isect, sampledType};
+        pathPoint p = {r.origin, f * fabs(dot(wi, normal)) / pdf, curPdf, isect, sampledType};
         points.push_back(p);
+        curPdf *= pdf;
 
         if(f.isBlack() || pdf == 0.f){
             break;
@@ -143,7 +155,7 @@ const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
         }
 
         L += throughput * (sampleAllLights(points[i].p, wo, isect, b) + mat.Le());
-        throughput *= points[i].f * fabs(dot(wi, isect.shadingNormal)) / points[i].pdf;
+        throughput *= points[i].f;
         lastBounceWasSpecular = (points[i].sampledType & SPECULAR) != 0;
     }
 

@@ -39,7 +39,7 @@ class light {
             return position;
         }
 
-		const float& getPower(){
+		const float& getPower() const {
 			return power;
 		}
 

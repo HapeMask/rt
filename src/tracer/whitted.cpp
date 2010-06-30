@@ -6,6 +6,7 @@
 #include "samplers/samplers.hpp"
 #include "geometry/triangle.hpp"
 #include "materials/bsdf.hpp"
+#include "scene/scene.hpp"
 
 #include <omp.h>
 
@@ -20,7 +21,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 		return 0.f;
 	}
 
-	const intersection isect = parent->intersect(r);
+	const intersection isect = parent.intersect(r);
     //return rgbColor((float)isect.debugInfo / 300.f, 0.f,0.f);
 
 	if(!isect.hit){
@@ -44,8 +45,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 
     // Diffuse calculations.
 	float lightPdf = 0.f;
-	for(unsigned int i=0; i<parent->numLights(); ++i){
-        const lightPtr li = parent->getLight(i);
+	for(unsigned int i=0; i<parent.numLights(); ++i){
+        const lightPtr li = parent.getLight(i);
         if(li->isPointSource()){
             vec3 lightDir;
             const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
@@ -56,7 +57,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
             // Test for shadowing early.
             ray shadowRay(r.origin, lightDir);
             shadowRay.tMax = lightDist;
-            const intersection isect2 = parent->intersect(shadowRay);
+            const intersection isect2 = parent.intersect(shadowRay);
             if(isect2.hit){
                 continue;
             }
@@ -75,7 +76,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 
                 ray shadowRay(r.origin, normalize(lightDir));
                 shadowRay.tMax = lightDir.length();
-                const intersection isect2 = parent->intersect(shadowRay);
+                const intersection isect2 = parent.intersect(shadowRay);
                 if(isect2.hit){
                     continue;
                 }

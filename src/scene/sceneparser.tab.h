@@ -61,6 +61,8 @@
 
     #include "datastructs/arraylist.hpp"
 
+    #include "tracer/tracer.hpp"
+
     // We want to return a string
     //#define YYSTYPE std::string
 
@@ -69,7 +71,7 @@
 
 
 /* Line 34 of lalr1.cc  */
-#line 73 "sceneparser.tab.h"
+#line 75 "sceneparser.tab.h"
 
 
 #include <string>
@@ -82,7 +84,7 @@
 namespace Bison {
 
 /* Line 34 of lalr1.cc  */
-#line 86 "sceneparser.tab.h"
+#line 88 "sceneparser.tab.h"
   class position;
   class location;
 
@@ -91,7 +93,7 @@ namespace Bison {
 } // Bison
 
 /* Line 34 of lalr1.cc  */
-#line 95 "sceneparser.tab.h"
+#line 97 "sceneparser.tab.h"
 
 #include "location.hh"
 
@@ -138,7 +140,7 @@ do {							\
 namespace Bison {
 
 /* Line 34 of lalr1.cc  */
-#line 142 "sceneparser.tab.h"
+#line 144 "sceneparser.tab.h"
 
   /// A Bison parser.
   class Parser
@@ -150,7 +152,7 @@ namespace Bison {
     {
 
 /* Line 34 of lalr1.cc  */
-#line 46 "../src/scene/sceneparser.y"
+#line 48 "../src/scene/sceneparser.y"
 
     float fval;
     char* sval;
@@ -164,11 +166,12 @@ namespace Bison {
     bxdf* bxval;
     microfacetBxdf* mbxval;
     accelerator* aval;
+    rayTracer* tval;
 
 
 
 /* Line 34 of lalr1.cc  */
-#line 172 "sceneparser.tab.h"
+#line 175 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -190,24 +193,27 @@ namespace Bison {
      BVH = 265,
      OCTREE = 266,
      DEFAULT = 267,
-     MATERIAL = 268,
-     BLINN = 269,
-     PHONG = 270,
-     LAMBERT = 271,
-     BECKMANN = 272,
-     ANISO = 273,
-     SPECULAR = 274,
-     SUBSTRATE = 275,
-     PAIR = 276,
-     EMISSIVE = 277,
-     DIELECTRIC = 278,
-     CONDUCTOR = 279,
-     SMOOTH = 280,
-     FLAT = 281,
-     AREATYPE = 282,
-     POINTTYPE = 283,
-     FLOAT = 284,
-     FILEPATH = 285
+     WHITTED = 268,
+     PATH = 269,
+     BIDIR = 270,
+     MATERIAL = 271,
+     BLINN = 272,
+     PHONG = 273,
+     LAMBERT = 274,
+     BECKMANN = 275,
+     ANISO = 276,
+     SPECULAR = 277,
+     SUBSTRATE = 278,
+     PAIR = 279,
+     EMISSIVE = 280,
+     DIELECTRIC = 281,
+     CONDUCTOR = 282,
+     SMOOTH = 283,
+     FLAT = 284,
+     AREATYPE = 285,
+     POINTTYPE = 286,
+     FLOAT = 287,
+     FILEPATH = 288
    };
 
     };
@@ -384,7 +390,7 @@ namespace Bison {
 } // Bison
 
 /* Line 34 of lalr1.cc  */
-#line 388 "sceneparser.tab.h"
+#line 394 "sceneparser.tab.h"
 
 
 

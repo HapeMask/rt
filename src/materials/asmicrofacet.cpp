@@ -30,7 +30,7 @@ const rgbColor asMicrofacet::sampleF(const float& u0, const float& u1, const vec
     const float sintheta = sqrtf(max(0.f, 1.f - costheta*costheta));
     vec3 wh = normalize(vec3(sintheta*costheta, phi, sintheta*sintheta));
 
-    wi = -wo + 2.f * dot(wo, wh) * wh;
+    wi = -wo + 2.f * fabs(dot(wo, wh)) * wh;
     pd = pdf(wo, wi);
 
     if(wo.y() * wi.y() < 0.f){

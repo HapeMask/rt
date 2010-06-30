@@ -1,14 +1,17 @@
 #include "tracer.hpp"
+#include "utility.hpp"
+
 #include "color/color.hpp"
 #include "light/light.hpp"
+
 #include "acceleration/intersection.hpp"
-#include "utility.hpp"
+#include "scene/scene.hpp"
 
 const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
-    if(parent->numLights() > 0){
-        const unsigned int i = sampleRange(sampleUniform(), 0, parent->numLights()-1);
-        return sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
+    if(parent.numLights() > 0){
+        const unsigned int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
+        return sampleDirect(p, wo, isect, bsdf, *parent.getLight(i).get()) * parent.numLights();
     }else{
         return 0.f;
     }
@@ -16,13 +19,13 @@ const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const 
 
 const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
-    if(parent->numLights() > 0){
+    if(parent.numLights() > 0){
         rgbColor L(0.f);
-        for(unsigned int i=0;i<parent->numLights(); ++i){
-            L += sampleDirect(p, wo, isect, bsdf, *parent->getLight(i).get()) * parent->numLights();
+        for(unsigned int i=0;i<parent.numLights(); ++i){
+            L += sampleDirect(p, wo, isect, bsdf, *parent.getLight(i).get()) * parent.numLights();
         }
 
-        return L / parent->numLights();
+        return L / parent.numLights();
     }else{
         return 0.f;
     }
@@ -52,7 +55,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
             ray shadowRay(p, wi);
             shadowRay.tMax = lightDist;
 
-            if(!parent->intersectB(shadowRay)){
+            if(!parent.intersectB(shadowRay)){
                 if(li.isPointSource()){
                     return f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
                 }else if(dot(-wi, li.getNormal()) < 0.f){
@@ -78,7 +81,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
 
                 const intersection isectL = li.intersect(lightRay);
                 lightRay.tMax = isectL.t;
-                if(!parent->intersectB(lightRay)){
+                if(!parent.intersectB(lightRay)){
                     const rgbColor Li(li.L(lightRay));
 
                     if(!Li.isBlack()){

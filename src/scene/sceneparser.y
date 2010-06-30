@@ -30,6 +30,8 @@
 
     #include "datastructs/arraylist.hpp"
 
+    #include "tracer/tracer.hpp"
+
     // We want to return a string
     //#define YYSTYPE std::string
 
@@ -56,11 +58,13 @@
     bxdf* bxval;
     microfacetBxdf* mbxval;
     accelerator* aval;
+    rayTracer* tval;
 }
 
 %token SCENE SHAPE CAMERA LIGHT
 %token TRIANGLE SPHERE OBJFILE
 %token BVH OCTREE DEFAULT
+%token WHITTED PATH BIDIR
 %token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
@@ -91,19 +95,29 @@
 %type <mbxval> microfacet
 %type <bxval> lambert
 %type <aval> accelerator
+%type <tval> tracer
 
 %%
 
 scene_file :
-          SCENE '<' accelerator '>' '{' contents '}'
-          { scn.setAccelerator(acceleratorPtr($3)); }
-          ;
+            SCENE '<' accelerator ',' tracer '>' '{' contents '}'
+            {
+                scn.setAccelerator(acceleratorPtr($3));
+                scn.setTracer(rayTracerPtr($5));
+            }
+            ;
 
 accelerator :
             BVH { $$ = new bvh(); } |
             OCTREE { $$ = new octree(); } |
             DEFAULT { $$ = new defaultAccelerator(); }
             ;
+
+tracer :
+       WHITTED { $$ = new whittedRayTracer(scn); } |
+       PATH { $$ = new pathTracer(scn); } |
+       BIDIR { $$ = new bdpt(scn); }
+       ;
 
 contents :
         camera contents |

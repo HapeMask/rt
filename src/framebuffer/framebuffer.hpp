@@ -11,9 +11,7 @@ class framebuffer {
 		}
         virtual ~framebuffer() {}
 
-		virtual void drawPixel(const int& x, const int& y, const color& c) = 0;
-        virtual const color& getPixel(const int& x, const int& y) const = 0;
-
+        virtual void render() = 0;
 		virtual const bool readyForDrawing() const = 0;
 
 		const int& width() const{

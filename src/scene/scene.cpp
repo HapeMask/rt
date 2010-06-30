@@ -67,10 +67,6 @@ const bool scene::intersectB(const ray& r) const{
 	return accel->intersectB(r);
 }
 
-void scene::setCamera(cameraPtr p){
-	cam = p;
-}
-
 void scene::build(){
 	if(needsBuilding){
 		accel->build(*this);

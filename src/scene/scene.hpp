@@ -16,6 +16,8 @@
 #include "geometry/aabb.hpp"
 #include "geometry/primitive.hpp"
 
+#include "tracer/tracer.hpp"
+
 using namespace std;
 using tr1::shared_ptr;
 
@@ -63,12 +65,23 @@ class scene {
 			return bounds;
 		}
 
-		cameraPtr getCamera() const{
-			return cam;
-		}
+		inline void setCamera(cameraPtr p){
+            cam = p;
+        }
 
-		void setCamera(cameraPtr p);
+		inline void setTracer(rayTracerPtr p){
+            rt = p;
+        }
+
+        const camera& getCamera() const {
+            return *cam;
+        }
+
 		void build();
+
+        inline const rgbColor L(const float& x, const float& y) const {
+            return rt->L(cam->getRay(x, y));
+        }
 
 	private:
 		vector<shapePtr> shapes;
@@ -76,7 +89,9 @@ class scene {
 		vector<lightPtr> lights;
 
 		cameraPtr cam;
+        rayTracerPtr rt;
 		acceleratorPtr accel;
+
 		bool needsBuilding;
 		aabb bounds;
 };
