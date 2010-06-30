@@ -94,7 +94,10 @@ int main(int argc, char* args[]){
         }else{
             f.render();
             dirty = true;
-            SDL_PollEvent(&e);
+            int ret;
+            do{
+                ret = SDL_PollEvent(&e);
+            }while(e.type != SDL_KEYDOWN && e.type != SDL_QUIT && ret != 0);
         }
 
 		switch(e.type){
@@ -136,6 +139,8 @@ int main(int argc, char* args[]){
 			case SDL_QUIT:
 				return 0;
 				break;
+            default:
+                break;
 		}
 	}
 	return 0;
