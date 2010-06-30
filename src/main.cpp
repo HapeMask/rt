@@ -94,9 +94,12 @@ int main(int argc, char* args[]){
         }else{
             f.render();
             dirty = true;
+
+            // Consume any events that we aren't interested in.
             int ret;
             do{
                 ret = SDL_PollEvent(&e);
+            // Only interested in key events and quit events for now.
             }while(e.type != SDL_KEYDOWN && e.type != SDL_QUIT && ret != 0);
         }
 
