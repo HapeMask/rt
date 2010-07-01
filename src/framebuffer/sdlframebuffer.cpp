@@ -105,14 +105,11 @@ void sdlFramebuffer::render(){
 #endif
     for(int y=0; y<height_; y++){
         for(int x=0; x<width_; x++){
-            float xOffset, yOffset;
+            const float xOffset = sampleUniform() - 0.5f;
+			const float yOffset = sampleUniform() - 0.5f;
 
-#pragma omp critical
-            {
-                xOffset = radicalInverse(samplesTaken, 2) - 0.5f;
-                yOffset = radicalInverse(samplesTaken, 3) - 0.5f;
-                ++samplesTaken;
-            }
+#pragma omp atomic
+			++samplesTaken;
 
             addSample(x, y, scn.L((float)x + xOffset, (float)y + yOffset));
         }
