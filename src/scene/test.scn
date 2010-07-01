@@ -1,11 +1,6 @@
 scene<bvh, path>{
-	camera<384,384>(45, 0,0,10, 0,0,0, 0,1,0)
-    light<area>(1,2.8,1, 0,0,1, 1,0,0, 1,0,0, 4)
-    light<area>(0,2.8,-1, 0,0,1, 1,0,0, 0,1,0, 4)
-    light<area>(-1,2.8,1, 0,0,1, 1,0,0, 0,0,1, 4)
-
-    //light<point>(-1,2.8,-1, 1,0,0, 4)
-    //light<point>(0,2.8,1, 0,1,0, 4)
+	camera<800,600>(45, 0,0,8, 0,0,0, 0,1,0)
+    light<area>(0,2.8,0, 0,0,2, 2,0,0, 1,1,1, 2)
     //light<point>(1,2.8,-1, 0,0,1, 4)
 
 	shape{
@@ -34,7 +29,8 @@ scene<bvh, path>{
 	}
 
     shape{
-		sphere(0,-1.5,-1,1.5)
-        material(substrate(0.1,0.3,0.8, aniso(0.3,0.3,0.3, 1.5,1.5, 5,5)))
+		sphere(0,0,0,1)
+        //material(substrate(0.1,0.3,0.8, aniso(0.3,0.3,0.3, 1.5,1.5, 5,5)))
+        material(specular<dielectric>(1,1,1, 1.5))
     }
 }

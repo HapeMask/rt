@@ -41,7 +41,7 @@ using namespace std;
 
 // Default to 8 threads.
 #ifndef RT_OMP_THREADS
-#define RT_OMP_THREADS 8
+#define RT_OMP_THREADS 4
 #endif
 
 int main(int argc, char* args[]){
@@ -132,6 +132,7 @@ int main(int argc, char* args[]){
                             }else{
                                 cerr << "Pausing..." << endl;
                             }
+
                             paused = !paused;
                             break;
                         default:
