@@ -5,9 +5,12 @@
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
+
 #include "color/color.hpp"
 #include "acceleration/intersection.hpp"
 #include "materials/material.hpp"
+
+#include "geometry/triangle.hpp"
 
 using namespace std;
 using tr1::shared_ptr;
@@ -23,6 +26,10 @@ class light {
         virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
         virtual const intersection intersect(const ray& r) const {
             return noIntersect;
+        }
+
+        virtual const bool intersectB(const ray& r) const {
+            return false;
         }
 
 		inline virtual const rgbColor L(const ray& r) const {
@@ -93,6 +100,7 @@ class areaLight : public light {
                 const vec3& vA, const vec3& vB);
 
         virtual const intersection intersect(const ray& r) const;
+        virtual const bool intersectB(const ray& r) const;
 
         inline virtual const bool isPointSource() const {
             return false;
@@ -117,8 +125,9 @@ class areaLight : public light {
         }
 
     private:
-        vec3 a, b, normal;
-        vec3 A, B, C, D;
+		const triangle tri1, tri2;
+		const vec3 a,b;
+		const vec3 normal;
         const float area, invArea;
 };
 

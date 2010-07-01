@@ -93,7 +93,6 @@ typedef unsigned int flex_uint32_t;
 /* begin standard C++ headers. */
 #include <iostream> 
 #include <errno.h>
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 /* end standard C++ headers. */
@@ -527,7 +526,7 @@ static yyconst flex_int16_t yy_chk[244] =
 
 #include <cstring>
 #define YY_USER_ACTION yylloc->columns(yyleng);
-#line 531 "lex.yy.cc"
+#line 530 "lex.yy.cc"
 
 #define INITIAL 0
 
@@ -633,7 +632,7 @@ YY_DECL
     yylloc->step();
 
 
-#line 637 "lex.yy.cc"
+#line 636 "lex.yy.cc"
 
 	if ( !(yy_init) )
 		{
@@ -923,7 +922,7 @@ YY_RULE_SETUP
 #line 63 "../src/scene/sceneparser.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 927 "lex.yy.cc"
+#line 926 "lex.yy.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

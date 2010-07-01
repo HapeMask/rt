@@ -15,8 +15,7 @@
 using namespace std;
 using tr1::shared_ptr;
 
-const unsigned int MAXDEPTH = 20;
-const unsigned int areaSamples = 16;
+const int MAXDEPTH = 10;
 
 class scene;
 class rayTracer {
@@ -42,7 +41,7 @@ class whittedRayTracer : public rayTracer {
 		virtual const rgbColor L(const ray& r) const;
 
 	private:
-		const rgbColor _L(ray& r, const unsigned int& depth = 0) const;
+		const rgbColor _L(ray& r, const int& depth = 0) const;
 };
 
 static const float pathContinueProbability = 0.5f;

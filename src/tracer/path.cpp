@@ -16,7 +16,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
     rgbColor throughput(1.f), L(0.f);
     bool lastBounceWasSpecular = false;
 
-    for(unsigned int pathLength = 0; ; ++pathLength){
+    for(int pathLength = 0; ; ++pathLength){
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
         const ray rOrig(r);
@@ -25,7 +25,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 
         if(!isect.hit){
             if(pathLength == 0 || lastBounceWasSpecular){
-                for(unsigned int i=0; i<parent.numLights(); ++i){
+                for(int i=0; i<parent.numLights(); ++i){
                     const float lightDist = (parent.getLight(i)->getPosition() - rOrig.origin).length();
                     ray lightRay(rOrig, EPSILON, lightDist);
 
@@ -36,7 +36,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
                 }
             }
 
-            L += throughput * rgbColor(0.02f, 0.01f, 0.03f);
+            //L += throughput * rgbColor(0.02f, 0.01f, 0.03f);
 
             break;
         }

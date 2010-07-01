@@ -10,13 +10,15 @@
 
 #include <omp.h>
 
+const int areaSamples = 4;
+
 const rgbColor whittedRayTracer::L(const ray& r) const{
     ray r2(r);
 	return _L(r2);
 }
 
-const unsigned int nsamp = 512*512*16*2;
-const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
+const int nsamp = 512*512*16*2;
+const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(depth > MAXDEPTH){
 		return 0.f;
 	}
@@ -45,7 +47,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
 
     // Diffuse calculations.
 	float lightPdf = 0.f;
-	for(unsigned int i=0; i<parent.numLights(); ++i){
+	for(int i=0; i<parent.numLights(); ++i){
         const lightPtr li = parent.getLight(i);
         if(li->isPointSource()){
             vec3 lightDir;
@@ -57,37 +59,30 @@ const rgbColor whittedRayTracer::_L(ray& r, const unsigned int& depth) const{
             // Test for shadowing early.
             ray shadowRay(r.origin, lightDir);
             shadowRay.tMax = lightDist;
-            const intersection isect2 = parent.intersect(shadowRay);
-            if(isect2.hit){
-                continue;
-            }
-
-			const vec3 wi = worldToBsdf(lightDir, isect);
-			const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
-            L += f * dot(normal, lightDir) * (Li / lightPdf);
+			if(!parent.intersectB(shadowRay)){
+				const vec3 wi = worldToBsdf(lightDir, isect);
+				const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
+				L += f * dot(normal, lightDir) * (Li / lightPdf);
+			}
         }else{
-            // Area Sampling
             rgbColor areaContrib(0.f);
 
-            for(unsigned int i=0; i<areaSamples; ++i){
+            for(int i=0; i<areaSamples; ++i){
                 vec3 lightDir;
 
                 const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
-                shadowRay.tMax = lightDir.length();
-                const intersection isect2 = parent.intersect(shadowRay);
-                if(isect2.hit){
-                    continue;
-                }
+                shadowRay.tMax = lightDir.length() + EPSILON;
 
-                lightDir = normalize(lightDir);
-				const vec3 wi = worldToBsdf(lightDir, isect);
+				if(!parent.intersectB(shadowRay) && li->intersect(shadowRay).hit){
+					lightDir = normalize(lightDir);
+					const vec3 wi = worldToBsdf(lightDir, isect);
 
-				const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
-                areaContrib += f * dot(normal, lightDir) * (Li / lightPdf);
+					const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
+					areaContrib += f * dot(normal, lightDir) * (Li / lightPdf);
+				}
             }
-
             L += areaContrib / (float)areaSamples;
         }
 	}

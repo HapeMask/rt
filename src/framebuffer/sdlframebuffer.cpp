@@ -111,7 +111,10 @@ void sdlFramebuffer::render(){
 #pragma omp atomic
 			++samplesTaken;
 
-            addSample(x, y, scn.L((float)x + xOffset, (float)y + yOffset));
+            addSample(
+					x, y,
+					scn.L((float)x + xOffset, (float)y + yOffset)
+					);
         }
     }
 

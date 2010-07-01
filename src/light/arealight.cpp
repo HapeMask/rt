@@ -11,7 +11,8 @@
 areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
     light(p, pow, c), a(vA), b(vB), normal(normalize(cross(vA,vB))),
-    A(p - 0.5*vA - 0.5*vB), B(p + 0.5*vA - 0.5*vB), C(p + 0.5*vB - 0.5*vA), D(A + (B-A) + (C-A)),
+	tri1(p - 0.5f*vA - 0.5f*vB, p + 0.5f*vA - 0.5f*vB, p + 0.5f*vB - 0.5f*vA),
+	tri2(p + 0.5f*vA - 0.5f*vB, p + 0.5f*vB + 0.5f*vA, p + 0.5f*vB - 0.5f*vA),
     area(fabs(cross(vA,vB).length())), invArea(1.f/fabs(cross(vA,vB).length()))
 {}
 
@@ -44,12 +45,13 @@ const float areaLight::pdf(const point3& p, const vec3& wi) const {
 
 const intersection areaLight::intersect(const ray& r) const {
     ray rorig(r);
+
     // Backface Culling.
     if(dot(-r.direction, normal) > 0){
         return noIntersect;
     }
 
-    intersection isect1 = triangle(A, B, C).intersect(rorig);
+    intersection isect1 = tri1.intersect(rorig);
     if(isect1.hit){
         isect1.s = NULL;
         isect1.p = NULL;
@@ -57,10 +59,14 @@ const intersection areaLight::intersect(const ray& r) const {
         return isect1;
     }else{
         rorig = r;
-        intersection isect2 = triangle(B, D, C).intersect(rorig);
+        intersection isect2 = tri2.intersect(rorig);
         isect2.s = NULL;
         isect2.p = NULL;
         isect2.li = this;
         return isect2;
     }
+}
+
+const bool areaLight::intersectB(const ray& r) const{
+	return (tri1.intersectB(r) && tri2.intersectB(r));
 }

@@ -56,7 +56,7 @@
     material* mval;
     bsdf* bval;
     bxdf* bxval;
-    microfacetBxdf* mbxval;
+    microfacetBrdf* mbxval;
     accelerator* aval;
     rayTracer* tval;
 }

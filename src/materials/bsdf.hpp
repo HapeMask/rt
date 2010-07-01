@@ -198,9 +198,9 @@ class phongBrdf : public bxdf {
 /**
  * Torrance/Sparrow microfacet BRDF model.
  */
-class microfacetBxdf : public bxdf {
+class microfacetBrdf : public bxdf {
     public:
-        microfacetBxdf(const rgbColor r, const float& e, const float& K, const bxdfType type) : bxdf(type), Rs(r), eta(e), k(K) {}
+        microfacetBrdf(const rgbColor r, const float& e, const float& K, const bxdfType type) : bxdf(type), Rs(r), eta(e), k(K) {}
 
         virtual const float microfacetDistrib(const vec3& wh) const = 0;
 
@@ -239,10 +239,10 @@ class microfacetBxdf : public bxdf {
 /**
  * Bilnn microfacet distribution.
  */
-class blinnMicrofacet : public microfacetBxdf {
+class blinnMicrofacet : public microfacetBrdf {
     public:
         blinnMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& e) :
-            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), exp(e)
+            microfacetBrdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), exp(e)
         {}
 
         virtual const float microfacetDistrib(const vec3& wh) const {
@@ -261,10 +261,10 @@ class blinnMicrofacet : public microfacetBxdf {
 /**
  * Ashikhmin-Shirley anisotropic microfacet distribution.
  */
-class asMicrofacet : public microfacetBxdf {
+class asMicrofacet : public microfacetBrdf {
     public:
         asMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& Nu, const float& Nv) :
-            microfacetBxdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
+            microfacetBrdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
         {}
 
         virtual const float microfacetDistrib(const vec3& wh) const {
@@ -287,7 +287,7 @@ class asMicrofacet : public microfacetBxdf {
 
 class substrate : public bxdf {
     public:
-        substrate(const rgbColor& rd, const rgbColor& rs, microfacetBxdf* rhos) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), rhoS(rhos),
+        substrate(const rgbColor& rd, const rgbColor& rs, microfacetBrdf* rhos) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), rhoS(rhos),
         ecTerm(((28.f * rd) / (23.f * PI)) * rs.inverse())
         {}
 
@@ -303,7 +303,7 @@ class substrate : public bxdf {
     private:
         rgbColor Rd, Rs;
         rgbColor ecTerm;
-        microfacetBxdf* rhoS;
+        microfacetBrdf* rhoS;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

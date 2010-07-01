@@ -37,27 +37,36 @@
 
 #include <sys/time.h>
 #include <SDL.h>
-using namespace std;
 
-// Default to 8 threads.
-#ifndef RT_OMP_THREADS
-#define RT_OMP_THREADS 4
-#endif
+#include <unistd.h>
+using namespace std;
 
 int main(int argc, char* args[]){
 	scene scn;
 
-    string filename;
+    string filename = "../src/scene/test.scn";
+	int numThreads = 4;
+	int c;
 
-	int numThreads = RT_OMP_THREADS;
-    if(argc < 2){
-        filename = "../src/scene/test.scn";
-    }else{
-        filename = string(args[1]);
-    }
+	while( (c = getopt(argc, args, "n:")) != -1 ){
+		switch(c){
+			case 'n':
+				numThreads = atoi(optarg);
+				break;
+			case '?':
+				if(optopt == 'n'){
+					cerr << "-n requires an argument" << endl;
+				}else{
+					cerr << "Unknown option: -" << optopt << endl;
+				}
+				break;
+			default:
+				return 1;
+		}
+	}
 
-	if(argc == 3){
-		numThreads = atoi(args[2]);
+	if(optind < argc){
+		filename = string(args[optind]);
 	}
 
 	ifstream in(filename.c_str());
@@ -80,6 +89,9 @@ int main(int argc, char* args[]){
     omp_set_num_threads(numThreads);
     cerr << "Rendering on " << numThreads << " threads." << endl;
 #endif
+
+	//cerr << scn.L(scn.getCamera().width()/2, scn.getCamera().height()/2) << endl;
+	//return 0;
 
     SDL_EnableKeyRepeat(3,3);
 
