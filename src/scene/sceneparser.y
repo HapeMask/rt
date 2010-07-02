@@ -57,6 +57,7 @@
     bsdf* bval;
     bxdf* bxval;
     microfacetBrdf* mbxval;
+    microfacetDistribution* mdistval;
     accelerator* aval;
     rayTracer* tval;
 }
@@ -65,7 +66,7 @@
 %token TRIANGLE SPHERE OBJFILE
 %token BVH OCTREE DEFAULT
 %token WHITTED PATH BIDIR
-%token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE
+%token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
 %token AREATYPE POINTTYPE
@@ -89,8 +90,9 @@
 %type <bval> substrate
 %type <bval> pair
 %type <bxval> bxdf
-%type <mbxval> blinn
-%type <mbxval> aniso
+%type <mdistval> blinn
+%type <mdistval> aniso
+%type <mdistval> microfacetDistrib
 %type <bxval> phong
 %type <mbxval> microfacet
 %type <bxval> lambert
@@ -215,13 +217,13 @@ phong :
       ;
 
 blinn :
-      BLINN '(' FLOAT ',' FLOAT ',' FLOAT ','  FLOAT ',' FLOAT ',' FLOAT ')'
-      { $$ = new blinnMicrofacet(rgbColor($3, $5, $7), $9, $11, $13); }
+      BLINN '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+      { $$ = new blinn(rgbColor($3, $5, $7), $9); }
       ;
 
 aniso :
-      ANISO '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
-      { $$ = new asMicrofacet(rgbColor($3, $5, $7), $9, $11, $13, $15); }
+      ANISO '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+      { $$ = new aniso(rgbColor($3, $5, $7), $9, $11); }
 
 specular :
          specular_dielectric { $$ = $1; }|
@@ -247,9 +249,16 @@ specular_conductor :
                    }
                    ;
 
-microfacet :
+microfacetDistrib :
            blinn { $$ = $1; } |
            aniso { $$ = $1; }
+           ;
+
+microfacet :
+           MICROFACET '(' FLOAT ',' FLOAT ',' microfacetDistrib ')'
+           {
+               $$ = new microfacetBrdf($3, $5, $7, new tsAttenuation());
+           }
            ;
 
 bxdf :
@@ -259,10 +268,10 @@ bxdf :
      ;
 
 substrate :
-          SUBSTRATE '(' FLOAT ',' FLOAT ',' FLOAT ',' microfacet ')'
+          SUBSTRATE '(' FLOAT ',' FLOAT ',' FLOAT ',' microfacetDistrib ')'
           {
               bsdf* p = new bsdf();
-              p->addBxdf(new substrate(rgbColor($3, $5, $7), $9->rs(), $9));
+              p->addBxdf(new substrate(rgbColor($3, $5, $7), $9->rho, $9));
               $$ = p;
           }
           ;

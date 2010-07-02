@@ -195,16 +195,71 @@ class phongBrdf : public bxdf {
         const float n;
 };
 
+class microfacetDistribution {
+    public:
+        microfacetDistribution(const rgbColor& r) : rho(r) {}
+
+        virtual ~microfacetDistribution() {}
+
+        virtual const float D(const vec3& wh) const = 0;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
+        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const = 0;
+
+        const rgbColor rho;
+};
+
+class shadowingMaskingFunction {
+    public:
+        virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const = 0;
+
+        virtual ~shadowingMaskingFunction() {}
+};
+
 /**
  * Torrance/Sparrow microfacet BRDF model.
  */
 class microfacetBrdf : public bxdf {
     public:
-        microfacetBrdf(const rgbColor r, const float& e, const float& K, const bxdfType type) : bxdf(type), Rs(r), eta(e), k(K) {}
+        microfacetBrdf(const float& e, const float& K,
+                microfacetDistribution* d, shadowingMaskingFunction* g) : bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d), smf(g) {}
 
-        virtual const float microfacetDistrib(const vec3& wh) const = 0;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
+            const vec3 wh = halfVector(wo, wi);
+            const float cosThetaO = bsdf::cosTheta(wo);
+            const float cosThetaI = bsdf::cosTheta(wi);
+            const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaO);
 
-        const float attenuation(const vec3& wo, const vec3& wi, const vec3& wh) const {
+            return
+                distrib->rho * distrib->D(wh) * smf->G(wo, wi, wh) * F /
+                (4.f * cosThetaO * cosThetaI);
+        }
+
+        inline virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+            distrib->sampleF(u0, u1, wo, wi, pd);
+            return f(wo, wi);
+        }
+
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const{
+            return distrib->pdf(wo, wi);
+        }
+
+        ~microfacetBrdf(){
+            delete distrib;
+            delete smf;
+        }
+
+    private:
+        const float eta, k;
+        const microfacetDistribution* distrib;
+        const shadowingMaskingFunction* smf;
+};
+
+/**
+ * Torrance/Sparrow model attenuation function.
+ */
+class tsAttenuation : public shadowingMaskingFunction {
+    public:
+        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
             const float ndotwo = fabs(bsdf::cosTheta(wo));
             const float ndotwi = fabs(bsdf::cosTheta(wi));
             const float ndotwh = fabs(bsdf::cosTheta(wh));
@@ -212,44 +267,22 @@ class microfacetBrdf : public bxdf {
             return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
                         2.f * ndotwh * ndotwi / wodotwh));
         }
-
-        //virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const = 0;
-        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            const vec3 wh = halfVector(wo, wi);
-            const float cosThetaO = bsdf::cosTheta(wo);
-            const float cosThetaI = bsdf::cosTheta(wi);
-            const rgbColor Fr = rescaledApproxFresnel(eta, k, cosThetaO);
-
-            return
-                (Rs * microfacetDistrib(wh) * attenuation(wo, wi, wh) * Fr) /
-                (4.f * cosThetaO * cosThetaI);
-        }
-
-        virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
-
-        inline const rgbColor& rs() const {
-            return Rs;
-        }
-
-    private:
-        rgbColor Rs;
-        const float eta, k;
 };
 
 /**
  * Bilnn microfacet distribution.
  */
-class blinnMicrofacet : public microfacetBrdf {
+class blinn : public microfacetDistribution {
     public:
-        blinnMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& e) :
-            microfacetBrdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), exp(e)
+        blinn(const rgbColor& r, const float& e) :
+            microfacetDistribution(r), exp(e)
         {}
 
-        virtual const float microfacetDistrib(const vec3& wh) const {
+        virtual const float D(const vec3& wh) const {
             return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
         }
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
@@ -261,17 +294,17 @@ class blinnMicrofacet : public microfacetBrdf {
 /**
  * Ashikhmin-Shirley anisotropic microfacet distribution.
  */
-class asMicrofacet : public microfacetBrdf {
+class aniso : public microfacetDistribution {
     public:
-        asMicrofacet(const rgbColor& r, const float& eta, const float& k, const float& Nu, const float& Nv) :
-            microfacetBrdf(r, eta, k, bxdfType(GLOSSY | REFLECTION)), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
+        aniso(const rgbColor& r, const float& Nu, const float& Nv) :
+            microfacetDistribution(r), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
         {}
 
-        virtual const float microfacetDistrib(const vec3& wh) const {
+        virtual const float D(const vec3& wh) const {
             return ecTerm * powf(bsdf::cosTheta(wh), exponent(wh));
         }
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
@@ -287,23 +320,23 @@ class asMicrofacet : public microfacetBrdf {
 
 class substrate : public bxdf {
     public:
-        substrate(const rgbColor& rd, const rgbColor& rs, microfacetBrdf* rhos) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), rhoS(rhos),
+        substrate(const rgbColor& rd, const rgbColor& rs, microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), distrib(d),
         ecTerm(((28.f * rd) / (23.f * PI)) * rs.inverse())
         {}
-
-        ~substrate(){
-            delete rhoS;
-        }
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
+        ~substrate(){
+            delete distrib;
+        }
+
     private:
         rgbColor Rd, Rs;
         rgbColor ecTerm;
-        microfacetBrdf* rhoS;
+        const microfacetDistribution* distrib;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

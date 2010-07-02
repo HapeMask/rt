@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-const rgbColor asMicrofacet::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     // Generate a vector wh with distribution described by pdf().
     float phi, costheta;
     if (u0 < .25f) {
@@ -35,13 +35,10 @@ const rgbColor asMicrofacet::sampleF(const float& u0, const float& u1, const vec
 
     if(wo.y() * wi.y() < 0.f){
 		pd = 0.f;
-        return 0.f;
-    }else{
-        return f(wo, wi);
     }
 }
 
-const float asMicrofacet::pdf(const vec3& wo, const vec3& wi) const{
+const float aniso::pdf(const vec3& wo, const vec3& wi) const{
     const vec3 wh = halfVector(wo, wi);
-    return microfacetDistrib(wh) / (4.f * fabs(dot(wo, wh)));
+    return D(wh) / (4.f * fabs(dot(wo, wh)));
 }

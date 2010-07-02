@@ -39,6 +39,7 @@
 "lambert"                               { return Bison::Parser::token::LAMBERT; }
 "substrate"                             { return Bison::Parser::token::SUBSTRATE; }
 "pair"                                  { return Bison::Parser::token::PAIR; }
+"microfacet"                            { return Bison::Parser::token::MICROFACET; }
 
 "dielectric"                            { return Bison::Parser::token::DIELECTRIC; }
 "conductor"                             { return Bison::Parser::token::CONDUCTOR; }

@@ -165,13 +165,14 @@ namespace Bison {
     bsdf* bval;
     bxdf* bxval;
     microfacetBrdf* mbxval;
+    microfacetDistribution* mdistval;
     accelerator* aval;
     rayTracer* tval;
 
 
 
 /* Line 34 of lalr1.cc  */
-#line 175 "sceneparser.tab.h"
+#line 176 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -206,14 +207,15 @@ namespace Bison {
      SUBSTRATE = 278,
      PAIR = 279,
      EMISSIVE = 280,
-     DIELECTRIC = 281,
-     CONDUCTOR = 282,
-     SMOOTH = 283,
-     FLAT = 284,
-     AREATYPE = 285,
-     POINTTYPE = 286,
-     FLOAT = 287,
-     FILEPATH = 288
+     MICROFACET = 281,
+     DIELECTRIC = 282,
+     CONDUCTOR = 283,
+     SMOOTH = 284,
+     FLAT = 285,
+     AREATYPE = 286,
+     POINTTYPE = 287,
+     FLOAT = 288,
+     FILEPATH = 289
    };
 
     };
@@ -300,7 +302,7 @@ namespace Bison {
     static const unsigned char yydefact_[];
 
     static const short int yypgoto_[];
-    static const signed char yydefgoto_[];
+    static const short int yydefgoto_[];
 
     /// What to do in a state.
     /// \a yytable_[yypact_[s]]: what to do in state \a s.
@@ -390,7 +392,7 @@ namespace Bison {
 } // Bison
 
 /* Line 34 of lalr1.cc  */
-#line 394 "sceneparser.tab.h"
+#line 396 "sceneparser.tab.h"
 
 
 
