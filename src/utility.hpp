@@ -83,6 +83,12 @@ inline const vec3 bsdfToWorld(const vec3& v, const vec3& normal, const vec3& bin
         binormal.z() * v.x() + normal.z() * v.y() + tangent.z() * v.z());
 }
 
+inline void sphericalToDirection(vec3& v, const float& sinTheta, const float& cosTheta, const float& phi){
+    v.x() = sinTheta * cosf(phi);
+    v.y() = cosTheta;
+    v.z() = sinTheta * sinf(phi);
+}
+
 /**
  * Fast Float/Int conversion from PBRT.
  */

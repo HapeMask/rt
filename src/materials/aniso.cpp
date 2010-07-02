@@ -28,7 +28,9 @@ void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
     }
 
     const float sintheta = sqrtf(max(0.f, 1.f - costheta*costheta));
-    vec3 wh = normalize(vec3(sintheta*costheta, phi, sintheta*sintheta));
+    vec3 wh;
+    sphericalToDirection(wh, sintheta, costheta, phi);
+    wh.normalize();
 
     wi = -wo + 2.f * fabs(dot(wo, wh)) * wh;
     pd = pdf(wo, wi);

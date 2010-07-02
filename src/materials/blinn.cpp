@@ -13,12 +13,14 @@ void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
     const float cosThetaH = powf(u0, 1.f / (exp+1.f));
     const float sinThetaH = sqrtf(max(0.f, 1.f - cosThetaH*cosThetaH));
 
-    // Convert from spherical coords to BSDF xyz coords.
-    const vec3 wh = vec3(sinThetaH*cosf(phiH), cosThetaH, sinThetaH*sinf(phiH));
-    if(wh.y() > 0){
-        wi = -wo + 2.f * dot(wo, wh) * wh;
+    vec3 wh;
+    sphericalToDirection(wh, sinThetaH, cosThetaH, phiH);
+    wh.normalize();
 
-        pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * dot(wo, wh));
+    if(wh.y() > 0){
+        wi = 2.f * fabs(dot(wo, wh)) * wh - wo;
+
+        pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * fabs(dot(wo, wh)));
     }else{
         pd = 0.f;
     }

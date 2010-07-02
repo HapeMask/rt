@@ -34,6 +34,7 @@
 "emissive"                              { return Bison::Parser::token::EMISSIVE; }
 "blinn"                                 { return Bison::Parser::token::BLINN; }
 "aniso"                                 { return Bison::Parser::token::ANISO; }
+"beckmann"                              { return Bison::Parser::token::BECKMANN; }
 "phong"                                 { return Bison::Parser::token::PHONG; }
 "specular"                              { return Bison::Parser::token::SPECULAR; }
 "lambert"                               { return Bison::Parser::token::LAMBERT; }

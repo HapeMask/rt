@@ -321,6 +321,10 @@ class vec3 {
             return x()*x() + y()*y() + z()*z();
         }
 
+        inline void normalize() {
+            (*this) /= length();
+        }
+
 	private:
         union{
             float values[4];

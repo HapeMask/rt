@@ -120,8 +120,8 @@ class specularBxdf : public bxdf {
         specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
             bxdf(type), fType(ft), ior(eta), k(K) {}
 
-        virtual const rgbColor evalFresnel(const float& cosThetaI) const {
-            return rescaledApproxFresnel(ior, k, cosThetaI);
+        virtual const rgbColor evalFresnel(const float& cosThetaO) const {
+            return rescaledApproxFresnel(ior, k, cosThetaO);
         }
 
     protected:
@@ -202,17 +202,21 @@ class microfacetDistribution {
         virtual ~microfacetDistribution() {}
 
         virtual const float D(const vec3& wh) const = 0;
+
+        // Default is the TS shadowing masking function.
+        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
+            const float ndotwo = fabs(bsdf::cosTheta(wo));
+            const float ndotwi = fabs(bsdf::cosTheta(wi));
+            const float ndotwh = fabs(bsdf::cosTheta(wh));
+            const float wodotwh = fabs(dot(wo, wh));
+            return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
+                        2.f * ndotwh * ndotwi / wodotwh));
+        }
+
         virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
         virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const = 0;
 
         const rgbColor rho;
-};
-
-class shadowingMaskingFunction {
-    public:
-        virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const = 0;
-
-        virtual ~shadowingMaskingFunction() {}
 };
 
 /**
@@ -221,16 +225,17 @@ class shadowingMaskingFunction {
 class microfacetBrdf : public bxdf {
     public:
         microfacetBrdf(const float& e, const float& K,
-                microfacetDistribution* d, shadowingMaskingFunction* g) : bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d), smf(g) {}
+                microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
             const vec3 wh = halfVector(wo, wi);
             const float cosThetaO = bsdf::cosTheta(wo);
             const float cosThetaI = bsdf::cosTheta(wi);
-            const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaO);
+            const float cosThetaH = dot(wi, wh);
+            const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaH);
 
             return
-                distrib->rho * distrib->D(wh) * smf->G(wo, wi, wh) * F /
+                distrib->rho * distrib->D(wh) * distrib->G(wo, wi, wh) * F /
                 (4.f * cosThetaO * cosThetaI);
         }
 
@@ -245,29 +250,41 @@ class microfacetBrdf : public bxdf {
 
         ~microfacetBrdf(){
             delete distrib;
-            delete smf;
         }
 
     private:
         const float eta, k;
         const microfacetDistribution* distrib;
-        const shadowingMaskingFunction* smf;
 };
 
 /**
- * Torrance/Sparrow model attenuation function.
+ * Cornell's Microfacet BTDF model.
  */
-class tsAttenuation : public shadowingMaskingFunction {
+/*
+class microfacetBtdf : public bxdf {
     public:
-        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
-            const float ndotwo = fabs(bsdf::cosTheta(wo));
-            const float ndotwi = fabs(bsdf::cosTheta(wi));
-            const float ndotwh = fabs(bsdf::cosTheta(wh));
-            const float wodotwh = fabs(dot(wo, wh));
-            return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
-                        2.f * ndotwh * ndotwi / wodotwh));
+        microfacetBtdf(const float& e, const float& K,
+                microfacetDistribution* d) :
+            bxdf(bxdfType(GLOSSY | TRANSMISSION)), eta(e), k(K), distrib(d) {} 
+
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
+            const bool entering = (cosThetaO > 0.f);
+
+            const float eta1 = entering ? 1.0029f : eta;
+            const float eta2 = entering ? eta : 1.0029f;
+
+            const vec3 wh = halfVector(eta1 * wo, eta2 * wi);
+
+            const float cosThetaO = bsdf::cosTheta(wo);
+            const float cosThetaI = bsdf::cosTheta(wi);
+            const float cosThetaH = dot(wi, wh);
+
+            const rgbColor Ft = rgbColor(1.f) - rescaledApproxFresnel(eta, k, cosThetaH);
         }
+
+    private:
 };
+*/
 
 /**
  * Bilnn microfacet distribution.
@@ -278,7 +295,7 @@ class blinn : public microfacetDistribution {
             microfacetDistribution(r), exp(e)
         {}
 
-        virtual const float D(const vec3& wh) const {
+        inline virtual const float D(const vec3& wh) const {
             return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
         }
 
@@ -288,8 +305,6 @@ class blinn : public microfacetDistribution {
     private:
         float exp;
 };
-
-//, pdfTerm(sqrt((nu+1.f)*(nv+1.f)) * INVTWOPI) 
 
 /**
  * Ashikhmin-Shirley anisotropic microfacet distribution.
@@ -314,8 +329,52 @@ class aniso : public microfacetDistribution {
 
         float nu, nv;
 
-        // Energy conservation terms.
+        // Energy conservation term.
         float ecTerm;
+};
+
+/**
+ * Beckmann Distribution
+ */
+class beckmann : public microfacetDistribution {
+    public:
+        beckmann(const rgbColor& r, const float& a) : microfacetDistribution(r), alpha(a) {}
+
+        virtual const float D(const vec3& wh) const {
+            const float cosThetaH = bsdf::cosTheta(wh);
+            if(cosThetaH > 0.f){
+                const float thetaH = acosf(cosThetaH);
+                const float tanThetaH = tanf(thetaH);
+                const float e = -(tanThetaH * tanThetaH) / (alpha * alpha);
+                return (exp(e) * INVPI) / (alpha * alpha * pow(cosThetaH, 4));
+            }else{
+                return 0.f;
+            }
+        }
+
+        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
+            return G1(wo, wh) * G1(wi, wh);
+        }
+
+        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+    private:
+        inline const float G1(const vec3& v, const vec3& wh) const{
+            if(dot(v,wh) / bsdf::cosTheta(v) > 0.f){
+                const float cosThetaH = bsdf::cosTheta(wh);
+                const float a = 1.f / (alpha * tanf(acosf(cosThetaH)));
+                if(a < 1.6f){
+                    return (3.535f * a + 2.181* a*a) / (1.f + 2.276*a + 2.577 * a*a);
+                }else{
+                    return 1.f;
+                }
+            }else{
+                return 0.f;
+            }
+        }
+
+        const float alpha;
 };
 
 class substrate : public bxdf {

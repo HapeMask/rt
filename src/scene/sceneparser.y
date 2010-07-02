@@ -92,6 +92,7 @@
 %type <bxval> bxdf
 %type <mdistval> blinn
 %type <mdistval> aniso
+%type <mdistval> beckmann
 %type <mdistval> microfacetDistrib
 %type <bxval> phong
 %type <mbxval> microfacet
@@ -221,6 +222,11 @@ blinn :
       { $$ = new blinn(rgbColor($3, $5, $7), $9); }
       ;
 
+beckmann :
+      BECKMANN '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+      { $$ = new blinn(rgbColor($3, $5, $7), $9); }
+      ;
+
 aniso :
       ANISO '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
       { $$ = new aniso(rgbColor($3, $5, $7), $9, $11); }
@@ -251,13 +257,14 @@ specular_conductor :
 
 microfacetDistrib :
            blinn { $$ = $1; } |
-           aniso { $$ = $1; }
+           aniso { $$ = $1; } |
+           beckmann { $$ = $1; }
            ;
 
 microfacet :
            MICROFACET '(' FLOAT ',' FLOAT ',' microfacetDistrib ')'
            {
-               $$ = new microfacetBrdf($3, $5, $7, new tsAttenuation());
+               $$ = new microfacetBrdf($3, $5, $7);
            }
            ;
 
