@@ -231,7 +231,7 @@ class microfacetBrdf : public bxdf {
             const vec3 wh = halfVector(wo, wi);
             const float cosThetaO = bsdf::cosTheta(wo);
             const float cosThetaI = bsdf::cosTheta(wi);
-            const float cosThetaH = dot(wi, wh);
+            const float cosThetaH = fabs(dot(wi, wh));
             const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaH);
 
             return
@@ -316,7 +316,7 @@ class aniso : public microfacetDistribution {
         {}
 
         virtual const float D(const vec3& wh) const {
-            return ecTerm * powf(bsdf::cosTheta(wh), exponent(wh));
+            return ecTerm * powf(fabs(bsdf::cosTheta(wh)), exponent(wh));
         }
 
         virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
