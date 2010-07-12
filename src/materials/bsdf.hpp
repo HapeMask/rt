@@ -205,10 +205,10 @@ class microfacetDistribution {
 
         // Default is the TS shadowing masking function.
         inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
-            const float ndotwo = fabs(bsdf::cosTheta(wo));
-            const float ndotwi = fabs(bsdf::cosTheta(wi));
-            const float ndotwh = fabs(bsdf::cosTheta(wh));
-            const float wodotwh = fabs(dot(wo, wh));
+            const float ndotwo = bsdf::cosTheta(wo);
+            const float ndotwi = bsdf::cosTheta(wi);
+            const float ndotwh = bsdf::cosTheta(wh);
+            const float wodotwh = dot(wo, wh);
             return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
                         2.f * ndotwh * ndotwi / wodotwh));
         }
@@ -231,7 +231,7 @@ class microfacetBrdf : public bxdf {
             const vec3 wh = halfVector(wo, wi);
             const float cosThetaO = bsdf::cosTheta(wo);
             const float cosThetaI = bsdf::cosTheta(wi);
-            const float cosThetaH = fabs(dot(wi, wh));
+            const float cosThetaH = dot(wi, wh);
             const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaH);
 
             return
