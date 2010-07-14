@@ -31,7 +31,8 @@ scene<bvh, path>{
     shape{
 		sphere(0,-2,0,1)
         //material(specular<dielectric>(1,1,1, 1.5))
-        material(pair(lambert(0,0,0), microfacet(1.4, 7.7, beckmann(0.9,0.9,0.9, 10000))))
+        material(specular<conductor>(1,1,1, 0.177, 3.5))
+        //material(pair(lambert(0,0,0), microfacet(1.4, 7.7, beckmann(0.9,0.9,0.9, 10000))))
     }
 
     shape{

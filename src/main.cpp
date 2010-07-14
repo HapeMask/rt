@@ -124,6 +124,13 @@ int main(int argc, char* args[]){
                                 return 0;
                             }
                             break;
+                        case SDLK_ESCAPE:
+                            if(!paused){
+                                cerr << "Pausing..." << endl;
+                                paused = true;
+                            }
+
+                            break;
                         case '-':
                             linTmScale -= 0.25f;
                             f.setLinearTonemapScale(linTmScale);
