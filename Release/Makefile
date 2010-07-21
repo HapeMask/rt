@@ -7,7 +7,8 @@ SDL_LDFLAGS= $(shell sdl-config --libs)
 WIN_CXXFLAGS = -IC:\MinGW\include\SDL
 WIN_LDFLAGS = -LC:\MinGW\lib
 
-PC_CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 -ffast-math \
+PC_CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
+	-msse4 -msse4.1 -msse4.2 -ffast-math \
 	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
 	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
 	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937 \
