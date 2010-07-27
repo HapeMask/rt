@@ -1,5 +1,5 @@
 scene<bvh, path>{
-	camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
+	camera<384,384>(45, 0,0,8, 0,0,0, 0,1,0)
     light<area>(0,2.8,0, 0,0,2, 2,0,0, 1,1,1, 2)
     //light<point>(1,2.8,-1, 0,0,1, 4)
 
@@ -30,13 +30,7 @@ scene<bvh, path>{
 
     shape{
 		sphere(0,-2,0,1)
-        //material(specular<dielectric>(1,1,1, 1.5))
-        material(specular<conductor>(1,1,1, 0.177, 3.5))
-        //material(pair(lambert(0,0,0), microfacet(1.4, 7.7, beckmann(0.9,0.9,0.9, 10000))))
-    }
-
-    shape{
-        sphere(2,-2,0,1)
-        material(lambert(0.8,0.8,0.8))
+		material(pair(lambert(0,0,0), ward(0.2,0.2,0.2, 5, 5)))
+		//material(pair(lambert(0,0,0), microfacet(1.5, 7.7, blinn(0.2,0.2,0.2, 20))))
     }
 }

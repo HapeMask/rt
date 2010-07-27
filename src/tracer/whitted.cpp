@@ -19,7 +19,7 @@ const rgbColor whittedRayTracer::L(const ray& r) const{
 
 const int nsamp = 512*512*16*2;
 const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
-	if(depth > MAXDEPTH){
+	if(depth > MAX_DEPTH){
 		return 0.f;
 	}
 

@@ -70,11 +70,11 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 		// Only sample non-specular reflection on the first bounce, leave the
 		// 1st-bounce specular hits for the recursive step below.
 		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ? bxdfType(ALL & ~SPECULAR) : ALL;
-        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, reflectionType, sampledType, pdf);
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, reflectionType, sampledType, pdf);
 
         if(f.isBlack() || pdf == 0.f){
 			// Trace both specular reflection and refraction recursively.
-			if(recursiveSpecular && pathLength == 0 && depth < 4){
+			if(recursiveSpecular && pathLength == 0 && depth < MAX_DEPTH){
 				vec3 specDir;
 
 				const rgbColor fr =

@@ -374,7 +374,22 @@ class beckmann : public microfacetDistribution {
             }
         }
 
-        const float alpha;
+        float alpha;
+};
+
+class newWard : public bxdf {
+	public:
+		newWard(const rgbColor& rs, const float& a, const float& b) :
+			bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b) {}
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+	private:
+		rgbColor Rs;
+		float alpha, beta;
 };
 
 class substrate : public bxdf {

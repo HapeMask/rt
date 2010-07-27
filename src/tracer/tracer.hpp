@@ -15,7 +15,7 @@
 using namespace std;
 using tr1::shared_ptr;
 
-const int MAXDEPTH = 10;
+const int MAX_DEPTH = 4;
 
 class scene;
 class rayTracer {

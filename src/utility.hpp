@@ -112,3 +112,7 @@ inline int Floor2Int(const double val) {
 inline int Ceil2Int(const double val) {
 	return Round2Int(val + doublemagicroundeps);
 }
+
+inline const float gray(const rgbColor& c){
+	return c.r * 0.297f, c.g * 0.569f, c.b * 0.114f;
+}

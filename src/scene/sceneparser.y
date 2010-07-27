@@ -66,7 +66,7 @@
 %token TRIANGLE SPHERE OBJFILE
 %token BVH OCTREE DEFAULT
 %token WHITTED PATH BIDIR
-%token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET
+%token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET WARD
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
 %token AREATYPE POINTTYPE
@@ -97,6 +97,7 @@
 %type <bxval> phong
 %type <mbxval> microfacet
 %type <bxval> lambert
+%type <bxval> ward
 %type <aval> accelerator
 %type <tval> tracer
 
@@ -217,6 +218,13 @@ phong :
       { $$ = new phongBrdf(rgbColor($3, $5, $7), $9); }
       ;
 
+// NOTE the 1.f/{alpha, beta} below. This makes the input format for the brdf
+// the same as others (0-BIG_NUMBER instead of 0-1).
+ward :
+	 WARD '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+     { $$ = new newWard(rgbColor($3, $5, $7), 1.f/$9, 1.f/$11); }
+	 ;
+
 blinn :
       BLINN '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
       { $$ = new blinn(rgbColor($3, $5, $7), $9); }
@@ -271,7 +279,8 @@ microfacet :
 bxdf :
      microfacet { $$ = $1; } |
      lambert { $$ = $1; } |
-     phong { $$ = $1; }
+     phong { $$ = $1; } |
+     ward { $$ = $1; }
      ;
 
 substrate :

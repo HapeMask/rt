@@ -208,14 +208,15 @@ namespace Bison {
      PAIR = 279,
      EMISSIVE = 280,
      MICROFACET = 281,
-     DIELECTRIC = 282,
-     CONDUCTOR = 283,
-     SMOOTH = 284,
-     FLAT = 285,
-     AREATYPE = 286,
-     POINTTYPE = 287,
-     FLOAT = 288,
-     FILEPATH = 289
+     WARD = 282,
+     DIELECTRIC = 283,
+     CONDUCTOR = 284,
+     SMOOTH = 285,
+     FLAT = 286,
+     AREATYPE = 287,
+     POINTTYPE = 288,
+     FLOAT = 289,
+     FILEPATH = 290
    };
 
     };
@@ -392,7 +393,7 @@ namespace Bison {
 } // Bison
 
 /* Line 34 of lalr1.cc  */
-#line 396 "sceneparser.tab.h"
+#line 397 "sceneparser.tab.h"
 
 
 
