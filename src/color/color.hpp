@@ -10,17 +10,21 @@ class color {
 		virtual const float green() const = 0;
 		virtual const float blue() const = 0;
 
-		const uint8_t R() const{
+		const uint8_t R() const {
 			return 255.f * red();
 		}
 
-		const uint8_t G() const{
+		const uint8_t G() const {
 			return 255.f * green();
 		}
 
-		const uint8_t B() const{
+		const uint8_t B() const {
 			return 255.f * blue();
 		}
+
+        inline const float gray() const {
+            return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
+        }
 
 		virtual void invert() = 0;
 };
