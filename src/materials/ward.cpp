@@ -28,8 +28,8 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
 	if(wo.y() * wi.y() < 0.f){
 		pd = 0.f;
 	}else{
-		const float y = gray(F);
-		const float ps = gray(Rs);
+		const float y = F.gray();
+		const float ps = Rs.gray();
 		pd = y /
 			((2.f * ps) / (1.f + wo.y()*wi.y()));
 	}
@@ -61,8 +61,8 @@ const float newWard::pdf(const vec3& wo, const vec3& wi) const{
 	}
 
 	const rgbColor fc = f(wo, wi);
-	const float y = gray(fc);
-	const float ps = gray(Rs);
+	const float y = fc.gray();
+	const float ps = Rs.gray();
 
 	return y /
 		((2.f * ps) / (1.f + wo.y()*wi.y()));
