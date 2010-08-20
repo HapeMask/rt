@@ -5,8 +5,13 @@
 #include "scene/scene.hpp"
 
 #include <SDL.h>
+#include <omp.h>
 #include <vector>
 using namespace std;
+
+// Number of image blocks in the X- and Y- axes.
+static const int HORIZ_BLOCKS = 8;
+static const int VERT_BLOCKS = 8;
 
 class sdlFramebuffer : public framebuffer {
 	public:
@@ -21,20 +26,47 @@ class sdlFramebuffer : public framebuffer {
 
         void setLinearTonemapScale(const float& scale){
             linearTonemapScale = scale;
-            tonemapAndFlip();
+            tonemapAndUpdateScreen();
+        }
+
+        inline void setShowUpdates(const bool show){
+            showUpdates = show;
         }
 
 	private:
 		void addSample(const int& x, const int& y, const color& c);
 		void setPixel(const int& x, const int& y, const color& c);
-        void tonemapAndFlip();
 
+        void tonemapAndUpdateScreen();
+        void tonemapAndUpdateRect(const int& cornerX, const int& cornerY);
 
+        /*
+         * Generates upper-left coordinates for the next block in the sequence of image
+         * blocks.
+         */
+        inline const bool getNextBlock(int& x, int& y){
+            bool done = false;
+#ifdef RT_MULTITHREADED
+#pragma omp critical
+#endif
+            {
+                x = (blocksUsed % HORIZ_BLOCKS) * blockWidth;
+                y = (blocksUsed / HORIZ_BLOCKS) * blockHeight;
+                ++blocksUsed;
+
+                done = (blocksUsed > (HORIZ_BLOCKS * VERT_BLOCKS));
+            }
+
+            return done;
+        }
+
+        int blocksUsed;
         uint64_t samplesTaken;
         const scene& scn;
+        const int blockWidth, blockHeight;
 
 		SDL_Surface* screen;
-		bool didInit;
+		bool didInit, showUpdates;
         vector<rgbColor>* buffer;
         float linearTonemapScale;
 };

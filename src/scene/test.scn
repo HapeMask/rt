@@ -30,7 +30,7 @@ scene<bvh, path>{
 
     shape{
 		sphere(0,-2,0,1)
-		material(pair(lambert(0,0,0), ward(0.2,0.2,0.2, 5, 5)))
-		//material(pair(lambert(0,0,0), microfacet(1.5, 7.7, blinn(0.2,0.2,0.2, 20))))
+		//material(pair(lambert(0,0,0), ward(0.2,0.2,0.2, 5, 5)))
+		material(pair(lambert(0,0,0), microfacet(1.5, 7.7, blinn(0.2,0.2,0.2, 20))))
     }
 }

@@ -25,7 +25,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 
         if(!isect.hit){
             if(pathLength == 0 || lastBounceWasSpecular){
-                for(int i=0; i<parent.numLights(); ++i){
+                for(size_t i=0; i<parent.numLights(); ++i){
                     const float lightDist = (parent.getLight(i)->getPosition() - rOrig.origin).length();
                     ray lightRay(rOrig, EPSILON, lightDist);
 

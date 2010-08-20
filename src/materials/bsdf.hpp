@@ -46,9 +46,9 @@ class bxdf;
 class specularBxdf;
 class bsdf {
     public:
-        bsdf() : specTra(NULL), specRef(NULL),
-        diffTra(NULL), diffRef(NULL),
-        glossTra(NULL), glossRef(NULL) {}
+        bsdf() : diffTra(NULL), diffRef(NULL),
+        glossTra(NULL), glossRef(NULL),
+        specTra(NULL), specRef(NULL) {}
         ~bsdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
@@ -83,10 +83,10 @@ class bsdf {
         }
 
     private:
-        bxdf *diffTra, *diffRef,
+        bxdf* diffTra, *diffRef,
              *glossTra, *glossRef;
 
-        specularBxdf *specRef, *specTra;
+        specularBxdf* specTra, *specRef;
 };
 
 class bxdf {
@@ -394,8 +394,9 @@ class newWard : public bxdf {
 
 class substrate : public bxdf {
     public:
-        substrate(const rgbColor& rd, const rgbColor& rs, microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)), Rd(rd), Rs(rs), distrib(d),
-        ecTerm(((28.f * rd) / (23.f * PI)) * rs.inverse())
+        substrate(const rgbColor& rd, const rgbColor& rs, microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)),
+            Rd(rd), Rs(rs), ecTerm(((28.f * rd) / (23.f * PI)) * rs.inverse()),
+            distrib(d)
         {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;

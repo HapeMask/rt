@@ -99,7 +99,11 @@ int main(int argc, char* args[]){
     struct timeval start, end;
 
 	SDL_Event e;
-    bool paused = false, dirty = false;;
+    bool paused = false, dirty = false, showUpdates = false;
+
+    /*
+     * Main interaction loop.
+     */
 	while(true){
         if(paused){
             SDL_WaitEvent(&e);
@@ -153,6 +157,10 @@ int main(int argc, char* args[]){
                             }
 
                             paused = !paused;
+                            break;
+                        case 'u':
+                            showUpdates = !showUpdates;
+                            f.setShowUpdates(showUpdates);
                             break;
                         default:
                             break;
