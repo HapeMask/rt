@@ -46,6 +46,8 @@ class sdlFramebuffer : public framebuffer {
          */
         inline const bool getNextBlock(int& x, int& y){
             bool done = false;
+
+            // Critical section protects race conditions on blocksUsed.
 #ifdef RT_MULTITHREADED
 #pragma omp critical
 #endif
@@ -67,7 +69,6 @@ class sdlFramebuffer : public framebuffer {
 
 		SDL_Surface* screen;
 		bool didInit, showUpdates;
-        //vector<rgbColor>* buffer;
         rgbColor* buffer;
         float linearTonemapScale;
 };
