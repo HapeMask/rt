@@ -10,8 +10,8 @@
 using namespace std;
 
 // Number of image blocks in the X- and Y- axes.
-static const int HORIZ_BLOCKS = 8;
-static const int VERT_BLOCKS = 8;
+static const int HORIZ_BLOCKS = 4;
+static const int VERT_BLOCKS = 4;
 
 class sdlFramebuffer : public framebuffer {
 	public:

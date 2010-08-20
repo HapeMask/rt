@@ -99,7 +99,7 @@ int main(int argc, char* args[]){
     struct timeval start, end;
 
 	SDL_Event e;
-    bool paused = false, dirty = false, showUpdates = false;
+    bool paused = true, dirty = false, showUpdates = false;
 
     /*
      * Main interaction loop.
