@@ -15,7 +15,7 @@ using namespace std;
 
 sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
     framebuffer(sc.getCamera().width(), sc.getCamera().height(), bpp),
-    blocksUsed(0), samplesTaken(0), scn(sc),
+    blocksUsed(0), samplesTaken(0), spp(0), scn(sc),
     blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
     blockHeight(sc.getCamera().height() / VERT_BLOCKS), didInit(false),
     showUpdates(false), linearTonemapScale(1.f)
@@ -36,7 +36,9 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
 		return;
 	}
 
-    buffer = new vector<rgbColor>[width_*height_];
+    //buffer = new vector<rgbColor>[width_*height_];
+    buffer = new rgbColor[width_*height_];
+
 	didInit = true;
 }
 
@@ -45,7 +47,8 @@ sdlFramebuffer::~sdlFramebuffer(){
 }
 
 void sdlFramebuffer::addSample(const int& x, const int& y, const color& c){
-    buffer[(width() * y) + x].push_back(c);
+    //buffer[(width() * y) + x].push_back(c);
+    buffer[(width() * y) + x] += c;
 }
 
 void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
@@ -156,7 +159,8 @@ void sdlFramebuffer::render(){
     const float timeElapsed = now.tv_sec - start.tv_sec +
         ((now.tv_usec - start.tv_usec) / 1e6);
 
-    cerr << "SPP: " << samplesTaken / (width_*height_) << ", ";
+    ++spp;
+    cerr << "SPP: " << spp << ", ";
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
 
     blocksUsed = 0;
@@ -168,13 +172,7 @@ void sdlFramebuffer::tonemapAndUpdateScreen(){
 #endif
     for(int y=0; y<height(); y++){
         for(int x=0; x<width(); x++){
-            rgbColor pixVal(0.f);
-            for(unsigned int i=0; i<buffer[y * width() + x].size(); ++i){
-                pixVal += buffer[y * width() + x][i];
-            }
-
-            pixVal /= (float)(buffer[y * width() + x].size());
-            setPixel(x, y, clamp(pixVal));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spp));
         }
     }
 
@@ -184,13 +182,7 @@ void sdlFramebuffer::tonemapAndUpdateScreen(){
 void sdlFramebuffer::tonemapAndUpdateRect(const int& cornerX, const int& cornerY){
     for(int y = cornerY; y < cornerY + blockHeight; y++){
         for(int x = cornerX; x < cornerX + blockWidth; x++){
-            rgbColor pixVal(0.f);
-            for(unsigned int i=0; i<buffer[y * width() + x].size(); ++i){
-                pixVal += buffer[y * width() + x][i];
-            }
-
-            pixVal /= (float)(buffer[y * width() + x].size());
-            setPixel(x, y, clamp(pixVal));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spp));
         }
     }
 
