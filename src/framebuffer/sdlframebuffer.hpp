@@ -10,15 +10,15 @@
 using namespace std;
 
 // Number of image blocks in the X- and Y- axes.
-static const int HORIZ_BLOCKS = 4;
-static const int VERT_BLOCKS = 4;
+static const int HORIZ_BLOCKS = 8;
+static const int VERT_BLOCKS = 8;
 
 class sdlFramebuffer : public framebuffer {
 	public:
 		sdlFramebuffer(const scene& sc, const int bpp = 32);
         ~sdlFramebuffer();
 
-        virtual void render();
+        virtual const bool render();
 
 		const bool readyForDrawing() const{
 			return didInit;
@@ -34,8 +34,8 @@ class sdlFramebuffer : public framebuffer {
         }
 
 	private:
-		void addSample(const int& x, const int& y, const color& c);
-		void setPixel(const int& x, const int& y, const color& c);
+		void addSample(const int& x, const int& y, const rgbColor& c);
+		void setPixel(const int& x, const int& y, const rgbColor& c);
 
         void tonemapAndUpdateScreen();
         void tonemapAndUpdateRect(const int& cornerX, const int& cornerY);
@@ -70,5 +70,7 @@ class sdlFramebuffer : public framebuffer {
 		SDL_Surface* screen;
 		bool didInit, showUpdates;
         rgbColor* buffer;
+        rgbColor* sumOfSquares;
+        int* spps;
         float linearTonemapScale;
 };

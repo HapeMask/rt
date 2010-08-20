@@ -1,6 +1,5 @@
 #include "mathlib/constants.hpp"
 #include "sdlframebuffer.hpp"
-#include "color/color.hpp"
 
 #include "utility.hpp"
 
@@ -8,8 +7,6 @@
 #include <cmath>
 #include <sys/time.h>
 #include <unistd.h>
-
-#include "omp.h"
 
 using namespace std;
 
@@ -37,19 +34,31 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
 	}
 
     buffer = new rgbColor[width_*height_];
+    sumOfSquares = new rgbColor[width_*height_];
+    spps = new int[width_*height_];
 
 	didInit = true;
 }
 
 sdlFramebuffer::~sdlFramebuffer(){
     delete[] buffer;
+    delete[] sumOfSquares;
+    delete[] spps;
 }
 
-void sdlFramebuffer::addSample(const int& x, const int& y, const color& c){
-    buffer[(width() * y) + x] += c;
+void sdlFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
+    const size_t offset = y * width_ + x;
+    buffer[offset] += c;
+    sumOfSquares[offset] += c * c;
+    ++spps[offset];
+
+#ifdef RT_MULTITHREADED
+#pragma omp atomic
+#endif
+            ++samplesTaken;
 }
 
-void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
+void sdlFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c){
 	if(SDL_MUSTLOCK(screen) && SDL_LockSurface(screen) < 0){
         return;
 	}
@@ -60,38 +69,38 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
             powf(c.green(), gamma),
             powf(c.blue(), gamma));
 
-	const uint32_t color = SDL_MapRGB(screen->format, gammaC.R(), gammaC.G(), gammaC.B());
+	const uint32_t rgbColor = SDL_MapRGB(screen->format, gammaC.R(), gammaC.G(), gammaC.B());
 	switch(screen->format->BytesPerPixel){
 		case 1:
 			{
 				uint8_t* buf = (uint8_t*)screen->pixels + y*screen->pitch + x;
-				*buf = color;
+				*buf = rgbColor;
 			}
 			break;
 		case 2:
 			{
 				uint16_t* buf = (uint16_t*)screen->pixels + y*screen->pitch/2 + x;
-				*buf = color;
+				*buf = rgbColor;
 			}
 			break;
 		case 3:
 			{
 				uint8_t* buf = (uint8_t*)screen->pixels + y*screen->pitch + x * 3;
 				if(SDL_BYTEORDER == SDL_LIL_ENDIAN){
-					buf[0] = color;
-					buf[1] = color >> 8;
-					buf[2] = color >> 16;
+					buf[0] = rgbColor;
+					buf[1] = rgbColor >> 8;
+					buf[2] = rgbColor >> 16;
 				}else{
-					buf[2] = color;
-					buf[1] = color >> 8;
-					buf[0] = color >> 16;
+					buf[2] = rgbColor;
+					buf[1] = rgbColor >> 8;
+					buf[0] = rgbColor >> 16;
 				}
 			}
 			break;
 		case 4:
 			{
 				uint32_t* buf = (uint32_t*)screen->pixels + y*screen->pitch/4 + x;
-				*buf = color;
+				*buf = rgbColor;
 			}
 			break;
 	}
@@ -101,13 +110,14 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const color& c){
 	}
 }
 
-void sdlFramebuffer::render(){
+const bool sdlFramebuffer::render(){
     struct timeval start, now;
     gettimeofday(&start, NULL);
 
 
+    bool done = false;
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic)
 #endif
     // Fill blocks as long as the thread can get new ones.
     for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
@@ -128,6 +138,7 @@ void sdlFramebuffer::render(){
         }
 
         // Render the pixels in block.
+        bool didSample = false;
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
                 // TODO: Replace this basic jittering with improved filtering,
@@ -135,41 +146,45 @@ void sdlFramebuffer::render(){
                 //
                 // Also look into
                 // adaptive sampling based on z-test.
-                const float xOffset = sampleUniform() - 0.5f;
-                const float yOffset = sampleUniform() - 0.5f;
 
-                addSample(
-                        x, y,
-                        scn.L((float)x + xOffset, (float)y + yOffset)
-                    );
-#ifdef RT_MULTITHREADED
-#pragma omp atomic
-#endif
-                ++samplesTaken;
+                float CIwidth = 1.f;
+                if(spp > 16){
+                    const rgbColor& sum = buffer[y * width_ + x];
+                    const rgbColor Sxx = sumOfSquares[y * width_ + x] - (sum * sum / (float)spps[y * width_ + x]);
+                    const rgbColor s = sqrt(Sxx / (float)(spps[y * width_ + x] - 1));
+                    CIwidth = (1.96f * s / sqrtf((float)spps[y * width_ + x])).blue();
+                }
+
+                if(CIwidth > 0.03f){
+                    didSample = true;
+                    const float xOffset = sampleUniform() - 0.5f;
+                    const float yOffset = sampleUniform() - 0.5f;
+
+                    /*
+#pragma omp critical
+                    if(spp > 16){
+                        // Flash the sampled pixel.
+                        setPixel(x, y, rgbColor(1,0,0));
+                        SDL_UpdateRect(screen, x, y, 1, 1);
+                    }
+                    */
+
+                    addSample(
+                            x, y,
+                            scn.L((float)x + xOffset, (float)y + yOffset)
+                        );
+                }
             }
+        }
+
+        if(spp > 16 && !didSample){
+            cerr << "DONE!" << endl;
+            done = true;
         }
 
         //tonemapAndUpdateRect(blockCornerX, blockCornerY);
     }
     tonemapAndUpdateScreen();
-
-    /*
-#pragma omp parallel for collapse(2)
-    for(int y=0; y<height_; ++y){
-        for(int x=0; x<width_; ++x){
-            const float xOffset = sampleUniform() - 0.5f;
-            const float yOffset = sampleUniform() - 0.5f;
-
-            addSample(
-                    x, y,
-                    scn.L((float)x + xOffset, (float)y + yOffset)
-                );
-#pragma omp atomic
-            ++samplesTaken;
-        }
-    }
-    tonemapAndUpdateScreen();
-    */
 
     gettimeofday(&now, NULL);
     const float timeElapsed = now.tv_sec - start.tv_sec +
@@ -180,15 +195,16 @@ void sdlFramebuffer::render(){
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
 
     blocksUsed = 0;
+    return done;
 }
 
 void sdlFramebuffer::tonemapAndUpdateScreen(){
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for
 #endif
     for(int y = 0; y <height_; y++){
         for(int x = 0; x < width_; x++){
-            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spp));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spps[y * width_ + x]));
         }
     }
 
@@ -198,7 +214,7 @@ void sdlFramebuffer::tonemapAndUpdateScreen(){
 void sdlFramebuffer::tonemapAndUpdateRect(const int& cornerX, const int& cornerY){
     for(int y = cornerY; y < cornerY + blockHeight; y++){
         for(int x = cornerX; x < cornerX + blockWidth; x++){
-            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spp));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spps[y * width_ + x]));
         }
     }
 

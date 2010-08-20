@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <stdint.h>
 #include <iostream>
 using namespace std;
@@ -36,29 +37,6 @@ class rgbColor : public color {
 		rgbColor(const float& r, const float& g, const float& b);
 		rgbColor(const color& c);
 
-		const rgbColor operator*(const float& f) const;
-		rgbColor& operator*=(const float& f);
-		const rgbColor operator/(const float& f) const;
-		rgbColor& operator/=(const float& f);
-
-		inline const rgbColor operator/(const rgbColor& c) const{
-            return rgbColor(*this) /= c;
-        }
-
-		inline rgbColor& operator/=(const rgbColor& c){
-            r /= c.r;
-            g /= c.g;
-            b /= c.b;
-            return (*this);
-        }
-
-		const rgbColor operator-(const rgbColor& f) const;
-		rgbColor& operator-=(const rgbColor& f);
-		const rgbColor operator+(const rgbColor& f) const;
-		rgbColor& operator+=(const rgbColor& f);
-		const rgbColor operator*(const rgbColor& f) const;
-		rgbColor& operator*=(const rgbColor& f);
-
 		const rgbColor inverse() const;
 		virtual void invert();
 
@@ -78,10 +56,77 @@ class rgbColor : public color {
             return (r <= 0 && g <= 0 && b <= 0);
         }
 
+		inline const rgbColor operator/(const rgbColor& c) const{
+            return rgbColor(*this) /= c;
+        }
+
+		inline rgbColor& operator/=(const rgbColor& c){
+            r /= c.r;
+            g /= c.g;
+            b /= c.b;
+            return (*this);
+        }
+
+        inline const rgbColor operator*(const float& f) const{
+            return rgbColor(*this) *= f;
+        }
+
+        inline rgbColor& operator*=(const float& f){
+            r *= f;
+            g *= f;
+            b *= f;
+            return (*this);
+        }
+
+        inline const rgbColor operator/(const float& f) const{
+            return rgbColor(*this) *= (1.f / f);
+        }
+
+        inline rgbColor& operator/=(const float& f){
+            return this->operator*=(1.f/f);
+        }
+
+        const rgbColor operator-(const rgbColor& c) const{
+            return rgbColor(*this) -= c;
+        }
+
+        inline rgbColor& operator-=(const rgbColor& c){
+            r -= c.r;
+            g -= c.g;
+            b -= c.b;
+            return (*this);
+        }
+
+        inline const rgbColor operator+(const rgbColor& c) const{
+            return rgbColor(*this) += c;
+        }
+
+        inline rgbColor& operator+=(const rgbColor& c){
+            r += c.r;
+            g += c.g;
+            b += c.b;
+            return (*this);
+        }
+
+        inline const rgbColor operator*(const rgbColor& c) const{
+            return rgbColor(*this) *= c;
+        }
+
+        inline rgbColor& operator*=(const rgbColor& c){
+            r *= c.r;
+            g *= c.g;
+            b *= c.b;
+            return (*this);
+        }
+
 		float r;
 		float g;
 		float b;
 };
+
+inline const rgbColor sqrt(const rgbColor& c){
+    return rgbColor(sqrtf(c.r), sqrtf(c.g), sqrtf(c.b));
+}
 
 inline rgbColor& operator*=(const float& f, rgbColor& c){
     c.r *= f;

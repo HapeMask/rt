@@ -223,12 +223,10 @@ class vec3 {
 		}
 
 		inline const __m128& getSIMD() const{
-            //return loadps(values);
             return vector;
 		}
 
         inline const vec3 operator+(const vec3& v) const {
-            //return vec3(*this) += v;
             return vec3(addps(vector, v.vector));
         }
 

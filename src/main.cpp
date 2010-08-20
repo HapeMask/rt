@@ -108,7 +108,12 @@ int main(int argc, char* args[]){
         if(paused){
             SDL_WaitEvent(&e);
         }else{
-            f.render();
+            const bool done = f.render();
+            if(done){
+                paused = true;
+                continue;
+            }
+
             dirty = true;
 
             // Consume any events that we aren't interested in.

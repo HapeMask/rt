@@ -1,7 +1,5 @@
 #pragma once
 
-#include "color/color.hpp"
-
 class framebuffer {
 	public:
 		framebuffer(const int& w, const int& h, const int& b){
@@ -11,7 +9,7 @@ class framebuffer {
 		}
         virtual ~framebuffer() {}
 
-        virtual void render() = 0;
+        virtual const bool render() = 0;
 		virtual const bool readyForDrawing() const = 0;
 
 		const int& width() const{
