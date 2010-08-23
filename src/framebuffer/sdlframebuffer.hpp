@@ -63,7 +63,7 @@ class sdlFramebuffer : public framebuffer {
         }
 
         int blocksUsed;
-        uint64_t samplesTaken, spp;
+        uint64_t pixelsSampled, iterations;
         const scene& scn;
         const int blockWidth, blockHeight;
 
@@ -71,6 +71,6 @@ class sdlFramebuffer : public framebuffer {
 		bool didInit, showUpdates;
         rgbColor* buffer;
         rgbColor* sumOfSquares;
-        int* spps;
+        int* samplesPerPixel;
         float linearTonemapScale;
 };

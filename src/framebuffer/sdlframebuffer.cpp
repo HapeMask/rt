@@ -12,7 +12,7 @@ using namespace std;
 
 sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
     framebuffer(sc.getCamera().width(), sc.getCamera().height(), bpp),
-    blocksUsed(0), samplesTaken(0), spp(0), scn(sc),
+    blocksUsed(0), pixelsSampled(0), iterations(0), scn(sc),
     blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
     blockHeight(sc.getCamera().height() / VERT_BLOCKS), didInit(false),
     showUpdates(false), linearTonemapScale(1.f)
@@ -35,7 +35,7 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
 
     buffer = new rgbColor[width_*height_];
     sumOfSquares = new rgbColor[width_*height_];
-    spps = new int[width_*height_];
+    samplesPerPixel = new int[width_*height_];
 
 	didInit = true;
 }
@@ -43,19 +43,19 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
 sdlFramebuffer::~sdlFramebuffer(){
     delete[] buffer;
     delete[] sumOfSquares;
-    delete[] spps;
+    delete[] samplesPerPixel;
 }
 
 void sdlFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
     const size_t offset = y * width_ + x;
     buffer[offset] += c;
     sumOfSquares[offset] += c * c;
-    ++spps[offset];
+    ++samplesPerPixel[offset];
 
 #ifdef RT_MULTITHREADED
 #pragma omp atomic
 #endif
-            ++samplesTaken;
+            ++pixelsSampled;
 }
 
 void sdlFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c){
@@ -142,15 +142,39 @@ const bool sdlFramebuffer::render(){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
                 // TODO: Replace this basic jittering with improved filtering,
                 // perhaps stratification over the image plane.
-                //
-                // Also look into
-                // adaptive sampling based on z-test.
-                const float xOffset = sampleUniform() - 0.5f;
-                const float yOffset = sampleUniform() - 0.5f;
-                addSample(
-                        x, y,
-                        scn.L((float)x + xOffset, (float)y + yOffset)
-                    );
+
+                float variationCoefficient = 1.f;
+                if(iterations > 16){
+                    const size_t offset = y * width_ + x;
+                    const int spp = samplesPerPixel[offset];
+
+                    const rgbColor& sum = buffer[offset];
+                    const rgbColor mean = sum / spp;
+                    const rgbColor Sxx = sumOfSquares[offset] - (sum * mean);
+                    const rgbColor stddev = sqrt(Sxx / (spp - 1));
+
+                    variationCoefficient = (stddev / mean).avg();
+                }
+
+                if(variationCoefficient > 0.5f){
+                    const float xOffset = sampleUniform() - 0.5f;
+                    const float yOffset = sampleUniform() - 0.5f;
+
+                    /*
+#pragma omp critical
+                    if(iterations > 16){
+                        // Flash the sampled pixel.
+                        setPixel(x, y, rgbColor(1,0,0));
+                        SDL_UpdateRect(screen, x, y, 1, 1);
+                    }
+                    */
+
+                    addSample(
+                            x, y,
+                            scn.L((float)x + xOffset, (float)y + yOffset)
+                        );
+                }
+
             }
         }
 
@@ -162,8 +186,8 @@ const bool sdlFramebuffer::render(){
     const float timeElapsed = now.tv_sec - start.tv_sec +
         ((now.tv_usec - start.tv_usec) / 1e6);
 
-    ++spp;
-    cerr << "SPP: " << spp << ", ";
+    ++iterations;
+    cerr << "Iterations: " << iterations << ", ";
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
 
     blocksUsed = 0;
@@ -176,7 +200,7 @@ void sdlFramebuffer::tonemapAndUpdateScreen(){
 #endif
     for(int y = 0; y <height_; y++){
         for(int x = 0; x < width_; x++){
-            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spps[y * width_ + x]));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)samplesPerPixel[y * width_ + x]));
         }
     }
 
@@ -186,7 +210,7 @@ void sdlFramebuffer::tonemapAndUpdateScreen(){
 void sdlFramebuffer::tonemapAndUpdateRect(const int& cornerX, const int& cornerY){
     for(int y = cornerY; y < cornerY + blockHeight; y++){
         for(int x = cornerX; x < cornerX + blockWidth; x++){
-            setPixel(x, y, clamp(buffer[y * width() + x] / (float)spps[y * width_ + x]));
+            setPixel(x, y, clamp(buffer[y * width() + x] / (float)samplesPerPixel[y * width_ + x]));
         }
     }
 
