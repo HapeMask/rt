@@ -27,6 +27,10 @@ class color {
             return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
         }
 
+        inline const float avg() const {
+            return (red() + blue() + green()) / 3.f;
+        }
+
 		virtual void invert() = 0;
 };
 

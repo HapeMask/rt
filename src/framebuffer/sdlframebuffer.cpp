@@ -138,7 +138,6 @@ const bool sdlFramebuffer::render(){
         }
 
         // Render the pixels in block.
-        bool didSample = false;
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
                 // TODO: Replace this basic jittering with improved filtering,
@@ -146,49 +145,18 @@ const bool sdlFramebuffer::render(){
                 //
                 // Also look into
                 // adaptive sampling based on z-test.
-
-                float CIwidth = 1.f;
-                if(spp > 16){
-                    const rgbColor& sum = buffer[y * width_ + x];
-                    const rgbColor Sxx = sumOfSquares[y * width_ + x] - (sum * sum / (float)spps[y * width_ + x]);
-                    const rgbColor s = sqrt(Sxx / (float)(spps[y * width_ + x] - 1));
-                    CIwidth = (1.96f * s / sqrtf((float)spps[y * width_ + x])).gray();
-                }
-
-                if(CIwidth > 0.03f){
-                    didSample = true;
-                    const float xOffset = sampleUniform() - 0.5f;
-                    const float yOffset = sampleUniform() - 0.5f;
-
-                    if(x == 64  && y == 220){
-                        cerr << CIwidth << endl;
-                    }
-
-                    /*
-#pragma omp critical
-                    if(spp > 16){
-                        // Flash the sampled pixel.
-                        setPixel(x, y, rgbColor(1,0,0));
-                        SDL_UpdateRect(screen, x, y, 1, 1);
-                    }
-                    */
-
-                    addSample(
-                            x, y,
-                            scn.L((float)x + xOffset, (float)y + yOffset)
-                        );
-                }
+                const float xOffset = sampleUniform() - 0.5f;
+                const float yOffset = sampleUniform() - 0.5f;
+                addSample(
+                        x, y,
+                        scn.L((float)x + xOffset, (float)y + yOffset)
+                    );
             }
         }
 
-        if(spp > 16 && !didSample){
-            cerr << "DONE!" << endl;
-            done = true;
-        }
-
-        tonemapAndUpdateRect(blockCornerX, blockCornerY);
+        //tonemapAndUpdateRect(blockCornerX, blockCornerY);
     }
-    //tonemapAndUpdateScreen();
+    tonemapAndUpdateScreen();
 
     gettimeofday(&now, NULL);
     const float timeElapsed = now.tv_sec - start.tv_sec +
