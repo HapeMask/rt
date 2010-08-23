@@ -152,13 +152,17 @@ const bool sdlFramebuffer::render(){
                     const rgbColor& sum = buffer[y * width_ + x];
                     const rgbColor Sxx = sumOfSquares[y * width_ + x] - (sum * sum / (float)spps[y * width_ + x]);
                     const rgbColor s = sqrt(Sxx / (float)(spps[y * width_ + x] - 1));
-                    CIwidth = (1.96f * s / sqrtf((float)spps[y * width_ + x])).blue();
+                    CIwidth = (1.96f * s / sqrtf((float)spps[y * width_ + x])).gray();
                 }
 
                 if(CIwidth > 0.03f){
                     didSample = true;
                     const float xOffset = sampleUniform() - 0.5f;
                     const float yOffset = sampleUniform() - 0.5f;
+
+                    if(x == 64  && y == 220){
+                        cerr << CIwidth << endl;
+                    }
 
                     /*
 #pragma omp critical
@@ -182,9 +186,9 @@ const bool sdlFramebuffer::render(){
             done = true;
         }
 
-        //tonemapAndUpdateRect(blockCornerX, blockCornerY);
+        tonemapAndUpdateRect(blockCornerX, blockCornerY);
     }
-    tonemapAndUpdateScreen();
+    //tonemapAndUpdateScreen();
 
     gettimeofday(&now, NULL);
     const float timeElapsed = now.tv_sec - start.tv_sec +
