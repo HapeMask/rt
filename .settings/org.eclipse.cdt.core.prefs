@@ -1,4 +1,0 @@
-#Sun Apr 04 20:09:42 EDT 2010
-eclipse.preferences.version=1
-environment/project/cdt.managedbuild.config.gnu.exe.debug.1630703917=<?xml version\="1.0" encoding\="UTF-8"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\="\:" name\="PATH" operation\="append" value\="/opt/local/bin\:/opt/local/bin\:/opt/local/sbin\:/usr/bin\:/bin\:/usr/sbin\:/sbin\:/usr/local/bin\:/usr/X11/bin"/>\n</environment>\n
-environment/project/cdt.managedbuild.config.gnu.exe.release.740736540=<?xml version\="1.0" encoding\="UTF-8"?>\n<environment append\="true" appendContributed\="true">\n<variable delimiter\="\:" name\="PATH" operation\="append" value\="/opt/local/bin\:/opt/local/bin\:/opt/local/sbin\:/usr/bin\:/bin\:/usr/sbin\:/sbin\:/usr/local/bin\:/usr/X11/bin"/>\n</environment>\n
