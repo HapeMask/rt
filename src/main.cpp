@@ -81,7 +81,8 @@ int main(int argc, char* args[]){
 
 	sdlFramebuffer f(scn, 32);
 
-	//srand(time(NULL));
+	//srand(0);
+
     // SFMT
     init_gen_rand(time(NULL));
 

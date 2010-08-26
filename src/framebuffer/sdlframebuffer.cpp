@@ -160,21 +160,23 @@ const bool sdlFramebuffer::render(){
                     const float xOffset = sampleUniform() - 0.5f;
                     const float yOffset = sampleUniform() - 0.5f;
 
-                    /*
-#pragma omp critical
-                    if(iterations > 16){
-                        // Flash the sampled pixel.
-                        setPixel(x, y, rgbColor(1,0,0));
-                        SDL_UpdateRect(screen, x, y, 1, 1);
-                    }
-                    */
-
                     addSample(
                             x, y,
                             scn.L((float)x + xOffset, (float)y + yOffset)
                         );
+
+                    if(showUpdates){
+                        setPixel(x, y, rgbColor(1,0,0));
+                    }
                 }
 
+            }
+        }
+
+        if(iterations > 16 && showUpdates){
+#pragma omp critical
+            {
+            SDL_UpdateRect(screen, blockCornerX, blockCornerY, blockWidth, blockHeight);
             }
         }
 
