@@ -36,7 +36,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
     vec3 wi;
     float bsdfPdf, lightPdf;
     rgbColor lightSample(0.f), bsdfSample(0.f);
-    float lightWeight, bsdfWeight;
+    float lightWeight = 0.f, bsdfWeight = 0.f;
 
     // Sample the light to find a point on the surface and the emission
     // at that point.
@@ -90,12 +90,6 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
                 }
             }
         }
-    }
-
-    if(bsdfWeight > 0){
-        cerr << "LW: " << lightWeight << ", BW: " << bsdfWeight << " sum: " << lightWeight+bsdfWeight << endl;
-    }else{
-        cerr << "BW: " << bsdfWeight << ", BP: " << bsdfPdf << " LP: " << lightPdf << endl;
     }
 
     // Combine the samples based on the weight from the chosen heuristic.

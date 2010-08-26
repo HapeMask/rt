@@ -182,8 +182,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     }
 
     /*
-     * Specular Importance Sampling
-     * Is this even correct? I made it up.
+     * Specular importance sampling I think.
      */
 	///*
     if(specRef && specTra && matches.size() > 1){
