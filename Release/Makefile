@@ -1,11 +1,17 @@
 .PHONY: all clean run parser parserclean
 SRCDIR=../src
 
+QT_CXXFLAGS=-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
+	-I/usr/share/qt/mkspecs/linux-g++ -I/usr/include/QtCore \
+	-I/usr/include/QtGui
+
+QT_LDFLAGS= -lQtGui -lQtCore -lpthread --hash-style=gnu --as-needed
+
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
 SDL_LDFLAGS= $(shell sdl-config --libs)
 
-WIN_CXXFLAGS = -IC:\MinGW\include\SDL
-WIN_LDFLAGS = -LC:\MinGW\lib
+WIN_CXXFLAGS= -IC:\MinGW\include\SDL
+WIN_LDFLAGS= -LC:\MinGW\lib
 
 PC_CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
 	-msse4 -msse4.1 -msse4.2 -ffast-math \
@@ -25,8 +31,8 @@ MAC_CXXFLAGS= -I$(SRCDIR) -march=prescott -O3 -mmmx -msse -msse2 -ffast-math \
 
 LDFLAGS= -fwhole-program
 
-#CXXFLAGS = $(MAC_CXXFLAGS)
-CXXFLAGS = $(PC_CXXFLAGS)
+CXXFLAGS = $(MAC_CXXFLAGS)
+#CXXFLAGS = $(PC_CXXFLAGS)
 
 CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
 LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
