@@ -15,7 +15,9 @@ using namespace std;
 
 class triangleMesh : public shape {
 	public:
-		triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL) {};
+		triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL), totalVertices(0)
+        {}
+
         ~triangleMesh(){
             if(pointHeap) delete[] pointHeap;
             if(vertexNormalHeap) delete[] vertexNormalHeap;
@@ -34,9 +36,15 @@ class triangleMesh : public shape {
             return uvHeap[i];
         }
 
+        inline virtual const unsigned long vertexCount() const {
+            return totalVertices;
+        }
+
         point3* pointHeap;
         vec3* vertexNormalHeap;
         vec2* uvHeap;
+
+        unsigned long totalVertices;
 };
 
 typedef tr1::shared_ptr<triangleMesh> triangleMeshPtr;

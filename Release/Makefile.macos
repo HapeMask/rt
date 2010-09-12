@@ -8,16 +8,14 @@ QT_CXXFLAGS=-I/opt/local/libexec/qt4-mac/mkspecs/macx-g++ \
 	-I/opt/local/libexec/qt4-mac/lib/QtOpenGL.framework/Versions/4/Headers \
 	-I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers \
 	-I/System/Library/Frameworks/AGL.framework/Headers \
-	-I/opt/local/libexec/qt4-mac/include
-
-QT_CFLAGS=-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
+	-I/opt/local/libexec/qt4-mac/include \
+	-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
 	-I/usr/share/qt/mkspecs/linux-g++ -I/usr/include/QtCore \
 	-I/usr/include/QtGui -I/usr/X11/include
 
 QT_LDFLAGS=-F/opt/local/libexec/qt4-mac/lib \
 	-L/opt/local/libexec/qt4-mac/lib -framework QtGui \
 	-framework QtOpenGL -framework QtCore -framework OpenGL -framework AGL \
-	-lQtGui -lQtCore -lQtOpenGL -lpthread --hash-style=gnu --as-needed
 
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
 SDL_LDFLAGS= $(shell sdl-config --libs)

@@ -29,6 +29,11 @@ scene<bvh, path>{
 	}
 
     shape{
+        objfile<smooth>("../models/bunny_hp.obj")
+        material(lambert(1,1,1))
+    }
+
+    shape{
 		sphere(0,-2,-1,1)
 		//material(pair(lambert(0,0,0), ward(0.2,0.2,0.2, 5, 5)))
 		material(pair(lambert(0,0,0), microfacet(1.5, 7.7, aniso(0.8,0.8,0.8, 30, 100))))

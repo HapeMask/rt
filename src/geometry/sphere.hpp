@@ -22,6 +22,15 @@ class sphere : public primitive {
             return 4.f * PI * radius2;
         }
 
+#ifdef RT_USE_QT
+        virtual void prepGL(GLfloat*& data) const;
+        virtual void drawGL() const;
+#endif
+
+        inline virtual const unsigned long vertexCount() const {
+            return 0;
+        }
+
 	private:
 		point3 location;
 		float radius, radius2;

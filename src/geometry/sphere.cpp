@@ -9,6 +9,10 @@
 
 #include "utility.hpp"
 
+#ifdef RT_USE_QT
+#include <GL/glu.h>
+#endif
+
 #include <cmath>
 
 sphere::sphere(const point3& p, const float& r) :
@@ -100,3 +104,21 @@ const vec3 sphere::getNormal(const point3& p) const{
 const point3 sphere::sampleSurface(const float& u0, const float& u1) const{
     return point3(0,0,0);
 }
+
+#ifdef RT_USE_QT
+void sphere::prepGL(GLfloat*& data) const {
+    // Do nothing. Spheres can't be drawn using the VBO (not easily) so use GLU
+    // quadrics instead.
+}
+
+void sphere::drawGL() const {
+    GLUquadric* quadric = gluNewQuadric();
+
+    glPushMatrix();
+    glTranslatef(location.x(), location.y(), location.z());
+    gluSphere(quadric, radius, 40, 40);
+    glPopMatrix();
+
+    gluDeleteQuadric(quadric);
+}
+#endif

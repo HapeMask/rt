@@ -25,6 +25,18 @@ class camera {
 
         void move(const vec3& dir);
 
+        inline const vec3& getPosition() const {
+            return pos;
+        }
+
+        inline const vec3& getLook() const {
+            return look;
+        }
+
+        inline const vec3& getUp() const {
+            return up;
+        }
+
 	private:
         float screen[4];
         float _width, _height;

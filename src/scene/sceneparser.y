@@ -168,7 +168,7 @@ shape :
 
 objfile :
         OBJFILE '<' SMOOTH '>' '(' FILEPATH ')'
-        { shape* s = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), s); $$ = s; } |
+        { triangleMesh* p = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), p); $$ = p; } |
         //{ triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm); $$ = tm; } |
         OBJFILE '<' FLAT '>' '(' FILEPATH ')'
         { shape* s = new shape(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), s); $$ = s; }

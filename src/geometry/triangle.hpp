@@ -46,6 +46,15 @@ class triangle : public primitive {
             return area_;
         }
 
+#ifdef RT_USE_QT
+        virtual void prepGL(GLfloat*& data) const;
+        virtual void drawGL() const;
+#endif
+
+        inline virtual const unsigned long vertexCount() const {
+            return 3;
+        }
+
 	private:
 		point3 points[3];
         vec3 vertNormals[3];

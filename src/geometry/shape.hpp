@@ -48,6 +48,39 @@ class shape {
             return area_;
         }
 
+        virtual const unsigned long vertexCount() const {
+            unsigned long count = 0;
+
+            for(size_t i=0; i<prims.size(); ++i){
+                count += prims[i]->vertexCount();
+            }
+
+            return count;
+        }
+
+#ifdef RT_USE_QT
+        /**
+         * Prepares any data required to draw this shape on an OpenGL
+         * framebuffer. Takes an optional pointer to some data as an argument.
+         *
+         * Data is usually a vertex array.
+         */
+        virtual void prepGL(GLfloat*& data) const {
+            for(size_t i=0; i<prims.size(); ++i){
+                prims[i]->prepGL(data);
+            }
+        }
+
+        /**
+         * Performs the required GL draw calls to draw this shape.
+         */
+        virtual void drawGL() const {
+            for(size_t i=0; i<prims.size(); ++i){
+                prims[i]->drawGL();
+            }
+        }
+#endif
+
 	protected:
         float area_, pdf_;
 		vector<primitivePtr> prims;

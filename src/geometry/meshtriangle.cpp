@@ -159,3 +159,35 @@ void meshTriangle::setUVs(const unsigned int& auv, const unsigned int& buv, cons
     invDetUV = 1.f / (du1*dv2 - dv1*du2);
     binormal_ = normalize((dv2*B - dv1*C) * invDetUV);
 }
+
+#ifdef RT_USE_QT
+void meshTriangle::prepGL(GLfloat*& data) const {
+    for(int i=0; i<3; ++i){
+        if(hasVertNormals){
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).x();
+            ++data;
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).y();
+            ++data;
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).z();
+            ++data;
+        }else{
+            (*data) = normal_.x();
+            ++data;
+            (*data) = normal_.y();
+            ++data;
+            (*data) = normal_.z();
+            ++data;
+        }
+
+        (*data) = meshParent->pointLookup(points[i]).x();
+        ++data;
+        (*data) = meshParent->pointLookup(points[i]).y();
+        ++data;
+        (*data) = meshParent->pointLookup(points[i]).z();
+        ++data;
+    }
+}
+
+void meshTriangle::drawGL() const {
+}
+#endif

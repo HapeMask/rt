@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 2.4.2.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Locations for Bison parsers in C++
    
-      Copyright (C) 2002-2007, 2009-2010 Free Software Foundation, Inc.
+      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010 Free Software
+   Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,12 +44,12 @@
 # include "position.hh"
 
 
-/* Line 162 of location.cc  */
+/* Line 163 of location.cc  */
 #line 4 "../src/scene/sceneparser.y"
 namespace Bison {
 
-/* Line 162 of location.cc  */
-#line 52 "location.hh"
+/* Line 163 of location.cc  */
+#line 53 "location.hh"
 
   /// Abstract a location.
   class location
@@ -158,11 +159,11 @@ namespace Bison {
   }
 
 
-/* Line 271 of location.cc  */
+/* Line 272 of location.cc  */
 #line 4 "../src/scene/sceneparser.y"
 } // Bison
 
-/* Line 271 of location.cc  */
-#line 167 "location.hh"
+/* Line 272 of location.cc  */
+#line 168 "location.hh"
 
 #endif // not BISON_LOCATION_HH

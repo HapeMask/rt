@@ -139,3 +139,37 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
     binormal_ = normalize((dv2 *  dp1 - dv1 * dp2) * invDetUV);
     tangent_ = normalize((-du2 *  dp1 + du1 * dp2) * invDetUV);
 }
+
+#ifdef RT_USE_QT
+void triangle::prepGL(GLfloat*& data) const {
+    for(int i=0; i<3; ++i){
+        if(hasVertNormals){
+            (*data) = vertNormals[i].x();
+            ++data;
+            (*data) = vertNormals[i].y();
+            ++data;
+            (*data) = vertNormals[i].z();
+            ++data;
+        }else{
+            (*data) = normal_.x();
+            ++data;
+            (*data) = normal_.y();
+            ++data;
+            (*data) = normal_.z();
+            ++data;
+        }
+
+        (*data) = points[i].x();
+        ++data;
+        (*data) = points[i].y();
+        ++data;
+        (*data) = points[i].z();
+        ++data;
+    }
+}
+
+void triangle::drawGL() const {
+    // Do nothing. This triangle's data has been dumped to the scene VBO
+    // already and will be drawn as such.
+}
+#endif

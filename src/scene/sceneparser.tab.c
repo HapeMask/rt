@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 2.4.2.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Skeleton implementation for Bison LALR(1) parsers in C++
    
-      Copyright (C) 2002-2010 Free Software Foundation, Inc.
+      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free
+   Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,8 +35,8 @@
 /* First part of user declarations.  */
 
 
-/* Line 310 of lalr1.cc  */
-#line 39 "sceneparser.tab.c"
+/* Line 311 of lalr1.cc  */
+#line 40 "sceneparser.tab.c"
 
 
 #include "sceneparser.tab.h"
@@ -43,11 +44,11 @@
 /* User implementation prologue.  */
 
 
-/* Line 316 of lalr1.cc  */
-#line 48 "sceneparser.tab.c"
+/* Line 317 of lalr1.cc  */
+#line 49 "sceneparser.tab.c"
 /* Unqualified %code blocks.  */
 
-/* Line 317 of lalr1.cc  */
+/* Line 318 of lalr1.cc  */
 #line 41 "../src/scene/sceneparser.y"
 
     // Prototype for the yylex function
@@ -57,8 +58,8 @@
 
 
 
-/* Line 317 of lalr1.cc  */
-#line 62 "sceneparser.tab.c"
+/* Line 318 of lalr1.cc  */
+#line 63 "sceneparser.tab.c"
 
 #ifndef YY_
 # if defined YYENABLE_NLS && YYENABLE_NLS
@@ -121,12 +122,12 @@ do {					\
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 
-/* Line 379 of lalr1.cc  */
+/* Line 380 of lalr1.cc  */
 #line 4 "../src/scene/sceneparser.y"
 namespace Bison {
 
-/* Line 379 of lalr1.cc  */
-#line 130 "sceneparser.tab.c"
+/* Line 380 of lalr1.cc  */
+#line 131 "sceneparser.tab.c"
 #if YYERROR_VERBOSE
 
   /* Return YYSTR after stripping away unnecessary quotes and
@@ -289,7 +290,7 @@ namespace Bison {
     /// Location of the lookahead.
     location_type yylloc;
     /// The locations where the error started and ended.
-    location_type yyerror_range[2];
+    location_type yyerror_range[3];
 
     /// $$.
     semantic_type yyval;
@@ -417,7 +418,7 @@ namespace Bison {
       {
 	  case 2:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 108 "../src/scene/sceneparser.y"
     {
                 scn.setAccelerator(acceleratorPtr((yysemantic_stack_[(9) - (3)].aval)));
@@ -427,49 +428,49 @@ namespace Bison {
 
   case 3:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 115 "../src/scene/sceneparser.y"
     { (yyval.aval) = new bvh(); }
     break;
 
   case 4:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 116 "../src/scene/sceneparser.y"
     { (yyval.aval) = new octree(); }
     break;
 
   case 5:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 117 "../src/scene/sceneparser.y"
     { (yyval.aval) = new defaultAccelerator(); }
     break;
 
   case 6:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 121 "../src/scene/sceneparser.y"
     { (yyval.tval) = new whittedRayTracer(scn); }
     break;
 
   case 7:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 122 "../src/scene/sceneparser.y"
     { (yyval.tval) = new pathTracer(scn); }
     break;
 
   case 8:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 123 "../src/scene/sceneparser.y"
     { (yyval.tval) = new bdpt(scn); }
     break;
 
   case 15:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 135 "../src/scene/sceneparser.y"
     {
            cameraPtr cam(new camera((float)(yysemantic_stack_[(27) - (3)].fval), (float)(yysemantic_stack_[(27) - (5)].fval), 0.1f, 100.f, (yysemantic_stack_[(27) - (8)].fval), point3((yysemantic_stack_[(27) - (10)].fval), (yysemantic_stack_[(27) - (12)].fval), (yysemantic_stack_[(27) - (14)].fval)), point3((yysemantic_stack_[(27) - (16)].fval), (yysemantic_stack_[(27) - (18)].fval), (yysemantic_stack_[(27) - (20)].fval)), vec3((yysemantic_stack_[(27) - (22)].fval), (yysemantic_stack_[(27) - (24)].fval), (yysemantic_stack_[(27) - (26)].fval))));
@@ -479,35 +480,35 @@ namespace Bison {
 
   case 16:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 142 "../src/scene/sceneparser.y"
     { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
     break;
 
   case 17:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 143 "../src/scene/sceneparser.y"
     { scn.addLight((yysemantic_stack_[(1) - (1)].lval)); }
     break;
 
   case 18:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 148 "../src/scene/sceneparser.y"
     { light* l = new pointLight(point3((yysemantic_stack_[(19) - (6)].fval), (yysemantic_stack_[(19) - (8)].fval), (yysemantic_stack_[(19) - (10)].fval)), (yysemantic_stack_[(19) - (18)].fval), rgbColor((yysemantic_stack_[(19) - (12)].fval), (yysemantic_stack_[(19) - (14)].fval), (yysemantic_stack_[(19) - (16)].fval))); (yyval.lval) = l; }
     break;
 
   case 19:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 153 "../src/scene/sceneparser.y"
     { light* l = new areaLight(point3((yysemantic_stack_[(31) - (6)].fval), (yysemantic_stack_[(31) - (8)].fval), (yysemantic_stack_[(31) - (10)].fval)), (yysemantic_stack_[(31) - (30)].fval), rgbColor((yysemantic_stack_[(31) - (24)].fval), (yysemantic_stack_[(31) - (26)].fval), (yysemantic_stack_[(31) - (28)].fval)), vec3((yysemantic_stack_[(31) - (12)].fval), (yysemantic_stack_[(31) - (14)].fval), (yysemantic_stack_[(31) - (16)].fval)), vec3((yysemantic_stack_[(31) - (18)].fval), (yysemantic_stack_[(31) - (20)].fval), (yysemantic_stack_[(31) - (22)].fval))); (yyval.lval) = l; }
     break;
 
   case 20:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 157 "../src/scene/sceneparser.y"
     {
            shapePtr shp(new shape());
@@ -522,175 +523,175 @@ namespace Bison {
 
   case 21:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 166 "../src/scene/sceneparser.y"
     { (yysemantic_stack_[(5) - (3)].shval)->setMaterial((yysemantic_stack_[(5) - (4)].mval)); scn.addShape((yysemantic_stack_[(5) - (3)].shval)); }
     break;
 
   case 22:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 171 "../src/scene/sceneparser.y"
-    { shape* s = new triangleMesh(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
+    { triangleMesh* p = new triangleMesh(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), p); (yyval.shval) = p; }
     break;
 
   case 23:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 174 "../src/scene/sceneparser.y"
     { shape* s = new shape(); objParser::parse(std::string((yysemantic_stack_[(7) - (6)].sval)).substr(1, std::string((yysemantic_stack_[(7) - (6)].sval)).length() - 2), s); (yyval.shval) = s; }
     break;
 
   case 24:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 178 "../src/scene/sceneparser.y"
     { (yysemantic_stack_[(2) - (2)].listval)->add((yysemantic_stack_[(2) - (1)].pval)); (yyval.listval) = (yysemantic_stack_[(2) - (2)].listval); }
     break;
 
   case 25:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 179 "../src/scene/sceneparser.y"
     { arraylist<primitive*>* l = new arraylist<primitive*>(); l->add((yysemantic_stack_[(1) - (1)].pval)); (yyval.listval) = l; }
     break;
 
   case 26:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 183 "../src/scene/sceneparser.y"
     { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
     break;
 
   case 27:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 184 "../src/scene/sceneparser.y"
     { (yyval.pval) = (yysemantic_stack_[(1) - (1)].pval); }
     break;
 
   case 28:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 189 "../src/scene/sceneparser.y"
     { (yyval.pval) = new triangle(point3((yysemantic_stack_[(20) - (3)].fval), (yysemantic_stack_[(20) - (5)].fval), (yysemantic_stack_[(20) - (7)].fval)), point3((yysemantic_stack_[(20) - (9)].fval), (yysemantic_stack_[(20) - (11)].fval), (yysemantic_stack_[(20) - (13)].fval)), point3((yysemantic_stack_[(20) - (15)].fval), (yysemantic_stack_[(20) - (17)].fval), (yysemantic_stack_[(20) - (19)].fval))); }
     break;
 
   case 29:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 194 "../src/scene/sceneparser.y"
     { (yyval.pval) = new sphere(point3((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 30:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 198 "../src/scene/sceneparser.y"
     { bsdfPtr p((yysemantic_stack_[(4) - (3)].bval)); material* mat = new material(p); (yyval.mval) = mat; }
     break;
 
   case 31:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 200 "../src/scene/sceneparser.y"
     { (yyval.mval) = new material(rgbColor((yysemantic_stack_[(13) - (6)].fval), (yysemantic_stack_[(13) - (8)].fval), (yysemantic_stack_[(13) - (10)].fval)), (yysemantic_stack_[(13) - (12)].fval)); }
     break;
 
   case 32:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 204 "../src/scene/sceneparser.y"
     { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
     break;
 
   case 33:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 205 "../src/scene/sceneparser.y"
     { bsdf* b = new bsdf(); b->addBxdf((yysemantic_stack_[(1) - (1)].bxval)); (yyval.bval) = b; }
     break;
 
   case 34:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 206 "../src/scene/sceneparser.y"
     { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 35:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 207 "../src/scene/sceneparser.y"
     { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 36:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 208 "../src/scene/sceneparser.y"
     { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 37:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 213 "../src/scene/sceneparser.y"
     { (yyval.bxval) = new lambertianBrdf(rgbColor((yysemantic_stack_[(8) - (3)].fval), (yysemantic_stack_[(8) - (5)].fval), (yysemantic_stack_[(8) - (7)].fval))); }
     break;
 
   case 38:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 218 "../src/scene/sceneparser.y"
     { (yyval.bxval) = new phongBrdf(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 39:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 225 "../src/scene/sceneparser.y"
     { (yyval.bxval) = new newWard(rgbColor((yysemantic_stack_[(12) - (3)].fval), (yysemantic_stack_[(12) - (5)].fval), (yysemantic_stack_[(12) - (7)].fval)), 1.f/(yysemantic_stack_[(12) - (9)].fval), 1.f/(yysemantic_stack_[(12) - (11)].fval)); }
     break;
 
   case 40:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 230 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = new blinn(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 41:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 235 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = new blinn(rgbColor((yysemantic_stack_[(10) - (3)].fval), (yysemantic_stack_[(10) - (5)].fval), (yysemantic_stack_[(10) - (7)].fval)), (yysemantic_stack_[(10) - (9)].fval)); }
     break;
 
   case 42:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 240 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = new aniso(rgbColor((yysemantic_stack_[(12) - (3)].fval), (yysemantic_stack_[(12) - (5)].fval), (yysemantic_stack_[(12) - (7)].fval)), (yysemantic_stack_[(12) - (9)].fval), (yysemantic_stack_[(12) - (11)].fval)); }
     break;
 
   case 43:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 243 "../src/scene/sceneparser.y"
     { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 44:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 244 "../src/scene/sceneparser.y"
     { (yyval.bval) = (yysemantic_stack_[(1) - (1)].bval); }
     break;
 
   case 45:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 249 "../src/scene/sceneparser.y"
     {
                      bsdf* p = new bsdf();
@@ -702,7 +703,7 @@ namespace Bison {
 
   case 46:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 259 "../src/scene/sceneparser.y"
     {
                        bsdf* p = new bsdf();
@@ -713,28 +714,28 @@ namespace Bison {
 
   case 47:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 267 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = (yysemantic_stack_[(1) - (1)].mdistval); }
     break;
 
   case 48:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 268 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = (yysemantic_stack_[(1) - (1)].mdistval); }
     break;
 
   case 49:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 269 "../src/scene/sceneparser.y"
     { (yyval.mdistval) = (yysemantic_stack_[(1) - (1)].mdistval); }
     break;
 
   case 50:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 274 "../src/scene/sceneparser.y"
     {
                (yyval.mbxval) = new microfacetBrdf((yysemantic_stack_[(8) - (3)].fval), (yysemantic_stack_[(8) - (5)].fval), (yysemantic_stack_[(8) - (7)].mdistval));
@@ -743,35 +744,35 @@ namespace Bison {
 
   case 51:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 280 "../src/scene/sceneparser.y"
     { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].mbxval); }
     break;
 
   case 52:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 281 "../src/scene/sceneparser.y"
     { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
     break;
 
   case 53:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 282 "../src/scene/sceneparser.y"
     { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
     break;
 
   case 54:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 283 "../src/scene/sceneparser.y"
     { (yyval.bxval) = (yysemantic_stack_[(1) - (1)].bxval); }
     break;
 
   case 55:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 288 "../src/scene/sceneparser.y"
     {
               bsdf* p = new bsdf();
@@ -782,7 +783,7 @@ namespace Bison {
 
   case 56:
 
-/* Line 677 of lalr1.cc  */
+/* Line 678 of lalr1.cc  */
 #line 297 "../src/scene/sceneparser.y"
     {
          bsdf* p = new bsdf();
@@ -794,8 +795,8 @@ namespace Bison {
 
 
 
-/* Line 677 of lalr1.cc  */
-#line 799 "sceneparser.tab.c"
+/* Line 678 of lalr1.cc  */
+#line 800 "sceneparser.tab.c"
 	default:
           break;
       }
@@ -829,7 +830,7 @@ namespace Bison {
 	error (yylloc, yysyntax_error_ (yystate));
       }
 
-    yyerror_range[0] = yylloc;
+    yyerror_range[1] = yylloc;
     if (yyerrstatus_ == 3)
       {
 	/* If just tried and failed to reuse lookahead token after an
@@ -864,7 +865,7 @@ namespace Bison {
     if (false)
       goto yyerrorlab;
 
-    yyerror_range[0] = yylocation_stack_[yylen - 1];
+    yyerror_range[1] = yylocation_stack_[yylen - 1];
     /* Do not reclaim the symbols of the rule which action triggered
        this YYERROR.  */
     yypop_ (yylen);
@@ -896,7 +897,7 @@ namespace Bison {
 	if (yystate_stack_.height () == 1)
 	YYABORT;
 
-	yyerror_range[0] = yylocation_stack_[0];
+	yyerror_range[1] = yylocation_stack_[0];
 	yydestruct_ ("Error: popping",
 		     yystos_[yystate],
 		     &yysemantic_stack_[0], &yylocation_stack_[0]);
@@ -905,10 +906,10 @@ namespace Bison {
 	YY_STACK_PRINT ();
       }
 
-    yyerror_range[1] = yylloc;
+    yyerror_range[2] = yylloc;
     // Using YYLLOC is tempting, but would change the location of
     // the lookahead.  YYLOC is available though.
-    YYLLOC_DEFAULT (yyloc, (yyerror_range - 1), 2);
+    YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
     yysemantic_stack_.push (yylval);
     yylocation_stack_.push (yyloc);
 
@@ -1421,15 +1422,15 @@ namespace Bison {
   const Parser::token_number_type Parser::yyundef_token_ = 2;
 
 
-/* Line 1053 of lalr1.cc  */
+/* Line 1054 of lalr1.cc  */
 #line 4 "../src/scene/sceneparser.y"
 } // Bison
 
-/* Line 1053 of lalr1.cc  */
-#line 1430 "sceneparser.tab.c"
+/* Line 1054 of lalr1.cc  */
+#line 1431 "sceneparser.tab.c"
 
 
-/* Line 1055 of lalr1.cc  */
+/* Line 1056 of lalr1.cc  */
 #line 304 "../src/scene/sceneparser.y"
 
 

@@ -7,10 +7,10 @@
 #include "acceleration/intersection.hpp"
 #include "light/light.hpp"
 
-scene::scene() : accel(new defaultAccelerator()), needsBuilding(false)
+scene::scene() : accel(new defaultAccelerator()), needsBuilding(false), totalVertices(0)
 {}
 
-scene::scene(accelerator* a) : accel(a), needsBuilding(false)
+scene::scene(accelerator* a) : accel(a), needsBuilding(false), totalVertices(0)
 {}
 
 void scene::addLight(lightPtr l){
@@ -30,6 +30,8 @@ void scene::addShape(shapePtr s){
 
 	needsBuilding = true;
     bounds = mergeAabb(bounds, s->getBounds());
+
+    totalVertices += s->vertexCount();
 }
 
 void scene::addShape(shape* s){
@@ -41,6 +43,8 @@ void scene::addShape(shape* s){
 
 	needsBuilding = true;
     bounds = mergeAabb(bounds, p->getBounds());
+
+    totalVertices += s->vertexCount();
 }
 
 void scene::setAccelerator(acceleratorPtr a){

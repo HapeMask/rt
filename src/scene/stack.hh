@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 2.4.2.  */
+/* A Bison parser, made by GNU Bison 2.4.3.  */
 
 /* Stack handling for Bison parsers in C++
    
-      Copyright (C) 2002-2010 Free Software Foundation, Inc.
+      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free
+   Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,12 +37,12 @@
 #include <deque>
 
 
-/* Line 1066 of lalr1.cc  */
+/* Line 1067 of lalr1.cc  */
 #line 4 "../src/scene/sceneparser.y"
 namespace Bison {
 
-/* Line 1066 of lalr1.cc  */
-#line 45 "stack.hh"
+/* Line 1067 of lalr1.cc  */
+#line 46 "stack.hh"
   template <class T, class S = std::deque<T> >
   class stack
   {
@@ -128,12 +129,12 @@ namespace Bison {
     unsigned int range_;
   };
 
-/* Line 1152 of lalr1.cc  */
+/* Line 1153 of lalr1.cc  */
 #line 4 "../src/scene/sceneparser.y"
 } // Bison
 
-/* Line 1152 of lalr1.cc  */
-#line 137 "stack.hh"
+/* Line 1153 of lalr1.cc  */
+#line 138 "stack.hh"
 
 #endif // not BISON_STACK_HH[]dnl
 

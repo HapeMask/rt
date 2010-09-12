@@ -1,3 +1,5 @@
+#ifdef RT_USE_SDL
+
 #include "mathlib/constants.hpp"
 #include "sdlframebuffer.hpp"
 
@@ -15,7 +17,7 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
     blocksUsed(0), pixelsSampled(0), iterations(0), scn(sc),
     blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
     blockHeight(sc.getCamera().height() / VERT_BLOCKS), didInit(false),
-    showUpdates(false), linearTonemapScale(1.f)
+    showUpdates(false)
 {
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -223,3 +225,5 @@ void sdlFramebuffer::tonemapAndUpdateRect(const int& cornerX, const int& cornerY
             SDL_UpdateRect(screen, cornerX, cornerY, blockWidth, blockHeight);
         }
 }
+
+#endif

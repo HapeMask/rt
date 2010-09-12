@@ -18,6 +18,10 @@
 
 #include "tracer/tracer.hpp"
 
+#ifdef RT_USE_QT
+#include <GL/gl.h>
+#endif
+
 using namespace std;
 using tr1::shared_ptr;
 
@@ -83,6 +87,26 @@ class scene {
             return rt->L(cam->getRay(x, y));
         }
 
+        inline const unsigned long vertexCount() const {
+            return totalVertices;
+        }
+
+#ifdef RT_USE_QT
+        void dumpToVbo(GLfloat* vbo) const {
+            GLfloat* p = vbo;
+
+            for(size_t i=0; i<shapes.size(); ++i){
+                shapes[i]->prepGL(p);
+            }
+        }
+
+        void drawGL() const {
+            for(size_t i=0; i<shapes.size(); ++i){
+                shapes[i]->drawGL();
+            }
+        }
+#endif
+
 	private:
 		vector<shapePtr> shapes;
 		vector<shapePtr> emitters;
@@ -94,6 +118,8 @@ class scene {
 
 		bool needsBuilding;
 		aabb bounds;
+
+        unsigned long totalVertices;
 };
 
 typedef shared_ptr<scene> scenePtr;

@@ -129,6 +129,8 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
         file >> chunk;
     }
 
+    p->totalVertices = 3 * tris.size();
+
     if(smooth){
         // Sum the normals for all faces adjacent to each vert,
         // then store the vertex normal.

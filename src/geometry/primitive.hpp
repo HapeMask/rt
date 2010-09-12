@@ -7,6 +7,11 @@
 
 #include <vector>
 #include <tr1/memory>
+
+#ifdef RT_USE_QT
+#include <GL/gl.h>
+#endif
+
 using namespace std;
 using tr1::shared_ptr;
 
@@ -43,6 +48,23 @@ class primitive {
 		shape* getParent() const {
 			return parent;
 		}
+
+#ifdef RT_USE_QT
+        /**
+         * Prepares any data required to draw this shape on an OpenGL
+         * framebuffer. Takes an optional pointer to some data as an argument.
+         *
+         * Data is usually a vertex array.
+         */
+        virtual void prepGL(GLfloat*& data) const = 0;
+
+        /**
+         * Performs the required GL draw calls to draw this shape.
+         */
+        virtual void drawGL() const = 0;
+#endif
+
+        virtual const unsigned long vertexCount() const = 0;
 
         ray* lastRayTested;
 
