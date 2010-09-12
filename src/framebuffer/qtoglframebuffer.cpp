@@ -187,7 +187,7 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glPushMatrix();
 
     glDrawArrays(GL_TRIANGLES, 0, scn.vertexCount());
-    //scn.drawGL();
+    scn.drawGL();
 
     glPopMatrix();
 
