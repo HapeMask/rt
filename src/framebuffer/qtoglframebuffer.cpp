@@ -240,7 +240,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
     gettimeofday(&start, NULL);
 
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(dynamic) shared(painter)
 #endif
     // Fill blocks as long as the thread can get new ones.
     for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
@@ -252,6 +252,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
 #pragma omp critical
 #endif
             {
+                painter.eraseRect(blockCornerX, blockCornerY, width_, height_);
                 painter.fillRect(
                         blockCornerX, blockCornerY,
                         blockWidth, blockHeight, Qt::green);
@@ -295,7 +296,6 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
             }
         }
 
-            /*
         if(iterations > 16 && showUpdates){
 #pragma omp critical
             {
@@ -305,10 +305,15 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
                     QRect(blockCornerX, blockCornerY, blockWidth, blockHeight));
             }
         }
-        */
 
-        //tonemapAndUpdateRect(painter, blockCornerX, blockCornerY);
+        /*
+#pragma omp critical
+        {
+        tonemapAndUpdateRect(painter, blockCornerX, blockCornerY);
+        }
+        */
     }
+
     tonemapAndUpdateScreen(painter);
 
     gettimeofday(&now, NULL);
@@ -372,7 +377,7 @@ void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c
 
 void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 #endif
     for(int y = 0; y <height_; y++){
         for(int x = 0; x < width_; x++){
@@ -385,6 +390,9 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
 }
 
 void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY){
+#ifdef RT_MULTITHREADED
+#pragma omp parallel for collapse(2)
+#endif
     for(int y = cornerY; y < cornerY + blockHeight; y++){
         for(int x = cornerX; x < cornerX + blockWidth; x++){
             setPixel(x, y,
