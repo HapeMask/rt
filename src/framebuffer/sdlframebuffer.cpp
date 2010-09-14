@@ -13,11 +13,8 @@
 using namespace std;
 
 sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
-    framebuffer(sc.getCamera().width(), sc.getCamera().height(), bpp),
-    blocksUsed(0), pixelsSampled(0), iterations(0), scn(sc),
-    blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
-    blockHeight(sc.getCamera().height() / VERT_BLOCKS), didInit(false),
-    showUpdates(false)
+    framebuffer(sc, bpp),
+    pixelsSampled(0), iterations(0), showUpdates(false)
 {
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -112,12 +109,10 @@ void sdlFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c){
 	}
 }
 
-const bool sdlFramebuffer::render(){
+void sdlFramebuffer::render(){
     struct timeval start, now;
     gettimeofday(&start, NULL);
 
-
-    bool done = false;
 #ifdef RT_MULTITHREADED
 #pragma omp parallel for schedule(dynamic)
 #endif
@@ -195,7 +190,6 @@ const bool sdlFramebuffer::render(){
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
 
     blocksUsed = 0;
-    return done;
 }
 
 void sdlFramebuffer::tonemapAndUpdateScreen(){

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <QImage>
 #include <QGLWidget>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QKeyEvent>
+
 #include <GL/gl.h>
 
 #include "framebuffer.hpp"
@@ -21,13 +23,14 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         QSize minimumSizeHint() const;
         QSize sizeHint() const;
 
-        virtual const bool render();
+        virtual void render();
 
 		inline virtual const bool readyForDrawing() const {
             return true;
         }
 
     protected:
+        void _render(QPainter& painter);
         void initializeGL();
         void resizeGL(int width, int height);
 
@@ -46,7 +49,21 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         QPoint lastPos;
         vec3 camPos, camForward;
 
-        const scene& scn;
+        uint64_t pixelsSampled, iterations;
+		bool showUpdates;
+
+        rgbColor* buffer;
+        rgbColor* sumOfSquares;
+        int* samplesPerPixel;
+        QImage imgBuffer;
+        bool paused;
+
+        void tonemapAndUpdateScreen(QPainter& painter);
+        void tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY);
+        void addSample(const int& x, const int& y, const rgbColor& c);
+        void setPixel(const int& x, const int& y, const rgbColor& c);
 
         void positionCamera();
+        void enableGLOptions();
+        void disableGLOptions();
 };

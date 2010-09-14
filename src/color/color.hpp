@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef RT_USE_QT
+#include <QColor>
+#include <QColormap>
+#endif
+
 #include <cmath>
 #include <stdint.h>
 #include <iostream>
@@ -122,6 +127,16 @@ class rgbColor : public color {
             b *= c.b;
             return (*this);
         }
+
+#ifdef RT_USE_QT
+        inline const QColor qcolor() const {
+            return QColor(255.f * r, 255.f * g, 255.f * b);
+        }
+
+        inline const uint toUint() const {
+            return QColormap::instance().pixel(qcolor());
+        }
+#endif
 
 		float r;
 		float g;

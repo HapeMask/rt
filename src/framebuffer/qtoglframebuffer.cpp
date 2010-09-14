@@ -6,6 +6,13 @@
 #include "mathlib/vector.hpp"
 #include "scene/objparser.hpp"
 
+#include "utility.hpp"
+#include "mathlib/constants.hpp"
+
+#include <QPixmap>
+#include <sys/time.h>
+#include <unistd.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <iostream>
@@ -27,10 +34,12 @@ GLfloat shine = 100;
 
 qtOpenGLFramebuffer::qtOpenGLFramebuffer(const scene& s, const int bpp, QWidget* parent) :
     QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), parent),
-    framebuffer(s.getCamera().width(), s.getCamera().height(), bpp),
-    vbo(0), sceneData(NULL),
+    framebuffer(s, bpp), vbo(0), sceneData(NULL),
     viewRotX(0.f), viewRotY(0.f), lastPos(0.f, 0.f),
-    camPos(s.getCamera().getPosition()), camForward(s.getCamera().getLook()), scn(s)
+    camPos(s.getCamera().getPosition()), camForward(s.getCamera().getLook()),
+    pixelsSampled(0), iterations(0), showUpdates(false),
+    imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),
+    paused(false)
 {
     setAutoFillBackground(false);
 
@@ -45,6 +54,10 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(const scene& s, const int bpp, QWidget*
             2 * 3 * s.vertexCount() * sizeof(GLfloat),
             sceneData,
             GL_STATIC_DRAW);
+
+    buffer = new rgbColor[width_*height_];
+    sumOfSquares = new rgbColor[width_*height_];
+    samplesPerPixel = new int[width_*height_];
 }
 
 qtOpenGLFramebuffer::~qtOpenGLFramebuffer()
@@ -53,27 +66,16 @@ qtOpenGLFramebuffer::~qtOpenGLFramebuffer()
 }
 
 QSize qtOpenGLFramebuffer::minimumSizeHint() const {
-    return QSize(400, 400);
+    return QSize(width_, height_);
 }
 
 QSize qtOpenGLFramebuffer::sizeHint() const {
-    return QSize(400, 400);
+    return QSize(width_, height_);
 }
 
 void qtOpenGLFramebuffer::initializeGL(){
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-    glShadeModel(GL_SMOOTH);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
-
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+    glEnable(GL_MULTISAMPLE);
+    enableGLOptions();
 }
 
 void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
@@ -100,6 +102,27 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
         case Qt::Key_Z:
 			camPos -= up / 5.f;
 			break;
+        case Qt::Key_P:
+            paused = !paused;
+            break;
+        case Qt::Key_Escape:
+            paused = true;
+            break;
+        case Qt::Key_R:
+            {
+            //QPainter painter(this);
+            //painter.beginNativePainting();
+            disableGLOptions();
+            QPainter painter;
+            painter.begin(this);
+            _render(painter);
+            painter.end();
+            //painter.endNativePainting();
+            break;
+            }
+        case Qt::Key_U:
+            showUpdates = !showUpdates;
+            break;
     }
 
     update();
@@ -166,7 +189,7 @@ void qtOpenGLFramebuffer::resizeGL(int width, int height) {
 }
 
 void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
-    initializeGL();
+    enableGLOptions();
 
     positionCamera();
     glLightfv(GL_LIGHT0, GL_POSITION, light0Pos);
@@ -195,22 +218,189 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glDisableClientState(GL_NORMAL_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    disableGLOptions();
+
+    QPainter painter(this);
+    painter.beginNativePainting();
+    //painter.fillRect(0,0,128,128, QColor(0,255,0,128));
+    //_render(painter);
+    painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
+    painter.endNativePainting();
+}
+
+void qtOpenGLFramebuffer::render() {
+    QPainter painter(this);
+    painter.beginNativePainting();
+    _render(painter);
+    painter.endNativePainting();
+}
+
+void qtOpenGLFramebuffer::_render(QPainter& painter) {
+    struct timeval start, now;
+    gettimeofday(&start, NULL);
+
+#ifdef RT_MULTITHREADED
+#pragma omp parallel for schedule(dynamic)
+#endif
+    // Fill blocks as long as the thread can get new ones.
+    for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
+        int blockCornerX=0, blockCornerY=0;
+        getNextBlock(blockCornerY, blockCornerX);
+
+        if(showUpdates){
+#ifdef RT_MULTITHREADED
+#pragma omp critical
+#endif
+            {
+                painter.fillRect(
+                        blockCornerX, blockCornerY,
+                        blockWidth, blockHeight, Qt::green);
+                swapBuffers();
+            }
+        }
+
+        // Render the pixels in block.
+        for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
+            for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
+                // TODO: Replace this basic jittering with improved filtering,
+                // perhaps stratification over the image plane.
+
+                float variationCoefficient = 1.f;
+                if(iterations > 16){
+                    const size_t offset = y * width_ + x;
+                    const int spp = samplesPerPixel[offset];
+
+                    const rgbColor& sum = buffer[offset];
+                    const rgbColor mean = sum / spp;
+                    const rgbColor Sxx = sumOfSquares[offset] - (sum * mean);
+                    const rgbColor stddev = sqrt(Sxx / (spp - 1));
+
+                    variationCoefficient = (stddev / mean).avg();
+                }
+
+                if(variationCoefficient > 0.5f){
+                    const float xOffset = sampleUniform() - 0.5f;
+                    const float yOffset = sampleUniform() - 0.5f;
+
+                    addSample(
+                            x, y,
+                            scn.L((float)x + xOffset, (float)y + yOffset)
+                        );
+
+                    if(showUpdates){
+                        setPixel(x, y, rgbColor(1.f,0,0));
+                    }
+                }
+
+            }
+        }
+
+            /*
+        if(iterations > 16 && showUpdates){
+#pragma omp critical
+            {
+            painter.drawPixmap(
+                    QPoint(blockCornerX, blockCornerY),
+                    QPixmap::fromImage(imgBuffer),
+                    QRect(blockCornerX, blockCornerY, blockWidth, blockHeight));
+            }
+        }
+        */
+
+        //tonemapAndUpdateRect(painter, blockCornerX, blockCornerY);
+    }
+    tonemapAndUpdateScreen(painter);
+
+    gettimeofday(&now, NULL);
+    const float timeElapsed = now.tv_sec - start.tv_sec +
+        ((now.tv_usec - start.tv_usec) / 1e6);
+
+    ++iterations;
+    cerr << "Iterations: " << iterations << ", ";
+    cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
+
+    blocksUsed = 0;
+}
+
+void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
+    const size_t offset = y * width_ + x;
+    buffer[offset] += c;
+    sumOfSquares[offset] += c * c;
+    ++samplesPerPixel[offset];
+
+#ifdef RT_MULTITHREADED
+#pragma omp atomic
+#endif
+            ++pixelsSampled;
+}
+
+void qtOpenGLFramebuffer::enableGLOptions() {
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+    glShadeModel(GL_SMOOTH);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
+
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+}
+
+void qtOpenGLFramebuffer::disableGLOptions() {
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+	//glDisable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
     glShadeModel(GL_SMOOTH);
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
-	glDisable(GL_AUTO_NORMAL);
-	glDisable(GL_NORMALIZE);
-
-    QPainter painter(this);
-    painter.beginNativePainting();
-    painter.fillRect(0,0,128,128, QColor(0,255,0,128));
-    painter.endNativePainting();
 }
 
-const bool qtOpenGLFramebuffer::render() {
+void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c) {
+    const float gamma = 1.f/2.2f;
+    const rgbColor gammaC = rgbColor(
+            powf(c.red(), gamma),
+            powf(c.green(), gamma),
+            powf(c.blue(), gamma));
+
+    imgBuffer.setPixel(x, y, gammaC.toUint());
 }
+
+void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
+#ifdef RT_MULTITHREADED
+#pragma omp parallel for
+#endif
+    for(int y = 0; y <height_; y++){
+        for(int x = 0; x < width_; x++){
+            setPixel(x, y,
+                    clamp(buffer[y * framebuffer::width() + x] / (float)samplesPerPixel[y * framebuffer::width() + x]));
+        }
+    }
+
+    painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
+}
+
+void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY){
+    for(int y = cornerY; y < cornerY + blockHeight; y++){
+        for(int x = cornerX; x < cornerX + blockWidth; x++){
+            setPixel(x, y,
+                    clamp(buffer[y * framebuffer::width() + x] / (float)samplesPerPixel[y * framebuffer::width() + x]));
+        }
+    }
+
+#ifdef RT_MULTITHREADED
+#pragma omp critical
+#endif
+        {
+            painter.drawPixmap(
+                    QPoint(cornerX, cornerY),
+                    QPixmap::fromImage(imgBuffer),
+                    QRect(cornerX, cornerY, blockWidth, blockHeight));
+        }
+}
+
 #endif

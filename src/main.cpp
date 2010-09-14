@@ -29,6 +29,9 @@
 using namespace std;
 
 int main(int argc, char* args[]){
+    // SFMT
+    init_gen_rand(time(NULL));
+
 #ifdef RT_USE_SDL
 #include "sdlmain.hpp"
 #endif

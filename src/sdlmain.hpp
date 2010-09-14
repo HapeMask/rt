@@ -37,11 +37,6 @@ scn.build();
 
 sdlFramebuffer f(scn, 32);
 
-//srand(0);
-
-// SFMT
-init_gen_rand(time(NULL));
-
 #ifdef RT_MULTITHREADED
 omp_set_num_threads(numThreads);
 cerr << "Rendering on " << numThreads << " threads." << endl;
@@ -64,11 +59,7 @@ while(true){
     if(paused){
         SDL_WaitEvent(&e);
     }else{
-        const bool done = f.render();
-        if(done){
-            paused = true;
-            continue;
-        }
+        f.render();
 
         dirty = true;
 

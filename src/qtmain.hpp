@@ -1,6 +1,6 @@
 scene scn;
 
-string filename = "../src/scene/test.scn";
+string filename = "/Users/hape/hape-rt/rt/src/scene/test.scn";
 int numThreads = 4;
 int c;
 
