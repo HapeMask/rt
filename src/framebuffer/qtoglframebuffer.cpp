@@ -32,12 +32,12 @@ GLfloat specularMat0[] = {0.5, 0.5, 0.5, 1.0};
 
 GLfloat shine = 100;
 
-qtOpenGLFramebuffer::qtOpenGLFramebuffer(const scene& s, const int bpp, QWidget* parent) :
+qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* parent) :
     QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), parent),
     framebuffer(s, bpp), vbo(0), sceneData(NULL),
-    viewRotX(0.f), viewRotY(0.f), lastPos(0.f, 0.f),
+    viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()), lastPos(0.f, 0.f),
     camPos(s.getCamera().getPosition()), camForward(s.getCamera().getLook()),
-    pixelsSampled(0), iterations(0), showUpdates(false),
+    pixelsSampled(0), iterations(0), showUpdates(false), rendered(false),
     imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),
     paused(false)
 {
@@ -86,22 +86,38 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
     switch(event->key()){
         case Qt::Key_W:
 			camPos += camForward / 5.f;
+            rendered = false;
 			break;
         case Qt::Key_A:
 			camPos -= right / 5.f;
+            rendered = false;
 			break;
         case Qt::Key_S:
 			camPos -= camForward / 5.f;
+            rendered = false;
 			break;
         case Qt::Key_D:
 			camPos += right / 5.f;
+            rendered = false;
 			break;
         case Qt::Key_Space:
 			camPos += up / 5.f;
+            rendered = false;
 			break;
         case Qt::Key_Z:
 			camPos -= up / 5.f;
+            rendered = false;
 			break;
+        case Qt::Key_Plus:
+        case Qt::Key_Equal:
+            fovy += 2;
+            rendered = false;
+            break;
+        case Qt::Key_Minus:
+        case Qt::Key_Underscore:
+            fovy -= 2;
+            rendered = false;
+            break;
         case Qt::Key_P:
             paused = !paused;
             break;
@@ -125,6 +141,10 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
             break;
     }
 
+    scn.getCamera().setPosition(camPos);
+    scn.getCamera().setLook(camPos + normalize(camForward));
+    scn.getCamera().setFov(fovy);
+
     update();
 }
 
@@ -137,6 +157,8 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
     const int dy = event->y() - lastPos.y();
 
     if(dx != 0 || dy != 0){
+        rendered = false;
+
         // Derp multiple inheritance...
         viewRotY += sin(TWOPI * (dx / (float)framebuffer::width()));
         viewRotX += sin(TWOPI * (dy / (float)framebuffer::height()));
@@ -162,8 +184,7 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
 void qtOpenGLFramebuffer::positionCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    gluPerspective(45, 1.0, 0.5, 100);
-    glTranslatef(0,0,-2);
+    gluPerspective(fovy, width_ / height_, 0.5, 100);
 
 	// Construct quaternions for composite rotation around
 	// Y and X axes.
@@ -176,11 +197,28 @@ void qtOpenGLFramebuffer::positionCamera() {
 	// Rotate p around Y, then around X, then scale by distance.
 	const quaternion pr = qmult(qmult(qmult(q, r), p), qmult(q, r).inverse());
 	camForward = normalize(vec3(pr.x, pr.y, pr.z));
+
+    // Update the tracer's camera.
+    scn.getCamera().setLook(camPos + normalize(camForward));
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(camPos.x(), camPos.y(), camPos.z(),
 			camPos.x() + camForward.x(), camPos.y() + camForward.y(), camPos.z() + camForward.z(),
 			0, 1, 0);
+}
+
+void qtOpenGLFramebuffer::clearBuffers() {
+    imgBuffer.fill(0);
+
+    const rgbColor black(0.f);
+    for(int i=0; i<width_*height_; ++i){
+        buffer[i] = black;
+        samplesPerPixel[i] = 0;
+    }
+
+    pixelsSampled = 0;
+    iterations = 0;
 }
 
 void qtOpenGLFramebuffer::resizeGL(int width, int height) {
@@ -212,6 +250,27 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glDrawArrays(GL_TRIANGLES, 0, scn.vertexCount());
     scn.drawGL();
 
+    /* SAMPLER DEMO CODE
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    glBegin(GL_POINTS);
+
+    float samples[400];
+    getLDSamples2D(samples, 200);
+
+    for(int i=0; i<200; ++i){
+        glColor3f(1,0,0);
+        point3 p;
+        sampleRectangle(p, vec3(0,2,0), vec3(2,0,0), point3(-2,0,0), samples[2*i], samples[2*i+1]);
+        glVertex3f(p.x(), p.y(), p.z());
+
+        glColor3f(0,0,1);
+        uniformSampleRectangle(p, vec3(0,2,0), vec3(2,0,0), point3(2,0,0));
+        glVertex3f(p.x(), p.y(), p.z());
+    }
+    glEnd();
+    */
+
     glPopMatrix();
 
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -224,7 +283,10 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     painter.beginNativePainting();
     //painter.fillRect(0,0,128,128, QColor(0,255,0,128));
     //_render(painter);
-    painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
+
+    if(rendered){
+        painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
+    }
     painter.endNativePainting();
 }
 
@@ -236,6 +298,10 @@ void qtOpenGLFramebuffer::render() {
 }
 
 void qtOpenGLFramebuffer::_render(QPainter& painter) {
+    if(!rendered){
+        clearBuffers();
+    }
+
     struct timeval start, now;
     gettimeofday(&start, NULL);
 
@@ -263,46 +329,13 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
         // Render the pixels in block.
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
-                // TODO: Replace this basic jittering with improved filtering,
-                // perhaps stratification over the image plane.
+                const float xOffset = sampleUniform() - 0.5f;
+                const float yOffset = sampleUniform() - 0.5f;
 
-                float variationCoefficient = 1.f;
-                if(iterations > 16){
-                    const size_t offset = y * width_ + x;
-                    const int spp = samplesPerPixel[offset];
-
-                    const rgbColor& sum = buffer[offset];
-                    const rgbColor mean = sum / spp;
-                    const rgbColor Sxx = sumOfSquares[offset] - (sum * mean);
-                    const rgbColor stddev = sqrt(Sxx / (spp - 1));
-
-                    variationCoefficient = (stddev / mean).avg();
-                }
-
-                if(variationCoefficient > 0.5f){
-                    const float xOffset = sampleUniform() - 0.5f;
-                    const float yOffset = sampleUniform() - 0.5f;
-
-                    addSample(
-                            x, y,
-                            scn.L((float)x + xOffset, (float)y + yOffset)
-                        );
-
-                    if(showUpdates){
-                        setPixel(x, y, rgbColor(1.f,0,0));
-                    }
-                }
-
-            }
-        }
-
-        if(iterations > 16 && showUpdates){
-#pragma omp critical
-            {
-            painter.drawPixmap(
-                    QPoint(blockCornerX, blockCornerY),
-                    QPixmap::fromImage(imgBuffer),
-                    QRect(blockCornerX, blockCornerY, blockWidth, blockHeight));
+                addSample(
+                        x, y,
+                        scn.L((float)x + xOffset, (float)y + yOffset)
+                    );
             }
         }
 
@@ -325,6 +358,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
 
     blocksUsed = 0;
+    rendered = true;
 }
 
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){

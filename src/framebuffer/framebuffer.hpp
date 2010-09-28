@@ -7,7 +7,7 @@ static const int VERT_BLOCKS = 4;
 
 class framebuffer {
 	public:
-		framebuffer(const scene& sc, const int& b) :
+		framebuffer(scene& sc, const int& b) :
             scn(sc), width_(sc.getCamera().width()),
             height_(sc.getCamera().height()), bpp_(b),
             blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
@@ -55,7 +55,7 @@ class framebuffer {
             return done;
         }
 
-        const scene& scn;
+        scene& scn;
 
         const int blockWidth, blockHeight;
         int blocksUsed;

@@ -43,4 +43,9 @@ fb.resize(scn.getCamera().width(), scn.getCamera().height());
 fb.setWindowTitle("Qt/OpenGL Framebuffer");
 fb.show();
 
+/*
+QHboxLayout* hbox = new QHboxLayout(&app);
+hbox->add
+*/
+
 return app.exec();

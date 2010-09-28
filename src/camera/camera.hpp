@@ -37,6 +37,25 @@ class camera {
             return up;
         }
 
+        inline const float& getFov() const {
+            return fov;
+        }
+
+        inline void setPosition(const vec3& p) {
+            pos = p;
+            updateMatrices();
+        }
+
+        inline void setLook(const vec3& l) {
+            look = l;
+            updateMatrices();
+        }
+
+        inline void setFov(const float& f) {
+            fov = f;
+            updateMatrices();
+        }
+
 	private:
         float screen[4];
         float _width, _height;

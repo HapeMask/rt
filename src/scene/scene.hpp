@@ -81,6 +81,10 @@ class scene {
             return *cam;
         }
 
+        camera& getCamera() {
+            return *cam;
+        }
+
 		void build();
 
         inline const rgbColor L(const float& x, const float& y) const {

@@ -17,7 +17,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
     //Q_OBJECT
 
     public:
-        qtOpenGLFramebuffer(const scene& s, const int bpp=32, QWidget* parent = NULL);
+        qtOpenGLFramebuffer(scene& s, const int bpp=32, QWidget* parent = NULL);
         ~qtOpenGLFramebuffer();
 
         QSize minimumSizeHint() const;
@@ -45,12 +45,12 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         GLfloat* sceneData;
 
-        float viewRotX, viewRotY;
+        float viewRotX, viewRotY, fovy;
         QPoint lastPos;
         vec3 camPos, camForward;
 
         uint64_t pixelsSampled, iterations;
-		bool showUpdates;
+		bool showUpdates, rendered;
 
         rgbColor* buffer;
         rgbColor* sumOfSquares;
@@ -66,4 +66,6 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void positionCamera();
         void enableGLOptions();
         void disableGLOptions();
+
+        void clearBuffers();
 };
