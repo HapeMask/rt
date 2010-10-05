@@ -11,8 +11,10 @@
 #include "framebuffer.hpp"
 #include "scene/scene.hpp"
 #include "mathlib/vector.hpp"
+//#include "qtgui/qtmainwin.hpp"
 
 class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
+    friend class rtGUI;
     // Only if you use signals/slots.
     //Q_OBJECT
 
@@ -40,9 +42,11 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void mouseMoveEvent(QMouseEvent* event);
         void keyPressEvent(QKeyEvent* event);
 
+        virtual void addSample(const int& x, const int& y, const rgbColor& c);
+        virtual void setPixel(const int& x, const int& y, const rgbColor& c);
+
     private:
         GLuint vbo;
-
         GLfloat* sceneData;
 
         float viewRotX, viewRotY, fovy;
@@ -60,8 +64,6 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         void tonemapAndUpdateScreen(QPainter& painter);
         void tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY);
-        void addSample(const int& x, const int& y, const rgbColor& c);
-        void setPixel(const int& x, const int& y, const rgbColor& c);
 
         void positionCamera();
         void enableGLOptions();

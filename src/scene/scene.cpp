@@ -1,11 +1,6 @@
 #include "scene.hpp"
 #include "geometry/shape.hpp"
-
-#include "camera/camera.hpp"
-
 #include "acceleration/defaultaccelerator.hpp"
-#include "acceleration/intersection.hpp"
-#include "light/light.hpp"
 
 scene::scene() : accel(new defaultAccelerator()), needsBuilding(false), totalVertices(0)
 {}

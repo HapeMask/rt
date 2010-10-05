@@ -23,6 +23,7 @@
 #ifdef RT_USE_QT
 #include <QApplication>
 #include "framebuffer/qtoglframebuffer.hpp"
+#include "qtgui/qtmainwin.hpp"
 #endif
 
 #include <unistd.h>

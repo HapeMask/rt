@@ -12,7 +12,7 @@
 
 using namespace std;
 
-sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
+sdlFramebuffer::sdlFramebuffer(scene& sc, const int bpp):
     framebuffer(sc, bpp),
     pixelsSampled(0), iterations(0), showUpdates(false)
 {
@@ -40,9 +40,9 @@ sdlFramebuffer::sdlFramebuffer(const scene& sc, const int bpp):
 }
 
 sdlFramebuffer::~sdlFramebuffer(){
-    delete[] buffer;
-    delete[] sumOfSquares;
-    delete[] samplesPerPixel;
+    if(buffer) delete[] buffer;
+    if(sumOfSquares) delete[] sumOfSquares;
+    if(samplesPerPixel) delete[] samplesPerPixel;
 }
 
 void sdlFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){

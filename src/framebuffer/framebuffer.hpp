@@ -63,4 +63,7 @@ class framebuffer {
 		int width_;
 		int height_;
 		int bpp_;
+
+        virtual void addSample(const int& x, const int& y, const rgbColor& c) = 0;
+        virtual void setPixel(const int& x, const int& y, const rgbColor& c) = 0;
 };

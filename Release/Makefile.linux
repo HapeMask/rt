@@ -1,33 +1,39 @@
-
-.PHONY: all clean run parser parserclean
+.PHONY: all clean run parser parserclean sdl qt
 SRCDIR=../src
 
-QT_CXXFLAGS=-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
-	-I/usr/share/qt/mkspecs/linux-g++ -I/usr/include/QtCore \
-	-I/usr/include/QtGui
+QT_CXXFLAGS=-m64 -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED \
+	-I/usr/share/qt/mkspecs/linux-g++-64 -I/usr/include/QtCore \
+	-I/usr/include/QtGui -I/usr/X11/include -I/usr/include/QtOpenGL -I/usr/include \
+	-DGL_GLEXT_PROTOTYPES
 
-QT_LDFLAGS= -lQtGui -lQtCore -lpthread --hash-style=gnu --as-needed
+QT_LDFLAGS= -lQtGui -lQtCore -lQtOpenGL -lpthread --hash-style=gnu --as-needed -lGL -lGLU
 
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
 SDL_LDFLAGS= $(shell sdl-config --libs)
 
-WIN_CXXFLAGS = -IC:\MinGW\include\SDL
-WIN_LDFLAGS = -LC:\MinGW\lib
+CXXFLAGS= -g -I$(SRCDIR) -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
+	-msse4 -msse4.1 -msse4.2 -ffast-math \
+	-fno-pic -mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
+	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
+	-fno-exceptions -DRT_NO_EXCEPTIONS -DRT_MULTITHREADED -fopenmp -DHAVE_SSE2 -DMEXP=19937 \
+	-fgcse-sm -fgcse-las
 
-CXXFLAGS= -pg -O0 -Wall -g -DDEBUG -DMEXP=19937 -I$(SRCDIR) -msse
-LDFLAGS=
-
-#CXX=/opt/local/bin/g++-mp-4.5
-#CC=/opt/local/bin/gcc-mp-4.5
-
-CXXFLAGS += $(SDL_CXXFLAGS) $(WIN_CXXFLAGS)
-LDFLAGS += $(SDL_LDFLAGS) $(WIN_LDFlAGS)
+LDFLAGS= -fwhole-program
 
 SRC = $(shell find $(SRCDIR) -name '*.cpp')
 OBJS=$(SRC:.cpp=.o)
 OBJS+=$(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 
-all : parser rt
+all : parser qt
+
+sdl: CXXFLAGS += -DRT_USE_SDL $(SDL_CXXFLAGS)
+qt: CXXFLAGS += -DRT_USE_QT $(QT_CXXFLAGS)
+
+sdl: LDFLAGS += $(SDL_LDFLAGS)
+qt: LDFLAGS += $(QT_LDFLAGS)
+
+sdl : rt
+qt : rt
 
 parser: $(SRCDIR)/scene/parser.o $(SRCDIR)/scene/scanner.o
 

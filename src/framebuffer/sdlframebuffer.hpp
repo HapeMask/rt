@@ -11,7 +11,7 @@ using namespace std;
 
 class sdlFramebuffer : public framebuffer {
 	public:
-		sdlFramebuffer(const scene& sc, const int bpp = 32);
+		sdlFramebuffer(scene& sc, const int bpp = 32);
         ~sdlFramebuffer();
 
         virtual void render();
@@ -24,9 +24,11 @@ class sdlFramebuffer : public framebuffer {
             showUpdates = show;
         }
 
+    protected:
+		virtual void addSample(const int& x, const int& y, const rgbColor& c);
+		virtual void setPixel(const int& x, const int& y, const rgbColor& c);
+
 	private:
-		void addSample(const int& x, const int& y, const rgbColor& c);
-		void setPixel(const int& x, const int& y, const rgbColor& c);
 
         void tonemapAndUpdateScreen();
         void tonemapAndUpdateRect(const int& cornerX, const int& cornerY);

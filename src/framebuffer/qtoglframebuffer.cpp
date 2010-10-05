@@ -15,6 +15,7 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glext.h>
 #include <iostream>
 using namespace std;
 
@@ -60,9 +61,11 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     samplesPerPixel = new int[width_*height_];
 }
 
-qtOpenGLFramebuffer::~qtOpenGLFramebuffer()
-{
+qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
     if(sceneData) delete[] sceneData;
+    if(buffer) delete[] buffer;
+    if(sumOfSquares) delete[] sumOfSquares;
+    if(samplesPerPixel) delete[] samplesPerPixel;
 }
 
 QSize qtOpenGLFramebuffer::minimumSizeHint() const {

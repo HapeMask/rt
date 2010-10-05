@@ -16,6 +16,7 @@ QT_CXXFLAGS=-I/opt/local/libexec/qt4-mac/mkspecs/macx-g++ \
 QT_LDFLAGS=-F/opt/local/libexec/qt4-mac/lib \
 	-L/opt/local/libexec/qt4-mac/lib -framework QtGui \
 	-framework QtOpenGL -framework QtCore -framework OpenGL -framework AGL \
+	-lGL -lGLU
 
 SDL_CXXFLAGS= $(shell sdl-config --cflags)
 SDL_LDFLAGS= $(shell sdl-config --libs)
