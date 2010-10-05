@@ -16,7 +16,7 @@
 class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
     friend class rtGUI;
     // Only if you use signals/slots.
-    //Q_OBJECT
+    Q_OBJECT
 
     public:
         qtOpenGLFramebuffer(scene& s, const int bpp=32, QWidget* parent = NULL);
@@ -29,6 +29,10 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
 		inline virtual const bool readyForDrawing() const {
             return true;
+        }
+
+        inline const uint64_t& getIterations() const {
+            return iterations;
         }
 
     protected:
@@ -70,4 +74,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void disableGLOptions();
 
         void clearBuffers();
+
+    signals:
+        void iterated(uint64_t iterations, float samplesPerSec);
 };

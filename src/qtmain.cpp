@@ -66,8 +66,8 @@ int main(int argc, char* args[]){
 
     rtGUI win(scn);
 
-    win.resize(scn.getCamera().width(), scn.getCamera().height());
-    win.setWindowTitle("Qt/OpenGL Framebuffer");
+    //win.resize(scn.getCamera().width(), scn.getCamera().height());
+    win.setWindowTitle("Qt/OpenGL rt GUI");
     win.show();
 
     return app.exec();

@@ -144,6 +144,10 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
             break;
     }
 
+    if(!rendered && iterations != 0){
+        emit iterated(0,0);
+    }
+
     scn.getCamera().setPosition(camPos);
     scn.getCamera().setLook(camPos + normalize(camForward));
     scn.getCamera().setFov(fovy);
@@ -153,6 +157,7 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
 
 void qtOpenGLFramebuffer::mousePressEvent(QMouseEvent* event) {
     lastPos = event->pos();
+    setFocus(Qt::MouseFocusReason);
 }
 
 void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
@@ -160,7 +165,10 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
     const int dy = event->y() - lastPos.y();
 
     if(dx != 0 || dy != 0){
-        rendered = false;
+        if(rendered){
+            emit iterated(0,0);
+            rendered = false;
+        }
 
         // Derp multiple inheritance...
         viewRotY += sin(TWOPI * (dx / (float)framebuffer::width()));
@@ -309,7 +317,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
     gettimeofday(&start, NULL);
 
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for schedule(dynamic) shared(painter)
+#pragma omp parallel for schedule(dynamic)
 #endif
     // Fill blocks as long as the thread can get new ones.
     for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
@@ -357,8 +365,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
         ((now.tv_usec - start.tv_usec) / 1e6);
 
     ++iterations;
-    cerr << "Iterations: " << iterations << ", ";
-    cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
+    emit iterated(iterations, (float)(width_*height_)/timeElapsed);
 
     blocksUsed = 0;
     rendered = true;
@@ -447,5 +454,4 @@ void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cor
                     QRect(cornerX, cornerY, blockWidth, blockHeight));
         }
 }
-
 #endif
