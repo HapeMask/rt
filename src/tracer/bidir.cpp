@@ -30,7 +30,7 @@ const rgbColor bdpt::L(const ray& r) const {
 
     // Sample the surface to find the start of the light path. 
     const point3 p = parent.getLight(i)->uniformSampleSurface();
-    const vec3& normal = parent.getLight(i)->getNormal();
+    const vec3& normal = parent.getLight(i)->getNormal(p);
 
     vec3 wi;
     uniformSampleHemisphere(wi);

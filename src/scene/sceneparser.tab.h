@@ -214,8 +214,8 @@ namespace Bison {
      CONDUCTOR = 284,
      SMOOTH = 285,
      FLAT = 286,
-     AREATYPE = 287,
-     POINTTYPE = 288,
+     AREA = 287,
+     POINT = 288,
      FLOAT = 289,
      FILEPATH = 290
    };

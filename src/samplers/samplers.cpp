@@ -26,15 +26,34 @@ void sampleDisk(vec3& v, const float& u0, const float& u1){
 	v.z() = sin(theta) * r;
 }
 
-void uniformSampleHemisphere(vec3& v){
-    const float u0 = sampleUniform();
-    const float u1 = sampleUniform();
-
+void sampleHemisphere(vec3& v, const float& u0, const float& u1) {
 	v.y() = u0;
+    // Sqrt of r normalizes the distance distribution from the center (since it
+    // takes up ~r^2 less area as radius decreases).
 	const float r = sqrtf(max(0.f, 1.f - u0*u0));
 	const float phi = TWOPI * u1;
 	v.x() = r * cos(phi);
 	v.z() = r * sin(phi);
+}
+
+void uniformSampleHemisphere(vec3& v) {
+    sampleHemisphere(v, sampleUniform(), sampleUniform());
+}
+
+void sampleSphere(vec3& v, const float& u0, const float& u1, const float& u2) {
+    // Sample the hemisphere then flip with probability 1/2 to uniformly sample
+    // the sphere.
+    sampleHemisphere(v, u0, u1);
+
+    // Need to use a new RV here otherwise there will be correlation between
+    // the hemisphere selected and the y value of the vector generated.
+    if(u2 > 0.5){
+        v.y() = -v.y();
+    }
+}
+
+void uniformSampleSphere(vec3& v) {
+    sampleSphere(v, sampleUniform(), sampleUniform(), sampleUniform());
 }
 
 void sampleTriangle(point3& p, const triangle& t, const float& u0, const float& u1){
@@ -82,6 +101,16 @@ void getLDSamples2D(float* samples, const unsigned int& count){
     for(unsigned int i=0; i<count; ++i){
         samples[2*i] = (float)i * invN;
         samples[2*i+1] = radicalInverse(i, primes[0]);
+    }
+}
+
+void getLDSamples3D(float* samples, const unsigned int& count){
+    const float invN = 1.f / (float)count;
+
+    for(unsigned int i=0; i<count; ++i){
+        samples[3*i] = (float)i * invN;
+        samples[3*i+1] = radicalInverse(i, primes[0]);
+        samples[3*i+2] = radicalInverse(i, primes[1]);
     }
 }
 

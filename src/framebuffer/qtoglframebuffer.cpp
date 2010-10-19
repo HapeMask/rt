@@ -266,18 +266,18 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glDisable(GL_LIGHT0);
     glBegin(GL_POINTS);
 
-    float samples[400];
-    getLDSamples2D(samples, 200);
+    float samples[600];
+    getLDSamples3D(samples, 200);
 
     for(int i=0; i<200; ++i){
         glColor3f(1,0,0);
-        point3 p;
-        sampleRectangle(p, vec3(0,2,0), vec3(2,0,0), point3(-2,0,0), samples[2*i], samples[2*i+1]);
-        glVertex3f(p.x(), p.y(), p.z());
+        vec3 p;
+        sampleSphere(p, samples[3*i], samples[3*i+1], samples[3*i+2]);
+        glVertex3f(p.x()-1, p.y(), p.z());
 
         glColor3f(0,0,1);
-        uniformSampleRectangle(p, vec3(0,2,0), vec3(2,0,0), point3(2,0,0));
-        glVertex3f(p.x(), p.y(), p.z());
+        uniformSampleSphere(p);
+        glVertex3f(p.x()+1, p.y(), p.z());
     }
     glEnd();
     */

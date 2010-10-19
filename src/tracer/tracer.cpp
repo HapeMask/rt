@@ -57,7 +57,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
             if(!parent.intersectB(shadowRay)){
                 if(li.isPointSource()){
                     return f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
-                }else if(dot(-wi, li.getNormal()) < 0.f){
+                }else if(dot(-wi, li.getNormal(p + lightDist * wi)) < 0.f){
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
 
                     lightWeight = powerHeuristic(1, lightPdf, 1, bsdfPdf);

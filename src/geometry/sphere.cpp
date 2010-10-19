@@ -101,10 +101,6 @@ const vec3 sphere::getNormal(const point3& p) const{
     return normalize(p - location);
 }
 
-const point3 sphere::sampleSurface(const float& u0, const float& u1) const{
-    return point3(0,0,0);
-}
-
 #ifdef RT_USE_QT
 void sphere::prepGL(GLfloat*& data) const {
     // Do nothing. Spheres can't be drawn using the VBO (not easily) so use GLU

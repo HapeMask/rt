@@ -69,7 +69,7 @@
 %token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET WARD
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
-%token AREATYPE POINTTYPE
+%token AREA POINT
 
 %token <fval> FLOAT
 %token <sval> FILEPATH
@@ -81,6 +81,7 @@
 %type <cval> camera
 %type <lval> light
 %type <lval> arealight
+%type <lval> spherelight
 %type <lval> pointlight
 %type <mval> material
 %type <bval> bsdf
@@ -140,17 +141,22 @@ camera :
 
 light :
       pointlight { scn.addLight($1); } |
-      arealight { scn.addLight($1); }
+      arealight { scn.addLight($1); } |
+      spherelight { scn.addLight($1); }
       ;
 
 pointlight :
-           LIGHT '<' POINTTYPE '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
-           { light* l = new pointLight(point3($6, $8, $10), $18, rgbColor($12, $14, $16)); $$ = l; }
+           LIGHT '<' POINT '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+           { light* l = new pointLight(point3($6, $8, $10), $12, rgbColor($14, $16, $18)); $$ = l; }
            ;
 
 arealight :
-          LIGHT '<' AREATYPE '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
-          { light* l = new areaLight(point3($6, $8, $10), $30, rgbColor($24, $26, $28), vec3($12, $14, $16), vec3($18, $20, $22)); $$ = l; }
+          LIGHT '<' AREA '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+          { light* l = new areaLight(point3($6, $8, $10), $12, rgbColor($14, $16, $18), vec3($20, $22, $24), vec3($26, $28, $30)); $$ = l; }
+
+spherelight :
+          LIGHT '<' SPHERE '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+          { light* l = new sphereLight(point3($6, $8, $10), $12, rgbColor($14, $16, $18), $20); $$ = l;}
 
 shape :
        SHAPE '{' primitive_list material '}'

@@ -20,8 +20,8 @@
 "camera"                                { return Bison::Parser::token::CAMERA; }
 "light"                                 { return Bison::Parser::token::LIGHT; }
 
-"area"                                  { return Bison::Parser::token::AREATYPE; }
-"point"                                 { return Bison::Parser::token::POINTTYPE; }
+"area"                                  { return Bison::Parser::token::AREA; }
+"point"                                 { return Bison::Parser::token::POINT; }
 
 "triangle"                              { return Bison::Parser::token::TRIANGLE; }
 "sphere"                                { return Bison::Parser::token::SPHERE; }

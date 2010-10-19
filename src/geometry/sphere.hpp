@@ -15,7 +15,12 @@ class sphere : public primitive {
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
 
-        virtual const point3 sampleSurface(const float& u0, const float& u1) const;
+        inline virtual const point3 sampleSurface(const float& u0, const float& u1) const {
+            vec3 v;
+            sampleSphere(v, u0, u1, sampleUniform());
+            return point3(v);
+        }
+
         virtual const vec3 getNormal(const point3& p) const;
 
         inline virtual const float area() const {

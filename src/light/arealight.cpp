@@ -18,7 +18,7 @@ areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
 
 const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const{
     point3 samplePoint;
-    sampleRectangle(samplePoint, a, b, position, u0, u1);
+    sampleRectangle(samplePoint, a, b, location, u0, u1);
 
     wi = samplePoint - p;
     const float cosTheta = fabs(dot(-wi, normal));
@@ -53,17 +53,10 @@ const intersection areaLight::intersect(const ray& r) const {
 
     intersection isect1 = tri1.intersect(rorig);
     if(isect1.hit){
-        isect1.s = NULL;
-        isect1.p = NULL;
-        isect1.li = this;
-        return isect1;
+        return intersection(this, isect1.t);
     }else{
         rorig = r;
-        intersection isect2 = tri2.intersect(rorig);
-        isect2.s = NULL;
-        isect2.p = NULL;
-        isect2.li = this;
-        return isect2;
+        return intersection(this, tri2.intersect(rorig).t);
     }
 }
 
