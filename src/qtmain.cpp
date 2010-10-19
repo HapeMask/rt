@@ -59,6 +59,8 @@ int main(int argc, char* args[]){
         return 1;
     }
 
+    omp_set_num_threads(numThreads);
+
     sceneloader::load(in, scn);
     in.close();
     scn.build();
