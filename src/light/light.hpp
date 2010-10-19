@@ -163,7 +163,7 @@ class sphereLight : public light {
         inline virtual const point3 uniformSampleSurface() const {
             vec3 v;
             uniformSampleSphere(v);
-            return point3(v);
+            return location + radius * v;
         }
 
     private:

@@ -23,9 +23,37 @@ const float sphereLight::pdf(const point3& p, const vec3& wi) const {
 }
 
 const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const {
-    const point3 samplePoint = uniformSampleSurface();
+    /*
+    vec3 v;
+    uniformSampleSphere(v);
+    const point3 samplePoint = location + radius * v;
+    */
 
-    wi = samplePoint - p;
+    const float theta = acosf(
+            1.f - u0 + u0 *
+            sqrtf(1.f - (radius*radius) / (p-location).length2())
+                    );
+    const float phi = TWOPI * u1;
+
+    const vec3 w = normalize(location - p);
+    const vec3 u = normalize(cross(w, vec3(0,1,0)));
+    const vec3 v = normalize(cross(w, u));
+
+    const float v1 = cosf(phi) * sinf(theta);
+    const float v2 = cosf(theta);
+    const float v3 = sinf(phi) * sinf(theta);
+
+    const vec3 a = normalize(vec3(
+            u.x() * v1 + v.x() * v2 + w.x() * v3,
+            u.y() * v1 + v.y() * v2 + w.y() * v3,
+            u.z() * v1 + v.z() * v2 + w.z() * v3));
+
+    const intersection isect = intersect(ray(p, a));
+    const point3 hit = p + isect.t * a;
+
+    //wi = samplePoint - p;
+    wi = a;
+    //pd = -dot(a,getNormal(hit)) / (TWOPI * isect.t * isect.t * (1.f - sqrtf(1.f - (;
     pd = pdf(p, wi);
     return lightColor * power;
 }
