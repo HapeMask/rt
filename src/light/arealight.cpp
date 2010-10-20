@@ -47,7 +47,7 @@ const intersection areaLight::intersect(const ray& r) const {
     ray rorig(r);
 
     // Backface Culling.
-    if(dot(-r.direction, normal) > 0){
+    if(dot(-r.direction, normal) < 0){
         return noIntersect;
     }
 

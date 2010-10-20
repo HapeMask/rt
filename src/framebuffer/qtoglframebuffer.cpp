@@ -266,19 +266,51 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glDisable(GL_LIGHT0);
     glBegin(GL_POINTS);
 
-    float samples[600];
-    getLDSamples3D(samples, 200);
+    float samples[400];
+    getLDSamples2D(samples, 200);
+
+    const point3 location(0, 1, 0);
+    const point3 p(-2.98212, -3, -2.94696);
+    const float radius = 0.5f;
+    const sphere sph(location, radius);
 
     for(int i=0; i<200; ++i){
         glColor3f(1,0,0);
-        vec3 p;
-        sampleSphere(p, samples[3*i], samples[3*i+1], samples[3*i+2]);
-        glVertex3f(p.x()-1, p.y(), p.z());
+        //const float u0 = sampleUniform(), u1 = sampleUniform();
 
-        glColor3f(0,0,1);
-        uniformSampleSphere(p);
-        glVertex3f(p.x()+1, p.y(), p.z());
+        const float u0 = samples[2*i], u1 = samples[2*i+1];
+        const vec3 w = normalize(location - p);
+        const vec3 u = normalize(cross(w, vec3(0,1,0)));
+        const vec3 v = normalize(cross(u, w));
+
+        const float d = 1.f - (radius*radius) / (p-location).length2();
+        const float theta = acosf(1.f - u0 + u0 * sqrtf(d));
+        const float phi = TWOPI * u1;
+
+        const float v1 = cosf(phi) * sinf(theta);
+        const float v2 = cosf(theta);
+        const float v3 = sinf(phi) * sinf(theta);
+
+        const vec3 a = normalize(vec3(
+                    v1 * u.x() + v2 * w.x() + v3 * v.x(),
+                    v1 * u.y() + v2 * w.y() + v3 * v.y(),
+                    v1 * u.z() + v2 * w.z() + v3 * v.z()));
+
+        glVertex3f(p.x()+a.x(), p.y()+a.y(), p.z()+a.z());
+
+        glColor3f(1,1,0);
+        ray r(p,a);
+        const intersection isect = sph.intersect(r);
+        const point3 hit = p + isect.t * a;
+        glVertex3f(hit.x(), hit.y(), hit.z());
+
+        glColor3f(1,1,1);
+        glVertex3f(location.x(), location.y(), location.z());
+
+        glColor3f(0,1,1);
+        glVertex3f(p.x(), p.y(), p.z());
     }
+
     glEnd();
     */
 
