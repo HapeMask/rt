@@ -24,7 +24,9 @@
     #include "acceleration/octree.hpp"
     #include "acceleration/defaultaccelerator.hpp"
 
-    #include "light/light.hpp"
+    #include "light/spherelight.hpp"
+    #include "light/pointlight.hpp"
+    #include "light/arealight.hpp"
 
     #include "materials/material.hpp"
 

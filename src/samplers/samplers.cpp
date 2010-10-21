@@ -40,20 +40,20 @@ void uniformSampleHemisphere(vec3& v) {
     sampleHemisphere(v, sampleUniform(), sampleUniform());
 }
 
-void sampleSphere(vec3& v, const float& u0, const float& u1, const float& u2) {
+void sampleSphere(vec3& v, const float& u0, const float& u1) {
     // Sample the hemisphere then flip with probability 1/2 to uniformly sample
-    // the sphere.
-    sampleHemisphere(v, u0, u1);
-
-    // Need to use a new RV here otherwise there will be correlation between
-    // the hemisphere selected and the y value of the vector generated.
-    if(u2 > 0.5){
+    // the sphere. Need to rescale u0 to avoid correlation between
+    // hemispheres/samples.
+    if(u0 < 0.5f){
+        sampleHemisphere(v, 2.f * u0, u1);
+    }else{
+        sampleHemisphere(v, 2.f * (1 - u0), u1);
         v.y() = -v.y();
     }
 }
 
 void uniformSampleSphere(vec3& v) {
-    sampleSphere(v, sampleUniform(), sampleUniform(), sampleUniform());
+    sampleSphere(v, sampleUniform(), sampleUniform());
 }
 
 void sampleTriangle(point3& p, const triangle& t, const float& u0, const float& u1){

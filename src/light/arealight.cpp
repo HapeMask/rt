@@ -1,12 +1,9 @@
-#include "light.hpp"
+#include "arealight.hpp"
 #include "samplers/samplers.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "color/color.hpp"
-
-#include "acceleration/intersection.hpp"
-#include "geometry/triangle.hpp"
 
 areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
@@ -21,8 +18,8 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     sampleRectangle(samplePoint, a, b, location, u0, u1);
 
     wi = samplePoint - p;
-    const float cosTheta = fabs(dot(-wi, normal));
-    if(cosTheta > 0.f){
+    const float cosTheta = dot(-wi, normal);
+    if(cosTheta > 0){
         pd = wi.length2() / (cosTheta * area);
         return lightColor * power;
     }else{
@@ -32,11 +29,11 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
 }
 
 const float areaLight::pdf(const point3& p, const vec3& wi) const {
-    // P(wi) = r^2 / cosTheta * A
-    const float cosTheta = fabs(dot(-wi, normal));
     const intersection isect = intersect(ray(p, normalize(wi)));
 
-    if(cosTheta > 0.f && isect.hit){
+    if(isect.hit){
+        // P(wi) = r^2 / cosTheta * A
+        const float cosTheta = fabs(dot(-wi, normal));
         return (isect.t * isect.t) / (cosTheta * area);
     }else{
         return 0.f;
@@ -53,13 +50,16 @@ const intersection areaLight::intersect(const ray& r) const {
 
     intersection isect1 = tri1.intersect(rorig);
     if(isect1.hit){
-        return intersection(this, isect1.t);
+        isect1.li = this;
+        return isect1;
     }else{
         rorig = r;
-        return intersection(this, tri2.intersect(rorig).t);
+        intersection isect2 = tri2.intersect(rorig);
+        isect2.li = this;
+        return isect2;
     }
 }
 
 const bool areaLight::intersectB(const ray& r) const{
-	return (tri1.intersectB(r) && tri2.intersectB(r));
+	return (tri1.intersectB(r) || tri2.intersectB(r));
 }

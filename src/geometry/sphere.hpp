@@ -17,7 +17,7 @@ class sphere : public primitive {
 
         inline virtual const point3 sampleSurface(const float& u0, const float& u1) const {
             vec3 v;
-            sampleSphere(v, u0, u1, sampleUniform());
+            sampleSphere(v, u0, u1);
             return point3(v);
         }
 

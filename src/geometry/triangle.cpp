@@ -74,7 +74,6 @@ const intersection triangle::intersect(ray& r) const {
     }else{
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
     }
-
 	return isect;
 }
 

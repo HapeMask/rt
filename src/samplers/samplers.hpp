@@ -14,7 +14,7 @@ void sampleHemisphere(vec3& v, const float& u0, const float& u1);
 void uniformSampleHemisphere(vec3& v);
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1);
 
-void sampleSphere(vec3& v, const float& u0, const float& u1, const float& u2);
+void sampleSphere(vec3& v, const float& u0, const float& u1);
 void uniformSampleSphere(vec3& v);
 
 void sampleTriangle(point3& p, const triangle& t, const float& u0, const float& u1);

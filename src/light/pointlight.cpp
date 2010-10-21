@@ -1,7 +1,4 @@
-#include "light.hpp"
-#include "mathlib/point.hpp"
-#include "color/color.hpp"
-#include "mathlib/vector.hpp"
+#include "pointlight.hpp"
 
 pointLight::pointLight(const point3& p, const float& pow, const rgbColor& c) : light(p, pow, c)
 {}

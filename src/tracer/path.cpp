@@ -23,7 +23,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         const intersection isect = parent.intersect(r);
         //return rgbColor(0, isect.debugInfo / 2400.f, 0);
 
-        if(!isect.hit){
+        if(!isect.hit || isect.li){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(size_t i=0; i<parent.numLights(); ++i){
                     const float lightDist = (parent.getLight(i)->getPosition() - rOrig.origin).length();
@@ -33,6 +33,11 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
                     if(isectL.hit && !parent.intersectB(lightRay)){
                         L += throughput * isectL.li->L(rOrig);
                     }
+                }
+
+                // If the first hit was a light, don't keep bouncing.
+                if(pathLength == 0){
+                    return L;
                 }
             }
 
@@ -71,8 +76,11 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 		// 1st-bounce specular hits for the recursive step below.
 		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ? bxdfType(ALL & ~SPECULAR) : ALL;
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, reflectionType, sampledType, pdf);
+        if(f.isBlack() && pdf != 0){
+            return rgbColor(0.f);
+        }
 
-        if(f.isBlack() || pdf == 0.f){
+        if(f.isBlack()){
 			// Trace both specular reflection and refraction recursively.
 			if(recursiveSpecular && pathLength == 0 && depth < MAX_DEPTH){
 				vec3 specDir;

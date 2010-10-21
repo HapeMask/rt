@@ -33,6 +33,11 @@ const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const
 
 const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
         const intersection& isect, const bsdf& bsdf, const light& li) const {
+    // Ignore lights.
+    if(isect.li){
+        return rgbColor(0.f);
+    }
+
     vec3 wi;
     float bsdfPdf, lightPdf;
     rgbColor lightSample(0.f), bsdfSample(0.f);
@@ -57,7 +62,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
             if(!parent.intersectB(shadowRay)){
                 if(li.isPointSource()){
                     return f * Li * fabs(dot(wi, isect.shadingNormal)) / lightPdf;
-                }else if(dot(-wi, li.getNormal(p + lightDist * wi)) >= 0.f){
+                }else{
                     bsdfPdf = bsdf.pdf(wo, bsdfSpaceLightDir);
 
                     lightWeight = powerHeuristic(1, lightPdf, 1, bsdfPdf);
