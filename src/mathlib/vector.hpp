@@ -150,10 +150,13 @@ class vec3 {
 		}
 
 		vec3(const vec3& x){
+			/*
 			values[0] = x(0);
 			values[1] = x(1);
 			values[2] = x(2);
             values[3] = 0.f;
+			*/
+			vector = x.vector;
 		}
 
 		vec3(const vec2& u, const float& x){
@@ -178,7 +181,8 @@ class vec3 {
 		}
 
         vec3(const __m128 v){
-			memcpy(values, &v, 16);
+			vector = v;
+			//memcpy(values, &v, 16);
         }
 
 		vec3(const point3& p);

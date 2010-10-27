@@ -230,8 +230,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -269,7 +267,7 @@
 								<string>08FB7794FE84155DC02AAC07</string>
 								<string>08FB7795FE84155DC02AAC07</string>
 								<string>39F9CE211277A6D6000F610A</string>
-								<string>39F9CE741277A6D6000F610A</string>
+								<string>39F9CE221277A6D6000F610A</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>39B6A1B21277ADA20010B4C5</string>
 								<string>1C37FAAC04509CD000000102</string>
@@ -278,15 +276,15 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>39</integer>
-									<integer>12</integer>
+									<integer>5</integer>
+									<integer>3</integer>
 									<integer>2</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 263}, {186, 486}}</string>
+							<string>{{0, 15}, {186, 486}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -316,12 +314,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>sdlmain.hpp</string>
+								<string>vector.hpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -329,22 +329,24 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>sdlmain.hpp</string>
+										<string>vector.hpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>39B6A1C41277AEEC0010B4C5</string>
+										<string>39B6A2101277B5330010B4C5</string>
 										<key>history</key>
 										<array>
 											<string>39F9CF361277A9EA000F610A</string>
 											<string>39F9CF371277A9EA000F610A</string>
 											<string>39F9CF4B1277AA84000F610A</string>
-											<string>39B6A1771277AB6A0010B4C5</string>
 											<string>39B6A1891277AC7A0010B4C5</string>
 											<string>39B6A18A1277AC7A0010B4C5</string>
 											<string>39B6A18B1277AC7A0010B4C5</string>
 											<string>39B6A1C21277AEEC0010B4C5</string>
-											<string>39B6A1C31277AEEC0010B4C5</string>
+											<string>39B6A1E61277B2CB0010B4C5</string>
+											<string>39B6A2091277B47D0010B4C5</string>
+											<string>39B6A20E1277B5330010B4C5</string>
+											<string>39B6A20F1277B5330010B4C5</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -566,12 +568,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>sdlmain.hpp</string>
+								<string>bvh.cpp</string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -588,8 +592,6 @@
 							<string>252pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -898,7 +900,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {650, 209}}</string>
 								<key>RubberWindowFrame</key>
-								<string>24 393 650 250 0 0 1280 778 </string>
+								<string>25 393 650 250 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXDebugCLIModule</string>
@@ -927,7 +929,7 @@
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.consoleV3</string>
 			<key>WindowString</key>
-			<string>24 393 650 250 0 0 1280 778 </string>
+			<string>25 393 650 250 0 0 1280 778 </string>
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>

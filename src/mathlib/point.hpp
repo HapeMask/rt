@@ -90,6 +90,7 @@ class point2 {
 };
 
 class point3 {
+	friend class vec3;
 	public:
 		point3(const vec3& u);
 
@@ -150,7 +151,6 @@ class point3 {
 		}
 
         inline const __m128 getSIMD() const {
-            //return loadps(coords);
             return vector;
         }
 

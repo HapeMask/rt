@@ -1,7 +1,7 @@
 Trt
 v7
 r0
-t309833444.050325
+t309834873.570127
 cCheck dependencies
 cCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp normal i386 c++ com.apple.compilers.gcc.4_5
 cCompileC build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp normal i386 c++ com.apple.compilers.gcc.4_5
@@ -160,12 +160,12 @@ t1254464951
 s48842
 
 N/Users/hape/hape-rt/rt/build/Release/rt
-t1288140643
-s463500
+t1288142073
+s451160
 
 N/Users/hape/hape-rt/rt/build/Release/rt.dSYM
-t1288140643
-s102
+t1288142073
+s136
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/sceneparser.yy.c
 t1288139241
@@ -198,55 +198,55 @@ t1288140065
 s22012
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/aniso.o
-t1288140632
-s50280
+t1288141714
+s49752
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/arealight.o
-t1288140631
-s131780
+t1288141713
+s123996
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o
-t1288140633
-s51704
+t1288141715
+s51512
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bidir.o
-t1288140642
-s172164
+t1288141724
+s159772
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/blinn.o
-t1288140633
-s48060
+t1288141715
+s47932
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o
-t1288140634
+t1288141716
 s83828
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o
-t1288140625
-s162308
+t1288142072
+s162332
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/camera.o
-t1288140627
-s54460
+t1288141708
+s53924
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/color.o
 t1288140064
 s19528
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o
-t1288140625
-s155260
+t1288141707
+s154540
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o
-t1288140638
+t1288141720
 s160284
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/main.o
-t1288140632
+t1288141714
 s128688
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/material.o
-t1288140634
+t1288141716
 s43744
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/matrix.o
@@ -254,23 +254,23 @@ t1288140074
 s36924
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o
-t1288140629
-s91200
+t1288141711
+s82368
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/objparser.o
-t1288140641
-s395280
+t1288141723
+s395844
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/octree.o
-t1288140628
-s161956
+t1288141709
+s145412
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/path.o
-t1288140642
-s96236
+t1288141724
+s94420
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/phong.o
-t1288140634
+t1288141717
 s43632
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/point.o
@@ -303,12 +303,12 @@ t1288140000
 s3241
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/samplers.o
-t1288140636
-s61024
+t1288141719
+s60576
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/scene.o
-t1288140640
-s198920
+t1288141722
+s195928
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sceneparser.tab.o
 t1288140089
@@ -319,52 +319,52 @@ t2
 s0
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o
-t1288140628
+t1288141710
 s112720
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/shape.o
-t1288140629
-s91340
+t1288141711
+s89324
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/specular.o
-t1288140635
+t1288141717
 s52248
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sphere.o
-t1288140630
-s61408
+t1288141711
+s58456
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o
-t1288140631
-s114916
+t1288141713
+s111564
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/substrate.o
-t1288140635
-s48300
+t1288141717
+s48220
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/tracer.o
-t1288140643
-s86632
+t1288141725
+s86024
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/transformation.o
-t1288140636
-s60380
+t1288141718
+s60524
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/triangle.o
-t1288140630
-s83876
+t1288141712
+s77468
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/vector.o
-t1288140074
-s22080
+t1288141718
+s21776
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/ward.o
-t1288140635
+t1288141717
 s48400
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/whitted.o
-t1288140643
-s102600
+t1288141725
+s101344
 
 N/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/y.tab.o
 t2
@@ -743,9 +743,9 @@ i<vector>
 i<tr1/memory>
 
 N/Users/hape/hape-rt/rt/src/acceleration/bvh.cpp
-c000000004C64E6630000000000001C1E
-t1281680995
-s7198
+c000000004CC77CF30000000000001C49
+t1288142067
+s7241
 i"bvh.hpp"
 i"intersection.hpp"
 i"utility.hpp"
@@ -1416,9 +1416,9 @@ i"point.hpp"
 i"vector.hpp"
 
 N/Users/hape/hape-rt/rt/src/mathlib/point.hpp
-c000000004C64E6620000000000000F09
-t1281680994
-s3849
+c000000004CC77B880000000000000EF8
+t1288141704
+s3832
 i<iostream>
 i<cassert>
 i"sse.hpp"
@@ -1462,9 +1462,9 @@ i"point.hpp"
 i"ray.hpp"
 
 N/Users/hape/hape-rt/rt/src/mathlib/vector.cpp
-c000000004C64E6620000000000000270
-t1281680994
-s624
+c000000004CC77B27000000000000028D
+t1288141607
+s653
 i<iostream>
 i<cmath>
 i"sse.hpp"
@@ -1472,9 +1472,9 @@ i"vector.hpp"
 i"point.hpp"
 
 N/Users/hape/hape-rt/rt/src/mathlib/vector.hpp
-c000000004CC777470000000000002F1C
-t1288140615
-s12060
+c000000004CC77B2B0000000000002F4F
+t1288141611
+s12111
 i<iostream>
 i<cassert>
 i<string.h>
@@ -2035,7 +2035,7 @@ s1482
 
 CCheck dependencies
 r0
-lSLF07#2@18"Check dependencies309833423#309833423#0(0"0(0#1#0"2514984896#0"0#
+lSLF07#2@18"Check dependencies309834871#309834871#0(0"0(0#1#0"2514984896#0"0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/SFMT.o /Users/hape/hape-rt/rt/src/mathlib/SFMT.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
@@ -2073,8 +2073,8 @@ CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/aniso.o /Users/hap
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/aniso.o /Users/hape/hape-rt/rt/src/materials/aniso.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833431.880270
-e309833432.565855
+s309834513.842132
+e309834514.542167
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/aniso.o
@@ -2083,14 +2083,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/aniso.cpp309833431#309833432#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/aniso.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/aniso.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/aniso.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/aniso.cpp309834513#309834514#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/aniso.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/aniso.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/aniso.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/arealight.o /Users/hape/hape-rt/rt/src/light/arealight.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/arealight.o /Users/hape/hape-rt/rt/src/light/arealight.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833430.210618
-e309833431.524751
+s309834511.976144
+e309834513.301310
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/arealight.o
@@ -2099,14 +2099,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/light/arealight.cpp309833430#309833431#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/light/arealight.cpp2514984896#940"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/light/arealight.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/arealight.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/light/arealight.cpp309834511#309834513#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/light/arealight.cpp2514984896#940"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/light/arealight.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/arealight.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o /Users/hape/hape-rt/rt/src/materials/beckmann.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o /Users/hape/hape-rt/rt/src/materials/beckmann.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833432.565981
-e309833433.364292
+s309834514.542294
+e309834515.319936
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o
@@ -2115,14 +2115,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/beckmann.cpp309833432#309833433#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/beckmann.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/beckmann.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o0#
+lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/beckmann.cpp309834514#309834515#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/beckmann.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/beckmann.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/beckmann.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bidir.o /Users/hape/hape-rt/rt/src/tracer/bidir.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bidir.o /Users/hape/hape-rt/rt/src/tracer/bidir.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833440.220650
-e309833442.256514
+s309834522.447595
+e309834524.221369
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/bidir.o
@@ -2131,14 +2131,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@51"Compile /Users/hape/hape-rt/rt/src/tracer/bidir.cpp309833440#309833442#0(0"0(0#0#43"/Users/hape/hape-rt/rt/src/tracer/bidir.cpp2514984896#933"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/bidir.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bidir.o0#
+lSLF07#2@51"Compile /Users/hape/hape-rt/rt/src/tracer/bidir.cpp309834522#309834524#0(0"0(0#0#43"/Users/hape/hape-rt/rt/src/tracer/bidir.cpp2514984896#933"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/bidir.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bidir.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/blinn.o /Users/hape/hape-rt/rt/src/materials/blinn.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/blinn.o /Users/hape/hape-rt/rt/src/materials/blinn.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833432.975474
-e309833433.663807
+s309834514.929480
+e309834515.664363
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/blinn.o
@@ -2147,14 +2147,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/blinn.cpp309833432#309833433#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/blinn.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/blinn.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/blinn.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/blinn.cpp309834514#309834515#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/blinn.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/blinn.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/blinn.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o /Users/hape/hape-rt/rt/src/materials/bsdf.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o /Users/hape/hape-rt/rt/src/materials/bsdf.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833433.364475
-e309833434.442182
+s309834515.320062
+e309834516.398392
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o
@@ -2163,14 +2163,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/materials/bsdf.cpp309833433#309833434#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/materials/bsdf.cpp2514984896#934"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/bsdf.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o0#
+lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/materials/bsdf.cpp309834515#309834516#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/materials/bsdf.cpp2514984896#934"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/bsdf.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bsdf.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833423.146112
-e309833425.773077
+s309834871.168616
+e309834872.781162
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/bvh.o
@@ -2179,14 +2179,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@55"Compile /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp309833423#309833425#0(0"0(0#0#47"/Users/hape/hape-rt/rt/src/acceleration/bvh.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o0#
+lSLF07#2@55"Compile /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp309834871#309834872#0(0"0(0#0#47"/Users/hape/hape-rt/rt/src/acceleration/bvh.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/bvh.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/bvh.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/camera.o /Users/hape/hape-rt/rt/src/camera/camera.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/camera.o /Users/hape/hape-rt/rt/src/camera/camera.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833425.871522
-e309833427.224068
+s309834507.718333
+e309834508.866939
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/camera.o
@@ -2195,7 +2195,7 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@52"Compile /Users/hape/hape-rt/rt/src/camera/camera.cpp309833425#309833427#0(0"0(0#0#44"/Users/hape/hape-rt/rt/src/camera/camera.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/camera/camera.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/camera.o0#
+lSLF07#2@52"Compile /Users/hape/hape-rt/rt/src/camera/camera.cpp309834507#309834508#0(0"0(0#0#44"/Users/hape/hape-rt/rt/src/camera/camera.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/camera/camera.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/camera.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/color.o /Users/hape/hape-rt/rt/src/color/color.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
@@ -2217,8 +2217,8 @@ CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833423.147468
-e309833425.871393
+s309834505.753834
+e309834507.343089
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o
@@ -2227,14 +2227,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@70"Compile /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp309833423#309833425#0(0"0(0#0#62"/Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp2514984896#965"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o0#
+lSLF07#2@70"Compile /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp309834505#309834507#0(0"0(0#0#62"/Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp2514984896#965"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/defaultaccelerator.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/defaultaccelerator.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o /Users/hape/hape-rt/rt/src/scene/lex.yy.cc normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o /Users/hape/hape-rt/rt/src/scene/lex.yy.cc normal i386 c++ com.apple.compilers.gcc.4_5
-s309833436.654547
-e309833438.407659
+s309834518.919028
+e309834520.689351
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o
@@ -2243,14 +2243,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/scene/lex.yy.cc309833436#309833438#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/scene/lex.yy.cc2514984896#933"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/lex.yy.cc -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o0#
+lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/scene/lex.yy.cc309834518#309834520#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/scene/lex.yy.cc2514984896#933"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/lex.yy.cc -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/lex.yy.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/main.o /Users/hape/hape-rt/rt/src/main.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/main.o /Users/hape/hape-rt/rt/src/main.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833431.524923
-e309833432.975349
+s309834513.301494
+e309834514.929284
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/main.o
@@ -2263,14 +2263,14 @@ oIn file included from /Users/hape/hape-rt/rt/src/main.cpp:37:0:
 o/Users/hape/hape-rt/rt/src/sdlmain.hpp: In function 'int SDL_main(int, char**)':
 o/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:16: warning: unused variable 'start'
 o/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:23: warning: unused variable 'end'
-lSLF07#2@43"Compile /Users/hape/hape-rt/rt/src/main.cpp309833431#309833432#0(301"In file included from /Users/hape/hape-rt/rt/src/main.cpp:37:0:/Users/hape/hape-rt/rt/src/sdlmain.hpp: In function 'int SDL_main(int, char**)':/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:16: warning: unused variable 'start'/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:23: warning: unused variable 'end'2(22@23"Unused variable 'start'309833432#145#79#2(7@57"In file included from /Users/hape/hape-rt/rt/src/main.cpp309833432#4294967295#0#0(6@35"/Users/hape/hape-rt/rt/src/main.cpp309390115#37#0#37#0#0"0(13@65"Unused variable 'start' in /Users/hape/hape-rt/rt/src/sdlmain.hpp309833432#4294967295#0#0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#0"0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#19"unused variable '*'0(22@21"Unused variable 'end'309833432#224#77#2(7@57"In file included from /Users/hape/hape-rt/rt/src/main.cpp309833432#4294967295#0#0(6@35"/Users/hape/hape-rt/rt/src/main.cpp309390115#37#0#37#0#0"0(13@63"Unused variable 'end' in /Users/hape/hape-rt/rt/src/sdlmain.hpp309833432#4294967295#0#0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#0"0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#19"unused variable '*'0(0#0#35"/Users/hape/hape-rt/rt/src/main.cpp2514984896#924"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/main.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/main.o0#
+lSLF07#2@43"Compile /Users/hape/hape-rt/rt/src/main.cpp309834513#309834514#0(301"In file included from /Users/hape/hape-rt/rt/src/main.cpp:37:0:/Users/hape/hape-rt/rt/src/sdlmain.hpp: In function 'int SDL_main(int, char**)':/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:16: warning: unused variable 'start'/Users/hape/hape-rt/rt/src/sdlmain.hpp:51:23: warning: unused variable 'end'2(22@23"Unused variable 'start'309834514#145#79#2(7@57"In file included from /Users/hape/hape-rt/rt/src/main.cpp309834514#4294967295#0#0(6@35"/Users/hape/hape-rt/rt/src/main.cpp309390115#37#0#37#0#0"0(13@65"Unused variable 'start' in /Users/hape/hape-rt/rt/src/sdlmain.hpp309834514#4294967295#0#0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#0"0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#19"unused variable '*'0(22@21"Unused variable 'end'309834514#224#77#2(7@57"In file included from /Users/hape/hape-rt/rt/src/main.cpp309834514#4294967295#0#0(6@35"/Users/hape/hape-rt/rt/src/main.cpp309390115#37#0#37#0#0"0(13@63"Unused variable 'end' in /Users/hape/hape-rt/rt/src/sdlmain.hpp309834514#4294967295#0#0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#0"0(6@38"/Users/hape/hape-rt/rt/src/sdlmain.hpp309390038#51#0#51#0#19"unused variable '*'0(0#0#35"/Users/hape/hape-rt/rt/src/main.cpp2514984896#924"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/main.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/main.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/material.o /Users/hape/hape-rt/rt/src/materials/material.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/material.o /Users/hape/hape-rt/rt/src/materials/material.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833433.663980
-e309833434.283721
+s309834515.664753
+e309834516.324974
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/material.o
@@ -2279,7 +2279,7 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/material.cpp309833433#309833434#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/material.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/material.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/material.o0#
+lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/material.cpp309834515#309834516#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/material.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/material.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/material.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/matrix.o /Users/hape/hape-rt/rt/src/mathlib/matrix.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
@@ -2301,8 +2301,8 @@ CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o /Us
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o /Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833428.032885
-e309833429.348361
+s309834509.678114
+e309834511.075018
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o
@@ -2311,14 +2311,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@60"Compile /Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp309833428#309833429#0(0"0(0#0#52"/Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp2514984896#949"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o0#
+lSLF07#2@60"Compile /Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp309834509#309834511#0(0"0(0#0#52"/Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp2514984896#949"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/meshtriangle.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/meshtriangle.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/objparser.o /Users/hape/hape-rt/rt/src/scene/objparser.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/objparser.o /Users/hape/hape-rt/rt/src/scene/objparser.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833436.752009
-e309833441.162482
+s309834519.156498
+e309834523.619418
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/objparser.o
@@ -2327,14 +2327,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/scene/objparser.cpp309833436#309833441#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/scene/objparser.cpp2514984896#940"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/objparser.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/objparser.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/scene/objparser.cpp309834519#309834523#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/scene/objparser.cpp2514984896#940"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/objparser.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/objparser.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/octree.o /Users/hape/hape-rt/rt/src/acceleration/octree.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/octree.o /Users/hape/hape-rt/rt/src/acceleration/octree.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833425.773273
-e309833428.032546
+s309834507.343336
+e309834509.677852
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/octree.o
@@ -2343,14 +2343,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@58"Compile /Users/hape/hape-rt/rt/src/acceleration/octree.cpp309833425#309833428#0(0"0(0#0#50"/Users/hape/hape-rt/rt/src/acceleration/octree.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/octree.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/octree.o0#
+lSLF07#2@58"Compile /Users/hape/hape-rt/rt/src/acceleration/octree.cpp309834507#309834509#0(0"0(0#0#50"/Users/hape/hape-rt/rt/src/acceleration/octree.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/acceleration/octree.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/octree.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/path.o /Users/hape/hape-rt/rt/src/tracer/path.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/path.o /Users/hape/hape-rt/rt/src/tracer/path.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833441.162613
-e309833442.138030
+s309834523.619548
+e309834524.621536
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/path.o
@@ -2359,14 +2359,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/tracer/path.cpp309833441#309833442#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/tracer/path.cpp2514984896#931"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/path.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/path.o0#
+lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/tracer/path.cpp309834523#309834524#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/tracer/path.cpp2514984896#931"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/path.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/path.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/phong.o /Users/hape/hape-rt/rt/src/materials/phong.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/phong.o /Users/hape/hape-rt/rt/src/materials/phong.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833434.283853
-e309833434.954986
+s309834516.325109
+e309834517.032492
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/phong.o
@@ -2375,7 +2375,7 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/phong.cpp309833434#309833434#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/phong.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/phong.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/phong.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/materials/phong.cpp309834516#309834517#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/materials/phong.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/phong.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/phong.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/point.o /Users/hape/hape-rt/rt/src/mathlib/point.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
@@ -2422,8 +2422,8 @@ CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/samplers.o /Users/
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/samplers.o /Users/hape/hape-rt/rt/src/samplers/samplers.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833435.844250
-e309833436.654353
+s309834518.282256
+e309834519.156368
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/samplers.o
@@ -2432,14 +2432,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/samplers/samplers.cpp309833435#309833436#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/samplers/samplers.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/samplers/samplers.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/samplers.o0#
+lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/samplers/samplers.cpp309834518#309834519#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/samplers/samplers.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/samplers/samplers.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/samplers.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/scene.o /Users/hape/hape-rt/rt/src/scene/scene.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/scene.o /Users/hape/hape-rt/rt/src/scene/scene.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833438.407903
-e309833440.220467
+s309834520.689542
+e309834522.447413
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/scene.o
@@ -2448,7 +2448,7 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/scene/scene.cpp309833438#309833440#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/scene/scene.cpp2514984896#932"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/scene.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/scene.o0#
+lSLF07#2@50"Compile /Users/hape/hape-rt/rt/src/scene/scene.cpp309834520#309834522#0(0"0(0#0#42"/Users/hape/hape-rt/rt/src/scene/scene.cpp2514984896#932"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/scene/scene.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/scene.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/sceneparser.tab.o /Users/hape/hape-rt/rt/src/scene/sceneparser.tab.c normal i386 c com.apple.compilers.gcc.4_2
 r0
@@ -2489,8 +2489,8 @@ CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o /
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o /Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833427.224331
-e309833428.474963
+s309834508.867310
+e309834510.255101
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o
@@ -2499,14 +2499,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@65"Compile /Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp309833427#309833428#0(0"0(0#0#57"/Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp2514984896#956"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o0#
+lSLF07#2@65"Compile /Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp309834508#309834510#0(0"0(0#0#57"/Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp2514984896#956"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/framebuffer/sdlframebuffer.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sdlframebuffer.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/shape.o /Users/hape/hape-rt/rt/src/geometry/shape.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/shape.o /Users/hape/hape-rt/rt/src/geometry/shape.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833428.475115
-e309833429.545922
+s309834510.255226
+e309834511.436238
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/shape.o
@@ -2515,14 +2515,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/geometry/shape.cpp309833428#309833429#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/geometry/shape.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/shape.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/shape.o0#
+lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/geometry/shape.cpp309834510#309834511#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/geometry/shape.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/shape.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/shape.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/specular.o /Users/hape/hape-rt/rt/src/materials/specular.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/specular.o /Users/hape/hape-rt/rt/src/materials/specular.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833434.442307
-e309833435.168525
+s309834516.398524
+e309834517.148323
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/specular.o
@@ -2531,14 +2531,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/specular.cpp309833434#309833435#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/specular.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/specular.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/specular.o0#
+lSLF07#2@57"Compile /Users/hape/hape-rt/rt/src/materials/specular.cpp309834516#309834517#0(0"0(0#0#49"/Users/hape/hape-rt/rt/src/materials/specular.cpp2514984896#942"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/specular.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/specular.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/sphere.o /Users/hape/hape-rt/rt/src/geometry/sphere.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/sphere.o /Users/hape/hape-rt/rt/src/geometry/sphere.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833429.348496
-e309833430.210492
+s309834511.075203
+e309834511.976014
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/sphere.o
@@ -2547,14 +2547,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/geometry/sphere.cpp309833429#309833430#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/geometry/sphere.cpp2514984896#937"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/sphere.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sphere.o0#
+lSLF07#2@54"Compile /Users/hape/hape-rt/rt/src/geometry/sphere.cpp309834511#309834511#0(0"0(0#0#46"/Users/hape/hape-rt/rt/src/geometry/sphere.cpp2514984896#937"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/sphere.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/sphere.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o /Users/hape/hape-rt/rt/src/light/spherelight.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o /Users/hape/hape-rt/rt/src/light/spherelight.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833430.682871
-e309833431.880124
+s309834512.544949
+e309834513.841998
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o
@@ -2563,14 +2563,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/light/spherelight.cpp309833430#309833431#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/light/spherelight.cpp2514984896#944"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/light/spherelight.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o0#
+lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/light/spherelight.cpp309834512#309834513#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/light/spherelight.cpp2514984896#944"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/light/spherelight.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/spherelight.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/substrate.o /Users/hape/hape-rt/rt/src/materials/substrate.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/substrate.o /Users/hape/hape-rt/rt/src/materials/substrate.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833434.955181
-e309833435.674632
+s309834517.032732
+e309834517.772429
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/substrate.o
@@ -2579,14 +2579,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@58"Compile /Users/hape/hape-rt/rt/src/materials/substrate.cpp309833434#309833435#0(0"0(0#0#50"/Users/hape/hape-rt/rt/src/materials/substrate.cpp2514984896#944"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/substrate.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/substrate.o0#
+lSLF07#2@58"Compile /Users/hape/hape-rt/rt/src/materials/substrate.cpp309834517#309834517#0(0"0(0#0#50"/Users/hape/hape-rt/rt/src/materials/substrate.cpp2514984896#944"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/substrate.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/substrate.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/tracer.o /Users/hape/hape-rt/rt/src/tracer/tracer.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/tracer.o /Users/hape/hape-rt/rt/src/tracer/tracer.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833442.138238
-e309833443.037864
+s309834524.221569
+e309834525.272304
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/tracer.o
@@ -2595,14 +2595,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@52"Compile /Users/hape/hape-rt/rt/src/tracer/tracer.cpp309833442#309833443#0(0"0(0#0#44"/Users/hape/hape-rt/rt/src/tracer/tracer.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/tracer.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/tracer.o0#
+lSLF07#2@52"Compile /Users/hape/hape-rt/rt/src/tracer/tracer.cpp309834524#309834525#0(0"0(0#0#44"/Users/hape/hape-rt/rt/src/tracer/tracer.cpp2514984896#935"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/tracer.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/tracer.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/transformation.o /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/transformation.o /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833435.675111
-e309833436.751883
+s309834517.766322
+e309834518.918801
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/transformation.o
@@ -2611,14 +2611,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@61"Compile /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp309833435#309833436#0(0"0(0#0#53"/Users/hape/hape-rt/rt/src/mathlib/transformation.cpp2514984896#952"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/transformation.o0#
+lSLF07#2@61"Compile /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp309834517#309834518#0(0"0(0#0#53"/Users/hape/hape-rt/rt/src/mathlib/transformation.cpp2514984896#952"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/mathlib/transformation.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/transformation.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/triangle.o /Users/hape/hape-rt/rt/src/geometry/triangle.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/triangle.o /Users/hape/hape-rt/rt/src/geometry/triangle.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833429.546106
-e309833430.682584
+s309834511.436370
+e309834512.544694
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/triangle.o
@@ -2627,14 +2627,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/geometry/triangle.cpp309833429#309833430#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/geometry/triangle.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/triangle.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/triangle.o0#
+lSLF07#2@56"Compile /Users/hape/hape-rt/rt/src/geometry/triangle.cpp309834511#309834512#0(0"0(0#0#48"/Users/hape/hape-rt/rt/src/geometry/triangle.cpp2514984896#941"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/geometry/triangle.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/triangle.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/vector.o /Users/hape/hape-rt/rt/src/mathlib/vector.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/vector.o /Users/hape/hape-rt/rt/src/mathlib/vector.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309832874.515966
-e309832874.967139
+s309834517.772550
+e309834518.282127
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/vector.o
@@ -2643,14 +2643,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/mathlib/vector.cpp309832874#309832874#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/mathlib/vector.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/mathlib/vector.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/vector.o0#
+lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/mathlib/vector.cpp309834517#309834518#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/mathlib/vector.cpp2514984896#936"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/mathlib/vector.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/vector.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/ward.o /Users/hape/hape-rt/rt/src/materials/ward.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/ward.o /Users/hape/hape-rt/rt/src/materials/ward.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833435.168651
-e309833435.843953
+s309834517.148469
+e309834517.765846
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/ward.o
@@ -2659,14 +2659,14 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/materials/ward.cpp309833435#309833435#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/materials/ward.cpp2514984896#934"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/ward.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/ward.o0#
+lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/materials/ward.cpp309834517#309834517#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/materials/ward.cpp2514984896#934"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/materials/ward.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/ward.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/whitted.o /Users/hape/hape-rt/rt/src/tracer/whitted.cpp normal i386 c++ com.apple.compilers.gcc.4_2
 r0
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/whitted.o /Users/hape/hape-rt/rt/src/tracer/whitted.cpp normal i386 c++ com.apple.compilers.gcc.4_5
-s309833442.256658
-e309833443.229256
+s309834524.621667
+e309834525.708964
 r1
 xCompileC
 xbuild/rt.build/Release/rt.build/Objects-normal/i386/whitted.o
@@ -2675,7 +2675,7 @@ xnormal
 xi386
 xc++
 xcom.apple.compilers.gcc.4_5
-lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/tracer/whitted.cpp309833442#309833443#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/tracer/whitted.cpp2514984896#937"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/whitted.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/whitted.o0#
+lSLF07#2@53"Compile /Users/hape/hape-rt/rt/src/tracer/whitted.cpp309834524#309834525#0(0"0(0#0#45"/Users/hape/hape-rt/rt/src/tracer/whitted.cpp2514984896#937"    cd /Users/hape/hape-rt/rt    setenv LANG en_US.US-ASCII    /opt/local/bin/gcc-mp-4.5 -x c++ -fmessage-length=0 -pipe -Wno-trigraphs -fno-exceptions -fno-rtti -O3 -mdynamic-no-pic -Wreturn-type -Wunused-variable -DRT_NO_EXCEPTIONS -DHAVE_SSE2 -DMEXP=19937 -DRT_MULTITHREADED -DRT_USE_SDL -D_THREAD_SAFE -isysroot /Developer/SDKs/MacOSX10.6.sdk -funroll-loops -ffast-math -ftree-vectorize -fvisibility=hidden -fvisibility-inlines-hidden -fno-threadsafe-statics -mmacosx-version-min=10.6 -gdwarf-2 -fopenmp -F/Users/hape/hape-rt/rt/build/Release -iquotesrc -I/Users/hape/hape-rt/rt/build/Release/include -I/opt/local/include/SDL -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/i386 -I/Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources -mmmx -msse -msse2 -c /Users/hape/hape-rt/rt/src/tracer/whitted.cpp -o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/whitted.o0#
 
 CCompileC build/rt.build/Release/rt.build/Objects-normal/i386/y.tab.o /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/DerivedSources/y.tab.c normal i386 c com.apple.compilers.gcc.4_2
 r0
@@ -3672,23 +3672,23 @@ CCreateUniversalBinary /Users/hape/hape-rt/rt/build/Release/rt normal "x86_64 i3
 r0
 
 CGenerateDSYMFile /Users/hape/hape-rt/rt/build/Release/rt.dSYM /Users/hape/hape-rt/rt/build/Release/rt
-s309833443.572737
-e309833444.050153
+s309834873.128140
+e309834873.570058
 r1
 xGenerateDSYMFile
 x/Users/hape/hape-rt/rt/build/Release/rt.dSYM
 x/Users/hape/hape-rt/rt/build/Release/rt
-lSLF07#2@55"GenerateDSYMFile build/Release/rt.dSYM build/Release/rt309833443#309833444#0(0"0(0#0#39"/Users/hape/hape-rt/rt/build/Release/rt2514984896#150"    cd /Users/hape/hape-rt/rt    /Developer/usr/bin/dsymutil /Users/hape/hape-rt/rt/build/Release/rt -o /Users/hape/hape-rt/rt/build/Release/rt.dSYM0#
+lSLF07#2@55"GenerateDSYMFile build/Release/rt.dSYM build/Release/rt309834873#309834873#0(0"0(0#0#39"/Users/hape/hape-rt/rt/build/Release/rt2514984896#150"    cd /Users/hape/hape-rt/rt    /Developer/usr/bin/dsymutil /Users/hape/hape-rt/rt/build/Release/rt -o /Users/hape/hape-rt/rt/build/Release/rt.dSYM0#
 
 CLd /Users/hape/hape-rt/rt/build/Release/rt normal i386
-s309833443.229375
-e309833443.572505
+s309834872.781355
+e309834873.127954
 r1
 xLd
 x/Users/hape/hape-rt/rt/build/Release/rt
 xnormal
 xi386
-lSLF07#2@44"Link /Users/hape/hape-rt/rt/build/Release/rt309833443#309833443#0(0"0(0#0#0"2514984896#464"    cd /Users/hape/hape-rt/rt    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /opt/local/bin/g++-mp-4.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/hape/hape-rt/rt/build/Release -L/opt/local/lib -F/Users/hape/hape-rt/rt/build/Release -filelist /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/rt.LinkFileList -mmacosx-version-min=10.6 -fopenmp -lSDLmain -Wl,-framework,Cocoa -lSDL -o /Users/hape/hape-rt/rt/build/Release/rt0#
+lSLF07#2@44"Link /Users/hape/hape-rt/rt/build/Release/rt309834872#309834873#0(0"0(0#0#0"2514984896#464"    cd /Users/hape/hape-rt/rt    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /opt/local/bin/g++-mp-4.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/hape/hape-rt/rt/build/Release -L/opt/local/lib -F/Users/hape/hape-rt/rt/build/Release -filelist /Users/hape/hape-rt/rt/build/rt.build/Release/rt.build/Objects-normal/i386/rt.LinkFileList -mmacosx-version-min=10.6 -fopenmp -lSDLmain -Wl,-framework,Cocoa -lSDL -o /Users/hape/hape-rt/rt/build/Release/rt0#
 
 CLd /Users/hape/hape-rt/rt/build/Release/rt normal x86_64
 r0

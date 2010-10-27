@@ -19,8 +19,9 @@
 #include "datastructs/linkedlist.hpp"
 using namespace std;
 
-//DBG
+#ifdef RT_DEBUG
 int boxesTested = 0;
+#endif
 
 const intersection bvh::intersect(ray& r) const{
     intersection isect = _intersect(0, r);
@@ -28,9 +29,10 @@ const intersection bvh::intersect(ray& r) const{
         r.origin += isect.t * r.direction;
     }
 
-    //DBG
+#ifdef RT_DEBUG
     isect.debugInfo = boxesTested;
     boxesTested = 0;
+#endif
     return isect;
 }
 
@@ -72,8 +74,9 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     const bool didIntersectLeft = nodes[index+1].box.intersect(r, tLeftMin, tLeftMax);
     const bool didIntersectRight = nodes[node.rightChild].box.intersect(r, tRightMin, tRightMax);
 
-    //DBG
+#ifdef RT_DEBUG
     boxesTested += 2;
+#endif
 
     // Check the child boxes to see if we hit them.
     if(didIntersectLeft && didIntersectRight){
