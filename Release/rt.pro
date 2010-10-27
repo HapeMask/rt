@@ -26,6 +26,7 @@ QMAKE_LFLAGS += -fwhole-program -fopenmp $(CXXFLAGS)
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
 INCLUDEPATH += ../src \
+    /usr/X11/include
 
 flex.commands = flex ${QMAKE_FILE_IN} && mv lex.yy.cc ../src//scene/
 flex.input = FLEXSOURCES
@@ -120,6 +121,7 @@ SOURCES += ../src/qtmain.cpp \
            ../src/geometry/sphere.cpp \
            ../src/geometry/triangle.cpp \
            ../src/light/arealight.cpp \
+           ../src/light/spherelight.cpp \
            ../src/light/pointlight.cpp \
            ../src/materials/aniso.cpp \
            ../src/materials/beckmann.cpp \

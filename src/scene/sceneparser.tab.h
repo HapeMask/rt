@@ -56,7 +56,9 @@
     #include "acceleration/octree.hpp"
     #include "acceleration/defaultaccelerator.hpp"
 
-    #include "light/light.hpp"
+    #include "light/spherelight.hpp"
+    #include "light/pointlight.hpp"
+    #include "light/arealight.hpp"
 
     #include "materials/material.hpp"
 
@@ -72,7 +74,7 @@
 
 
 /* Line 35 of lalr1.cc  */
-#line 76 "sceneparser.tab.h"
+#line 78 "sceneparser.tab.h"
 
 
 #include <string>
@@ -85,7 +87,7 @@
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 89 "sceneparser.tab.h"
+#line 91 "sceneparser.tab.h"
   class position;
   class location;
 
@@ -94,7 +96,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 98 "sceneparser.tab.h"
+#line 100 "sceneparser.tab.h"
 
 #include "location.hh"
 
@@ -141,7 +143,7 @@ do {							\
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 145 "sceneparser.tab.h"
+#line 147 "sceneparser.tab.h"
 
   /// A Bison parser.
   class Parser
@@ -153,7 +155,7 @@ namespace Bison {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 48 "../src/scene/sceneparser.y"
+#line 50 "../src/scene/sceneparser.y"
 
     float fval;
     char* sval;
@@ -173,7 +175,7 @@ namespace Bison {
 
 
 /* Line 35 of lalr1.cc  */
-#line 177 "sceneparser.tab.h"
+#line 179 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -394,7 +396,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 398 "sceneparser.tab.h"
+#line 400 "sceneparser.tab.h"
 
 
 

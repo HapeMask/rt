@@ -121,64 +121,20 @@ void sdlFramebuffer::render(){
         int blockCornerX=0, blockCornerY=0;
         getNextBlock(blockCornerY, blockCornerX);
 
-        if(showUpdates){
-            const uint32_t rectColor = SDL_MapRGB(screen->format, 0,200,0);
-            SDL_Rect updatedRect = { blockCornerX, blockCornerY, blockWidth, blockHeight };
-            SDL_FillRect(screen, &updatedRect, rectColor);
-
-#ifdef RT_MULTITHREADED
-#pragma omp critical
-#endif
-            {
-                SDL_UpdateRect(screen, blockCornerX, blockCornerY, blockWidth, blockHeight);
-            }
-        }
-
-        // Render the pixels in block.
+        // Render the pixels in the block.
+//#pragma omp parallel for collapse(2) schedule(dynamic)
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
-                // TODO: Replace this basic jittering with improved filtering,
-                // perhaps stratification over the image plane.
-
-                float variationCoefficient = 1.f;
-                if(iterations > 16){
-                    const size_t offset = y * width_ + x;
-                    const int spp = samplesPerPixel[offset];
-
-                    const rgbColor& sum = buffer[offset];
-                    const rgbColor mean = sum / spp;
-                    const rgbColor Sxx = sumOfSquares[offset] - (sum * mean);
-                    const rgbColor stddev = sqrt(Sxx / (spp - 1));
-
-                    variationCoefficient = (stddev / mean).avg();
-                }
-
-                if(variationCoefficient > 0.5f){
-                    const float xOffset = sampleUniform() - 0.5f;
-                    const float yOffset = sampleUniform() - 0.5f;
-
-                    addSample(
-                            x, y,
-                            scn.L((float)x + xOffset, (float)y + yOffset)
-                        );
-
-                    if(showUpdates){
-                        setPixel(x, y, rgbColor(1,0,0));
-                    }
-                }
-
+                const float xOffset = sampleUniform() - 0.5f;
+                const float yOffset = sampleUniform() - 0.5f;
+                addSample(
+                        x, y,
+                        scn.L((float)x + xOffset, (float)y + yOffset)
+                    );
             }
         }
-
-        if(iterations > 16 && showUpdates){
-#pragma omp critical
-            {
-            SDL_UpdateRect(screen, blockCornerX, blockCornerY, blockWidth, blockHeight);
-            }
-        }
-
-        //tonemapAndUpdateRect(blockCornerX, blockCornerY);
     }
+
     tonemapAndUpdateScreen();
 
     gettimeofday(&now, NULL);
@@ -188,13 +144,14 @@ void sdlFramebuffer::render(){
     ++iterations;
     cerr << "Iterations: " << iterations << ", ";
     cerr << "samples/sec: " << (float)(width_*height_)/timeElapsed << endl;
+    cerr << "Time for this iteration: " << timeElapsed << endl << endl;
 
     blocksUsed = 0;
 }
 
 void sdlFramebuffer::tonemapAndUpdateScreen(){
 #ifdef RT_MULTITHREADED
-#pragma omp parallel for
+#pragma omp parallel for collapse(2)
 #endif
     for(int y = 0; y <height_; y++){
         for(int x = 0; x < width_; x++){
