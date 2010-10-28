@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		39B6A1841277AC5E0010B4C5 /* sceneparser.tab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39B6A1831277AC5E0010B4C5 /* sceneparser.tab.cpp */; };
+		39D396A21279EAE9001EE26A /* sceneparser.l in Sources */ = {isa = PBXBuildFile; fileRef = 39D396531279E646001EE26A /* sceneparser.l */; };
+		39D396A31279EAE9001EE26A /* sceneparser.y in Sources */ = {isa = PBXBuildFile; fileRef = 39D396541279E646001EE26A /* sceneparser.y */; };
 		39F9CEBD1277A6D6000F610A /* bvh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE241277A6D6000F610A /* bvh.cpp */; };
 		39F9CEBF1277A6D6000F610A /* defaultaccelerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE271277A6D6000F610A /* defaultaccelerator.cpp */; };
 		39F9CEC11277A6D6000F610A /* octree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE2B1277A6D6000F610A /* octree.cpp */; };
@@ -38,31 +39,44 @@
 		39F9CEF41277A6D6000F610A /* transformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE8F1277A6D6000F610A /* transformation.cpp */; };
 		39F9CEF61277A6D6000F610A /* vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE921277A6D6000F610A /* vector.cpp */; };
 		39F9CEFA1277A6D6000F610A /* samplers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE9A1277A6D6000F610A /* samplers.cpp */; };
-		39F9CEFC1277A6D6000F610A /* lex.yy.cc in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CE9E1277A6D6000F610A /* lex.yy.cc */; };
 		39F9CEFD1277A6D6000F610A /* objparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEA01277A6D6000F610A /* objparser.cpp */; };
 		39F9CF011277A6D6000F610A /* scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEA71277A6D6000F610A /* scene.cpp */; };
 		39F9CF061277A6D6000F610A /* bidir.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEB31277A6D6000F610A /* bidir.cpp */; };
 		39F9CF081277A6D6000F610A /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEB51277A6D6000F610A /* path.cpp */; };
 		39F9CF0A1277A6D6000F610A /* tracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEB71277A6D6000F610A /* tracer.cpp */; };
 		39F9CF0C1277A6D6000F610A /* whitted.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F9CEBA1277A6D6000F610A /* whitted.cpp */; };
-		8DD76F6A0486A84900D96B5E /* rt.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* rt.1 */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		8DD76F690486A84900D96B5E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				8DD76F6A0486A84900D96B5E /* rt.1 in CopyFiles */,
+/* Begin PBXBuildRule section */
+		39D396B11279EB5B001EE26A /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = sourcecode.lex;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_NAME}.cpp",
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			script = "flex -o \"${DERIVED_FILES_DIR}/${INPUT_FILE_NAME}.cpp\" \"${INPUT_FILE_PATH}\"";
 		};
-/* End PBXCopyFilesBuildPhase section */
+		39D396BB1279EC5D001EE26A /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = sourcecode.yacc;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_NAME}.cpp",
+				"${DERIVED_FILES_DIR}/${INPUT_FILE_NAME}.hpp",
+				"${DERIVED_FILES_DIR}/stack.hpp",
+				"${DERIVED_FILES_DIR}/location.hpp",
+				"${DERIVED_FILES_DIR}/position.hpp",
+			);
+			script = "bison -o \"${DERIVED_FILES_DIR}/${INPUT_FILE_NAME}.cpp\" \"${INPUT_FILE_PATH}\"";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
-		39B6A1831277AC5E0010B4C5 /* sceneparser.tab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneparser.tab.cpp; sourceTree = "<group>"; };
+		39D396531279E646001EE26A /* sceneparser.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = sceneparser.l; sourceTree = "<group>"; };
+		39D396541279E646001EE26A /* sceneparser.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = sceneparser.y; sourceTree = "<group>"; };
 		39F9CE231277A6D6000F610A /* accelerator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = accelerator.hpp; sourceTree = "<group>"; };
 		39F9CE241277A6D6000F610A /* bvh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bvh.cpp; sourceTree = "<group>"; };
 		39F9CE251277A6D6000F610A /* bvh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = bvh.hpp; sourceTree = "<group>"; };
@@ -145,17 +159,12 @@
 		39F9CE981277A6D6000F610A /* qtmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qtmain.cpp; sourceTree = "<group>"; };
 		39F9CE9A1277A6D6000F610A /* samplers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = samplers.cpp; sourceTree = "<group>"; };
 		39F9CE9B1277A6D6000F610A /* samplers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = samplers.hpp; sourceTree = "<group>"; };
-		39F9CE9E1277A6D6000F610A /* lex.yy.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lex.yy.cc; sourceTree = "<group>"; };
-		39F9CE9F1277A6D6000F610A /* location.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = location.hh; sourceTree = "<group>"; };
 		39F9CEA01277A6D6000F610A /* objparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = objparser.cpp; sourceTree = "<group>"; };
 		39F9CEA11277A6D6000F610A /* objparser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = objparser.hpp; sourceTree = "<group>"; };
-		39F9CEA41277A6D6000F610A /* position.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = position.hh; sourceTree = "<group>"; };
 		39F9CEA51277A6D6000F610A /* scanner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scanner.hpp; sourceTree = "<group>"; };
 		39F9CEA71277A6D6000F610A /* scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scene.cpp; sourceTree = "<group>"; };
 		39F9CEA81277A6D6000F610A /* scene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scene.hpp; sourceTree = "<group>"; };
 		39F9CEAA1277A6D6000F610A /* sceneloader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sceneloader.hpp; sourceTree = "<group>"; };
-		39F9CEAD1277A6D6000F610A /* sceneparser.tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneparser.tab.h; sourceTree = "<group>"; };
-		39F9CEAF1277A6D6000F610A /* stack.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stack.hh; sourceTree = "<group>"; };
 		39F9CEB01277A6D6000F610A /* test.scn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.scn; sourceTree = "<group>"; };
 		39F9CEB11277A6D6000F610A /* sdlmain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sdlmain.hpp; sourceTree = "<group>"; };
 		39F9CEB31277A6D6000F610A /* bidir.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bidir.cpp; sourceTree = "<group>"; };
@@ -389,18 +398,14 @@
 		39F9CE9D1277A6D6000F610A /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				39B6A1831277AC5E0010B4C5 /* sceneparser.tab.cpp */,
-				39F9CE9E1277A6D6000F610A /* lex.yy.cc */,
-				39F9CE9F1277A6D6000F610A /* location.hh */,
+				39D396531279E646001EE26A /* sceneparser.l */,
+				39D396541279E646001EE26A /* sceneparser.y */,
 				39F9CEA01277A6D6000F610A /* objparser.cpp */,
 				39F9CEA11277A6D6000F610A /* objparser.hpp */,
-				39F9CEA41277A6D6000F610A /* position.hh */,
 				39F9CEA51277A6D6000F610A /* scanner.hpp */,
 				39F9CEA71277A6D6000F610A /* scene.cpp */,
 				39F9CEA81277A6D6000F610A /* scene.hpp */,
 				39F9CEAA1277A6D6000F610A /* sceneloader.hpp */,
-				39F9CEAD1277A6D6000F610A /* sceneparser.tab.h */,
-				39F9CEAF1277A6D6000F610A /* stack.hh */,
 				39F9CEB01277A6D6000F610A /* test.scn */,
 			);
 			path = scene;
@@ -435,9 +440,10 @@
 			buildPhases = (
 				8DD76F640486A84900D96B5E /* Sources */,
 				8DD76F660486A84900D96B5E /* Frameworks */,
-				8DD76F690486A84900D96B5E /* CopyFiles */,
 			);
 			buildRules = (
+				39D396BB1279EC5D001EE26A /* PBXBuildRule */,
+				39D396B11279EB5B001EE26A /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -469,6 +475,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D396A21279EAE9001EE26A /* sceneparser.l in Sources */,
+				39D396A31279EAE9001EE26A /* sceneparser.y in Sources */,
 				39F9CEBD1277A6D6000F610A /* bvh.cpp in Sources */,
 				39F9CEBF1277A6D6000F610A /* defaultaccelerator.cpp in Sources */,
 				39F9CEC11277A6D6000F610A /* octree.cpp in Sources */,
@@ -499,14 +507,12 @@
 				39F9CEF41277A6D6000F610A /* transformation.cpp in Sources */,
 				39F9CEF61277A6D6000F610A /* vector.cpp in Sources */,
 				39F9CEFA1277A6D6000F610A /* samplers.cpp in Sources */,
-				39F9CEFC1277A6D6000F610A /* lex.yy.cc in Sources */,
 				39F9CEFD1277A6D6000F610A /* objparser.cpp in Sources */,
 				39F9CF011277A6D6000F610A /* scene.cpp in Sources */,
 				39F9CF061277A6D6000F610A /* bidir.cpp in Sources */,
 				39F9CF081277A6D6000F610A /* path.cpp in Sources */,
 				39F9CF0A1277A6D6000F610A /* tracer.cpp in Sources */,
 				39F9CF0C1277A6D6000F610A /* whitted.cpp in Sources */,
-				39B6A1841277AC5E0010B4C5 /* sceneparser.tab.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,6 +561,7 @@
 		1DEB923708733DC60010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				ENABLE_OPENMP_SUPPORT = YES;
 				GCC_AUTO_VECTORIZATION = YES;
@@ -590,6 +597,13 @@
 				LIBRARY_SEARCH_PATHS = /opt/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
+					"-funsafe-loop-optimizations",
+					"-funsafe-math-optimizations",
+					"-fexpensive-optimizations",
+					"-fno-finite-math-only",
+					"-mfpmath=sse",
+					"-march=prescott",
+					"-Isrc/scene",
 					"-mmmx",
 					"-msse",
 					"-msse2",
