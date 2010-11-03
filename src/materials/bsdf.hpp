@@ -380,7 +380,8 @@ class beckmann : public microfacetDistribution {
 class newWard : public bxdf {
 	public:
 		newWard(const rgbColor& rs, const float& a, const float& b) :
-			bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b) {}
+			bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b),
+            isIsotropic(alpha==beta) {}
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
@@ -390,6 +391,7 @@ class newWard : public bxdf {
 	private:
 		rgbColor Rs;
 		float alpha, beta;
+        bool isIsotropic;
 };
 
 class substrate : public bxdf {

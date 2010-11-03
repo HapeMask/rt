@@ -230,7 +230,7 @@ phong :
 // the same as others (0-BIG_NUMBER instead of 0-1).
 ward :
 	 WARD '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
-     { $$ = new newWard(rgbColor($3, $5, $7), 1.f/$9, 1.f/$11); }
+     { $$ = new newWard(rgbColor($3, $5, $7), $9, $11); }
 	 ;
 
 blinn :

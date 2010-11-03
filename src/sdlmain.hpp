@@ -43,7 +43,7 @@ cerr << "Rendering on " << numThreads << " threads." << endl;
 #endif
 
 //cerr << scn.L(scn.getCamera().width()/2, scn.getCamera().height()/2) << endl;
-//cerr << scn.L(10, 10) << endl;
+//cerr << scn.L(192, 192) << endl;
 //return 0;
 
 SDL_EnableKeyRepeat(3,3);
