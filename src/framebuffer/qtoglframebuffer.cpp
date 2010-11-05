@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#define GL_EXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>

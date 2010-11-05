@@ -3,7 +3,9 @@
 #include <iostream>
 #include <cassert>
 #include <string.h>
+#ifdef HAVE_SSE2
 #include "sse.hpp"
+#endif
 
 using namespace std;
 
@@ -150,13 +152,14 @@ class vec3 {
 		}
 
 		vec3(const vec3& x){
-			/*
+#ifdef HAVE_SSE2
+			vector = x.vector;
+#else
 			values[0] = x(0);
 			values[1] = x(1);
 			values[2] = x(2);
             values[3] = 0.f;
-			*/
-			vector = x.vector;
+#endif
 		}
 
 		vec3(const vec2& u, const float& x){
@@ -180,10 +183,11 @@ class vec3 {
             values[3] = 0.f;
 		}
 
+#ifdef HAVE_SSE2
         vec3(const __m128 v){
 			vector = v;
-			//memcpy(values, &v, 16);
         }
+#endif
 
 		vec3(const point3& p);
 
@@ -225,85 +229,127 @@ class vec3 {
 			return values[2];
 		}
 
+#ifdef HAVE_SSE2
 		inline const __m128& getSIMD() const{
             return vector;
 		}
+#endif
 
         inline const vec3 operator+(const vec3& v) const {
+#ifdef HAVE_SSE2
             return vec3(addps(vector, v.vector));
+#else
+            return vec3(v) += *this;
+#endif
         }
 
         inline vec3& operator+=(const vec3& v){
-            //values[0] += v(0);
-            //values[1] += v(1);
-            //values[2] += v(2);
+#ifdef HAVE_SSE2
             vector = addps(vector, v.vector);
+#else
+            values[0] += v(0);
+            values[1] += v(1);
+            values[2] += v(2);
+#endif
             return (*this);
         }
 
         inline const vec3 operator-(const vec3& v) const {
-            //return vec3(*this) -= v;
+#ifdef HAVE_SSE2
             return vec3(subps(vector, v.vector));
+#else
+            return vec3(*this) -= v;
+#endif
         }
 
         inline vec3& operator-=(const vec3& v){
-            //return (*this) += -v;
+#ifdef HAVE_SSE2
             vector = subps(vector, v.vector);
             return (*this);
+#else
+            return (*this) += -v;
+#endif
         }
 
         inline const vec3 operator-() const {
-            //return vec3(-x(), -y(), -z());
+#ifdef HAVE_SSE2
             return vec3(subps(_mm_setzero_ps(), vector));
+#else
+            return vec3(-x(), -y(), -z());
+#endif
         }
 
         inline const vec3 operator*(const float& x) const {
-            //return vec3(*this) *= x;
+#ifdef HAVE_SSE2
             return vec3(mulps(vector, _mm_load1_ps(&x)));
+#else
+            return vec3(*this) *= x;
+#endif
         }
 
         inline vec3& operator*=(const float& x){
-            //values[0] *= x;
-            //values[1] *= x;
-            //values[2] *= x;
+#ifdef HAVE_SSE2
             vector = mulps(vector, _mm_load1_ps(&x));
+#else
+            values[0] *= x;
+            values[1] *= x;
+            values[2] *= x;
+#endif
             return (*this);
         }
 
         inline const vec3 operator*(const vec3& v) const {
-            //return vec3(*this) *= v;
+#ifdef HAVE_SSE2
             return vec3(mulps(vector, v.vector));
+#else
+            return vec3(*this) *= v;
+#endif
         }
 
         inline vec3& operator*=(const vec3& v){
-            //values[0] *= v(0);
-            //values[1] *= v(1);
-            //values[2] *= v(2);
+#ifdef HAVE_SSE2
             vector = mulps(vector, v.vector);
+#else
+            values[0] *= v(0);
+            values[1] *= v(1);
+            values[2] *= v(2);
+#endif
             return (*this);
         }
 
         inline const vec3 operator/(const float& x) const {
-            //return vec3(*this) *= 1.f / x;
+#ifdef HAVE_SSE2
             return vec3(divps(vector, _mm_load1_ps(&x)));
+#else
+            return vec3(*this) *= 1.f / x;
+#endif
         }
 
         inline vec3& operator/=(const float& x){
-            //return (*this) *= 1.f / x;
+#ifdef HAVE_SSE2
             vector = divps(vector, _mm_load1_ps(&x));
             return (*this);
+#else
+            return (*this) *= 1.f / x;
+#endif
         }
 
         inline const vec3 operator/(const vec3& v) const {
-            //return vec3(*this) /= v;
+#ifdef HAVE_SSE2
             return vec3(divps(vector, v.vector));
+#else
+            return vec3(*this) /= v;
+#endif
         }
 
         inline vec3& operator/=(const vec3& v){
-            //values[0] /= v(0);
-            //values[1] /= v(1);
-            //values[2] /= v(2);
+#ifdef HAVE_SSE2
             vector = divps(vector, v.vector);
+#else
+            values[0] /= v(0);
+            values[1] /= v(1);
+            values[2] /= v(2);
+#endif
             return (*this);
         }
 
@@ -327,10 +373,14 @@ class vec3 {
         }
 
 	private:
+#ifdef HAVE_SSE2
         union{
             float values[4];
             __m128 vector;
         };
+#else
+        float values[4];
+#endif
 };
 
 class vec4 {
@@ -413,9 +463,11 @@ class vec4 {
 			return values[3];
 		}
 
+#ifdef HAVE_SSE2
         inline const __m128& getSIMD() const{
             return vector;
         }
+#endif
 
         inline const vec4 operator+(const vec4& v) const {
             return vec4(*this) += v;
@@ -501,10 +553,14 @@ class vec4 {
         }
 
 	private:
+#ifdef HAVE_SSE2
         union{
             float values[4];
             __m128 vector;
         };
+#else
+        float values[4];
+#endif
 };
 
 inline float dot(const vec2& u, const vec2& v){

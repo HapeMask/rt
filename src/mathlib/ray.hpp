@@ -26,5 +26,5 @@ class ray {
 		vec3 direction;
 		vec3 invDir;
 		float tMin, tMax;
-        int debugInfo;
+        float etao, etai;
 };

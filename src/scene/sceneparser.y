@@ -177,10 +177,8 @@ shape :
 objfile :
         OBJFILE '<' SMOOTH '>' '(' FILEPATH ')'
         { triangleMesh* p = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), p); $$ = p; } |
-        //{ triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm); $$ = tm; } |
         OBJFILE '<' FLAT '>' '(' FILEPATH ')'
-        { shape* s = new shape(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), s); $$ = s; }
-        //{ triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
+        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
         ;
 
 primitive_list : primitive primitive_list { $2->add($1); $$ = $2; } |

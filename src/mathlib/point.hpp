@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <cassert>
+#ifdef HAVE_SSE2
 #include "sse.hpp"
+#endif
 #include "vector.hpp" 
 
 using namespace std;

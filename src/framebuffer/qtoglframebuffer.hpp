@@ -6,6 +6,7 @@
 #include <QPaintEvent>
 #include <QKeyEvent>
 
+#define GL_EXT_PROTOTYPES
 #include <GL/gl.h>
 
 #include "framebuffer.hpp"

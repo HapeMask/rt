@@ -19,6 +19,7 @@
 #include "tracer/tracer.hpp"
 
 #ifdef RT_USE_QT
+#define GL_EXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
 
