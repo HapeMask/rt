@@ -54,7 +54,7 @@ class scene {
 			return lights.size();
 		}
 
-		const lightPtr& getLight(const unsigned int& i) const {
+		const lightPtr& getLight(const int& i) const {
 			return lights[i];
 		}
 
@@ -62,7 +62,7 @@ class scene {
             return emitters.size();
         }
 
-        shapePtr getEmitter(const unsigned int& i) const {
+        shapePtr getEmitter(const int& i) const {
             return emitters[i];
         }
 
@@ -92,7 +92,7 @@ class scene {
             return rt->L(cam->getRay(x, y));
         }
 
-        inline const unsigned long vertexCount() const {
+        inline const long vertexCount() const {
             return totalVertices;
         }
 
@@ -124,7 +124,7 @@ class scene {
 		bool needsBuilding;
 		aabb bounds;
 
-        unsigned long totalVertices;
+        long totalVertices;
 };
 
 typedef shared_ptr<scene> scenePtr;

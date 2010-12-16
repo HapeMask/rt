@@ -14,7 +14,7 @@ class arraylist{
         arraylist();
         arraylist(const arraylist<T>& list);
         arraylist(const std::vector<T>& vec);
-        arraylist(const unsigned int& size);
+        arraylist(const int& size);
 
         ~arraylist(){
             delete[] data;
@@ -22,7 +22,7 @@ class arraylist{
 
         void add(const T& x);
 
-        T remove(const unsigned int& index);
+        T remove(const int& index);
         T pop(){
             remove(_size-1);
         }
@@ -34,8 +34,8 @@ class arraylist{
         arraylist<T>& operator=(const arraylist<T>& list);
         arraylist<T>& operator=(const std::vector<T>& vec);
 
-        T& operator[](const unsigned int& index);
-        const T& operator[](const unsigned int& index) const;
+        T& operator[](const int& index);
+        const T& operator[](const int& index) const;
 
         class iterator : public std::iterator<std::random_access_iterator_tag, T>{
             public:
@@ -133,7 +133,7 @@ arraylist<T>::arraylist(){
 }
 
 template <typename T>
-arraylist<T>::arraylist(const unsigned int& size){
+arraylist<T>::arraylist(const int& size){
     _size = size;
     _maxsize = size;
     data = new T[_maxsize];
@@ -145,7 +145,7 @@ arraylist<T>::arraylist(const arraylist<T>& list){
     _maxsize = list._maxsize;
     data = new T[_maxsize];
 
-    for(unsigned int i=0; i<list.size(); ++i){
+    for(int i=0; i<list.size(); ++i){
         data[i] = list.data[i];
     }
 }
@@ -156,7 +156,7 @@ arraylist<T>::arraylist(const std::vector<T>& vec){
     _maxsize = vec.capacity();
     data = new T[_maxsize];
 
-    for(unsigned int i=0; i<vec.size(); ++i){
+    for(int i=0; i<vec.size(); ++i){
         data[i] = vec[i];
     }
 }
@@ -169,7 +169,7 @@ arraylist<T>& arraylist<T>::operator=(const arraylist<T>& list){
     _maxsize = list._maxsize;
     data = new T[_maxsize];
 
-    for(unsigned int i=0; i<list.size(); ++i){
+    for(int i=0; i<list.size(); ++i){
         data[i] = list.data[i];
     }
 
@@ -184,7 +184,7 @@ arraylist<T>& arraylist<T>::operator=(const std::vector<T>& vec){
     _maxsize = vec.capacity();
     data = new T[_maxsize];
 
-    for(unsigned int i=0; i<vec.size(); ++i){
+    for(int i=0; i<vec.size(); ++i){
         data[i] = vec[i];
     }
 
@@ -192,7 +192,7 @@ arraylist<T>& arraylist<T>::operator=(const std::vector<T>& vec){
 }
 
 template <typename T>
-T& arraylist<T>::operator[](const unsigned int& index){
+T& arraylist<T>::operator[](const int& index){
 #ifdef DEBUG
     assert(index < _size);
 #endif
@@ -200,7 +200,7 @@ T& arraylist<T>::operator[](const unsigned int& index){
 }
 
 template <typename T>
-const T& arraylist<T>::operator[](const unsigned int& index) const{
+const T& arraylist<T>::operator[](const int& index) const{
 #ifdef DEBUG
     assert(index < _size);
 #endif
@@ -218,13 +218,13 @@ void arraylist<T>::add(const T& x){
 }
 
 template <typename T>
-T arraylist<T>::remove(const unsigned int& index){
+T arraylist<T>::remove(const int& index){
 #ifdef DEBUG
     assert(index < _size);
 #endif
 
     const T x = data[index];
-    for(unsigned int i=index; i<_size; ++i){
+    for(int i=index; i<_size; ++i){
         data[i] = data[i+1];
     }
 
@@ -239,7 +239,7 @@ template <typename T>
 void arraylist<T>::_grow(){
     const T* oldData = data;
     T* newData = new T[_maxsize * 2];
-    for(unsigned int i=0; i<_size; ++i){
+    for(int i=0; i<_size; ++i){
         newData[i] = oldData[i];
     }
 
@@ -252,7 +252,7 @@ template <typename T>
 void arraylist<T>::_shrink(){
     const T* oldData = data;
     T* newData = new T[_maxsize / 2];
-    for(unsigned int i=0; i<_size; ++i){
+    for(int i=0; i<_size; ++i){
         newData[i] = oldData[i];
     }
 

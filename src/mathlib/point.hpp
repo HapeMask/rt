@@ -28,14 +28,14 @@ class point2 {
 			coords[1] = p(1);
 		}
 
-		inline const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 2);
 #endif
 			return coords[index];
 		}
 
-		inline float& operator()(const unsigned short& index){
+		inline float& operator()(const short& index){
 #ifdef DEBUG
 			assert(index < 2);
 #endif
@@ -114,14 +114,14 @@ class point3 {
 			coords[2] = p(2);
 		}
 
-		inline const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 3);
 #endif
 			return coords[index];
 		}
 
-		inline float& operator()(const unsigned short& index){
+		inline float& operator()(const short& index){
 #ifdef DEBUG
 			assert(index < 3);
 #endif

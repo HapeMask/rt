@@ -7,7 +7,7 @@
 #include "datastructs/arraylist.hpp"
 
 enum {LEFT=0, RIGHT=1};
-const unsigned short BVH_MAX_PRIMS_PER_LEAF = 16;
+const short BVH_MAX_PRIMS_PER_LEAF = 16;
 
 inline uint8_t nextAxis(uint8_t axis){
     switch(axis){
@@ -27,8 +27,8 @@ inline uint8_t nextAxis(uint8_t axis){
 typedef struct bn {
     aabb box;
     union{
-        unsigned int prims[2];
-        unsigned int rightChild;
+        int prims[2];
+        int rightChild;
     };
 
     uint8_t axis;
@@ -51,15 +51,15 @@ class bvh : public accelerator {
 
     private:
         void _build(const aabb& box,
-                unsigned int start, unsigned int end,
+                int start, int end,
                 uint8_t axis, int& index);
 
         const intersection _intersect(const int& index, const ray& r) const;
         const bool _intersectB(const int& index, const ray& r) const;
         const intersection leafTest(const bvhNode& node, const ray& r) const;
 
-        unsigned int numNodes;
-        unsigned int numPrims;
+        int numNodes;
+        int numPrims;
         bvhNode* nodes;
         arraylist<primitive*> primitives;
 };

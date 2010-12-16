@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cmath>
+using namespace std;
+
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
 #include <tr1/memory>
@@ -94,7 +97,7 @@ class bxdf {
         bxdf(const bxdfType t) : type(t) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const = 0;
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, float& pd) const = 0;
         virtual ~bxdf() {}
 
         const bxdfType getType() const {
@@ -105,11 +108,7 @@ class bxdf {
             return (type & t) == type;
         }
 
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
-            // PDF for solid angle over entire hemisphere:
-            // Cos(Theta)/Pi
-            return bsdf::cosTheta(wi) * INVPI;
-        }
+        virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
 
     private:
         const bxdfType type;
@@ -134,9 +133,9 @@ class lambertianBrdf : public bxdf {
     public:
         lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
 
-        inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const{
-            return rOverPi;
-        }
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
         const rgbColor rOverPi;
@@ -153,7 +152,7 @@ class specularBrdf : public specularBxdf {
             return 0.f;
         }
 
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const{
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
             return 0.f;
         }
 
@@ -239,12 +238,12 @@ class microfacetBrdf : public bxdf {
                 (4.f * cosThetaO * cosThetaI);
         }
 
-        inline virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+        inline virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
             distrib->sampleF(u0, u1, wo, wi, pd);
             return f(wo, wi);
         }
 
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const{
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
             return distrib->pdf(wo, wi);
         }
 
@@ -323,7 +322,7 @@ class aniso : public microfacetDistribution {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        inline const float exponent(const vec3& wh) const{
+        inline const float exponent(const vec3& wh) const {
             return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
         }
 
@@ -360,7 +359,7 @@ class beckmann : public microfacetDistribution {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        inline const float G1(const vec3& v, const vec3& wh) const{
+        inline const float G1(const vec3& v, const vec3& wh) const {
             if(dot(v,wh) / bsdf::cosTheta(v) > 0.f){
                 const float cosThetaH = bsdf::cosTheta(wh);
                 const float a = 1.f / (alpha * tanf(acosf(cosThetaH)));

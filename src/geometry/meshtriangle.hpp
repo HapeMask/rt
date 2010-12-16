@@ -13,20 +13,20 @@
 
 class meshTriangle : public primitive {
 	public:
-		meshTriangle(const unsigned int& a, const unsigned int& b, const unsigned int& c, triangleMesh* parent);
+		meshTriangle(const int& a, const int& b, const int& c, triangleMesh* parent);
 
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
 
-		const unsigned int& aIndex() const{
+		const int& aIndex() const{
 			return points[0];
 		}
 
-		const unsigned int& bIndex() const{
+		const int& bIndex() const{
 			return points[1];
 		}
 
-		const unsigned int& cIndex() const{
+		const int& cIndex() const{
 			return points[2];
 		}
 
@@ -50,8 +50,8 @@ class meshTriangle : public primitive {
             return normal_;
         }
 
-        void setVertNormals(const unsigned int& an, const unsigned int& bn, const unsigned int& cn);
-        void setUVs(const unsigned int& auv, const unsigned int& buv, const unsigned int& cuv);
+        void setVertNormals(const int& an, const int& bn, const int& cn);
+        void setUVs(const int& auv, const int& buv, const int& cuv);
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
         inline virtual const float area() const {
@@ -63,14 +63,14 @@ class meshTriangle : public primitive {
         virtual void drawGL() const;
 #endif
 
-        inline virtual const unsigned long vertexCount() const {
+        inline virtual const long vertexCount() const {
             return 3;
         }
 
 	private:
-		unsigned int points[3];
-        unsigned int vertNormals[3];
-        unsigned int uvs[3];
+		int points[3];
+        int vertNormals[3];
+        int uvs[3];
 
         float du1,du2,dv1,dv2, invDetUV;
 

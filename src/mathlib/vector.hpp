@@ -28,14 +28,14 @@ class vec2 {
 			values[1] = x(1);
 		}
 
-		const float& operator()(const unsigned short& index) const{
+		const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 2);
 #endif
 			return values[index];
 		}
 
-		float& operator()(const unsigned short& index){
+		float& operator()(const short& index){
 #ifdef DEBUG
 			assert(index < 2);
 #endif
@@ -191,14 +191,14 @@ class vec3 {
 
 		vec3(const point3& p);
 
-		inline const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 3);
 #endif
 			return values[index];
 		}
 
-		inline float& operator()(const unsigned short& index){
+		inline float& operator()(const short& index){
 #ifdef DEBUG
 			assert(index < 3);
 #endif
@@ -417,14 +417,14 @@ class vec4 {
 			values[3] = x;
 		}
 
-		inline const float& operator()(const unsigned short& index) const{
+		inline const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 4);
 #endif
 			return values[index];
 		}
 
-		inline float& operator()(const unsigned short& index){
+		inline float& operator()(const short& index){
 #ifdef DEBUG
 			assert(index < 4);
 #endif

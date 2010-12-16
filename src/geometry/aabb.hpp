@@ -93,12 +93,12 @@ class aabb {
              updateMid();
         }
 
-        inline void setMax(const float& f, unsigned int axis){
+        inline void setMax(const float& f, int axis){
             _max(axis) = f;
             updateMid();
         }
 
-        inline void setMin(const float& f, unsigned int axis){
+        inline void setMin(const float& f, int axis){
             _min(axis) = f;
             updateMid();
         }

@@ -12,7 +12,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	vector<intersection> hits;
 
 	const point3 ro(r.origin);
-	for(unsigned int i=0; i<shapes.size(); ++i){
+	for(int i=0; i<shapes.size(); ++i){
         ray rCopy(r);
         const intersection isect = shapes[i]->intersect(rCopy);
 		if(isect.hit){
@@ -27,7 +27,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	// Grab the closest hit.
 	float minDist = POS_INF;
 	intersection closestIntersection;
-	for(unsigned int i=0; i<hits.size(); ++i){
+	for(int i=0; i<hits.size(); ++i){
 		if(hits[i].t < minDist){
 			minDist = hits[i].t;
 			closestIntersection = hits[i];

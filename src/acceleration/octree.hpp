@@ -8,8 +8,8 @@
 
 #include "datastructs/arraylist.hpp"
 
-const unsigned int OCTREE_MAX_PRIMS_PER_LEAF = 16;
-const unsigned int OCTREE_MAX_DEPTH = 64;
+const int OCTREE_MAX_PRIMS_PER_LEAF = 16;
+const int OCTREE_MAX_DEPTH = 64;
 
 typedef struct on{
     bool isLeaf;

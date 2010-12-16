@@ -113,7 +113,7 @@ const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
     bool didHit = false;
     float minDist = MAX_FLOAT;
 
-    for(unsigned int i=0; i<node.contents.size(); ++i){
+    for(int i=0; i<node.contents.size(); ++i){
         ray rCopy(r);
         const intersection isect = node.contents[i]->intersect(rCopy);
         if(isect.hit){

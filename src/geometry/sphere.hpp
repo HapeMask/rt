@@ -32,7 +32,7 @@ class sphere : public primitive {
         virtual void drawGL() const;
 #endif
 
-        inline virtual const unsigned long vertexCount() const {
+        inline virtual const long vertexCount() const {
             return 0;
         }
 

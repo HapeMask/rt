@@ -65,7 +65,7 @@ class primitive {
         virtual void drawGL() const = 0;
 #endif
 
-        virtual const unsigned long vertexCount() const = 0;
+        virtual const long vertexCount() const = 0;
 
         ray* lastRayTested;
 

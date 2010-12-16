@@ -41,12 +41,12 @@ const bool bvh::intersectB(const ray& r) const{
 }
 
 const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
-    const unsigned int numPrims = node.prims[1] - node.prims[0];
+    const int numPrims = node.prims[1] - node.prims[0];
 
     // Check each hit and find the closest.
     intersection closestIsect = noIntersect;
 
-    for(unsigned int i=0; i<numPrims; ++i){
+    for(int i=0; i<numPrims; ++i){
         ray rCopy(r);
         const intersection isect = primitives[node.prims[0]+i]->intersect(rCopy);
         if(isect.hit){
@@ -114,10 +114,10 @@ const bool bvh::_intersectB(const int& index, const ray& r) const{
     if(!node.box.intersect(r, tLeftMin, tLeftMax)){
         return false;
     }else if(node.axis == AXIS_LEAF){
-        const unsigned int numPrims = node.prims[1] - node.prims[0];
+        const int numPrims = node.prims[1] - node.prims[0];
 
         // Find the intersection points for each primitive in the leaf.
-        for(unsigned int i=0; i<numPrims; ++i){
+        for(int i=0; i<numPrims; ++i){
             if(primitives[node.prims[0]+i]->intersectB(r)){
                 return true;
             }
@@ -156,7 +156,7 @@ void bvh::build(const scene& s){
     primitives = arraylist<primitive*>(numPrims);
 
     // Fill the list of primitives.
-    unsigned int k = 0;
+    int k = 0;
     for(size_t i=0; i<shapes.size(); ++i){
         const vector<primitivePtr>& p = shapes[i]->getPrimitives();
         for(size_t j=0; j<p.size(); ++j){
@@ -186,7 +186,7 @@ void bvh::build(const scene& s){
 }
 
 void bvh::_build(const aabb& box,
-        unsigned int start, unsigned int end,
+        int start, int end,
         uint8_t axis, int& index){
 
     if(start == end){
@@ -221,17 +221,17 @@ void bvh::_build(const aabb& box,
 
     // Rounding ensures that the leaves are well-filled.
     // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
-    //const unsigned int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
-    const unsigned int mid = (start+end)/2;
+    //const int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
+    const int mid = (start+end)/2;
 
     aabb leftBox(primitives[start]->getBounds());
     aabb rightBox(primitives[mid]->getBounds());
 
-    for(unsigned int i=start; i<mid; ++i){
+    for(int i=start; i<mid; ++i){
         leftBox = mergeAabb(leftBox, primitives[i]->getBounds());
     }
 
-    for(unsigned int i=mid; i<end; ++i){
+    for(int i=mid; i<end; ++i){
         rightBox = mergeAabb(rightBox, primitives[i]->getBounds());
     }
 

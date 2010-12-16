@@ -48,8 +48,8 @@ class shape {
             return area_;
         }
 
-        virtual const unsigned long vertexCount() const {
-            unsigned long count = 0;
+        virtual const long vertexCount() const {
+            long count = 0;
 
             for(size_t i=0; i<prims.size(); ++i){
                 count += prims[i]->vertexCount();

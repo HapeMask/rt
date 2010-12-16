@@ -23,7 +23,7 @@ const rgbColor bdpt::L(const ray& r) const {
     createPath(eyeRay, eyePath);
 
     // Pick a random light and start a path on it in a random direction.
-    unsigned int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
+    int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
     while(parent.getLight(i)->isPointSource()){
         i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
     }
@@ -86,7 +86,7 @@ const rgbColor bdpt::L(const ray& r) const {
 void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
     float curPdf = 1.f;
 
-    for(unsigned int pathLength = 0; ; ++pathLength){
+    for(int pathLength = 0; ; ++pathLength){
         // Copy the ray since we need the original for the light test below and
         // scene::intersect() modifies it.
         const ray rOrig(r);

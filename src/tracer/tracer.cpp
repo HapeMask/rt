@@ -10,7 +10,7 @@
 const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
     if(parent.numLights() > 0){
-        const unsigned int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
+        const int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
         return sampleDirect(p, wo, isect, bsdf, *parent.getLight(i).get()) * parent.numLights();
     }else{
         return 0.f;
@@ -21,7 +21,7 @@ const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const
         const bsdf& bsdf) const{
     if(parent.numLights() > 0){
         rgbColor L(0.f);
-        for(unsigned int i=0;i<parent.numLights(); ++i){
+        for(int i=0;i<parent.numLights(); ++i){
             L += sampleDirect(p, wo, isect, bsdf, *parent.getLight(i).get()) * parent.numLights();
         }
 

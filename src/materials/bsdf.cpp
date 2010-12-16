@@ -10,12 +10,6 @@
 #include <vector>
 using std::vector;
 
-const rgbColor bxdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
-    cosineSampleHemisphere(wi, u0, u1);
-    pd = pdf(wo, wi);
-    return f(wo, wi);
-}
-
 bsdf::~bsdf(){
     if(specTra){
         delete specTra;

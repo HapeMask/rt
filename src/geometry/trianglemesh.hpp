@@ -24,19 +24,19 @@ class triangleMesh : public shape {
             if(uvHeap) delete[] uvHeap;
         }
 
-        inline point3 pointLookup(const unsigned int& i) const{
+        inline point3 pointLookup(const int& i) const{
             return pointHeap[i];
         }
 
-        inline vec3 vertNormalLookup(const unsigned int& i) const{
+        inline vec3 vertNormalLookup(const int& i) const{
             return vertexNormalHeap[i];
         }
 
-        inline vec2 uvLookup(const unsigned int& i) const{
+        inline vec2 uvLookup(const int& i) const{
             return uvHeap[i];
         }
 
-        inline virtual const unsigned long vertexCount() const {
+        inline virtual const long vertexCount() const {
             return totalVertices;
         }
 
@@ -44,7 +44,7 @@ class triangleMesh : public shape {
         vec3* vertexNormalHeap;
         vec2* uvHeap;
 
-        unsigned long totalVertices;
+        long totalVertices;
 };
 
 typedef tr1::shared_ptr<triangleMesh> triangleMeshPtr;

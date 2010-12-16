@@ -82,7 +82,7 @@ void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1){
     v.y() = sqrtf(max(0.f, 1.f - v.x()*v.x() - v.z()*v.z()));
 }
 
-const float radicalInverse(unsigned int n, const int& base){
+const float radicalInverse(int n, const int& base){
     float val = 0.f;
     const double invBase = 1.f / base;
     float invBi = invBase;
@@ -95,19 +95,19 @@ const float radicalInverse(unsigned int n, const int& base){
     return val;
 }
 
-void getLDSamples2D(float* samples, const unsigned int& count){
+void getLDSamples2D(float* samples, const int& count){
     const float invN = 1.f / (float)count;
 
-    for(unsigned int i=0; i<count; ++i){
+    for(int i=0; i<count; ++i){
         samples[2*i] = (float)i * invN;
         samples[2*i+1] = radicalInverse(i, primes[0]);
     }
 }
 
-void getLDSamples3D(float* samples, const unsigned int& count){
+void getLDSamples3D(float* samples, const int& count){
     const float invN = 1.f / (float)count;
 
-    for(unsigned int i=0; i<count; ++i){
+    for(int i=0; i<count; ++i){
         samples[3*i] = (float)i * invN;
         samples[3*i+1] = radicalInverse(i, primes[0]);
         samples[3*i+2] = radicalInverse(i, primes[1]);

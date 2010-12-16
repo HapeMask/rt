@@ -88,8 +88,8 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
 
     // Read in the faces and construct the polys.
     while(!file.eof() && chunk == "f"){
-        unsigned int vert1, vert2, vert3;
-        unsigned int uv1, uv2, uv3;
+        int vert1, vert2, vert3;
+        int uv1, uv2, uv3;
 
         file >> chunk;
         if(uvs.size() > 0){
@@ -230,8 +230,8 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
 
     // Read in the faces and construct the polys.
     while(!file.eof() && chunk == "f"){
-        unsigned int vert1, vert2, vert3;
-        unsigned int uv1, uv2, uv3;
+        int vert1, vert2, vert3;
+        int uv1, uv2, uv3;
 
         file >> chunk;
         if(uvs.size() > 0){

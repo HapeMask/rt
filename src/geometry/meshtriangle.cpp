@@ -13,7 +13,7 @@
 
 #include <cmath>
 
-meshTriangle::meshTriangle(const unsigned int& a, const unsigned int& b, const unsigned int& c, triangleMesh* p) :
+meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMesh* p) :
     primitive(aabb(
                     vec3(minps(minps(p->pointLookup(a).getSIMD(), p->pointLookup(b).getSIMD()), p->pointLookup(c).getSIMD())),
                     vec3(maxps(maxps(p->pointLookup(a).getSIMD(), p->pointLookup(b).getSIMD()), p->pointLookup(c).getSIMD()))
@@ -134,14 +134,14 @@ const point3 meshTriangle::sampleSurface(const float& u0, const float& u1) const
     exit(1);
 }
 
-void meshTriangle::setVertNormals(const unsigned int& an, const unsigned int& bn, const unsigned int& cn){
+void meshTriangle::setVertNormals(const int& an, const int& bn, const int& cn){
     vertNormals[0] = an;
     vertNormals[1] = bn;
     vertNormals[2] = cn;
     hasVertNormals = true;
 }
 
-void meshTriangle::setUVs(const unsigned int& auv, const unsigned int& buv, const unsigned int& cuv){
+void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
     uvs[0] = auv;
     uvs[1] = buv;
     uvs[2] = cuv;
