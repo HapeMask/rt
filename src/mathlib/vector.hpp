@@ -42,22 +42,6 @@ class vec2 {
 			return values[index];
 		}
 
-		const float& x() const {
-			return values[0];
-		}
-
-		const float& y() const {
-			return values[1];
-		}
-
-		float& x() {
-			return values[0];
-		}
-
-		float& y() {
-			return values[1];
-		}
-
         inline const vec2 operator+(const vec2& v) const {
             return vec2(*this) += v;
         }
@@ -77,7 +61,7 @@ class vec2 {
         }
 
         inline const vec2 operator-() const {
-            return vec2(-x(), -y());
+            return vec2(-x, -y);
         }
 
         inline const vec2 operator*(const float& x) const {
@@ -119,7 +103,7 @@ class vec2 {
         }
 
         inline const bool operator==(const vec2& v) const {
-            return (x() == v.x()) && (y() == v.y());
+            return (x == v.x) && (y == v.y);
         }
 
         inline const float length() const {
@@ -131,12 +115,20 @@ class vec2 {
         }
 
 	private:
-		float values[2];
+        union {
+            float values[2];
+            struct {
+                float x;
+                float y;
+            };
+        };
 };
 
 class vec3 {
     friend class point3;
 	public:
+		vec3(const point3& p);
+
 		vec3(){
             values[0] = 0.f;
             values[1] = 0.f;
@@ -152,14 +144,10 @@ class vec3 {
 		}
 
 		vec3(const vec3& x){
-#ifdef HAVE_SSE2
-			vector = x.vector;
-#else
 			values[0] = x(0);
 			values[1] = x(1);
 			values[2] = x(2);
             values[3] = 0.f;
-#endif
 		}
 
 		vec3(const vec2& u, const float& x){
@@ -189,8 +177,6 @@ class vec3 {
         }
 #endif
 
-		vec3(const point3& p);
-
 		inline const float& operator()(const short& index) const{
 #ifdef DEBUG
 			assert(index < 3);
@@ -205,30 +191,6 @@ class vec3 {
 			return values[index];
 		}
 
-		inline const float& x() const {
-			return values[0];
-		}
-
-		inline const float& y() const {
-			return values[1];
-		}
-
-		inline const float& z() const {
-			return values[2];
-		}
-
-		inline float& x() {
-			return values[0];
-		}
-
-		inline float& y() {
-			return values[1];
-		}
-
-		inline float& z() {
-			return values[2];
-		}
-
 #ifdef HAVE_SSE2
 		inline const __m128& getSIMD() const{
             return vector;
@@ -236,128 +198,74 @@ class vec3 {
 #endif
 
         inline const vec3 operator+(const vec3& v) const {
-#ifdef HAVE_SSE2
-            return vec3(addps(vector, v.vector));
-#else
             return vec3(v) += *this;
-#endif
         }
 
         inline vec3& operator+=(const vec3& v){
-#ifdef HAVE_SSE2
-            vector = addps(vector, v.vector);
-#else
             values[0] += v(0);
             values[1] += v(1);
             values[2] += v(2);
-#endif
             return (*this);
         }
 
         inline const vec3 operator-(const vec3& v) const {
-#ifdef HAVE_SSE2
-            return vec3(subps(vector, v.vector));
-#else
             return vec3(*this) -= v;
-#endif
         }
 
         inline vec3& operator-=(const vec3& v){
-#ifdef HAVE_SSE2
-            vector = subps(vector, v.vector);
-            return (*this);
-#else
             return (*this) += -v;
-#endif
         }
 
         inline const vec3 operator-() const {
-#ifdef HAVE_SSE2
-            return vec3(subps(_mm_setzero_ps(), vector));
-#else
-            return vec3(-x(), -y(), -z());
-#endif
+            return vec3(-x, -y, -z);
         }
 
         inline const vec3 operator*(const float& x) const {
-#ifdef HAVE_SSE2
-            return vec3(mulps(vector, _mm_load1_ps(&x)));
-#else
             return vec3(*this) *= x;
-#endif
         }
 
         inline vec3& operator*=(const float& x){
-#ifdef HAVE_SSE2
-            vector = mulps(vector, _mm_load1_ps(&x));
-#else
             values[0] *= x;
             values[1] *= x;
             values[2] *= x;
-#endif
             return (*this);
         }
 
         inline const vec3 operator*(const vec3& v) const {
-#ifdef HAVE_SSE2
-            return vec3(mulps(vector, v.vector));
-#else
             return vec3(*this) *= v;
-#endif
         }
 
         inline vec3& operator*=(const vec3& v){
-#ifdef HAVE_SSE2
-            vector = mulps(vector, v.vector);
-#else
             values[0] *= v(0);
             values[1] *= v(1);
             values[2] *= v(2);
-#endif
             return (*this);
         }
 
         inline const vec3 operator/(const float& x) const {
-#ifdef HAVE_SSE2
-            return vec3(divps(vector, _mm_load1_ps(&x)));
-#else
             return vec3(*this) *= 1.f / x;
-#endif
         }
 
         inline vec3& operator/=(const float& x){
-#ifdef HAVE_SSE2
-            vector = divps(vector, _mm_load1_ps(&x));
-            return (*this);
-#else
             return (*this) *= 1.f / x;
-#endif
         }
 
         inline const vec3 operator/(const vec3& v) const {
-#ifdef HAVE_SSE2
-            return vec3(divps(vector, v.vector));
-#else
             return vec3(*this) /= v;
-#endif
         }
 
         inline vec3& operator/=(const vec3& v){
-#ifdef HAVE_SSE2
-            vector = divps(vector, v.vector);
-#else
             values[0] /= v(0);
             values[1] /= v(1);
             values[2] /= v(2);
-#endif
             return (*this);
         }
 
         inline const bool operator==(const vec3& v) const {
             return
-                (x() == v.x()) &&
-                (y() == v.y()) &&
-                (z() == v.z());
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z);
         }
 
         inline const float length() const {
@@ -365,7 +273,7 @@ class vec3 {
         }
 
         inline const float length2() const {
-            return x()*x() + y()*y() + z()*z();
+            return x*x + y*y + z*z;
         }
 
         inline void normalize() {
@@ -373,14 +281,17 @@ class vec3 {
         }
 
 	private:
-#ifdef HAVE_SSE2
         union{
             float values[4];
+#ifdef HAVE_SSE2
             __m128 vector;
-        };
-#else
-        float values[4];
 #endif
+            struct {
+                float x;
+                float y;
+                float z;
+            };
+        };
 };
 
 class vec4 {
@@ -431,38 +342,6 @@ class vec4 {
 			return values[index];
 		}
 
-		inline const float& x() const {
-			return values[0];
-		}
-
-		inline const float& y() const {
-			return values[1];
-		}
-
-		inline const float& z() const {
-			return values[2];
-		}
-
-		inline const float& w() const {
-			return values[3];
-		}
-
-		inline float& x() {
-			return values[0];
-		}
-
-		inline float& y() {
-			return values[1];
-		}
-
-		inline float& z() {
-			return values[2];
-		}
-
-		inline float& w() {
-			return values[3];
-		}
-
 #ifdef HAVE_SSE2
         inline const __m128& getSIMD() const{
             return vector;
@@ -490,7 +369,7 @@ class vec4 {
         }
 
         inline const vec4 operator-() const {
-            return vec4(-x(), -y(), -z(), -w());
+            return vec4(-x, -y, -z, -w);
         }
 
         inline const vec4 operator*(const float& x) const {
@@ -535,10 +414,10 @@ class vec4 {
 
         inline const bool operator==(const vec4& v) const {
             return
-                (x() == v.x()) &&
-                (y() == v.y()) &&
-                (z() == v.z()) &&
-                (w() == v.w());
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z) &&
+                (w == v.w);
         }
 
         inline const float length() const {
@@ -553,35 +432,39 @@ class vec4 {
         }
 
 	private:
-#ifdef HAVE_SSE2
         union{
             float values[4];
+#ifdef HAVE_SSE2
             __m128 vector;
-        };
-#else
-        float values[4];
 #endif
+            struct {
+                float x;
+                float y;
+                float z;
+                float w;
+            };
+        };
 };
 
 inline float dot(const vec2& u, const vec2& v){
 	return
-		(u.x() * v.x()) +
-		(u.y() * v.y());
+		(u.x * v.x) +
+		(u.y * v.y);
 }
 
 inline float dot(const vec3& u, const vec3& v){
 	return
-		(u.x() * v.x()) +
-		(u.y() * v.y()) +
-		(u.z() * v.z());
+		(u.x * v.x) +
+		(u.y * v.y) +
+		(u.z * v.z);
 }
 
 inline float dot(const vec4& u, const vec4& v){
 	return
-		(u.x() * v.x()) +
-		(u.y() * v.y()) +
-		(u.z() * v.z()) +
-		(u.w() * v.w());
+		(u.x * v.x) +
+		(u.y * v.y) +
+		(u.z * v.z) +
+		(u.w * v.w);
 }
 
 inline vec3 cross(const vec3& u, const vec3& v){

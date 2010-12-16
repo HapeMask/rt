@@ -42,29 +42,13 @@ class point2 {
 			return coords[index];
 		}
 
-		inline const float& x() const {
-			return coords[0];
-		}
-
-		inline const float& y() const {
-			return coords[1];
-		}
-
-		inline float& x() {
-			return coords[0];
-		}
-
-		inline float& y() {
-			return coords[1];
-		}
-
         inline const point2 operator+(const vec2& u) const {
             return point2(*this) += u;
         }
 
         inline point2& operator+=(const vec2& u) {
-            x() += u.x();
-            y() += u.y();
+            x += u.x;
+            y += u.y;
             return (*this);
         }
 
@@ -78,17 +62,23 @@ class point2 {
         }
 
         inline const vec2 operator-(const point2& p) const {
-            return vec2(x(), y()) - vec2(p.x(), p.y());
+            return vec2(x, y) - vec2(p.x, p.y);
         }
 
         inline const bool operator==(const point2& p) const {
             return
-                (x() == p.x()) &&
-                (y() == p.y());
+                (x == p.x) &&
+                (y == p.y);
         }
 
 	private:
-		float coords[2];
+        union {
+            float coords[2];
+            struct {
+                float x;
+                float y;
+            };
+        };
 };
 
 class point3 {
@@ -128,43 +118,20 @@ class point3 {
 			return coords[index];
 		}
 
-		inline const float& x() const {
-			return coords[0];
-		}
-
-		inline const float& y() const {
-			return coords[1];
-		}
-
-		inline const float& z() const {
-			return coords[2];
-		}
-
-		inline float& x() {
-			return coords[0];
-		}
-
-		inline float& y() {
-			return coords[1];
-		}
-
-		inline float& z() {
-			return coords[2];
-		}
-
+#ifdef HAVE_SSE2
         inline const __m128 getSIMD() const {
             return vector;
         }
+#endif
 
         inline const point3 operator+(const vec3& u) const {
             return point3(*this) += u;
         }
 
         inline point3& operator+=(const vec3& u) {
-            //x() += u.x();
-            //y() += u.y();
-            //z() += u.z();
-            vector = addps(vector, u.vector);
+            x += u.x;
+            y += u.y;
+            z += u.z;
             return (*this);
         }
 
@@ -173,27 +140,28 @@ class point3 {
         }
 
         inline point3& operator-=(const vec3& u) {
-            //(*this) += -u;
-            vector = subps(vector, u.vector);
-            return (*this);
+            return (*this) += -u;
         }
 
         inline const vec3 operator-(const point3& p) const {
-            //return vec3(subps(getSIMD(), p.getSIMD()));
-            return vec3(subps(vector, p.vector));
+            return vec3(x - p.x, y - p.y, z - p.z);
         }
 
         inline const bool operator==(const point3& p) const {
-            return
-                (x() == p.x()) &&
-                (y() == p.y()) &&
-                (z() == p.z());
+            return (x == p.x) && (y == p.y) && (z == p.z);
         }
 
 	private:
         union{
             float coords[4];
+#ifdef HAVE_SSE2
             __m128 vector;
+#endif
+            struct {
+                float x;
+                float y;
+                float z;
+            };
         };
 };
 

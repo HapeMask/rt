@@ -17,6 +17,6 @@ point3::point3(const vec3& u){
 }
 
 ostream& operator<<(ostream& out, const point3& p){
-	out << "point3(" << p.x() << ", " << p.y() << ", " << p.z() << ")";
+	out << "point3(" << p.x << ", " << p.y << ", " << p.z << ")";
 	return out;
 }
