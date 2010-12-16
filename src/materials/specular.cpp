@@ -4,13 +4,13 @@
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
-#include "samplers/samplers.hpp"
 
 #include <cmath>
 
 const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
-    wi = vec3(-wo.x(), wo.y(), -wo.z());
+    wi = vec3(-wo.x, wo.y, -wo.z);
+    wi.normalize();
 
     const rgbColor Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
     return Fr * kR / fabs(bsdf::cosTheta(wi));
@@ -40,9 +40,11 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
         -sqrtf(max(0.f, 1.f - sin2ThetaT)) :
         sqrtf(max(0.f, 1.f - sin2ThetaT));
 
-    wi.x() = eta * -wo.x();
-    wi.y() = cosThetaT;
-    wi.z() = eta * -wo.z();
+    wi.x = eta * -wo.x;
+    wi.y = cosThetaT;
+    wi.z = eta * -wo.z;
+
+    wi.normalize();
 
     const rgbColor Fr = evalFresnel(fabs(bsdf::cosTheta(wo)));
     return eta2 * (rgbColor(1.f) - Fr) * kT / fabs(bsdf::cosTheta(wi));

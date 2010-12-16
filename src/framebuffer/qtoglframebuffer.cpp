@@ -215,8 +215,8 @@ void qtOpenGLFramebuffer::positionCamera() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(camPos.x(), camPos.y(), camPos.z(),
-			camPos.x() + camForward.x(), camPos.y() + camForward.y(), camPos.z() + camForward.z(),
+	gluLookAt(camPos.x, camPos.y, camPos.z,
+			camPos.x + camForward.x, camPos.y + camForward.y, camPos.z + camForward.z,
 			0, 1, 0);
 }
 
@@ -293,23 +293,23 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
         const float v3 = sinf(phi) * sinf(theta);
 
         const vec3 a = normalize(vec3(
-                    v1 * u.x() + v2 * w.x() + v3 * v.x(),
-                    v1 * u.y() + v2 * w.y() + v3 * v.y(),
-                    v1 * u.z() + v2 * w.z() + v3 * v.z()));
+                    v1 * u.x + v2 * w.x + v3 * v.x,
+                    v1 * u.y + v2 * w.y + v3 * v.y,
+                    v1 * u.z + v2 * w.z + v3 * v.z));
 
-        glVertex3f(p.x()+a.x(), p.y()+a.y(), p.z()+a.z());
+        glVertex3f(p.x+a.x, p.y+a.y, p.z+a.z);
 
         glColor3f(1,1,0);
         ray r(p,a);
         const intersection isect = sph.intersect(r);
         const point3 hit = p + isect.t * a;
-        glVertex3f(hit.x(), hit.y(), hit.z());
+        glVertex3f(hit.x, hit.y, hit.z);
 
         glColor3f(1,1,1);
-        glVertex3f(location.x(), location.y(), location.z());
+        glVertex3f(location.x, location.y, location.z);
 
         glColor3f(0,1,1);
-        glVertex3f(p.x(), p.y(), p.z());
+        glVertex3f(p.x, p.y, p.z);
     }
 
     glEnd();

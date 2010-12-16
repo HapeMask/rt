@@ -152,10 +152,10 @@ void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
     const vec2& uv3 = meshParent->uvLookup(cuv);
 
     // Compute partial derivatives in u/v for the hit.
-    du1 = uv1.x() - uv3.x();
-    du2 = uv2.x() - uv3.x();
-    dv1 = uv1.y() - uv3.y();
-    dv2 = uv2.y() - uv3.y();
+    du1 = uv1.x - uv3.x;
+    du2 = uv2.x - uv3.x;
+    dv1 = uv1.y - uv3.y;
+    dv2 = uv2.y - uv3.y;
     invDetUV = 1.f / (du1*dv2 - dv1*du2);
     binormal_ = normalize((dv2*B - dv1*C) * invDetUV);
 }
@@ -164,26 +164,26 @@ void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
 void meshTriangle::prepGL(GLfloat*& data) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).x();
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).x;
             ++data;
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).y();
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).y;
             ++data;
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).z();
+            (*data) = meshParent->vertNormalLookup(vertNormals[i]).z;
             ++data;
         }else{
-            (*data) = normal_.x();
+            (*data) = normal_.x;
             ++data;
-            (*data) = normal_.y();
+            (*data) = normal_.y;
             ++data;
-            (*data) = normal_.z();
+            (*data) = normal_.z;
             ++data;
         }
 
-        (*data) = meshParent->pointLookup(points[i]).x();
+        (*data) = meshParent->pointLookup(points[i]).x;
         ++data;
-        (*data) = meshParent->pointLookup(points[i]).y();
+        (*data) = meshParent->pointLookup(points[i]).y;
         ++data;
-        (*data) = meshParent->pointLookup(points[i]).z();
+        (*data) = meshParent->pointLookup(points[i]).z;
         ++data;
     }
 }

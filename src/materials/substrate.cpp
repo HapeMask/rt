@@ -16,7 +16,7 @@ const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& 
         const float u = 2.f * (u0 - 0.5f);
         distrib->sampleF(u, u1, wo, wi, pd);
 
-        if(wo.y() * wi.y() < 0){
+        if(wo.y * wi.y < 0){
             return 0.f;
         }
     }
@@ -40,7 +40,7 @@ const rgbColor substrate::f(const vec3& wo, const vec3& wi) const{
 }
 
 const float substrate::pdf(const vec3& wo, const vec3& wi) const{
-    if(wo.y() * wi.y() >= 0){
+    if(wo.y * wi.y >= 0){
         return 0.5f * (bsdf::cosTheta(wi) * INVPI + distrib->pdf(wo, wi));
     }else{
         return 0.f;

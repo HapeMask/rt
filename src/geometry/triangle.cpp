@@ -126,10 +126,10 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
     hasUVs = true;
 
     // Compute partial derivatives in u/v for the hit.
-    const float du1 = uvs[0].x() - uvs[2].x();
-    const float du2 = uvs[1].x() - uvs[2].x();
-    const float dv1 = uvs[0].y() - uvs[2].y();
-    const float dv2 = uvs[1].y() - uvs[2].y();
+    const float du1 = uvs[0].x - uvs[2].x;
+    const float du2 = uvs[1].x - uvs[2].x;
+    const float dv1 = uvs[0].y - uvs[2].y;
+    const float dv2 = uvs[1].y - uvs[2].y;
     const float invDetUV = 1.f / (du1*dv2 - dv1*du2);
 
     const vec3 dp1 = points[0] - points[2];
@@ -143,26 +143,26 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
 void triangle::prepGL(GLfloat*& data) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*data) = vertNormals[i].x();
+            (*data) = vertNormals[i].x;
             ++data;
-            (*data) = vertNormals[i].y();
+            (*data) = vertNormals[i].y;
             ++data;
-            (*data) = vertNormals[i].z();
+            (*data) = vertNormals[i].z;
             ++data;
         }else{
-            (*data) = normal_.x();
+            (*data) = normal_.x;
             ++data;
-            (*data) = normal_.y();
+            (*data) = normal_.y;
             ++data;
-            (*data) = normal_.z();
+            (*data) = normal_.z;
             ++data;
         }
 
-        (*data) = points[i].x();
+        (*data) = points[i].x;
         ++data;
-        (*data) = points[i].y();
+        (*data) = points[i].y;
         ++data;
-        (*data) = points[i].z();
+        (*data) = points[i].z;
         ++data;
     }
 }

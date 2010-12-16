@@ -9,7 +9,7 @@
 #include <cmath>
 
 const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
-    if(wo.y() < 0.f) {
+    if(wo.y < 0.f) {
         pd = 0.f;
         return 0.f;
     }
@@ -34,7 +34,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
 	// Find the incident direction that corresponds to this half vector and the
 	// reflected direction.
     wi = 2.f * dot(wo, wh) * wh - wo;
-    if(wi.y() < 0.f){
+    if(wi.y < 0.f){
         pd = 0.f;
         return 0.f;
     }
@@ -43,34 +43,34 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
     // computed below, see Bruce Walter's TR from Cornell: PCG-05-06).
     //
     // Lots of cancellation between BRDF and PDF -> simpler calculations.
-    pd = sqrtf(wi.y()*wo.y()) / (fabs(dot(wh, wo)) * powf(wh.y(), 3));
+    pd = sqrtf(wi.y*wo.y) / (fabs(dot(wh, wo)) * powf(wh.y, 3));
     return Rs;
 }
 
 const rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
-	if(wo.y()*wi.y() < 0.f){
+	if(wo.y*wi.y < 0.f){
 		return 0.f;
 	}
 
 	const vec3 wh = halfVector(wo, wi);
 
-    const float meanX = wh.x() / alpha;
-    const float meanZ = wh.z() / beta;
+    const float meanX = wh.x / alpha;
+    const float meanZ = wh.z / beta;
 
-    return Rs * exp( -(meanX*meanX + meanZ*meanZ) / (wh.y()*wh.y())) /
-        (4.f * PI * alpha * beta * sqrtf(wo.y()*wi.y()));
+    return Rs * exp( -(meanX*meanX + meanZ*meanZ) / (wh.y*wh.y)) /
+        (4.f * PI * alpha * beta * sqrtf(wo.y*wi.y));
 }
 
 const float newWard::pdf(const vec3& wo, const vec3& wi) const{
-	if(wo.y()*wi.y() < 0.f){
+	if(wo.y*wi.y < 0.f){
 		return 0.f;
 	}
 
     const vec3 wh(halfVector(wo, wi));
 
-    const float meanX = wh.x() / alpha;
-    const float meanZ = wh.z() / beta;
+    const float meanX = wh.x / alpha;
+    const float meanZ = wh.z / beta;
 
-    return exp( -(meanX*meanX + meanZ*meanZ) / (wh.y()*wh.y())) /
-        (4.f * PI * alpha * beta * fabs(dot(wh,wo)) * powf(wh.y(), 3));
+    return exp( -(meanX*meanX + meanZ*meanZ) / (wh.y*wh.y)) /
+        (4.f * PI * alpha * beta * fabs(dot(wh,wo)) * powf(wh.y, 3));
 }

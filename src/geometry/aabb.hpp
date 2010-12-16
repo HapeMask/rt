@@ -28,27 +28,27 @@ class aabb {
             _min(b,l,f), _max(t,r,ba), _mid((_min+_max)/2.f) {}
 
         inline const float& top() const {
-            return _max.y();
+            return _max.y;
         }
 
         inline const float& right() const {
-            return _max.x();
+            return _max.x;
         }
 
         inline const float& back() const {
-            return _max.z();
+            return _max.z;
         }
 
         inline const float& bottom() const {
-            return _min.y();
+            return _min.y;
         }
 
         inline const float& left() const {
-            return _min.x();
+            return _min.x;
         }
 
         inline const float& front() const {
-            return _min.z();
+            return _min.z;
         }
 
         inline const vec3& min() const {
@@ -64,32 +64,32 @@ class aabb {
         }
 
         inline void setTop(const float& f){
-             _max.y() = f;
+             _max.y = f;
              updateMid();
         }
 
         inline void setRight(const float& f){
-             _max.y() = f;
+             _max.y = f;
              updateMid();
         }
 
         inline void setBack(const float& f){
-             _max.y() = f;
+             _max.y = f;
              updateMid();
         }
 
         inline void setBottom(const float& f){
-             _min.y() = f;
+             _min.y = f;
              updateMid();
         }
 
         inline void setLeft(const float& f){
-             _min.y() = f;
+             _min.y = f;
              updateMid();
         }
 
         inline void setFront(const float& f){
-             _min.y() = f;
+             _min.y = f;
              updateMid();
         }
 

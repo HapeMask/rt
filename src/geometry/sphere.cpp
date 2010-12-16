@@ -17,8 +17,8 @@
 
 sphere::sphere(const point3& p, const float& r) :
 	primitive(aabb(
-                    vec3(p.x()-r, p.y()-r, p.z()-r),
-                    vec3(p.x()+r, p.y()+r, p.z()+r)
+                    vec3(p.x-r, p.y-r, p.z-r),
+                    vec3(p.x+r, p.y+r, p.z+r)
                 )
             ),
 	location(p), radius(r), radius2(r*r)
@@ -61,13 +61,13 @@ const intersection sphere::intersect(ray& r) const {
     isect.shadingNormal = isect.normal;
 
     isect.binormal = normalize(vec3(
-            -TWOPI * isect.normal.z(),
+            -TWOPI * isect.normal.z,
             0,
-            TWOPI * isect.normal.x()
+            TWOPI * isect.normal.x
             ));
 
-    const float u = atan2f(isect.normal.z(), isect.normal.x()) * INVTWOPI;
-    const float v = acosf(sqrtf(isect.normal.x()*isect.normal.x()+isect.normal.z()*isect.normal.z()) / radius);
+    const float u = atan2f(isect.normal.z, isect.normal.x) * INVTWOPI;
+    const float v = acosf(sqrtf(isect.normal.x*isect.normal.x+isect.normal.z*isect.normal.z) / radius);
     isect.uv = vec2(u,v);
 
     isect.tangent = cross(isect.normal, isect.binormal);
@@ -111,7 +111,7 @@ void sphere::drawGL() const {
     GLUquadric* quadric = gluNewQuadric();
 
     glPushMatrix();
-    glTranslatef(location.x(), location.y(), location.z());
+    glTranslatef(location.x, location.y, location.z);
     gluSphere(quadric, radius, 40, 40);
     glPopMatrix();
 

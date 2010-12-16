@@ -17,7 +17,7 @@ void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
     sphericalToDirection(wh, sinThetaH, cosThetaH, phiH);
     wh.normalize();
 
-    if(wh.y() > 0){
+    if(wh.y > 0){
         wi = 2.f * fabs(dot(wo, wh)) * wh - wo;
 
         pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * fabs(dot(wo, wh)));
@@ -28,7 +28,7 @@ void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
 
 const float blinn::pdf(const vec3& wo, const vec3& wi) const {
     const vec3 wh = halfVector(wo, wi);
-    if(wh.y() > 0){
+    if(wh.y > 0){
         return ((exp + 2.f) * powf(bsdf::cosTheta(wh), exp)) / (4.f * TWOPI * dot(wo, wh));
     }else{
         return 0.f;

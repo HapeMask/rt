@@ -27,7 +27,6 @@ enum fresnelType {
 //
 // Utility Functions
 //
-
 inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, const float& cosTheta){
     return ((eta-1.f)*(eta-1.f) + (4 * eta * powf(1.f - cosTheta, 5) + k*k)) /
         ((eta+1.f)*(eta+1.f) + k*k);
@@ -41,8 +40,8 @@ inline const vec3 halfVector(const vec3& wo, const vec3& wi){
     return normalize(wo + wi);
 }
 
-inline const vec3 reflect(const vec3& wo){
-    return vec3(-wo.x(), wo.y(), -wo.z());
+inline const vec3 reflect(const vec3& w) {
+    return vec3(-w.x, w.y, -w.z);
 }
 
 class bxdf;
@@ -68,16 +67,16 @@ class bsdf {
         }
 
         inline static const float cosTheta(const vec3& v){
-            return v.y();
+            return v.y;
         }
 
         inline static const float cos2Theta(const vec3& v){
-            return v.y()*v.y();
+            return v.y*v.y;
         }
 
         inline static const float sinTheta(const vec3& v){
             // sintheta(v) = sqrt(1 - cos2theta(v))
-            return sqrtf(max(0.f, 1.f - v.y()*v.y()));
+            return sqrtf(max(0.f, 1.f - v.y*v.y));
         }
 
         inline static const float sin2Theta(const vec3& v){
@@ -323,7 +322,7 @@ class aniso : public microfacetDistribution {
 
     private:
         inline const float exponent(const vec3& wh) const {
-            return ((nu * wh.x() * wh.x()) + (nv * wh.z() * wh.z())) / (1.f - wh.y() * wh.y());
+            return ((nu * wh.x * wh.x) + (nv * wh.z * wh.z)) / (1.f - wh.y * wh.y);
         }
 
         float nu, nv;

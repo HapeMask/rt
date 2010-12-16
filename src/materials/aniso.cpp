@@ -35,7 +35,7 @@ void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
     wi = -wo + 2.f * fabs(dot(wo, wh)) * wh;
     pd = pdf(wo, wi);
 
-    if(wo.y() * wi.y() < 0.f){
+    if(wo.y * wi.y < 0.f){
 		pd = 0.f;
     }
 }

@@ -79,7 +79,7 @@ const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     rgbColor f(0.f);
 
     // Ignore BTDFs if the vectors are on the same side of the surface. 
-    if(wo.y() * wi.y() > 0){
+    if(wo.y * wi.y > 0){
         type = bxdfType(type & ~TRANSMISSION);
     }else{
         type = bxdfType(type & ~REFLECTION);
