@@ -31,6 +31,28 @@ bsdf::~bsdf(){
     }
 }
 
+void bsdf::updateFromUVTexture(const vec2& uv) {
+    if(diffRef) {
+        diffRef->updateFromUVTexture(uv);
+    }
+    if(glossRef) {
+        glossRef->updateFromUVTexture(uv);
+    }
+    if(specRef) {
+        specRef->updateFromUVTexture(uv);
+    }
+
+    if(diffTra) {
+        diffTra->updateFromUVTexture(uv);
+    }
+    if(glossTra) {
+        glossTra->updateFromUVTexture(uv);
+    }
+    if(specTra) {
+        specTra->updateFromUVTexture(uv);
+    }
+}
+
 void bsdf::addBxdf(bxdf* b){
     switch((int)b->getType()){
         case (SPECULAR | TRANSMISSION):
@@ -70,7 +92,7 @@ void bsdf::addBxdf(bxdf* b){
             glossRef = b;
             break;
         default:
-            cerr << "Invalid type added." << endl;
+            cerr << "Invalid type added: " << b->getType() << endl;
             break;
     }
 }
@@ -138,7 +160,8 @@ const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
 }
 
 const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
-        const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& p) const{
+        const vec3& wo, vec3& wi,
+        bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;
     rgbColor f(0.f);
     vector<bxdf*> matches;
@@ -170,7 +193,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
 
     if(matches.size() == 0){
         p = 0.f;
-        return 0.f;
+        return rgbColor(0.f);
     }
 
     /*

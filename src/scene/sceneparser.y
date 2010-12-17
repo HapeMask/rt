@@ -29,6 +29,7 @@
     #include "light/arealight.hpp"
 
     #include "materials/material.hpp"
+    #include "materials/texture.hpp"
 
     #include "datastructs/arraylist.hpp"
 
@@ -69,6 +70,7 @@
 %token BVH OCTREE DEFAULT
 %token WHITTED PATH BIDIR
 %token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET WARD
+%token IMGTEX
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
 %token AREA POINT
@@ -216,7 +218,8 @@ bsdf:
 
 lambert :
         LAMBERT '(' FLOAT ',' FLOAT ',' FLOAT ')'
-        { $$ = new lambertianBrdf(rgbColor($3, $5, $7)); }
+        { texture2DPtr p(new colorTexture2D("/Users/hape/checkerboard.gif"));;
+        $$ = new lambertianBrdf(rgbColor($3, $5, $7)); }
         ;
 
 phong :

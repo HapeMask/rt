@@ -13,7 +13,7 @@ const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const 
         const int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
         return sampleDirect(p, wo, isect, bsdf, *parent.getLight(i).get()) * parent.numLights();
     }else{
-        return 0.f;
+        return rgbColor(0.f);
     }
 }
 
@@ -27,7 +27,7 @@ const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const
 
         return L / parent.numLights();
     }else{
-        return 0.f;
+        return rgbColor(0.f);
     }
 }
 
@@ -75,7 +75,8 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
     // Evaluate the BSDF using a direction sampled from the BSDF.
     if(!li.isPointSource()){
         bxdfType sampledType;
-        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),
+                wo, wi, bxdfType(ALL & ~SPECULAR), sampledType, bsdfPdf);
         wi = normalize(bsdfToWorld(wi, isect));
 
         if(!f.isBlack() && bsdfPdf > 0.f){

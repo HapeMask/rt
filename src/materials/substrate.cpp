@@ -17,7 +17,7 @@ const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& 
         distrib->sampleF(u, u1, wo, wi, pd);
 
         if(wo.y * wi.y < 0){
-            return 0.f;
+            return rgbColor(0.f);
         }
     }
 

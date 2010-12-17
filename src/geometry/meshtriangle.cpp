@@ -14,11 +14,14 @@
 #include <cmath>
 
 meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMesh* p) :
-    primitive(aabb(
-                    vec3(minps(minps(p->pointLookup(a).getSIMD(), p->pointLookup(b).getSIMD()), p->pointLookup(c).getSIMD())),
-                    vec3(maxps(maxps(p->pointLookup(a).getSIMD(), p->pointLookup(b).getSIMD()), p->pointLookup(c).getSIMD()))
-                ), p
-            ), hasVertNormals(false), hasUVs(false), meshParent(p) {
+    primitive(
+            aabb(
+                min(min(p->pointLookup(a), p->pointLookup(b)), p->pointLookup(c)),
+                max(max(p->pointLookup(a), p->pointLookup(b)), p->pointLookup(c))
+                ),
+            p
+            ),
+    hasVertNormals(false), hasUVs(false), meshParent(p) {
 
 	points[0] = a;
 	points[1] = b;

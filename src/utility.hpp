@@ -1,13 +1,17 @@
 #pragma once
 
+#include <cmath>
+#include <iostream>
+using namespace std;
+
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "acceleration/intersection.hpp"
 
-#include <cmath>
-#include <iostream>
-using namespace std;
+#ifdef HAVE_SSE2
+#include "mathlib/sse.hpp"
+#endif
 
 inline const float radians(const float& deg){
 	return (deg / 180.f) * PI;
@@ -92,17 +96,22 @@ inline void sphericalToDirection(vec3& v, const float& sinTheta, const float& co
 /**
  * Fast Float/Int conversion from PBRT.
  */
+//2^52 * 1.5, uses limited precision to floor.
 const double doublemagic = 6755399441055744.0;
-const double doublemagicroundeps = .5-1.4e-11;
 inline int Round2Int(double val) {
-	//2^52 * 1.5, uses limited precision to floor.
 	val	= val + doublemagic;
 	return (reinterpret_cast<long*>(&val))[0];
 }
 
+const double doublemagicroundeps = .5-1.4e-11;
+#ifdef HAVE_SSE2
+inline int Float2Int(const float val) {
+    return float2int(val);
+#else
 inline int Float2Int(const double val) {
 	return (val<0) ?  Round2Int(val+doublemagicroundeps) :
 		   Round2Int(val-doublemagicroundeps);
+#endif
 }
 
 inline int Floor2Int(const double val) {

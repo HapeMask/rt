@@ -1,12 +1,15 @@
 #pragma once
 
+#include <tr1/memory>
+using std::tr1::shared_ptr;
+
 #include <cmath>
 using namespace std;
 
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
-#include <tr1/memory>
-using std::tr1::shared_ptr;
+#include "mathlib/constants.hpp"
+#include "texture.hpp"
 
 enum bxdfType {
     REFLECTION =        1<<0,
@@ -28,8 +31,8 @@ enum fresnelType {
 // Utility Functions
 //
 inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, const float& cosTheta){
-    return ((eta-1.f)*(eta-1.f) + (4 * eta * powf(1.f - cosTheta, 5) + k*k)) /
-        ((eta+1.f)*(eta+1.f) + k*k);
+    return rgbColor(((eta-1.f)*(eta-1.f) + (4 * eta * powf(1.f - cosTheta, 5) + k*k)) /
+        ((eta+1.f)*(eta+1.f) + k*k));
 }
 
 inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
@@ -50,13 +53,16 @@ class bsdf {
     public:
         bsdf() : diffTra(NULL), diffRef(NULL),
         glossTra(NULL), glossRef(NULL),
-        specTra(NULL), specRef(NULL) {}
+        specTra(NULL), specRef(NULL) {
+        }
+
         ~bsdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
-        const rgbColor sampleF(const float& u0, const float& u1, const float& u2,
-                const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType, float& pd) const;
+        const rgbColor sampleF(const float& u0, const float& u1, const float&
+                u2, const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType,
+                float& pd) const;
 
         void addBxdf(bxdf* b);
 
@@ -84,6 +90,8 @@ class bsdf {
             return 1.f - c*c;
         }
 
+        void updateFromUVTexture(const vec2& uv);
+
     private:
         bxdf* diffTra, *diffRef,
              *glossTra, *glossRef;
@@ -93,10 +101,11 @@ class bsdf {
 
 class bxdf {
     public:
-        bxdf(const bxdfType t) : type(t) {}
+        bxdf(const bxdfType t) : type(t), hasTexture(false) {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const = 0;
-        virtual const rgbColor sampleF(const float& u1, const float& u2, const vec3& wo, vec3& wi, float& pd) const = 0;
+        virtual const rgbColor sampleF(const float& u1, const float& u2,
+                const vec3& wo, vec3& wi, float& pd) const = 0;
         virtual ~bxdf() {}
 
         const bxdfType getType() const {
@@ -109,8 +118,23 @@ class bxdf {
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
 
+        void setTexture(textureSlot slot, texture2DPtr p) {
+            hasTexture = true;
+            textureSlots[slot] = p;
+        }
+
+        virtual void updateFromUVTexture(const vec2& uv) = 0;
+
+    protected:
+        const rgbColor textureLookup(const textureSlot& slot, const vec2& uv) const {
+            return textureSlots[slot]->lookup(uv.s, uv.t);
+        }
+
+        bool hasTexture;
+
     private:
         const bxdfType type;
+        texture2DPtr textureSlots[NUM_TEXTURE_SLOTS];
 };
 
 class specularBxdf : public bxdf {
@@ -122,22 +146,28 @@ class specularBxdf : public bxdf {
             return rescaledApproxFresnel(ior, k, cosThetaO);
         }
 
+        virtual void updateFromUVTexture(const vec2& uv) {}
+
     protected:
+
         const fresnelType fType;
-        const float ior;
-        const float k;
+        float ior;
+        float k;
 };
 
 class lambertianBrdf : public bxdf {
     public:
         lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
+        lambertianBrdf(const rgbColor& r, texture2DPtr diffuseTex);
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
+        virtual void updateFromUVTexture(const vec2& uv);
+        rgbColor rOverPi;
+
     private:
-        const rgbColor rOverPi;
 };
 
 class specularBrdf : public specularBxdf {
@@ -148,7 +178,7 @@ class specularBrdf : public specularBxdf {
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return 0.f;
+            return rgbColor(0.f);
         }
 
         inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
@@ -167,7 +197,7 @@ class specularBtdf : public specularBxdf {
 
         virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
         inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return 0.f;
+            return rgbColor(0.f);
         }
 
         inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
@@ -187,6 +217,8 @@ class phongBrdf : public bxdf {
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const; 
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
+
+        virtual void updateFromUVTexture(const vec2& uv) {}
 
     private:
         rgbColor ks;
@@ -250,6 +282,8 @@ class microfacetBrdf : public bxdf {
             delete distrib;
         }
 
+        virtual void updateFromUVTexture(const vec2& uv) {}
+
     private:
         const float eta, k;
         const microfacetDistribution* distrib;
@@ -279,6 +313,8 @@ class microfacetBtdf : public bxdf {
 
             const rgbColor Ft = rgbColor(1.f) - rescaledApproxFresnel(eta, k, cosThetaH);
         }
+
+        virtual void updateFromUVTexture(const vec2& uv) {}
 
     private:
 };
@@ -386,6 +422,8 @@ class newWard : public bxdf {
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
+        virtual void updateFromUVTexture(const vec2& uv) {}
+
 	private:
 		rgbColor Rs;
 		float alpha, beta;
@@ -407,6 +445,8 @@ class substrate : public bxdf {
         ~substrate(){
             delete distrib;
         }
+
+        virtual void updateFromUVTexture(const vec2& uv) {}
 
     private:
         rgbColor Rd, Rs;

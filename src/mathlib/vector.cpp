@@ -8,13 +8,14 @@
 using namespace std;
 
 vec3::vec3(const point3& p){
-	/*
-	values[0] = p.x;
-	values[1] = p.y;
-	values[2] = p.z;
-    values[3] = 0;
-	 */
+#ifdef HAVE_SSE2
 	vector = p.vector;
+#else
+	x = p.x;
+	y = p.y;
+	z = p.z;
+    values[3] = 0;
+#endif
 }
 
 ostream& operator<<(ostream& out, const vec2& x){

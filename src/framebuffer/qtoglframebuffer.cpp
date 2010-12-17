@@ -37,9 +37,11 @@ GLfloat shine = 100;
 qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* parent) :
     QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), parent),
     framebuffer(s, bpp), vbo(0), sceneData(NULL),
-    viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()), lastPos(0.f, 0.f),
+    viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()),
+    lastPos(0.f, 0.f),
     camPos(s.getCamera().getPosition()), camForward(s.getCamera().getLook()),
-    pixelsSampled(0), iterations(0), showUpdates(false), rendered(false),
+    pixelsSampled(0), iterations(0),
+    showUpdates(false), rendered(false),
     imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),
     paused(false)
 {
@@ -57,9 +59,9 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
             sceneData,
             GL_STATIC_DRAW);
 
-    buffer = new rgbColor[width_*height_];
-    sumOfSquares = new rgbColor[width_*height_];
-    samplesPerPixel = new int[width_*height_];
+    buffer = new rgbColor[_width*_height];
+    sumOfSquares = new rgbColor[_width*_height];
+    samplesPerPixel = new int[_width*_height];
 }
 
 qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
@@ -70,11 +72,11 @@ qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
 }
 
 QSize qtOpenGLFramebuffer::minimumSizeHint() const {
-    return QSize(width_, height_);
+    return QSize(_width, _height);
 }
 
 QSize qtOpenGLFramebuffer::sizeHint() const {
-    return QSize(width_, height_);
+    return QSize(_width, _height);
 }
 
 void qtOpenGLFramebuffer::initializeGL(){
@@ -196,7 +198,7 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
 void qtOpenGLFramebuffer::positionCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    gluPerspective(fovy, width_ / height_, 0.5, 100);
+    gluPerspective(fovy, _width / _height, 0.5, 100);
 
 	// Construct quaternions for composite rotation around
 	// Y and X axes.
@@ -224,7 +226,7 @@ void qtOpenGLFramebuffer::clearBuffers() {
     imgBuffer.fill(0);
 
     const rgbColor black(0.f);
-    for(int i=0; i<width_*height_; ++i){
+    for(int i=0; i<_width*_height; ++i){
         buffer[i] = black;
         samplesPerPixel[i] = 0;
     }
@@ -362,7 +364,7 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
 #pragma omp critical
 #endif
             {
-                painter.eraseRect(blockCornerX, blockCornerY, width_, height_);
+                painter.eraseRect(blockCornerX, blockCornerY, _width, _height);
                 painter.fillRect(
                         blockCornerX, blockCornerY,
                         blockWidth, blockHeight, Qt::green);
@@ -398,14 +400,14 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
         ((now.tv_usec - start.tv_usec) / 1e6);
 
     ++iterations;
-    emit iterated(iterations, (float)(width_*height_)/timeElapsed);
+    emit iterated(iterations, (float)(_width*_height)/timeElapsed);
 
     blocksUsed = 0;
     rendered = true;
 }
 
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
-    const size_t offset = y * width_ + x;
+    const size_t offset = y * _width + x;
     buffer[offset] += c;
     sumOfSquares[offset] += c * c;
     ++samplesPerPixel[offset];
@@ -456,8 +458,8 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
 #ifdef RT_MULTITHREADED
 #pragma omp parallel for collapse(2)
 #endif
-    for(int y = 0; y <height_; y++){
-        for(int x = 0; x < width_; x++){
+    for(int y = 0; y <_height; y++){
+        for(int x = 0; x < _width; x++){
             setPixel(x, y,
                     clamp(buffer[y * framebuffer::width() + x] / (float)samplesPerPixel[y * framebuffer::width() + x]));
         }

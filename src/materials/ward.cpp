@@ -11,7 +11,7 @@
 const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     if(wo.y < 0.f) {
         pd = 0.f;
-        return 0.f;
+        return rgbColor(0.f);
     }
 
 	const float phi = isIsotropic ? 
@@ -36,7 +36,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
     wi = 2.f * dot(wo, wh) * wh - wo;
     if(wi.y < 0.f){
         pd = 0.f;
-        return 0.f;
+        return rgbColor(0.f);
     }
 
     // For the derivation of this PDF and the fact that it isn't the one
@@ -49,7 +49,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
 
 const rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
 	if(wo.y*wi.y < 0.f){
-		return 0.f;
+		return rgbColor(0.f);
 	}
 
 	const vec3 wh = halfVector(wo, wi);

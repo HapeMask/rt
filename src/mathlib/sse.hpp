@@ -15,6 +15,7 @@
 #define divps           _mm_div_ps
 #define addps           _mm_add_ps
 #define subps           _mm_sub_ps
+#define float2int(f)    _mm_cvtss_si32(_mm_load_ss(&(f)))
 #define rotatelps(ps)   _mm_shuffle_ps((ps),(ps), 0x39)
 #define muxhps(low,high) _mm_movehl_ps((low),(high))
 

@@ -78,6 +78,10 @@ class point2 {
                 float x;
                 float y;
             };
+            struct {
+                float s;
+                float t;
+            };
         };
 };
 
@@ -164,5 +168,21 @@ class point3 {
             };
         };
 };
+
+inline const point3 min(const point3& a, const point3& b) {
+#ifdef HAVE_SSE2
+    return point3(minps(a.getSIMD(), b.getSIMD()));
+#else
+    return point3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
+#endif
+}
+
+inline const point3 max(const point3& a, const point3& b) {
+#ifdef HAVE_SSE2
+    return point3(maxps(a.getSIMD(), b.getSIMD()));
+#else
+    return point3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
+#endif
+}
 
 ostream& operator<<(ostream& out, const point3& p);

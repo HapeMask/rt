@@ -84,6 +84,11 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
         }
     }
 
+    // Consume any intermediate info.
+    while(!file.eof() && chunk != "f"){
+        file >> chunk;
+    }
+
     vector<vector<meshTrianglePtr> > vertPolys(points.size());
 
     // Read in the faces and construct the polys.

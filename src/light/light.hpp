@@ -17,7 +17,7 @@ class light {
 	public:
 		light(const point3& p, const float& pow, const rgbColor& c) : location(p), power(pow), lightColor(c) {
             bsdfPtr b(new bsdf());
-            b->addBxdf(new lambertianBrdf(1.f));
+            b->addBxdf(new lambertianBrdf(rgbColor(1.f)));
             mat = materialPtr(new material(b));
         }
 

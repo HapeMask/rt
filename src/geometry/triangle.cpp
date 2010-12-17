@@ -14,11 +14,8 @@
 #include <cmath>
 
 triangle::triangle(const point3& a, const point3& b, const point3& c) :
-    primitive(aabb(
-                    vec3(minps(minps(a.getSIMD(), b.getSIMD()), c.getSIMD())),
-                    vec3(maxps(maxps(a.getSIMD(), b.getSIMD()), c.getSIMD()))
-                )
-            ), B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
+    primitive(aabb(min(min(a, b), c), max(max(a, b), c))),
+    B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
 
 	points[0] = a;
 	points[1] = b;

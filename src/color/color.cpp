@@ -8,6 +8,10 @@ rgbColor::rgbColor(const float& f) : r(f), g(f), b(f)
 rgbColor::rgbColor(const float& r, const float& g, const float& b) : r(r), g(g), b(b)
 {}
 
+rgbColor::rgbColor(const int& r, const int& g, const int& b) :
+    r(r/255.f), g(g/255.f), b(b/255.f)
+{}
+
 rgbColor::rgbColor(const color& c) : r(c.red()), g(c.green()), b(c.blue())
 {}
 

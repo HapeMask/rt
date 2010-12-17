@@ -20,22 +20,22 @@ const rgbColor whittedRayTracer::L(const ray& r) const{
 const int nsamp = 512*512*16*2;
 const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(depth > MAX_DEPTH){
-		return 0.f;
+		return rgbColor(0.f);
 	}
 
 	const intersection isect = parent.intersect(r);
     //return rgbColor((float)isect.debugInfo / 300.f, 0.f,0.f);
 
 	if(!isect.hit){
-        return 0.f;
+        return rgbColor(0.f);
 	}else if(isect.li != NULL){
         return isect.li->L(r);
     }
 
     // Handle emissive and specular materials.
-	const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
+	material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
 	const vec3& normal = isect.shadingNormal;
-	const bsdf& bsdf = mat.getBsdf();
+	const bsdf& bsdf = mat.getBsdf(isect.uv);
     const vec3 wo = worldToBsdf(-r.direction, isect);
 
 	bxdfType sampledType;
@@ -54,7 +54,6 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
             const float lightDist = lightDir.length();
             lightDir = normalize(lightDir);
-
 
             // Test for shadowing early.
             ray shadowRay(r.origin, lightDir);
@@ -91,7 +90,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     vec3 specDir;
 	float pdf;
     const rgbColor fr =
-        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
+        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
 
     if(!fr.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
@@ -100,7 +100,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     }
 
     const rgbColor ft =
-        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
+        bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
 
     if(!ft.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);

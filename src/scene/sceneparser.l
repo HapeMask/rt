@@ -31,6 +31,7 @@
 "flat"                                  { return Bison::Parser::token::FLAT; }
 
 "material"                              { return Bison::Parser::token::MATERIAL; }
+"imageTexture"                          { return Bison::Parser::token::IMGTEX; }
 "emissive"                              { return Bison::Parser::token::EMISSIVE; }
 "blinn"                                 { return Bison::Parser::token::BLINN; }
 "aniso"                                 { return Bison::Parser::token::ANISO; }

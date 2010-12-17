@@ -20,6 +20,10 @@
 #include "tracer/tracer.hpp"
 #include "scene/sceneloader.hpp"
 
+#include "materials/texture.hpp"
+#include "utility.hpp"
+#include <QImage>
+
 using namespace std;
 
 int main(int argc, char* args[]){

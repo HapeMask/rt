@@ -2,10 +2,10 @@
 
 #include <tr1/memory>
 
-#include "bsdf.hpp"
 #include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
+#include "bsdf.hpp"
 
 using namespace std;
 using tr1::shared_ptr;
@@ -16,10 +16,14 @@ class material {
         material(const rgbColor& c, const float& pow);
 
         const rgbColor Le() const;
-        const rgbColor sample(const point3& p, const vec3& wo, const vec3& wi, bxdfType type) const;
 
         inline const bsdf& getBsdf() const {
             return *b.get();
+        }
+
+        inline const bsdf& getBsdf(const vec2& uv) {
+            b->updateFromUVTexture(uv);
+            return *b;
         }
 
         inline const bool isEmissive(){

@@ -12,10 +12,8 @@
 #include "framebuffer.hpp"
 #include "scene/scene.hpp"
 #include "mathlib/vector.hpp"
-//#include "qtgui/qtmainwin.hpp"
 
 class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
-    friend class rtGUI;
     // Only if you use signals/slots.
     Q_OBJECT
 
@@ -27,10 +25,6 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         QSize sizeHint() const;
 
         virtual void render();
-
-		inline virtual const bool readyForDrawing() const {
-            return true;
-        }
 
         inline const uint64_t& getIterations() const {
             return iterations;

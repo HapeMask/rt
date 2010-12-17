@@ -52,10 +52,10 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
             L += throughput * isect.li->L(rOrig);
         }
 
-        const material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
+        material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
         const vec3& normal = isect.shadingNormal;
-        const bsdf& bsdf = mat.getBsdf();
         const vec3 wo = worldToBsdf(-r.direction, isect);
+        const bsdf& bsdf = mat.getBsdf(isect.uv);
 
 		// Perform explicit direct lighting computations.
 		//
@@ -74,8 +74,10 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 
 		// Only sample non-specular reflection on the first bounce, leave the
 		// 1st-bounce specular hits for the recursive step below.
-		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ? bxdfType(ALL & ~SPECULAR) : ALL;
-        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(), wo, wi, reflectionType, sampledType, pdf);
+		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ?
+            bxdfType(ALL & ~SPECULAR) : ALL;
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),
+                wo, wi, reflectionType, sampledType, pdf);
         if(f.isBlack() && pdf != 0){
             return rgbColor(0.f);
         }
@@ -86,7 +88,8 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				vec3 specDir;
 
 				const rgbColor fr =
-					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
+					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                            wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
 
 				if(!fr.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);
@@ -95,7 +98,8 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				}
 
 				const rgbColor ft =
-					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(), wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
+					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                            wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
 
 				if(!ft.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);

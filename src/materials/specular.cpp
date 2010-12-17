@@ -32,7 +32,7 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     const float sin2ThetaT = eta2 * bsdf::sin2Theta(wo);
     // Total Internal Reflection
     if(sin2ThetaT > 1.f){
-        return 0.f;
+        return rgbColor(0.f);
     }
 
     // Flip the normal if we're entering the surface.

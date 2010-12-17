@@ -4,15 +4,16 @@
 
 ostream& operator<<(ostream& out, const aabb& b){
 	out << "AABB:" <<
-		"\n\tMin: " << b.min() <<
-		"\n\tMax: " << b.max();
+		"\n\tMin: " << b.min <<
+		"\n\tMax: " << b.max;
 
 	return out;
 }
 
 const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
-    const __m128 boxMin = _min.getSIMD();
-    const __m128 boxMax = _max.getSIMD();
+#ifdef HAVE_SSE2
+    const __m128 boxMin = min.getSIMD();
+    const __m128 boxMax = max.getSIMD();
     const __m128 pos = r.origin.getSIMD();
     const __m128 invDir = r.invDir.getSIMD();
 
@@ -38,14 +39,37 @@ const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
     storess(lmax, &tmax);
 
     return ret;
+#else
+    float t0 = r.tMin, t1 = r.tMax;
+    for(int i=0; i<3; ++i){
+        float tNear = (min(i) - r.origin(i)) * r.invDir(i);
+        float tFar = (max(i) - r.origin(i)) * r.invDir(i);
+
+        if(tNear > tFar) {
+            const float temp = tNear;
+            tNear = tFar;
+            tFar = temp;
+        }
+
+        t0 = tNear > t0 ? tNear : t0;
+        t1 = tFar < t1 ? tFar : t1;
+
+        if(t0 > t1) {
+            return false;
+        }
+    }
+
+    return true;
+#endif
 }
 
 const bool aabb::intersect(const aabb& box) const {
-    const __m128 aMin = _min.getSIMD();
-    const __m128 aMax = _max.getSIMD();
+#ifdef HAVE_SSE2
+    const __m128 aMin = min.getSIMD();
+    const __m128 aMax = max.getSIMD();
 
-    const __m128 bMin = box.min().getSIMD();
-    const __m128 bMax = box.max().getSIMD();
+    const __m128 bMin = box.min.getSIMD();
+    const __m128 bMax = box.max.getSIMD();
 
     const __m128 test1 = _mm_cmple_ps(aMin, bMax);
     const __m128 test2 = _mm_cmpge_ps(aMax, bMin);
@@ -55,4 +79,6 @@ const bool aabb::intersect(const aabb& box) const {
     const int res2 = _mm_movemask_ps(test2) & 0x7;
 
     return (res1 && res2);
+#else
+#endif
 }

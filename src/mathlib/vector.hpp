@@ -1,8 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <cmath>
 #include <cassert>
-#include <string.h>
+
 #ifdef HAVE_SSE2
 #include "sse.hpp"
 #endif
@@ -120,6 +121,10 @@ class vec2 {
             struct {
                 float x;
                 float y;
+            };
+            struct {
+                float s;
+                float t;
             };
         };
 };
@@ -291,13 +296,21 @@ class vec3 {
                 float y;
                 float z;
             };
+            struct {
+                float s;
+                float t;
+                float r;
+            };
         };
 };
 
 class vec4 {
 	public:
 		vec4(){
-            memset(values, 0, 16);
+			values[0] = 0.f;
+			values[1] = 0.f;
+			values[2] = 0.f;
+			values[3] = 0.f;
 		}
 
 		vec4(const float& x, const float& y, const float& z, const float& w){
@@ -501,6 +514,22 @@ inline vec3& operator*=(const float& x, vec3& u){
 
 inline const vec3 operator/(const float& x, const vec3& v){
 	return vec3(x / v(0), x / v(1), x / v(2));
+}
+
+inline const vec3 min(const vec3& a, const vec3& b) {
+#ifdef HAVE_SSE2
+    return vec3(minps(a.getSIMD(), b.getSIMD()));
+#else
+    return vec3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
+#endif
+}
+
+inline const vec3 max(const vec3& a, const vec3& b) {
+#ifdef HAVE_SSE2
+    return vec3(maxps(a.getSIMD(), b.getSIMD()));
+#else
+    return vec3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
+#endif
 }
 
 ostream& operator<<(ostream& out, const vec2& x);

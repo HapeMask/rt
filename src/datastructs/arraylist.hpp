@@ -22,7 +22,7 @@ class arraylist{
 
         void add(const T& x);
 
-        T remove(const int& index);
+        T remove(const size_t& index);
         T pop(){
             remove(_size-1);
         }
@@ -34,8 +34,8 @@ class arraylist{
         arraylist<T>& operator=(const arraylist<T>& list);
         arraylist<T>& operator=(const std::vector<T>& vec);
 
-        T& operator[](const int& index);
-        const T& operator[](const int& index) const;
+        T& operator[](const size_t& index);
+        const T& operator[](const size_t& index) const;
 
         class iterator : public std::iterator<std::random_access_iterator_tag, T>{
             public:
@@ -156,7 +156,7 @@ arraylist<T>::arraylist(const std::vector<T>& vec){
     _maxsize = vec.capacity();
     data = new T[_maxsize];
 
-    for(int i=0; i<vec.size(); ++i){
+    for(size_t i=0; i<vec.size(); ++i){
         data[i] = vec[i];
     }
 }
@@ -169,7 +169,7 @@ arraylist<T>& arraylist<T>::operator=(const arraylist<T>& list){
     _maxsize = list._maxsize;
     data = new T[_maxsize];
 
-    for(int i=0; i<list.size(); ++i){
+    for(size_t i=0; i<list.size(); ++i){
         data[i] = list.data[i];
     }
 
@@ -184,7 +184,7 @@ arraylist<T>& arraylist<T>::operator=(const std::vector<T>& vec){
     _maxsize = vec.capacity();
     data = new T[_maxsize];
 
-    for(int i=0; i<vec.size(); ++i){
+    for(size_t i=0; i<vec.size(); ++i){
         data[i] = vec[i];
     }
 
@@ -192,7 +192,7 @@ arraylist<T>& arraylist<T>::operator=(const std::vector<T>& vec){
 }
 
 template <typename T>
-T& arraylist<T>::operator[](const int& index){
+T& arraylist<T>::operator[](const size_t& index){
 #ifdef DEBUG
     assert(index < _size);
 #endif
@@ -200,7 +200,7 @@ T& arraylist<T>::operator[](const int& index){
 }
 
 template <typename T>
-const T& arraylist<T>::operator[](const int& index) const{
+const T& arraylist<T>::operator[](const size_t& index) const{
 #ifdef DEBUG
     assert(index < _size);
 #endif
@@ -218,13 +218,13 @@ void arraylist<T>::add(const T& x){
 }
 
 template <typename T>
-T arraylist<T>::remove(const int& index){
+T arraylist<T>::remove(const size_t& index){
 #ifdef DEBUG
     assert(index < _size);
 #endif
 
     const T x = data[index];
-    for(int i=index; i<_size; ++i){
+    for(size_t i=index; i<_size; ++i){
         data[i] = data[i+1];
     }
 

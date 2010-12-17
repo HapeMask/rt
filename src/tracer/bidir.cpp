@@ -18,7 +18,7 @@ const rgbColor bdpt::L(const ray& r) const {
 	}
 
     // Add the eye point first.
-    const pathPoint p0 = {r.origin, 0.f, 1.f, noIntersect};
+    const pathPoint p0 = {r.origin, rgbColor(0.f), 1.f, noIntersect};
     eyePath.push_back(p0);
     createPath(eyeRay, eyePath);
 
@@ -44,7 +44,7 @@ const rgbColor bdpt::L(const ray& r) const {
 	// Add the sampled point on the light as the start of the light path.
 	intersection iL(noIntersect);
 	iL.li = parent.getLight(i).get();
-	const pathPoint lp0 = {p, 0.f, 1.f, iL};
+	const pathPoint lp0 = {p, rgbColor(0.f), 1.f, iL};
 	lightPath.push_back(lp0);
 
     ray lightRay(p, wi);
@@ -55,7 +55,7 @@ const rgbColor bdpt::L(const ray& r) const {
         eyePdf *= eyePath[j].pdf;
     }
 
-    rgbColor L = 0.f;
+    rgbColor L(0.f);
     for(int lightIndex = lightPath.size()-1; lightIndex >= 1; --lightIndex){
         ray rConnector(eyePath.back().p, normalize(lightPath[lightIndex].p - eyePath.back().p));
         rConnector.tMax = (lightPath[lightIndex].p - eyePath.back().p).length() - EPSILON;
@@ -108,7 +108,8 @@ void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
 
         // Sample the BSDF to find the next direction.
         bxdfType sampledType;
-        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),wo, wi, ALL, sampledType, pdf);
+        const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),
+                wo, wi, ALL, sampledType, pdf);
 
         pathPoint p = {r.origin, f * fabs(dot(wi, normal)) / pdf, curPdf, isect, sampledType};
         points.push_back(p);
@@ -137,7 +138,7 @@ void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
 
 const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
     // Initial direction is always the ray from the eye.
-    rgbColor throughput = 1.f, L = 0.f;
+    rgbColor throughput(1.f), L(0.f);
     bool lastBounceWasSpecular = false;
 
     for(size_t i=1; i<points.size()-2; ++i){

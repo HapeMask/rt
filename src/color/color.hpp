@@ -41,10 +41,12 @@ class color {
 
 class rgbColor : public color {
 	public:
-        rgbColor(const float& f);
 		rgbColor() : r(0), g(0), b(0) {}
 		rgbColor(const float& r, const float& g, const float& b);
+		rgbColor(const int& r, const int& g, const int& b);
 		rgbColor(const color& c);
+
+        explicit rgbColor(const float& f);
 
 		const rgbColor inverse() const;
 		virtual void invert();
@@ -156,6 +158,10 @@ inline rgbColor& operator*=(const float& f, rgbColor& c){
 
 inline const rgbColor operator*(const float& f, const rgbColor& c){
     return rgbColor(f*c.r, f*c.g, f*c.b);
+}
+
+inline const rgbColor lerp(const rgbColor& a, const rgbColor& b, const float& alpha) {
+    return (1.f - alpha) * a + alpha * b;
 }
 
 ostream& operator<<(ostream& out, const color& c);

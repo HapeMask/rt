@@ -64,27 +64,27 @@ octreeNode* octree::_build(const int depth, const aabb& box,
     aabb boxes[8];
     for(int i=0; i<8; ++i){
         if(i & 1){
-            boxes[i].setFront(box.mid().z);
-            boxes[i].setBack(box.max().z);
+            boxes[i].setFront(box.mid.z);
+            boxes[i].setBack(box.max.z);
         }else{
-            boxes[i].setFront(box.min().z);
-            boxes[i].setBack(box.mid().z);
+            boxes[i].setFront(box.min.z);
+            boxes[i].setBack(box.mid.z);
         }
 
         if(i & 2){
-            boxes[i].setTop(box.max().y);
-            boxes[i].setBottom(box.mid().y);
+            boxes[i].setTop(box.max.y);
+            boxes[i].setBottom(box.mid.y);
         }else{
-            boxes[i].setTop(box.mid().y);
-            boxes[i].setBottom(box.min().y);
+            boxes[i].setTop(box.mid.y);
+            boxes[i].setBottom(box.min.y);
         }
 
         if(i & 4){
-            boxes[i].setLeft(box.mid().x);
-            boxes[i].setRight(box.max().x);
+            boxes[i].setLeft(box.mid.x);
+            boxes[i].setRight(box.max.x);
         }else{
-            boxes[i].setLeft(box.min().x);
-            boxes[i].setRight(box.mid().x);
+            boxes[i].setLeft(box.min.x);
+            boxes[i].setRight(box.mid.x);
         }
     }
 
@@ -155,13 +155,13 @@ const intersection octree::_intersect(const octreeNode* node, ray& r) const{
     // Check the boxes that the ray hits in the order that it hits them.
     while(!isect.hit && i < 3){
         curBox = 0;
-        if(p.x > box.mid().x){
+        if(p.x > box.mid.x){
             curBox |= 4;
         }
-        if(p.y > box.mid().y){
+        if(p.y > box.mid.y){
             curBox |= 2;
         }
-        if(p.z > box.mid().z){
+        if(p.z > box.mid.z){
             curBox |= 1;
         }
 

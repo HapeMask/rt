@@ -3,27 +3,15 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG = qt release stl
-CONFIG += thread mmx sse sse2
+CONFIG = qt debug stl opengl
 QT += opengl
 
 TARGET = rt
 
-DEFINES += GL_GLEXT_PROTOTYPES \
-    RT_NO_EXECPTIONS \
-    RT_MULTITHREADED \
-    HAVE_SSE2 \
-    MEXP=19937 \
-    RT_USE_QT
+DEFINES += GL_GLEXT_PROTOTYPES MEXP=19937 DEBUG
 
-QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
-	-msse4 -msse4.1 -msse4.2 -ffast-math \
-	-mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
-	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
-	-fno-exceptions -fopenmp \
-	-fgcse-sm -fgcse-las
+QMAKE_CXXFLAGS = -g -O0 -Wall -march=native
 
-QMAKE_LFLAGS += -fwhole-program -fopenmp $(CXXFLAGS)
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
 INCLUDEPATH += ../src \
@@ -78,7 +66,6 @@ HEADERS += ../src/utility.hpp \
            ../src/geometry/trianglemesh.hpp \
            ../src/light/light.hpp \
            ../src/materials/bsdf.hpp \
-           ../src/materials/texture.hpp \
            ../src/materials/material.hpp \
            ../src/mathlib/constants.hpp \
            ../src/mathlib/matrix.hpp \
@@ -125,7 +112,6 @@ SOURCES += ../src/main.cpp \
            ../src/light/spherelight.cpp \
            ../src/light/pointlight.cpp \
            ../src/materials/aniso.cpp \
-           ../src/materials/texture.cpp \
            ../src/materials/beckmann.cpp \
            ../src/materials/blinn.cpp \
            ../src/materials/bsdf.cpp \

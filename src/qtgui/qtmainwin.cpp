@@ -34,6 +34,7 @@ rtGUI::rtGUI(scene& s, QWidget* parent) : QMainWindow(parent),
 
     win->setLayout(hbox);
     setCentralWidget(win);
+    fb->setFocus(Qt::MouseFocusReason);
 }
 
 void rtGUI::iterated(uint64_t iterations, float samplesPerSec) {

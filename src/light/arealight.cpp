@@ -24,7 +24,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
         return lightColor * power;
     }else{
         pd = 0.f;
-        return 0.f;
+        return rgbColor(0.f);
     }
 }
 

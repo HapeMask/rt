@@ -18,7 +18,7 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
 
     if(wi.y < 0){
         pd = 0.f;
-        return 0.f;
+        return rgbColor(0.f);
     }else{
         pd = pdf(wo, wi);
         return f(wo, wi);
@@ -28,7 +28,7 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
 const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
     const float cosAlpha = dot(wo, reflect(wi));
     if(cosAlpha < 0){
-        return 0.f;
+        return rgbColor(0.f);
     }else{
         return ks * (float)(n+2) * INVTWOPI * powf(cosAlpha, n);
     }
