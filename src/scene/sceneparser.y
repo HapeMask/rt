@@ -10,6 +10,9 @@
 
 %code requires {
     #include <string>
+    #include <map>
+    using std::map;
+
     #include "scene/scene.hpp"
     #include "scene/objparser.hpp"
 
@@ -39,6 +42,10 @@
     //#define YYSTYPE std::string
 
     class scanner;
+
+    inline std::string stripQuotes(char* p) {
+        return std::string(p).substr(1, std::string(p).length() - 2);
+    }
 }
 
 %code{
@@ -59,6 +66,9 @@
     material* mval;
     bsdf* bval;
     bxdf* bxval;
+    texture2D* texval;
+    map<textureSlot, texture2D*>* tmval;
+    textureSlot tsval;
     microfacetBrdf* mbxval;
     microfacetDistribution* mdistval;
     accelerator* aval;
@@ -70,7 +80,7 @@
 %token BVH OCTREE DEFAULT
 %token WHITTED PATH BIDIR
 %token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET WARD
-%token IMGTEX
+%token IMGTEX TEXTURED DIFFUSETEX
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
 %token AREA POINT
@@ -105,9 +115,11 @@
 %type <bxval> ward
 %type <aval> accelerator
 %type <tval> tracer
+%type <texval> texture
+%type <tmval> texture_list
+%type <tsval> texture_slot
 
 %%
-
 scene_file :
             SCENE '<' accelerator ',' tracer '>' '{' contents '}'
             {
@@ -178,9 +190,9 @@ shape :
 
 objfile :
         OBJFILE '<' SMOOTH '>' '(' FILEPATH ')'
-        { triangleMesh* p = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), p); $$ = p; } |
+        { triangleMesh* p = new triangleMesh(); objParser::parse(stripQuotes($6), p); $$ = p; } |
         OBJFILE '<' FLAT '>' '(' FILEPATH ')'
-        { triangleMesh* tm = new triangleMesh(); objParser::parse(std::string($6).substr(1, std::string($6).length() - 2), tm, false); $$ = tm; }
+        { triangleMesh* tm = new triangleMesh(); objParser::parse(stripQuotes($6), tm, false); $$ = tm; }
         ;
 
 primitive_list : primitive primitive_list { $2->add($1); $$ = $2; } |
@@ -209,7 +221,7 @@ material :
          ;
 
 bsdf:
-    lambert { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; }|
+    lambert { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
     phong { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
     specular { $$ = $1; } |
     substrate { $$ = $1; } |
@@ -218,8 +230,10 @@ bsdf:
 
 lambert :
         LAMBERT '(' FLOAT ',' FLOAT ',' FLOAT ')'
-        { texture2DPtr p(new colorTexture2D("/Users/hape/checkerboard.gif"));;
-        $$ = new lambertianBrdf(rgbColor($3, $5, $7)); }
+        { $$ = new lambertianBrdf(rgbColor($3, $5, $7)); } |
+        LAMBERT '<' TEXTURED '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' texture')'
+        { texture2DPtr p($12);
+        $$ = new lambertianBrdf(rgbColor($6, $8, $10), p); }
         ;
 
 phong :
@@ -241,7 +255,7 @@ blinn :
 
 beckmann :
       BECKMANN '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
-      { $$ = new blinn(rgbColor($3, $5, $7), $9); }
+      { $$ = new beckmann(rgbColor($3, $5, $7), $9); }
       ;
 
 aniso :
@@ -310,6 +324,24 @@ pair :
          $$ = p;
      }
      ;
+
+texture_list :
+            texture_slot ':' texture texture_list { (*$4)[$1] = $3; } |
+            texture_slot ':' texture {
+            map<textureSlot, texture2D*>* m = new map<textureSlot, texture2D*>;
+            for(int i=0; i < NUM_TEXTURE_SLOTS; ++i) (*m)[i] = NULL;
+            (*m)[$1] = $3;
+            $$ = m;
+            }
+            ;
+
+texture :
+        IMGTEX '(' FILEPATH ')' { $$ = new colorTexture2D(stripQuotes($3)); }
+        ;
+
+texture_slot :
+             DIFFUSETEX { $$ = DIFFUSE_COLOR; }
+             ;
 %%
 
 void Bison::Parser::error(const Bison::Parser::location_type& loc, const std::string& msg){

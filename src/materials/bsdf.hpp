@@ -123,11 +123,15 @@ class bxdf {
             textureSlots[slot] = p;
         }
 
+        const texture2D& getTexture(textureSlot slot) const {
+            return *textureSlots[slot];
+        }
+
         virtual void updateFromUVTexture(const vec2& uv) = 0;
 
     protected:
         const rgbColor textureLookup(const textureSlot& slot, const vec2& uv) const {
-            return textureSlots[slot]->lookup(uv.s, uv.t);
+            return textureSlots[slot]->lookup(uv);
         }
 
         bool hasTexture;

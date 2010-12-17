@@ -42,6 +42,9 @@
 #line 11 "../src/scene/sceneparser.y"
 
     #include <string>
+    #include <map>
+    using std::map;
+
     #include "scene/scene.hpp"
     #include "scene/objparser.hpp"
 
@@ -72,10 +75,14 @@
 
     class scanner;
 
+    inline std::string stripQuotes(char* p) {
+        return std::string(p).substr(1, std::string(p).length() - 2);
+    }
+
 
 
 /* Line 35 of lalr1.cc  */
-#line 79 "sceneparser.tab.h"
+#line 86 "sceneparser.tab.h"
 
 
 #include <string>
@@ -88,7 +95,7 @@
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 92 "sceneparser.tab.h"
+#line 99 "sceneparser.tab.h"
   class position;
   class location;
 
@@ -97,7 +104,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 101 "sceneparser.tab.h"
+#line 108 "sceneparser.tab.h"
 
 #include "location.hh"
 
@@ -144,7 +151,7 @@ do {							\
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 148 "sceneparser.tab.h"
+#line 155 "sceneparser.tab.h"
 
   /// A Bison parser.
   class Parser
@@ -156,7 +163,7 @@ namespace Bison {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 51 "../src/scene/sceneparser.y"
+#line 58 "../src/scene/sceneparser.y"
 
     float fval;
     char* sval;
@@ -168,6 +175,9 @@ namespace Bison {
     material* mval;
     bsdf* bval;
     bxdf* bxval;
+    texture2D* texval;
+    map<textureSlot, texture2D*>* tmval;
+    textureSlot tsval;
     microfacetBrdf* mbxval;
     microfacetDistribution* mdistval;
     accelerator* aval;
@@ -176,7 +186,7 @@ namespace Bison {
 
 
 /* Line 35 of lalr1.cc  */
-#line 180 "sceneparser.tab.h"
+#line 190 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -213,14 +223,17 @@ namespace Bison {
      EMISSIVE = 280,
      MICROFACET = 281,
      WARD = 282,
-     DIELECTRIC = 283,
-     CONDUCTOR = 284,
-     SMOOTH = 285,
-     FLAT = 286,
-     AREA = 287,
-     POINT = 288,
-     FLOAT = 289,
-     FILEPATH = 290
+     IMGTEX = 283,
+     TEXTURED = 284,
+     DIFFUSETEX = 285,
+     DIELECTRIC = 286,
+     CONDUCTOR = 287,
+     SMOOTH = 288,
+     FLAT = 289,
+     AREA = 290,
+     POINT = 291,
+     FLOAT = 292,
+     FILEPATH = 293
    };
 
     };
@@ -397,7 +410,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 401 "sceneparser.tab.h"
+#line 414 "sceneparser.tab.h"
 
 
 

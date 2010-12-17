@@ -19,7 +19,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
     public:
         qtOpenGLFramebuffer(scene& s, const int bpp=32, QWidget* parent = NULL);
-        ~qtOpenGLFramebuffer();
+        virtual ~qtOpenGLFramebuffer();
 
         QSize minimumSizeHint() const;
         QSize sizeHint() const;
