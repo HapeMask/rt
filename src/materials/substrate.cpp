@@ -8,6 +8,10 @@
 
 #include <cmath>
 
+substrate::~substrate(){
+    delete distrib;
+}
+
 const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     if(u0 < 0.5f){
         const float u = 2.f * u0;

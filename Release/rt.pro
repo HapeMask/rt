@@ -127,8 +127,10 @@ SOURCES += ../src/main.cpp \
            ../src/materials/aniso.cpp \
            ../src/materials/texture.cpp \
            ../src/materials/beckmann.cpp \
+           ../src/materials/microfacet.cpp \
            ../src/materials/blinn.cpp \
            ../src/materials/bsdf.cpp \
+           ../src/materials/bxdf.cpp \
            ../src/materials/material.cpp \
            ../src/materials/phong.cpp \
            ../src/materials/lambertian.cpp \

@@ -10,6 +10,28 @@
 #include <vector>
 using std::vector;
 
+const bool bsdf::isSupertype(bxdfType a, bxdfType b) {
+    return (a & b);
+}
+
+const float bsdf::cosTheta(const vec3& v){
+    return v.y;
+}
+
+const float bsdf::cos2Theta(const vec3& v){
+    return v.y*v.y;
+}
+
+const float bsdf::sinTheta(const vec3& v){
+    // sintheta(v) = sqrt(1 - cos2theta(v))
+    return sqrtf(max(0.f, 1.f - v.y*v.y));
+}
+
+const float bsdf::sin2Theta(const vec3& v){
+    const float c = cosTheta(v);
+    return 1.f - c*c;
+}
+
 bsdf::~bsdf(){
     if(specTra){
         delete specTra;

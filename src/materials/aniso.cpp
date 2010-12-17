@@ -8,6 +8,14 @@
 
 #include <cmath>
 
+const float aniso::D(const vec3& wh) const {
+    return ecTerm * powf(fabs(bsdf::cosTheta(wh)), exponent(wh));
+}
+
+inline const float aniso::exponent(const vec3& wh) const {
+    return ((nu * wh.x * wh.x) + (nv * wh.z * wh.z)) / (1.f - wh.y * wh.y);
+}
+
 void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     // Generate a vector wh with distribution described by pdf().
     float phi, costheta;

@@ -7,6 +7,26 @@
 
 #include <cmath>
 
+const rgbColor specularBxdf::evalFresnel(const float& cosThetaO) const {
+    return rescaledApproxFresnel(ior, k, cosThetaO);
+}
+
+inline const rgbColor specularBrdf::f(const vec3& wo, const vec3& wi) const {
+    return rgbColor(0.f);
+}
+
+inline const float specularBrdf::pdf(const vec3& wo, const vec3& wi) const {
+    return 0.f;
+}
+
+inline const rgbColor specularBtdf::f(const vec3& wo, const vec3& wi) const {
+    return rgbColor(0.f);
+}
+
+inline const float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
+    return 0.f;
+}
+
 const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
     wi = vec3(-wo.x, wo.y, -wo.z);

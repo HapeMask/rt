@@ -8,6 +8,10 @@
 
 #include <cmath>
 
+inline const float blinn::D(const vec3& wh) const {
+    return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
+}
+
 void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     const float phiH = u1 * TWOPI;
     const float cosThetaH = powf(u0, 1.f / (exp+1.f));

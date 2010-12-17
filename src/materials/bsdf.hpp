@@ -53,8 +53,7 @@ class bsdf {
     public:
         bsdf() : diffTra(NULL), diffRef(NULL),
         glossTra(NULL), glossRef(NULL),
-        specTra(NULL), specRef(NULL) {
-        }
+        specTra(NULL), specRef(NULL) {}
 
         ~bsdf();
 
@@ -68,27 +67,11 @@ class bsdf {
 
         const float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
-        inline static const bool isSupertype(bxdfType a, bxdfType b) {
-            return (a & b);
-        }
-
-        inline static const float cosTheta(const vec3& v){
-            return v.y;
-        }
-
-        inline static const float cos2Theta(const vec3& v){
-            return v.y*v.y;
-        }
-
-        inline static const float sinTheta(const vec3& v){
-            // sintheta(v) = sqrt(1 - cos2theta(v))
-            return sqrtf(max(0.f, 1.f - v.y*v.y));
-        }
-
-        inline static const float sin2Theta(const vec3& v){
-            const float c = cosTheta(v);
-            return 1.f - c*c;
-        }
+        static const bool isSupertype(bxdfType a, bxdfType b);
+        static const float cosTheta(const vec3& v);
+        static const float cos2Theta(const vec3& v);
+        static const float sinTheta(const vec3& v);
+        static const float sin2Theta(const vec3& v);
 
         void updateFromUVTexture(const vec2& uv);
 
@@ -102,37 +85,22 @@ class bsdf {
 class bxdf {
     public:
         bxdf(const bxdfType t) : type(t), hasTexture(false) {}
+        virtual ~bxdf() {}
+
+        const bxdfType getType() const;
+        const bool isType(const bxdfType t) const;
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const = 0;
         virtual const rgbColor sampleF(const float& u1, const float& u2,
                 const vec3& wo, vec3& wi, float& pd) const = 0;
-        virtual ~bxdf() {}
-
-        const bxdfType getType() const {
-            return type;
-        }
-
-        inline const bool isType(const bxdfType t) const {
-            return (type & t) == type;
-        }
-
         virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
 
-        void setTexture(textureSlot slot, texture2DPtr p) {
-            hasTexture = true;
-            textureSlots[slot] = p;
-        }
-
-        const texture2D& getTexture(textureSlot slot) const {
-            return *textureSlots[slot];
-        }
-
+        void setTexture(textureSlot slot, texture2DPtr p);
+        const texture2D& getTexture(textureSlot slot) const;
         virtual void updateFromUVTexture(const vec2& uv) = 0;
 
     protected:
-        const rgbColor textureLookup(const textureSlot& slot, const vec2& uv) const {
-            return textureSlots[slot]->lookup(uv);
-        }
+        const rgbColor textureLookup(const textureSlot& slot, const vec2& uv) const;
 
         bool hasTexture;
 
@@ -146,14 +114,10 @@ class specularBxdf : public bxdf {
         specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
             bxdf(type), fType(ft), ior(eta), k(K) {}
 
-        virtual const rgbColor evalFresnel(const float& cosThetaO) const {
-            return rescaledApproxFresnel(ior, k, cosThetaO);
-        }
-
+        virtual const rgbColor evalFresnel(const float& cosThetaO) const;
         virtual void updateFromUVTexture(const vec2& uv) {}
 
     protected:
-
         const fresnelType fType;
         float ior;
         float k;
@@ -161,10 +125,12 @@ class specularBxdf : public bxdf {
 
 class lambertianBrdf : public bxdf {
     public:
-        lambertianBrdf(const rgbColor& r) : bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
+        lambertianBrdf(const rgbColor& r) :
+            bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
         lambertianBrdf(const rgbColor& r, texture2DPtr diffuseTex);
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
@@ -180,17 +146,13 @@ class specularBrdf : public specularBxdf {
             specularBxdf(bxdfType(SPECULAR | REFLECTION), i, K, ft), kR(kr)
         {}
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
-        inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0.f);
-        }
-
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
-            return 0.f;
-        }
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const rgbColor kR;
+        rgbColor kR;
 };
 
 class specularBtdf : public specularBxdf {
@@ -199,27 +161,24 @@ class specularBtdf : public specularBxdf {
             specularBxdf(bxdfType(SPECULAR | TRANSMISSION), i, 0.f, DIELECTRIC), kT(kt)
         {}
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
-        inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            return rgbColor(0.f);
-        }
-
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
-            return 0.f;
-        }
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
+        inline virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        inline virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        const rgbColor kT;
+        rgbColor kT;
 };
 
 class phongBrdf : public bxdf {
     public:
-        phongBrdf(const rgbColor& s, const float& N) : bxdf(bxdfType(GLOSSY | REFLECTION)), ks(s), n(N)
+        phongBrdf(const rgbColor& s, const float& N) :
+            bxdf(bxdfType(GLOSSY | REFLECTION)), ks(s), n(N)
         {}
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const; 
-
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
         virtual void updateFromUVTexture(const vec2& uv) {}
@@ -237,18 +196,11 @@ class microfacetDistribution {
 
         virtual const float D(const vec3& wh) const = 0;
 
-        // Default is the TS shadowing masking function.
-        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
-            const float ndotwo = fabs(bsdf::cosTheta(wo));
-            const float ndotwi = fabs(bsdf::cosTheta(wi));
-            const float ndotwh = fabs(bsdf::cosTheta(wh));
-            const float wodotwh = fabs(dot(wo, wh));
-            return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
-                        2.f * ndotwh * ndotwi / wodotwh));
-        }
-
+        // Default is the Torrance-Sparrow shadowing masking function.
+        virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const = 0;
-        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const = 0;
+        virtual void sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const = 0;
 
         const rgbColor rho;
 };
@@ -259,32 +211,15 @@ class microfacetDistribution {
 class microfacetBrdf : public bxdf {
     public:
         microfacetBrdf(const float& e, const float& K,
-                microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d) {}
+                microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)),
+                eta(e), k(K), distrib(d) {}
 
-        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            const vec3 wh = halfVector(wo, wi);
-            const float cosThetaO = bsdf::cosTheta(wo);
-            const float cosThetaI = bsdf::cosTheta(wi);
-            const float cosThetaH = dot(wi, wh);
-            const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaH);
+        ~microfacetBrdf();
 
-            return 
-                distrib->rho * distrib->D(wh) * distrib->G(wo, wi, wh) * F /
-                (4.f * cosThetaO * cosThetaI);
-        }
-
-        inline virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
-            distrib->sampleF(u0, u1, wo, wi, pd);
-            return f(wo, wi);
-        }
-
-        inline virtual const float pdf(const vec3& wo, const vec3& wi) const {
-            return distrib->pdf(wo, wi);
-        }
-
-        ~microfacetBrdf(){
-            delete distrib;
-        }
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
         virtual void updateFromUVTexture(const vec2& uv) {}
 
@@ -333,11 +268,9 @@ class blinn : public microfacetDistribution {
             microfacetDistribution(r), exp(e)
         {}
 
-        inline virtual const float D(const vec3& wh) const {
-            return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
-        }
-
-        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float D(const vec3& wh) const;
+        virtual void sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
@@ -353,17 +286,13 @@ class aniso : public microfacetDistribution {
             microfacetDistribution(r), nu(Nu), nv(Nv), ecTerm(sqrt((Nu+2.f)*(Nv+2.f)) * INVTWOPI)
         {}
 
-        virtual const float D(const vec3& wh) const {
-            return ecTerm * powf(fabs(bsdf::cosTheta(wh)), exponent(wh));
-        }
-
-        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float D(const vec3& wh) const;
+        virtual void sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        inline const float exponent(const vec3& wh) const {
-            return ((nu * wh.x * wh.x) + (nv * wh.z * wh.z)) / (1.f - wh.y * wh.y);
-        }
+        const float exponent(const vec3& wh) const;
 
         float nu, nv;
 
@@ -378,40 +307,15 @@ class beckmann : public microfacetDistribution {
     public:
         beckmann(const rgbColor& r, const float& a) : microfacetDistribution(r), alpha(a) {}
 
-        virtual const float D(const vec3& wh) const {
-            const float cosThetaH = bsdf::cosTheta(wh);
-            if(cosThetaH > 0.f){
-                const float thetaH = acosf(cosThetaH);
-                const float tanThetaH = tanf(thetaH);
-                const float e = -(tanThetaH * tanThetaH) / (alpha * alpha);
-                return (exp(e) * INVPI) / (alpha * alpha * pow(cosThetaH, 4));
-            }else{
-                return 0.f;
-            }
-        }
+        virtual const float D(const vec3& wh) const;
+        virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const;
 
-        inline virtual const float G(const vec3& wo, const vec3& wi, const vec3& wh) const {
-            return G1(wo, wh) * G1(wi, wh);
-        }
-
-        virtual void sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual void sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
     private:
-        inline const float G1(const vec3& v, const vec3& wh) const {
-            if(dot(v,wh) / bsdf::cosTheta(v) > 0.f){
-                const float cosThetaH = bsdf::cosTheta(wh);
-                const float a = 1.f / (alpha * tanf(acosf(cosThetaH)));
-                if(a < 1.6f){
-                    return (3.535f * a + 2.181* a*a) / (1.f + 2.276*a + 2.577 * a*a);
-                }else{
-                    return 1.f;
-                }
-            }else{
-                return 0.f;
-            }
-        }
-
+        inline const float G1(const vec3& v, const vec3& wh) const;
         float alpha;
 };
 
@@ -421,7 +325,8 @@ class newWard : public bxdf {
 			bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b),
             isIsotropic(alpha==beta) {}
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
@@ -441,21 +346,20 @@ class substrate : public bxdf {
             distrib(d)
         {}
 
-        virtual const rgbColor sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const;
+        ~substrate();
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
 
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
-
-        ~substrate(){
-            delete distrib;
-        }
 
         virtual void updateFromUVTexture(const vec2& uv) {}
 
     private:
         rgbColor Rd, Rs;
         rgbColor ecTerm;
-        const microfacetDistribution* distrib;
+        microfacetDistribution* distrib;
 };
 
 typedef shared_ptr<bsdf> bsdfPtr;

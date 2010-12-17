@@ -1,8 +1,8 @@
 scene<bvh, path>{
-	camera<256,256>(45, 0,0,8, 0,0,0, 0,1,0)
-    //light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
+	camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
+    light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
     //light<point>(0,2.8,0, 16, 1,1,1)
-    light<sphere>(0,1,0, 8, 1,1,1, 0.5)
+    //light<sphere>(0,1,0, 16, 1,1,1, 0.5)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
@@ -29,19 +29,14 @@ scene<bvh, path>{
 		material(lambert(0.3,0.3,0.3))
 	}
 
-    shape{
-		sphere(0,-2,-1,1)
-		material(pair(lambert(0.0,0.0,0.0), ward(0.75,0.75,0.75, 0.15, 0.45)))
-		//material(pair(lambert(0.0,0.0,0.0), microfacet(1.5, 7.7, aniso(0.75,0.75,0.75, 25, 25))))
-    }
+    //shape{
+	//	sphere(-1.5,-1.5,-1,1.5)
+	//	material(pair(lambert(0.0,0.0,0.0), ward(0.75,0.75,0.75, 0.15, 0.45)))
+	//	//material(pair(lambert(0.0,0.0,0.0), microfacet(1.5, 7.7, aniso(0.75,0.75,0.75, 25, 25))))
+    //}
 
     shape{
-        sphere(-2,-2,-1,1)
-        material(lambert(0.75,0.75,0.75))
-    }
-
-    shape{
-        sphere(2,-2,-1,1)
-        material(specular<dielectric>(0.9,0.9,0.9, 1.6))
+        sphere(0,-1.0,-1,1.0)
+        material(specular<dielectric>(0.9,0.9,0.9, 1.8))
     }
 }
