@@ -25,7 +25,7 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     /*
     vec3 v;
     uniformSampleSphere(v);
-    const point3 samplePoint = location + radius * v;
+    const point3 samplePoint = position + radius * v;
     */
 
     // Create an arbitrary basis around w (direction towards the light) for the
@@ -35,11 +35,11 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     // <0,1,0>).
     //
     // TODO: Fix that.
-    const vec3 w = normalize(location - p);
+    const vec3 w = normalize(position - p);
     const vec3 u = normalize(cross(w, vec3(0,1,0)));
     const vec3 v = normalize(cross(u, w));
 
-    const float distanceTerm = sqrtf(1.f - radius2 / (p-location).length2());
+    const float distanceTerm = sqrtf(1.f - radius2 / (p-position).length2());
     const float phi = TWOPI * u1;
 
     // Theta itself is never actually needed anywhere, so no need to calculate
@@ -70,7 +70,7 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
 }
 
 const intersection sphereLight::intersect(const ray& r) const {
-	const vec3 dir(r.origin - location);
+	const vec3 dir(r.origin - position);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);
 	const float C = dot(dir, dir) - (radius*radius);
@@ -101,12 +101,12 @@ const intersection sphereLight::intersect(const ray& r) const {
     }
 
     intersection isect(this, t);
-    isect.normal = normalize(t * r.direction - location);
+    isect.normal = normalize(t * r.direction - position);
 	return isect;
 }
 
 const bool sphereLight::intersectB(const ray& r) const {
-	const vec3 dir(r.origin - location);
+	const vec3 dir(r.origin - position);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);
 	const float C = dot(dir, dir) - (radius*radius);

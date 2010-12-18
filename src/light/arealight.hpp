@@ -27,7 +27,7 @@ class areaLight : public light {
 
         inline virtual const point3 uniformSampleSurface() const {
             point3 samplePoint;
-            sampleRectangle(samplePoint, a, b, location, sampleUniform(), sampleUniform());
+            sampleRectangle(samplePoint, a, b, position, sampleUniform(), sampleUniform());
             return samplePoint;
         }
 

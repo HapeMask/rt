@@ -15,13 +15,14 @@ using tr1::shared_ptr;
 
 class light {
 	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : location(p), power(pow), lightColor(c) {
+		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {
             bsdfPtr b(new bsdf());
             b->addBxdf(new lambertianBrdf(rgbColor(1.f)));
             mat = materialPtr(new material(b));
         }
 
-        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pdf) const = 0;
+        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1,
+                float& pdf) const = 0;
         virtual const intersection intersect(const ray& r) const {
             return noIntersect;
         }
@@ -35,13 +36,13 @@ class light {
         }
 
 		inline virtual const rgbColor L(const point3& p) const {
-            return (lightColor * power) / (location - p).length2();
+            return (lightColor * power) / (position - p).length2();
         }
 
         virtual const bool isPointSource() const = 0;
 
         const point3& getPosition() const {
-            return location;
+            return position;
         }
 
 		const float& getPower() const {
@@ -78,7 +79,7 @@ class light {
         }
 
 	protected:
-        point3 location;
+        point3 position;
 		float power;
 		rgbColor lightColor;
         materialPtr mat;

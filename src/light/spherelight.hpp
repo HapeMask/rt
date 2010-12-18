@@ -12,7 +12,7 @@ class sphereLight : public light {
         }
 
         inline virtual const vec3 getNormal(const point3& p) const {
-            return normalize(p - location);
+            return normalize(p - position);
         }
 
         inline virtual const float pdf(const point3& p) const {
@@ -26,7 +26,7 @@ class sphereLight : public light {
         inline virtual const point3 uniformSampleSurface() const {
             vec3 v;
             uniformSampleSphere(v);
-            return location + radius * v;
+            return position + radius * v;
         }
 
     private:

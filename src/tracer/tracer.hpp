@@ -19,41 +19,41 @@ const int MAX_DEPTH = 4;
 
 class scene;
 class rayTracer {
-	public:
-		rayTracer(const scene& p) : parent(p) {}
+    public:
+        rayTracer(const scene& p) : parent(p) {}
 
-		virtual const rgbColor L(const ray& r) const = 0;
+        virtual const rgbColor L(const ray& r) const = 0;
         virtual ~rayTracer() {}
 
-	protected:
+    protected:
         const rgbColor sampleOneLight(const point3& p, const vec3& wo, const intersection& isect, const bsdf& bsdf) const;
         const rgbColor sampleAllLights(const point3& p, const vec3& wo, const intersection& isect, const bsdf& bsdf) const;
         const rgbColor sampleDirect(const point3& p, const vec3& wo, const intersection& isect,
                 const bsdf& bsdf, const light& light) const;
 
-		const scene& parent;
+        const scene& parent;
 };
 
 class whittedRayTracer : public rayTracer {
-	public:
-		whittedRayTracer(const scene& p) : rayTracer(p) {}
+    public:
+        whittedRayTracer(const scene& p) : rayTracer(p) {}
 
-		virtual const rgbColor L(const ray& r) const;
+        virtual const rgbColor L(const ray& r) const;
 
-	private:
-		const rgbColor _L(ray& r, const int& depth = 0) const;
+    private:
+        const rgbColor _L(ray& r, const int& depth = 0) const;
 };
 
 static const float pathContinueProbability = 0.5f;
 
 class pathTracer : public rayTracer {
-	public:
-		pathTracer(const scene& p) : rayTracer(p) {}
-		virtual const rgbColor L(const ray& r) const;
+    public:
+        pathTracer(const scene& p) : rayTracer(p) {}
+        virtual const rgbColor L(const ray& r) const;
 
-	private:
-		template <const bool recursiveSpecular>
-		const rgbColor _L(ray& r, const int depth = 0) const;
+    private:
+        template <const bool recursiveSpecular>
+        const rgbColor _L(ray& r, const int depth = 0) const;
 };
 
 struct pathPoint{
@@ -65,12 +65,12 @@ struct pathPoint{
 };
 
 class bdpt : public rayTracer {
-	public:
-		bdpt(const scene& p) : rayTracer(p) {}
-		virtual const rgbColor L(const ray& r) const;
+    public:
+        bdpt(const scene& p) : rayTracer(p) {}
+        virtual const rgbColor L(const ray& r) const;
 
-	private:
-		void createPath(ray& r, vector<pathPoint>& points) const;
+    private:
+        void createPath(ray& r, vector<pathPoint>& points) const;
         const rgbColor tracePath(const vector<pathPoint>& points) const;
 };
 
