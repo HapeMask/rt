@@ -136,3 +136,7 @@ void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, cons
     costheta = powf(u1, 1.f/(nu * cosphi * cosphi +
         nv * sinphi * sinphi + 1.f));
 }
+
+const float evaluate2DGaussian(const float& x, const float& y, const float& sigma) {
+    return exp(-(x*x + y*y) / (2 *sigma*sigma)) / (TWOPI * sigma*sigma);
+}

@@ -1,6 +1,6 @@
 scene<bvh, path>{
 	camera<384,384>(45, 0,0,8, 0,0,0, 0,1,0)
-    light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
+    light<area>(0,2.8,0, 2, 1,1,1, 2,0,0, 0,0,2)
     //light<point>(0,2.8,0, 16, 1,1,1)
     //light<sphere>(0,1,0, 16, 1,1,1, 0.5)
 
@@ -26,12 +26,12 @@ scene<bvh, path>{
         triangle(3,3,-3, 3,3,3, -3,3,-3)
         triangle(3,3,3, -3,3,3, -3,3,-3)
 
-		material(lambert(0.3,0.3,0.3))
+		material(lambert<textured>(0.3,0.3,0.3, imageTexture("/Users/hape/normal.png")))
 	}
 
     //shape{
 	//	sphere(-1.5,-1.5,-1,1.5)
-	//	material(pair(lambert(0.0,0.0,0.0), ward(0.75,0.75,0.75, 0.15, 0.45)))
+	//	//material(pair(lambert(0.0,0.0,0.0), ward(0.75,0.75,0.75, 0.15, 0.45)))
 	//	//material(pair(lambert(0.0,0.0,0.0), microfacet(1.5, 7.7, aniso(0.75,0.75,0.75, 25, 25))))
     //}
 

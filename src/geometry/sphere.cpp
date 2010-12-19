@@ -66,11 +66,11 @@ const intersection sphere::intersect(ray& r) const {
             TWOPI * isect.normal.x
             ));
 
-    const float u = atan2f(isect.normal.z, isect.normal.x) * INVTWOPI;
-    const float v = acosf(sqrtf(isect.normal.x*isect.normal.x+isect.normal.z*isect.normal.z) / radius);
-    isect.uv = vec2(u,v);
-
     isect.tangent = cross(isect.normal, isect.binormal);
+
+    const float u = atan2f(isect.normal.z, isect.normal.x) * INVTWOPI;
+    const float v = (1.f + acosf(isect.normal.y)) * INVTWOPI;
+    isect.uv = vec2(u,v);
 	return isect;
 }
 

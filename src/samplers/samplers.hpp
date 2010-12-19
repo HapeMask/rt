@@ -28,3 +28,5 @@ void getLDSamples3D(float* samples, const int& count);
 const float powerHeuristic(int nf, float fPdf, int ng, float gPdf);
 const float balanceHeuristic(int nf, float fPdf, int ng, float gPdf);
 void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, const float& nv, float& phi, float& costheta);
+
+const float evaluate2DGaussian(const float& x, const float& y, const float& sigma);

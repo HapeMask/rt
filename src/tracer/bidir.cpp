@@ -24,6 +24,7 @@ const rgbColor bdpt::L(const ray& r) const {
     const point3 p = parent.getLight(i)->uniformSampleSurface();
     const vec3& normal = parent.getLight(i)->getNormal(p);
 
+    // Pick a random direction to start the light path.
     vec3 wi;
     uniformSampleHemisphere(wi);
 

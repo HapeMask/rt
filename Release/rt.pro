@@ -110,6 +110,7 @@ HEADERS += ../src/utility.hpp \
            ../src/scene/sceneloader.hpp \
            ../src/tracer/tracer.hpp
 SOURCES += ../src/main.cpp \
+           ../src/utility.cpp \
            ../src/acceleration/bvh.cpp \
            ../src/acceleration/defaultaccelerator.cpp \
            ../src/acceleration/octree.cpp \

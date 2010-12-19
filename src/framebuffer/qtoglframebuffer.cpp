@@ -377,11 +377,12 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
                 const float xOffset = sampleUniform() - 0.5f;
                 const float yOffset = sampleUniform() - 0.5f;
+                const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
 
-                addSample(
-                        x, y,
-                        scn.L((float)x + xOffset, (float)y + yOffset)
-                    );
+                const float sigma = 1.f;
+                addSample(x, y,
+                        L * evaluate2DGaussian(xOffset, yOffset, sigma) /
+                        gaussian2DNormalization(sigma));
             }
         }
 
