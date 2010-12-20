@@ -5,6 +5,7 @@
 #include "mathlib/quaternion.hpp"
 #include "mathlib/vector.hpp"
 #include "scene/objparser.hpp"
+#include "geometry/sphere.hpp"
 
 #include "utility.hpp"
 #include "mathlib/constants.hpp"
@@ -13,7 +14,9 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#ifndef GL_EXT_PROTOTYPES
 #define GL_EXT_PROTOTYPES
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
@@ -267,51 +270,46 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     /* SAMPLER DEMO CODE
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
-    glBegin(GL_POINTS);
+    glBegin(GL_LINES);
 
     float samples[400];
     getLDSamples2D(samples, 200);
 
-    const point3 location(0, 1, 0);
-    const point3 p(-2.98212, -3, -2.94696);
-    const float radius = 0.5f;
-    const sphere sph(location, radius);
+    vec3 wo(0,0,1);
+    glColor3f(0,1,1);
+    glVertex3f(0,0,0);
+    glVertex3f(wo.x, wo.y, wo.z);
 
-    for(int i=0; i<200; ++i){
+    wo = worldToBsdf(wo, vec3(0,0,1), vec3(0,1,0), vec3(1,0,0));
+
+    vec3 wi;
+
+    blinn* distrib = new blinn(rgbColor(0.9f,0.9f,0.9f), 100);
+    microfacetBrdf f(1.6, 1.0, distrib);
+
+    glColor3f(1,0,0);
+    glVertex3f(0,0,0);
+    glVertex3f(5, 0, 0);
+
+    glColor3f(0,1,0);
+    glVertex3f(0,0,0);
+    glVertex3f(0, 5, 0);
+
+    glColor3f(0,0,1);
+    glVertex3f(0,0,1);
+    glVertex3f(0, 0, 5);
+
+    for(int i=0; i < 20; ++i){
         glColor3f(1,0,0);
-        //const float u0 = sampleUniform(), u1 = sampleUniform();
+        const float u0 = sampleUniform(), u1 = samples[2*i], u2 = samples[2*i+1];
+        float pdf;
+        bxdfType sampledType;
 
-        const float u0 = samples[2*i], u1 = samples[2*i+1];
-        const vec3 w = normalize(location - p);
-        const vec3 u = normalize(cross(w, vec3(0,1,0)));
-        const vec3 v = normalize(cross(u, w));
+        f.sampleF(u1, u2, wo, wi,pdf);
+        wi = bsdfToWorld(wi, vec3(0,0,1), vec3(0,1,0), vec3(1,0,0));
 
-        const float d = 1.f - (radius*radius) / (p-location).length2();
-        const float theta = acosf(1.f - u0 + u0 * sqrtf(d));
-        const float phi = TWOPI * u1;
-
-        const float v1 = cosf(phi) * sinf(theta);
-        const float v2 = cosf(theta);
-        const float v3 = sinf(phi) * sinf(theta);
-
-        const vec3 a = normalize(vec3(
-                    v1 * u.x + v2 * w.x + v3 * v.x,
-                    v1 * u.y + v2 * w.y + v3 * v.y,
-                    v1 * u.z + v2 * w.z + v3 * v.z));
-
-        glVertex3f(p.x+a.x, p.y+a.y, p.z+a.z);
-
-        glColor3f(1,1,0);
-        ray r(p,a);
-        const intersection isect = sph.intersect(r);
-        const point3 hit = p + isect.t * a;
-        glVertex3f(hit.x, hit.y, hit.z);
-
-        glColor3f(1,1,1);
-        glVertex3f(location.x, location.y, location.z);
-
-        glColor3f(0,1,1);
-        glVertex3f(p.x, p.y, p.z);
+        glVertex3f(0,0,0);
+        glVertex3f(wi.x, wi.y, wi.z);
     }
 
     glEnd();
@@ -375,6 +373,15 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
         // Render the pixels in block.
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
+                /*
+                if(x != 192 || y != 192){
+                    continue;
+                }
+
+                cerr << scn.L(x, y) << endl;
+                exit(0);
+                */
+
                 const float xOffset = sampleUniform() - 0.5f;
                 const float yOffset = sampleUniform() - 0.5f;
                 const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
@@ -447,12 +454,12 @@ void qtOpenGLFramebuffer::disableGLOptions() {
 
 void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c) {
     const float gamma = 1.f/2.2f;
-    const rgbColor gammaC = rgbColor(
+    const rgbColor gammaC = clamp(rgbColor(
             powf(c.red(), gamma),
             powf(c.green(), gamma),
-            powf(c.blue(), gamma));
+            powf(c.blue(), gamma)));
 
-    imgBuffer.setPixel(x, y, gammaC.toUint());
+    imgBuffer.setPixel(x, y, qRgb(gammaC.R(), gammaC.G(), gammaC.B()));
 }
 
 void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){

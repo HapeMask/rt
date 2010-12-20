@@ -178,7 +178,8 @@ namespace Bison {
     texture2D* texval;
     map<textureSlot, texture2D*>* tmval;
     textureSlot tsval;
-    microfacetBrdf* mbxval;
+    microfacetBrdf* mbrval;
+    microfacetBtdf* mbtval;
     microfacetDistribution* mdistval;
     accelerator* aval;
     rayTracer* tval;
@@ -186,7 +187,7 @@ namespace Bison {
 
 
 /* Line 35 of lalr1.cc  */
-#line 190 "sceneparser.tab.h"
+#line 191 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -212,28 +213,30 @@ namespace Bison {
      PATH = 269,
      BIDIR = 270,
      MATERIAL = 271,
-     BLINN = 272,
-     PHONG = 273,
-     LAMBERT = 274,
-     BECKMANN = 275,
-     ANISO = 276,
-     SPECULAR = 277,
-     SUBSTRATE = 278,
-     PAIR = 279,
-     EMISSIVE = 280,
-     MICROFACET = 281,
-     WARD = 282,
-     IMGTEX = 283,
-     TEXTURED = 284,
-     DIFFUSETEX = 285,
-     DIELECTRIC = 286,
-     CONDUCTOR = 287,
-     SMOOTH = 288,
-     FLAT = 289,
-     AREA = 290,
-     POINT = 291,
-     FLOAT = 292,
-     FILEPATH = 293
+     PHONG = 272,
+     LAMBERT = 273,
+     SPECULAR = 274,
+     SUBSTRATE = 275,
+     PAIR = 276,
+     EMISSIVE = 277,
+     WARD = 278,
+     TEST = 279,
+     MICROFACET = 280,
+     BLINN = 281,
+     BECKMANN = 282,
+     ANISO = 283,
+     FROSTED = 284,
+     IMGTEX = 285,
+     TEXTURED = 286,
+     DIFFUSETEX = 287,
+     DIELECTRIC = 288,
+     CONDUCTOR = 289,
+     SMOOTH = 290,
+     FLAT = 291,
+     AREA = 292,
+     POINT = 293,
+     FLOAT = 294,
+     FILEPATH = 295
    };
 
     };
@@ -410,7 +413,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 414 "sceneparser.tab.h"
+#line 417 "sceneparser.tab.h"
 
 
 

@@ -223,7 +223,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
      */
 	///*
     if(specRef && specTra && matches.size() > 1){
-        const rgbColor F = specRef->evalFresnel(fabs(bsdf::cosTheta(wo)));
+        const rgbColor F = specRef->evalFresnel(fabsf(bsdf::cosTheta(wo)));
         const float Fr = (F.red() + F.blue() + F.green())/3.f;
         const float Ft = 1.f - Fr;
 
@@ -272,4 +272,11 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     }
 
     return f;
+}
+
+testBsdf::testBsdf() {
+    glossRef = new microfacetBrdf(1.8f, 1.f, new blinn(rgbColor(0.9f,0.9f,0.9f), 50));
+    //glossRef = new lambertianBrdf(rgbColor(0,0,0));
+    glossTra = new microfacetBtdf(1.8f, 1.f, new blinn(rgbColor(64, 128, 255), 50));
+    //glossTra = new lambertianBrdf(rgbColor(0,0,0));
 }

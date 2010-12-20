@@ -5,6 +5,8 @@
 #include "light/light.hpp"
 #include "acceleration/intersection.hpp"
 #include "scene/scene.hpp"
+#include <cmath>
+using namespace std;
 
 const rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
@@ -76,13 +78,11 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 		// 1st-bounce specular hits for the recursive step below.
 		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ?
             bxdfType(ALL & ~SPECULAR) : ALL;
+
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),
                 wo, wi, reflectionType, sampledType, pdf);
-        if(f.isBlack() && pdf != 0){
-            return rgbColor(0.f);
-        }
 
-        if(f.isBlack()){
+        if(f.isBlack() && pdf == 0.f){
 			// Trace both specular reflection and refraction recursively.
 			if(recursiveSpecular && pathLength == 0 && depth < MAX_DEPTH){
 				vec3 specDir;
@@ -94,7 +94,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				if(!fr.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);
 					ray r2(r.origin, specDir);
-					L += fr * _L<true>(r2, depth+1) * fabs(dot(specDir, normal)) / pdf;
+					L += fr * _L<true>(r2, depth+1) * fabsf(dot(specDir, normal)) / pdf;
 				}
 
 				const rgbColor ft =
@@ -104,7 +104,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				if(!ft.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);
 					ray r2(r.origin, specDir);
-					L += ft * _L<true>(r2, depth+1) * fabs(dot(specDir, normal)) / pdf;
+					L += ft * _L<true>(r2, depth+1) * fabsf(dot(specDir, normal)) / pdf;
 				}
 			}
 			break;
@@ -112,15 +112,15 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 
         wi = normalize(bsdfToWorld(wi, isect));
 
-        throughput *= f * fabs(dot(wi, normal)) / pdf;
+        throughput *= f * fabsf(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         if(pathLength > 4){
-            if(sampleUniform() > pathContinueProbability){
+            if(sampleUniform() > throughput.gray()){
                 break;
             }
 
-            throughput /= pathContinueProbability;
+            throughput /= throughput.gray();
         }
 
         r.direction = wi;
@@ -129,5 +129,12 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         r.tMin = EPSILON;
     }
 
-    return L;
+    // TODO: Really need to find out what's causing this.
+    if(L.r < 0.f || L.g < 0.f || L.b < 0.f ||
+            isnan(L.r) || isnan(L.g) || isnan(L.b))
+    {
+        return rgbColor(0.f);
+    }else{
+        return L;
+    }
 }

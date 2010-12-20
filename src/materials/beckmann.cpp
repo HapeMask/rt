@@ -49,7 +49,7 @@ void beckmann::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& w
     wh.normalize();
 
     if(wh.y > 0){
-        wi = 2.f * fabs(dot(wo, wh)) * wh - wo;
+        wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;
         pd = pdf(wo, wi);
     }else{
         pd = 0.f;
@@ -58,5 +58,5 @@ void beckmann::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& w
 
 const float beckmann::pdf(const vec3& wo, const vec3& wi) const{
     const vec3 wh = halfVector(wo, wi);
-    return D(wh) / (4.f * fabs(dot(wo, wh)));
+    return D(wh) / (4.f * fabsf(dot(wo, wh)));
 }

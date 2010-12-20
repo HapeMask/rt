@@ -9,8 +9,7 @@ QT += opengl
 
 TARGET = rt
 
-DEFINES += GL_GLEXT_PROTOTYPES \
-    RT_NO_EXECPTIONS \
+DEFINES += RT_NO_EXECPTIONS \
     RT_MULTITHREADED \
     HAVE_SSE2 \
     MEXP=19937 \
@@ -131,6 +130,7 @@ SOURCES += ../src/main.cpp \
            ../src/materials/microfacet.cpp \
            ../src/materials/blinn.cpp \
            ../src/materials/bsdf.cpp \
+           ../src/materials/frosted.cpp \
            ../src/materials/bxdf.cpp \
            ../src/materials/material.cpp \
            ../src/materials/phong.cpp \

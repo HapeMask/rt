@@ -58,14 +58,12 @@ class bsdf {
         ~bsdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
-
-        const rgbColor sampleF(const float& u0, const float& u1, const float&
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const float&
                 u2, const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType,
                 float& pd) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
         void addBxdf(bxdf* b);
-
-        const float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
         static const bool isSupertype(bxdfType a, bxdfType b);
         static const float cosTheta(const vec3& v);
@@ -75,11 +73,16 @@ class bsdf {
 
         void updateFromUVTexture(const vec2& uv);
 
-    private:
+    protected:
         bxdf* diffTra, *diffRef,
              *glossTra, *glossRef;
 
         specularBxdf* specTra, *specRef;
+};
+
+class testBsdf : public bsdf {
+    public:
+        testBsdf();
 };
 
 class bxdf {
@@ -210,11 +213,10 @@ class microfacetDistribution {
  */
 class microfacetBrdf : public bxdf {
     public:
-        microfacetBrdf(const float& e, const float& K,
-                microfacetDistribution* d) : bxdf(bxdfType(GLOSSY | REFLECTION)),
-                eta(e), k(K), distrib(d) {}
+        microfacetBrdf(const float& e, const float& K, microfacetDistribution* d) :
+            bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d) {}
 
-        ~microfacetBrdf();
+        virtual ~microfacetBrdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
         virtual const rgbColor sampleF(const float& u0, const float& u1,
@@ -223,41 +225,42 @@ class microfacetBrdf : public bxdf {
 
         virtual void updateFromUVTexture(const vec2& uv) {}
 
-    private:
-        const float eta, k;
-        const microfacetDistribution* distrib;
+        float eta, k;
+        microfacetDistribution* distrib;
 };
 
-/**
- * Cornell's Microfacet BTDF model.
- */
-/*
 class microfacetBtdf : public bxdf {
     public:
-        microfacetBtdf(const float& e, const float& K,
-                microfacetDistribution* d) :
-            bxdf(bxdfType(GLOSSY | TRANSMISSION)), eta(e), k(K), distrib(d) {} 
+        microfacetBtdf(const float& e, const float& K, microfacetDistribution* d);
+        virtual ~microfacetBtdf();
 
-        virtual const rgbColor f(const vec3& wo, const vec3& wi) const {
-            const bool entering = (cosThetaO > 0.f);
-
-            const float eta1 = entering ? 1.0029f : eta;
-            const float eta2 = entering ? eta : 1.0029f;
-
-            const vec3 wh = halfVector(eta1 * wo, eta2 * wi);
-
-            const float cosThetaO = bsdf::cosTheta(wo);
-            const float cosThetaI = bsdf::cosTheta(wi);
-            const float cosThetaH = dot(wi, wh);
-
-            const rgbColor Ft = rgbColor(1.f) - rescaledApproxFresnel(eta, k, cosThetaH);
-        }
+        virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
+        virtual const rgbColor sampleF(const float& u0, const float& u1,
+                const vec3& wo, vec3& wi, float& pd) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
         virtual void updateFromUVTexture(const vec2& uv) {}
 
-    private:
+        float eta, k;
+        microfacetDistribution* distrib;
 };
-*/
+
+class frostedGlassBsdf : public bsdf {
+    public:
+        frostedGlassBsdf(
+                microfacetBrdf* reflDistrib,
+                microfacetBtdf* transDistrib);
+
+        virtual const rgbColor sampleF(const float& u0, const float& u1, const float&
+                u2, const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType,
+                float& pd) const;
+        virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
+        virtual const float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
+
+    private:
+        microfacetBrdf* glossRef;
+        microfacetBtdf* glossTra;
+};
 
 /**
  * Bilnn microfacet distribution.

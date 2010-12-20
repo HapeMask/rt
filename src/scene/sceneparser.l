@@ -45,6 +45,8 @@
 "substrate"                             { return Bison::Parser::token::SUBSTRATE; }
 "pair"                                  { return Bison::Parser::token::PAIR; }
 "microfacet"                            { return Bison::Parser::token::MICROFACET; }
+"frosted"                               { return Bison::Parser::token::FROSTED; }
+"test"                                  { return Bison::Parser::token::TEST; }
 
 "dielectric"                            { return Bison::Parser::token::DIELECTRIC; }
 "conductor"                             { return Bison::Parser::token::CONDUCTOR; }

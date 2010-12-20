@@ -43,7 +43,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
     // computed below, see Bruce Walter's TR from Cornell: PCG-05-06).
     //
     // Lots of cancellation between BRDF and PDF -> simpler calculations.
-    pd = sqrtf(wi.y*wo.y) / (fabs(dot(wh, wo)) * powf(wh.y, 3));
+    pd = sqrtf(wi.y*wo.y) / (fabsf(dot(wh, wo)) * powf(wh.y, 3));
     return Rs;
 }
 
@@ -72,5 +72,5 @@ const float newWard::pdf(const vec3& wo, const vec3& wi) const{
     const float meanZ = wh.z / beta;
 
     return exp( -(meanX*meanX + meanZ*meanZ) / (wh.y*wh.y)) /
-        (4.f * PI * alpha * beta * fabs(dot(wh,wo)) * powf(wh.y, 3));
+        (4.f * PI * alpha * beta * fabsf(dot(wh,wo)) * powf(wh.y, 3));
 }

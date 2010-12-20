@@ -69,7 +69,8 @@
     texture2D* texval;
     map<textureSlot, texture2D*>* tmval;
     textureSlot tsval;
-    microfacetBrdf* mbxval;
+    microfacetBrdf* mbrval;
+    microfacetBtdf* mbtval;
     microfacetDistribution* mdistval;
     accelerator* aval;
     rayTracer* tval;
@@ -79,7 +80,8 @@
 %token TRIANGLE SPHERE OBJFILE
 %token BVH OCTREE DEFAULT
 %token WHITTED PATH BIDIR
-%token MATERIAL BLINN PHONG LAMBERT BECKMANN ANISO SPECULAR SUBSTRATE PAIR EMISSIVE MICROFACET WARD
+%token MATERIAL PHONG LAMBERT SPECULAR SUBSTRATE PAIR EMISSIVE WARD TEST
+%token MICROFACET BLINN BECKMANN ANISO FROSTED
 %token IMGTEX TEXTURED DIFFUSETEX
 %token DIELECTRIC CONDUCTOR
 %token SMOOTH FLAT
@@ -99,7 +101,9 @@
 %type <lval> pointlight
 %type <mval> material
 %type <bval> bsdf
+%type <bval> testBsdf
 %type <bval> specular
+%type <bval> frosted
 %type <bval> specular_dielectric
 %type <bval> specular_conductor
 %type <bval> substrate
@@ -110,7 +114,8 @@
 %type <mdistval> beckmann
 %type <mdistval> microfacetDistrib
 %type <bxval> phong
-%type <mbxval> microfacet
+%type <mbrval> microfacetBrdf
+%type <mbtval> microfacetBtdf
 %type <bxval> lambert
 %type <bxval> ward
 %type <aval> accelerator
@@ -220,12 +225,14 @@ material :
          { $$ = new material(rgbColor($6, $8, $10), $12); }
          ;
 
-bsdf:
+bsdf :
     lambert { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
     phong { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
     specular { $$ = $1; } |
+    frosted { $$ = $1; } |
     substrate { $$ = $1; } |
-    pair { $$ = $1; }
+    pair { $$ = $1; } |
+    testBsdf { $$ = $1; }
     ;
 
 lambert :
@@ -241,8 +248,6 @@ phong :
       { $$ = new phongBrdf(rgbColor($3, $5, $7), $9); }
       ;
 
-// NOTE the 1.f/{alpha, beta} below. This makes the input format for the brdf
-// the same as others (0-BIG_NUMBER instead of 0-1).
 ward :
 	 WARD '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
      { $$ = new newWard(rgbColor($3, $5, $7), $9, $11); }
@@ -286,21 +291,36 @@ specular_conductor :
                    }
                    ;
 
+frosted :
+        FROSTED '(' microfacetBrdf ',' microfacetBtdf ')'
+        {
+            $$ = new frostedGlassBsdf($3, $5);
+        }
+        ;
+
 microfacetDistrib :
            blinn { $$ = $1; } |
            aniso { $$ = $1; } |
            beckmann { $$ = $1; }
            ;
 
-microfacet :
+microfacetBrdf :
            MICROFACET '(' FLOAT ',' FLOAT ',' microfacetDistrib ')'
            {
                $$ = new microfacetBrdf($3, $5, $7);
            }
            ;
 
+microfacetBtdf :
+           MICROFACET '(' FLOAT ',' FLOAT ',' microfacetDistrib ')'
+           {
+               $$ = new microfacetBtdf($3, $5, $7);
+           }
+           ;
+
 bxdf :
-     microfacet { $$ = $1; } |
+     microfacetBrdf { $$ = $1; } |
+     microfacetBtdf { $$ = $1; } |
      lambert { $$ = $1; } |
      phong { $$ = $1; } |
      ward { $$ = $1; }
@@ -324,6 +344,13 @@ pair :
          $$ = p;
      }
      ;
+
+testBsdf :
+         TEST '('')'
+         {
+             $$ = new testBsdf();
+         }
+         ;
 
 texture_list :
             texture_slot ':' texture texture_list { (*$4)[$1] = $3; } |

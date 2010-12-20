@@ -69,7 +69,7 @@ const intersection triangle::intersect(ray& r) const {
         isect.tangent = cross(isect.shadingNormal, binormal_);
         isect.binormal = cross(isect.tangent, isect.shadingNormal);
     }else{
-        isect.uv = vec2(beta, beta+gamma);
+        isect.uv = vec2(beta, gamma);
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
     }
 	return isect;

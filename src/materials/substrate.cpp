@@ -35,7 +35,7 @@ const rgbColor substrate::f(const vec3& wo, const vec3& wi) const{
         (1.f - powf(1.f - bsdf::cosTheta(wi) * 0.5f, 5));
 
     const vec3 wh = halfVector(wo, wi);
-    const float wiDotWh = fabs(dot(wi, wh));
+    const float wiDotWh = fabsf(dot(wi, wh));
 
     const rgbColor specular = (distrib->D(wh) * schlickFresnel(Rs, wiDotWh)) /
         (8.f * PI * wiDotWh * max(bsdf::cosTheta(wo), bsdf::cosTheta(wi)));

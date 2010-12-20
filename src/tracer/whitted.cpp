@@ -96,7 +96,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!fr.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (fr / pdf) * _L(r2, depth+1) * fabs(dot(specDir, normal));
+        L += (fr / pdf) * _L(r2, depth+1) * fabsf(dot(specDir, normal));
     }
 
     const rgbColor ft =
@@ -106,8 +106,15 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!ft.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (ft / pdf) * _L(r2, depth+1) * fabs(dot(specDir, normal));
+        L += (ft / pdf) * _L(r2, depth+1) * fabsf(dot(specDir, normal));
     }
 
-    return clamp(L);
+    // TODO: Really need to find out what's causing this.
+    if(L.r < 0.f || L.g < 0.f || L.b < 0.f ||
+            isnan(L.r) || isnan(L.g) || isnan(L.b))
+    {
+        return rgbColor(0.f);
+    }else{
+        return L;
+    }
 }

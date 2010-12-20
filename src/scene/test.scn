@@ -2,41 +2,50 @@ scene<bvh, path>{
 	camera<384,384>(45, 0,0,8, 0,0,0, 0,1,0)
     light<area>(0,2.8,0, 2, 1,1,1, 2,0,0, 0,0,2)
     //light<point>(0,2.8,0, 16, 1,1,1)
-    //light<sphere>(0,1,0, 16, 1,1,1, 0.5)
+    //light<sphere>(0,2.5,0, 8, 1,1,1, 0.5)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
         triangle(-3,3,-3, -3,3,3, -3,-3,3)
-		material(lambert(0.01,0.6,0.01))
+		//material(lambert(0.01,0.6,0.01))
+		material(lambert(0.75,0.75,0.75))
 	}
 
 	shape{
         triangle(3,-3,3, 3,3,-3, 3,-3,-3)
         triangle(3,-3,3, 3,3,3, 3,3,-3)
-		material(lambert(0.01,0.01,0.6))
+		//material(lambert(0.01,0.01,0.6))
+		material(lambert(0.75,0.75,0.75))
 	}
 
-	shape{
-        triangle(-3,3,-3, 3,-3,-3, 3,3,-3)
-        triangle(-3,3,-3, -3,-3,-3, 3,-3,-3)
+    shape{
+        triangle(-3,-3,-3, 3,-3,-3, -3,3,-3)
+        triangle(3,3,-3, -3,3,-3, 3,-3,-3)
+		material(lambert<textured>(0.75,0.75,0.75, imageTexture("/Users/hape/grid.png")))
+    }
 
+	shape{
         triangle(-3,-3,-3, 3,-3,3, 3,-3,-3)
         triangle(-3,-3,-3, -3,-3,3, 3,-3,3)
 
         triangle(3,3,-3, 3,3,3, -3,3,-3)
         triangle(3,3,3, -3,3,3, -3,3,-3)
 
-		material(lambert<textured>(0.3,0.3,0.3, imageTexture("/Users/hape/normal.png")))
+		material(lambert(0.75,0.75,0.75))
 	}
 
-    //shape{
-	//	sphere(-1.5,-1.5,-1,1.5)
-	//	//material(pair(lambert(0.0,0.0,0.0), ward(0.75,0.75,0.75, 0.15, 0.45)))
-	//	//material(pair(lambert(0.0,0.0,0.0), microfacet(1.5, 7.7, aniso(0.75,0.75,0.75, 25, 25))))
-    //}
+	//shape{
+    //    //triangle(-1,-1,0, 1,-1,0, -1,1,0)
+    //    //triangle(1,1,0, -1,1,0, 1,-1,0)
+    //    objfile<smooth>("../models/lens.obj")
+    //    material(specular<dielectric>(0.9,0.9,0.9, 1.6))
+	//}
 
     shape{
         sphere(0,0,0,1.5)
-        material(specular<dielectric>(0.9,0.9,0.9, 1.4))
+        material(frosted(
+            microfacet(1.8, 0, blinn(0.2,0.2,0.2, 500)),
+            microfacet(1.8, 0, blinn(0.9,0.9,0.9, 500))
+            ))
     }
 }

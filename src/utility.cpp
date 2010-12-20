@@ -125,8 +125,8 @@ int Ceil2Int(const double val) {
  * Y in the range [-0.5, 0.5]
  */
 const float gaussian2DNormalization(const float& sigma) {
-    return 0.3989422804f * fabs(1.f/sigma) * erf(0.353553389f *
-            fabs(1.f/sigma)) * (-1.25331413f * sigma *
+    return 0.3989422804f * fabsf(1.f/sigma) * erf(0.353553389f *
+            fabsf(1.f/sigma)) * (-1.25331413f * sigma *
             erf(-0.353553389f/sigma) + 1.25331413f * sigma *
             erf(0.353553389f/sigma));
 }

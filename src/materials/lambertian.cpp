@@ -34,7 +34,7 @@ inline void lambertianBrdf::updateFromUVTexture(const vec2& uv) {
     if(hasTexture && uv.s != -1) {
         const rgbColor c = textureLookup(DIFFUSE_COLOR, uv);
 #ifdef RT_MULTITHREADED
-        texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c;
+        texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c * rOverPi;
 #else
         rOverPi = c;
 #endif
