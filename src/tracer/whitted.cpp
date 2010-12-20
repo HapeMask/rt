@@ -91,7 +91,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	float pdf;
     const rgbColor fr =
         bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
-                wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
+                wo, specDir, bxdfType(GLOSSY | SPECULAR | REFLECTION), sampledType, pdf);
 
     if(!fr.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
@@ -101,7 +101,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 
     const rgbColor ft =
         bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
-                wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
+                wo, specDir, bxdfType(GLOSSY | SPECULAR | TRANSMISSION), sampledType, pdf);
 
     if(!ft.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
