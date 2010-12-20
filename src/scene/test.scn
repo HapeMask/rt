@@ -44,8 +44,8 @@ scene<bvh, path>{
     shape{
         sphere(0,0,0,1.5)
         material(frosted(
-            microfacet(1.8, 0, blinn(0.2,0.2,0.2, 500)),
-            microfacet(1.8, 0, blinn(0.9,0.9,0.9, 500))
+            microfacet(1.8, 0, beckmann(0.2,0.2,0.2, 0.023)),
+            microfacet(1.8, 0, beckmann(0.9,0.9,0.9, 0.023))
             ))
     }
 }

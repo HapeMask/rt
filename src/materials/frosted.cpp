@@ -15,16 +15,18 @@ const rgbColor frostedGlassBsdf::sampleF(const float& u0, const float& u1, const
     const float Fr = (F.red() + F.blue() + F.green())/3.f;
     const float Ft = 1.f - Fr;
     rgbColor f(0.f);
+    pd = 0.f;
 
-    if(u0 < Ft){
+    if((glossTra->getType() & type) && u0 < Ft){
         f = glossTra->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossTra->getType();
         pd = Ft;
-    }else{
+    }else if(glossRef->getType() & type){
         f = glossRef->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossRef->getType();
         pd *= Fr;
     }
+
     return f;
 }
 
