@@ -115,7 +115,6 @@ class vec2 {
             return values[0]*values[0] + values[1]*values[1];
         }
 
-	private:
         union {
             float values[2];
             struct {
@@ -285,7 +284,6 @@ class vec3 {
             (*this) /= length();
         }
 
-	//private:
         union{
             float values[4];
 #ifdef HAVE_SSE2
@@ -444,7 +442,6 @@ class vec4 {
                 values[3]*values[3];
         }
 
-	private:
         union{
             float values[4];
 #ifdef HAVE_SSE2

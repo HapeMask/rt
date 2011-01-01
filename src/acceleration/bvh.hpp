@@ -32,7 +32,6 @@ typedef struct bn {
     };
 
     uint8_t axis;
-    //mutable uint64_t timesHit;
 } bvhNode;
 
 class bvh : public accelerator {
