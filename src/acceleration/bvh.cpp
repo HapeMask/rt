@@ -66,8 +66,22 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
     const bvhNode& node = nodes[index];
 
     if(!node.box.intersect(r, tLeftMin, tLeftMax)){
+        //intersection i;
+        //i.debugInfo = node.timesHit;
+        //return i;
         return noIntersect;
     }else if(node.axis == AXIS_LEAF){
+        /*
+        intersection i = leafTest(node, r);
+
+        if(i.hit){
+#pragma omp atomic
+            ++node.timesHit;
+        }
+
+        i.debugInfo = node.timesHit;
+        return i;
+        */
         return leafTest(node, r);
     }
 
@@ -171,6 +185,8 @@ void bvh::build(const scene& s){
     numNodes = 2 * numPrims - 1;
 
     nodes = new bvhNode[numNodes];
+    //for(int i=0; i<numNodes; ++i)
+        //nodes[i].timesHit = 0;
 
     int index = 0;
     cerr << "Building BVH..." << endl;
@@ -195,6 +211,8 @@ void bvh::_build(const aabb& box,
 
     bvhNode node;
     node.box = box;
+    //node.timesHit = 0;
+
     if((end-start) <= BVH_MAX_PRIMS_PER_LEAF){
         node.prims[0] = start;
         node.prims[1] = end;

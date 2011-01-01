@@ -285,7 +285,7 @@ class vec3 {
             (*this) /= length();
         }
 
-	private:
+	//private:
         union{
             float values[4];
 #ifdef HAVE_SSE2

@@ -23,7 +23,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         // scene::intersect() modifies it.
         const ray rOrig(r);
         const intersection isect = parent.intersect(r);
-        //return rgbColor(0, isect.debugInfo / 2400.f, 0);
+        //return rgbColor(0, isect.debugInfo / 1e5f, 0);
 
         if(!isect.hit || isect.li){
             if(pathLength == 0 || lastBounceWasSpecular){

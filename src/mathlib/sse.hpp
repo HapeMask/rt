@@ -19,6 +19,15 @@
 #define rotatelps(ps)   _mm_shuffle_ps((ps),(ps), 0x39)
 #define muxhps(low,high) _mm_movehl_ps((low),(high))
 
+#ifdef __SSE4_1__
+#include <smmintrin.h>
+
+// dec(241) = bin(1111 0001), uses all 4 dwords of input and uses the LSdword of the output.
+static const int DOTMASK = 241;
+
+#define dotps           _mm_dp_ps
+#endif
+
 static const float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};
 static const float PS_NEG_INF[4] = {NEG_INF, NEG_INF, NEG_INF, NEG_INF};
 static const float PS_ONES[4] = {1,1,1,1};
