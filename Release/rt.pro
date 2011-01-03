@@ -13,7 +13,8 @@ DEFINES += RT_NO_EXECPTIONS \
     RT_MULTITHREADED \
     HAVE_SSE2 \
     MEXP=19937 \
-    RT_USE_QT
+    RT_USE_QT \
+    GL_GLEXT_PROTOTYPES
 
 QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
 	-msse4 -msse4.1 -msse4.2 -ffast-math \
@@ -100,6 +101,7 @@ HEADERS += ../src/utility.hpp \
            ../src/mathlib/sse.hpp \
            ../src/mathlib/transformation.hpp \
            ../src/mathlib/vector.hpp \
+           ../src/mathlib/point.hpp \
            ../src/qtgui/qtmainwin.hpp \
            ../src/samplers/samplers.hpp \
            ../src/scene/objparser.hpp \
@@ -141,6 +143,7 @@ SOURCES += ../src/main.cpp \
            ../src/mathlib/SFMT.cpp \
            ../src/mathlib/transformation.cpp \
            ../src/mathlib/vector.cpp \
+           ../src/mathlib/point.cpp \
            ../src/qtgui/qtmainwin.cpp \
            ../src/samplers/samplers.cpp \
            ../src/scene/objparser.cpp \
