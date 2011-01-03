@@ -17,12 +17,7 @@
 
 #include "tracer/tracer.hpp"
 
-#ifdef RT_USE_QT
-#ifndef GL_EXT_PROTOTYPES
-#define GL_EXT_PROTOTYPES
-#endif
 #include <GL/gl.h>
-#endif
 
 using std::tr1::shared_ptr;
 using std::vector;

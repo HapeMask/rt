@@ -8,9 +8,6 @@
 #include <tr1/memory>
 
 #ifdef RT_USE_QT
-#ifndef GL_EXT_PROTOTYPES
-#define GL_EXT_PROTOTYPES
-#endif
 #include <GL/gl.h>
 #endif
 
@@ -23,6 +20,8 @@ class intersection;
 
 class primitive {
 	public:
+        primitive() :parent(NULL) {}
+
         primitive(const aabb& box) : boundingBox(box) {}
         primitive(const aabb& box, shape* p) : parent(p), boundingBox(box) {}
 

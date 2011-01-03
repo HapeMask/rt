@@ -11,6 +11,8 @@
 
 class triangle : public primitive {
 	public:
+        triangle() {}
+
 		triangle(const point3& a, const point3& b, const point3& c);
 		virtual ~triangle() {}
 
@@ -18,15 +20,15 @@ class triangle : public primitive {
 		virtual const bool intersectB(const ray& r) const;
 
 		const point3& a() const{
-			return points[0];
+			return a_;
 		}
 
 		const point3& b() const{
-			return points[1];
+			return b_;
 		}
 
 		const point3& c() const{
-			return points[2];
+			return c_;
 		}
 
         virtual const vec3 getNormal(const point3& p) const {
@@ -55,11 +57,11 @@ class triangle : public primitive {
         }
 
 	private:
-		point3 points[3];
+		point3 a_, b_, c_;
         vec3 vertNormals[3];
         vec2 uvs[3];
 		vec3 normal_, binormal_, tangent_;
-        const vec3 B, C;
+        vec3 B, C;
 
         float area_;
         bool hasVertNormals, hasUVs;

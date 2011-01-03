@@ -1,4 +1,3 @@
-#ifdef RT_USE_QT
 #include "qtoglframebuffer.hpp"
 
 #include "mathlib/constants.hpp"
@@ -14,9 +13,6 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#ifndef GL_EXT_PROTOTYPES
-#define GL_EXT_PROTOTYPES
-#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
@@ -499,4 +495,3 @@ void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cor
                     QRect(cornerX, cornerY, blockWidth, blockHeight));
         }
 }
-#endif

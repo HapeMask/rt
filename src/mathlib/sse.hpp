@@ -20,6 +20,7 @@
 #define shufps          _mm_shuffle_ps
 #define shuffle         _MM_SHUFFLE
 #define zerops          _mm_setzero_ps
+#define set1ps          _mm_set1_ps
 #define float2int(f)    _mm_cvtss_si32(_mm_load_ss(&(f)))
 #define rotatelps(ps)   _mm_shuffle_ps((ps),(ps), 0x39)
 #define muxhps(low,high) _mm_movehl_ps((low),(high))

@@ -1,647 +1,615 @@
 #pragma once
 
 #include <iostream>
-using std::ostream;
+#include <cmath>
+#include <cassert>
 
+#ifdef HAVE_SSE2
 #include "sse.hpp"
+#endif
 
-class addOperator {
+using namespace std;
+
+class point3;
+
+class vec2 {
     public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return addps(lhs.eval(), rhs.eval());
-        }
-};
-
-class subOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return subps(lhs.eval(), rhs.eval());
-        }
-};
-
-class mulOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return mulps(lhs.eval(), rhs.eval());
-        }
-};
-
-class divOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return divps(lhs.eval(), rhs.eval());
-        }
-};
-
-class negOperator {
-    public:
-        template <typename rhs_t>
-        static inline const __m128 eval(const rhs_t& rhs) {
-            return subps(zerops(), rhs.eval());
-        }
-};
-
-class minOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return minps(lhs.eval(), rhs.eval());
-        }
-};
-
-class maxOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            return maxps(lhs.eval(), rhs.eval());
-        }
-};
-
-class halfVectorOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            const __m128 v = addps(lhs.eval(), rhs.eval());
-            const __m128 v1 = mulps(v, v);
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            return divps(
-                    v,
-                    sqrtps(
-                        addps(
-                            v2,
-                            shufps(v2, v2, shuffle(0, 1, 2, 3))))
-                    );
-        }
-};
-
-class dotOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            const __m128 v1 = mulss(mulps(lhs.eval(), rhs.eval()), zerops());
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            return addps(v2, shufps(v2, v2, shuffle(0, 1, 2, 3)));
-        }
-};
-
-class dot4Operator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            const __m128 v1 = mulps(lhs.eval(), rhs.eval());
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            return addps(v2, shufps(v2, v2, shuffle(0, 1, 2, 3)));
-        }
-};
-
-class crossOperator {
-    public:
-        template <typename lhs_t, typename rhs_t>
-        static inline const __m128 eval(const lhs_t& lhs, const rhs_t& rhs) {
-            const __m128 a = lhs.eval();
-            const __m128 b = rhs.eval();
-            const __m128 v1 = mulps(
-                    shufps(a, a, shuffle(0, 2, 3, 1)),
-                    shufps(b, b, shuffle(0, 3, 1, 2))
-                );
-            const __m128 v2 = mulps(
-                    shufps(a, a, shuffle(0, 3, 1, 2)),
-                    shufps(b, b, shuffle(0, 2, 3, 1))
-                );
-
-            return subps(v1, v2);
-        }
-};
-
-class sqrtOperator {
-    public:
-        template <typename expression_t>
-        static inline const __m128 eval(const expression_t& expr) {
-            return sqrtps(expr.eval());
-        }
-};
-
-class norm2Operator {
-    public:
-        template <typename expression_t>
-        static inline const __m128 eval(const expression_t& expr) {
-            const __m128 v1 = mulps(expr.eval(), expr.eval());
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            return addps(v2, shufps(v2, v2, shuffle(0, 1, 2, 3)));
-        }
-};
-
-class normOperator {
-    public:
-        template <typename expression_t>
-        static inline const __m128 eval(const expression_t& expr) {
-            const __m128 v1 = mulps(expr.eval(), expr.eval());
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            return sqrtps(addps(v2, shufps(v2, v2, shuffle(0, 1, 2, 3))));
-        }
-};
-
-class normalizeOperator {
-    public:
-        template <typename expression_t>
-        static inline const __m128 eval(const expression_t& expr) {
-            const __m128 e = expr.eval();
-            const __m128 v1 = mulps(e, e);
-            const __m128 v2 = addps(v1, shufps(v1, v1, shuffle(2, 3, 0, 1)));
-
-            // The __m128 contains 4 copies of the norm so just divide.
-            return divps(
-                    e,
-                    sqrtps(
-                        addps(
-                            v2,
-                            shufps(v2, v2, shuffle(0, 1, 2, 3))))
-                    );
-        }
-};
-
-template <typename type, typename operation> class expressionVec;
-template <typename lhs, typename rhs, typename operation> class expressionVecVec;
-template <typename lhs, typename operation> class expressionVecFloat;
-template <typename lhs, typename operation> class expressionFloatVec;
-
-template <typename lhsType>
-class expression {
-    public:
-        inline const lhsType& asActualType() const {
-            return *static_cast<const lhsType*>(this);
+        vec2(){
+            x = 0.f;
+            y = 0.f;
         }
 
-        inline lhsType& asActualType() {
-            return *static_cast<lhsType*>(this);
+        vec2(const float& x_, const float& y_){
+            x = x_;
+            y = y_;
         }
 
-        template <typename rhsType>
-        inline const expressionVecVec<lhsType, rhsType, addOperator>
-        operator+(const expression<rhsType>& rhs) const;
-
-        template <typename rhsType>
-        inline const expressionVecVec<lhsType, rhsType, subOperator>
-        operator-(const expression<rhsType>& rhs) const;
-
-        inline const expressionVec<lhsType, negOperator>
-        operator-() const;
-
-        template <typename rhsType>
-        inline const expressionVecVec<lhsType, rhsType, mulOperator>
-        operator*(const expression<rhsType>& rhs) const;
-
-        inline const expressionVecFloat<lhsType, mulOperator>
-        operator*(const float& rhs) const;
-
-        template <typename rhsType>
-        inline const expressionVecVec<lhsType, rhsType, divOperator>
-        operator/(const expression<rhsType>& rhs) const;
-
-        inline const expressionVecFloat<lhsType, divOperator>
-        operator/(const float& rhs) const;
-};
-
-class expressionFloat : public expression<expressionFloat> {
-    public:
-        inline expressionFloat(const float& f) : value(f) {}
-
-        inline const __m128 eval() const {
-            return _mm_set1_ps(value);
+        vec2(const vec2& v){
+            x = v.x;
+            y = v.y;
         }
 
-        const float& value;
-};
-
-template <typename lhs_t, typename rhs_t, typename operation>
-class expressionVecVec : public expression<expressionVecVec<lhs_t, rhs_t, operation> > {
-    public:
-        expressionVecVec(const lhs_t& l, const rhs_t& r) : lhs(l), rhs(r) {}
-
-        inline const __m128 eval () const {
-            return operation::eval(lhs, rhs);
+        const float& operator()(const int& index) const{
+#ifdef DEBUG
+            assert(index < 2);
+#endif
+            return *(&x + index);
         }
 
-        inline operator float() const {
-            float f = 0.f;
-            storess(operation::eval(lhs, rhs), &f);
-            return f;
+        float& operator()(const int& index){
+#ifdef DEBUG
+            assert(index < 2);
+#endif
+            return *(&x + index);
         }
 
-        const lhs_t& lhs;
-        const rhs_t& rhs;
-};
-
-template <typename lhs_t, typename operation>
-class expressionVecFloat : public expression<expressionVecFloat<lhs_t, operation> > {
-    public:
-        expressionVecFloat(const lhs_t& l, const float& r) : lhs(l), rhs(r) {}
-
-        inline const __m128 eval () const {
-            return operation::eval(lhs, rhs);
+        inline const vec2 operator+(const vec2& v) const {
+            return vec2(*this) += v;
         }
 
-        inline operator float() const {
-            float f = 0.f;
-            storess(operation::eval(lhs, rhs), &f);
-            return f;
+        inline vec2& operator+=(const vec2& v){
+            x += v(0);
+            y += v(1);
+            return (*this);
         }
 
-        const lhs_t& lhs;
-        const expressionFloat& rhs;
-};
-
-template <typename rhs_t, typename operation>
-class expressionFloatVec : public expression<expressionFloatVec<rhs_t, operation> > {
-    public:
-        expressionFloatVec(const float& l, const rhs_t& r) : lhs(l), rhs(r) {}
-
-        inline const __m128 eval() const {
-            return operation::eval(lhs, rhs);
+        inline const vec2 operator-(const vec2& v) const {
+            return vec2(*this) -= v;
         }
 
-        inline operator float() const {
-            float f = 0.f;
-            storess(operation::eval(lhs, rhs), &f);
-            return f;
+        inline vec2& operator-=(const vec2& v){
+            return (*this) += -v;
         }
 
-        const expressionFloat& lhs;
-        const rhs_t& rhs;
-};
-
-template <typename type, typename operation>
-class expressionVec : public expression<expressionVec<type, operation> > {
-    public:
-        expressionVec(const type& v) : vector(v) {}
-
-        inline const __m128 eval() const {
-            return operation::eval(vector);
+        inline const vec2 operator-() const {
+            return vec2(-x, -y);
         }
 
-        inline operator float() const {
-            float f = 0.f;
-            storess(operation::eval(vector), &f);
-            return f;
+        inline const vec2 operator*(const float& f) const {
+            return vec2(*this) *= f;
         }
 
-        const type& vector;
-};
-
-class vec4 : public expression<vec4> {
-    public:
-        vec4() : x(0.f), y(0.f), z(0.f), w(0.f) {}
-
-        /*
-         * Value Constructors
-         */
-        vec4(const float& a, const float& b, const float& c, const float& d) :
-            x(a), y(b), z(c), w(d) {}
-
-        vec4(const float& f) :
-            x(f), y(f), z(f), w(f) {}
-
-        vec4(const __m128& vec) : vector(vec) {}
-
-        /*
-         * Expression Constructors
-         */
-        template <typename lhs_t, typename rhs_t, typename operation>
-        vec4(const expressionVecVec<lhs_t, rhs_t, operation>& expr) :
-            vector(expr.eval()) {}
-
-        template <typename lhs_t, typename operation>
-        vec4(const expressionVecFloat<lhs_t, operation>& expr) :
-            vector(expr.eval()) {}
-
-        template <typename rhs_t, typename operation>
-        vec4(const expressionFloatVec<rhs_t, operation>& expr) :
-            vector(expr.eval()) {}
-
-        template <typename type, typename operation>
-        vec4(const expressionVec<type, operation>& expr) :
-            vector(expr.eval()) {}
-
-        /*
-         * Access Operators
-         */
-		inline const float& operator()(const int& index) const {
-            return *((&x) - index);
-		}
-
-		inline float& operator()(const int& index) {
-            return *((&x) - index);
-		}
-
-        inline const __m128 eval() const {
-            return vector;
+        inline vec2& operator*=(const float& f){
+            x *= f;
+            y *= f;
+            return (*this);
         }
 
-        /*
-         * Overloaded Operate/Assign Operators
-         */
-        template <typename T>
-        inline void operator+=(const T& rhs) {
-            *this = (*this) + rhs;
+        inline const vec2 operator*(const vec2& v) const {
+            return vec2(*this) *= v;
         }
 
-        template <typename T>
-        inline void operator-=(const T& rhs) {
-            *this = (*this) - rhs;
+        inline vec2& operator*=(const vec2& v){
+            x *= v(0);
+            y *= v(1);
+            return (*this);
         }
 
-        template <typename T>
-        inline void operator*=(const T& rhs) {
-            *this = (*this) * rhs;
+        inline const vec2 operator/(const float& f) const {
+            return vec2(*this) *= 1.f / f;
         }
 
-        template <typename T>
-        inline void operator/=(const T& rhs) {
-            *this = (*this) / rhs;
+        inline vec2& operator/=(const float& f){
+            return (*this) *= 1.f / f;
         }
 
-        /*
-         * Assignment (Used to take an expression tree with some type of root
-         * and evaluate it into this vector.
-         */
-        template <typename expr_t>
-        inline void operator=(const expression<expr_t>& expr) {
-            // We need the actual type of the expression root in order to call
-            // eval since the base class doesn't have any eval().
-            vector = expr.asActualType().eval();
+        inline const vec2 operator/(const vec2& v) const {
+            return vec2(*this) /= v;
         }
 
-        union ALIGN_16 {
-            __m128 vector;
-           struct {
-               float w;
-               float z;
-               float y;
-               float x;
-           };
-           struct {
-               float q;
-               float r;
-               float t;
-               float s;
-           };
+        inline vec2& operator/=(const vec2& v){
+            x /= v(0);
+            y /= v(1);
+            return (*this);
+        }
+
+        inline const bool operator==(const vec2& v) const {
+            return (x == v.x) && (y == v.y);
+        }
+
+        union {
+            struct {
+                float x;
+                float y;
+            };
+            struct {
+                float s;
+                float t;
+            };
         };
 };
 
-class vec3 : public vec4 {
+class vec3 {
+    friend class point3;
     public:
-        vec3() : vec4() {}
+        vec3(const point3& p);
 
-        vec3(const float& a, const float& b, const float& c) : vec4(a, b, c, 0.f) {}
-        vec3(const float& f) : vec4(f, f, f, 0.f) {}
-        vec3(const __m128& vec) : vec4(vec) {}
-
-        inline const bool operator==(const vec3& v){
-            return ((v.x == x) &&
-                (v.y == y) &&
-                (v.z == z));
+        vec3(){
+#ifdef HAVE_SSE2
+            vector = zerops();
+#else
+            x = 0.f;
+            y = 0.f;
+            z = 0.f;
+            w = 0.f;
+#endif
         }
 
-        template <typename lhs_t, typename rhs_t, typename operation>
-        vec3(const expressionVecVec<lhs_t, rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec3(const float& x_, const float& y_, const float& z_){
+            x = x_;
+            y = y_;
+            z = z_;
+            w = 0.f;
+        }
 
-        template <typename lhs_t, typename operation>
-        vec3(const expressionVecFloat<lhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec3(const vec3& v){
+#ifdef HAVE_SSE2
+            vector = v.vector;
+#else
+            x = v.x;
+            y = v.y;
+            z = v.z;
+            w = 0.f;
+#endif
+        }
 
-        template <typename rhs_t, typename operation>
-        vec3(const expressionFloatVec<rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec3(const vec2& v, const float& f){
+            x = v.x;
+            y = v.y;
+            z = f;
+            w = 0.f;
+        }
 
-        template <typename type, typename operation>
-        vec3(const expressionVec<type, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec3(const float& f, const vec2& v){
+            x = f;
+            y = v.x;
+            z = v.y;
+            w = 0.f;
+        }
+
+        vec3(const float& f){
+#ifdef HAVE_SSE2
+            vector = set1ps(f);
+            w = 0.f;
+#else
+            x = f;
+            y = f;
+            z = f;
+            w = 0.f;
+#endif
+        }
+
+#ifdef HAVE_SSE2
+        vec3(const __m128& v) : vector(v) {}
+#endif
+
+        inline const float& operator()(const int& index) const{
+#ifdef DEBUG
+            assert(index < 3);
+#endif
+            return *(&x + index);
+        }
+
+        inline float& operator()(const int& index){
+#ifdef DEBUG
+            assert(index < 3);
+#endif
+            return *(&x + index);
+        }
+
+        inline const vec3 operator+(const vec3& v) const {
+            return vec3(v) += *this;
+        }
+
+        inline vec3& operator+=(const vec3& v){
+#ifdef HAVE_SSE2
+            vector = addps(vector, v.vector);
+#else
+            x += v.x;
+            y += v.y;
+            z += v.z;
+#endif
+            return (*this);
+        }
+
+        inline const vec3 operator-(const vec3& v) const {
+            return vec3(*this) -= v;
+        }
+
+        inline vec3& operator-=(const vec3& v){
+            return (*this) += -v;
+        }
+
+        inline const vec3 operator-() const {
+            return vec3(-x, -y, -z);
+        }
+
+        inline const vec3 operator*(const float& f) const {
+            return vec3(*this) *= f;
+        }
+
+        inline vec3& operator*=(const float& f){
+#ifdef HAVE_SSE2
+            vector = mulps(vector, set1ps(f));
+#else
+            x *= f;
+            y *= f;
+            z *= f;
+#endif
+            return (*this);
+        }
+
+        inline const vec3 operator*(const vec3& v) const {
+#ifdef HAVE_SSE2
+            return vec3(mulps(vector, v.vector));
+#else
+            return vec3(*this) *= v;
+#endif
+        }
+
+        inline vec3& operator*=(const vec3& v){
+#ifdef HAVE_SSE2
+            vector = mulps(vector, v.vector);
+#else
+            x *= v(0);
+            y *= v(1);
+            z *= v(2);
+#endif
+            return (*this);
+        }
+
+        inline const vec3 operator/(const float& f) const {
+#ifdef HAVE_SSE2
+            return vec3(divps(vector, set1ps(f)));
+#else
+            return vec3(*this) *= 1.f / f;
+#endif
+        }
+
+        inline vec3& operator/=(const float& f){
+#ifdef HAVE_SSE2
+            vector = divps(vector, set1ps(f));
+            return (*this);
+#else
+            return (*this) *= 1.f / f;
+#endif
+        }
+
+        inline const vec3 operator/(const vec3& v) const {
+#ifdef HAVE_SSE2
+            return vec3(divps(vector, v.vector));
+#else
+            return vec3(*this) /= v;
+#endif
+        }
+
+        inline vec3& operator/=(const vec3& v){
+#ifdef HAVE_SSE2
+            vector = divps(vector, v.vector);
+#else
+            x /= v(0);
+            y /= v(1);
+            z /= v(2);
+#endif
+            return (*this);
+        }
+
+        inline const bool operator==(const vec3& v) const {
+            return
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z);
+        }
+
+        union{
+#ifdef HAVE_SSE2
+            __m128 vector;
+#endif
+            struct {
+                float x;
+                float y;
+                float z;
+                float w;
+            };
+            struct {
+                float s;
+                float t;
+                float r;
+                float q;
+            };
+        };
 };
 
-class vec2 : public vec4 {
+class vec4 {
     public:
-        vec2() : vec4() {}
+        vec4(){
+            x = 0.f;
+            y = 0.f;
+            z = 0.f;
+            w = 0.f;
+        }
 
-        vec2(const float& a, const float& b) : vec4(a, b, 0.f, 0.f) {}
-        vec2(const float& f) : vec4(f, f, 0.f, 0.f) {}
-        vec2(const __m128& vec) : vec4(vec) {}
+        vec4(const float& x_, const float& y_, const float& z_, const float& w_){
+            x = x_;
+            y = y_;
+            z = z_;
+            w = w_;
+        }
 
-        template <typename lhs_t, typename rhs_t, typename operation>
-        vec2(const expressionVecVec<lhs_t, rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec4(const vec4& v){
+#ifdef HAVE_SSE2
+            vector = v.vector;
+#else
+            x = v.x;
+            y = v.y;
+            z = v.z;
+            w = v.w;
+#endif
+        }
 
-        template <typename lhs_t, typename operation>
-        vec2(const expressionVecFloat<lhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec4(const float& f){
+#ifdef HAVE_SSE2
+            vector = set1ps(f);
+#else
+            x = f;
+            y = f;
+            z = f;
+            w = f;
+#endif
+        }
 
-        template <typename rhs_t, typename operation>
-        vec2(const expressionFloatVec<rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
+        vec4(const vec3& v, const float& f){
+#ifdef HAVE_SSE2
+            vector = v.vector;
+#else
+            x = v.x;
+            y = v.y;
+            z = v.z;
+#endif
+            w = f;
+        }
 
-        template <typename type, typename operation>
-        vec2(const expressionVec<type, operation>& expr) :
-            vec4(expr.eval()) {}
+#ifdef HAVE_SSE2
+        vec4(const __m128& v) : vector(v) {}
+#endif
+
+        inline const float& operator()(const int& index) const{
+#ifdef DEBUG
+            assert(index < 4);
+#endif
+            return *(&x + index);
+        }
+
+        inline float& operator()(const int& index){
+#ifdef DEBUG
+            assert(index < 4);
+#endif
+            return *(&x + index);
+        }
+
+        inline const vec4 operator+(const vec4& v) const {
+            return vec4(*this) += v;
+        }
+
+        inline vec4& operator+=(const vec4& v){
+#ifdef HAVE_SSE2
+            vector = addps(vector, v.vector);
+#else
+            x += v.x;
+            y += v.y;
+            z += v.z;
+            w += v.w;
+#endif
+            return (*this);
+        }
+
+        inline const vec4 operator-(const vec4& v) const {
+#ifdef HAVE_SSE2
+            return vec4(subps(vector, v.vector));
+#else
+            return vec4(*this) -= v;
+#endif
+        }
+
+        inline vec4& operator-=(const vec4& v){
+#ifdef HAVE_SSE2
+            vector = subps(vector, v.vector);
+            return (*this);
+#else
+            return (*this) += -v;
+#endif
+        }
+
+        inline const vec4 operator-() const {
+            return vec4(-x, -y, -z, -w);
+        }
+
+        inline const vec4 operator*(const float& f) const {
+            return vec4(*this) *= f;
+        }
+
+        inline vec4& operator*=(const float& f){
+#ifdef HAVE_SSE2
+            vector = mulps(vector, set1ps(f));
+#else
+            x *= f;
+            y *= f;
+            z *= f;
+            w *= f;
+#endif
+            return (*this);
+        }
+
+        inline const vec4 operator*(const vec4& v) const {
+            return vec4(*this) *= v;
+        }
+
+        inline vec4& operator*=(const vec4& v){
+            return (*this);
+        }
+
+        inline const vec4 operator/(const float& f) const {
+            return vec4(*this) *= 1.f / f;
+        }
+
+        inline vec4& operator/=(const float& f){
+            return (*this) *= 1.f / f;
+        }
+
+        inline const vec4 operator/(const vec4& v) const {
+            return vec4(*this) /= v;
+        }
+
+        inline vec4& operator/=(const vec4& v){
+#ifdef HAVE_SSE
+            vector = divps(vector, v.vector);
+#else
+            x /= v.x;
+            y /= v.y;
+            z /= v.z;
+            w /= v.w;
+#endif
+            return (*this);
+        }
+
+        inline const bool operator==(const vec4& v) const {
+            return
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z) &&
+                (w == v.w);
+        }
+
+        union{
+#ifdef HAVE_SSE2
+            __m128 vector;
+#endif
+            struct {
+                float x;
+                float y;
+                float z;
+                float w;
+            };
+        };
 };
 
-class point3 : public vec4 {
-    public:
-        point3() : vec4() {}
-
-        point3(const float& a, const float& b, const float& c) : vec4(a, b, c, 0.f) {}
-        point3(const float& f) : vec4(f, f, f, 0.f) {}
-        point3(const __m128& point) : vec4(point) {}
-
-        template <typename lhs_t, typename rhs_t, typename operation>
-        point3(const expressionVecVec<lhs_t, rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename lhs_t, typename operation>
-        point3(const expressionVecFloat<lhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename rhs_t, typename operation>
-        point3(const expressionFloatVec<rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename type, typename operation>
-        point3(const expressionVec<type, operation>& expr) :
-            vec4(expr.eval()) {}
-};
-
-class point2 : public vec4 {
-    public:
-        point2() : vec4() {}
-
-        point2(const float& a, const float& b) : vec4(a, b, 0.f, 0.f) {}
-        point2(const float& f) : vec4(f, f, 0.f, 0.f) {}
-        point2(const __m128& point) : vec4(point) {}
-
-        template <typename lhs_t, typename rhs_t, typename operation>
-        point2(const expressionVecVec<lhs_t, rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename lhs_t, typename operation>
-        point2(const expressionVecFloat<lhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename rhs_t, typename operation>
-        point2(const expressionFloatVec<rhs_t, operation>& expr) :
-            vec4(expr.eval()) {}
-
-        template <typename type, typename operation>
-        point2(const expressionVec<type, operation>& expr) :
-            vec4(expr.eval()) {}
-};
-
-/*
- * Operator Implementations
- *
- * NOTE: All of these require calling asActualType() on the lhs/rhs of the
- * expressions in order to instantiate the proper templates.
- */
-template <typename lhsType>
-template <typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, addOperator>
-expression<lhsType>::operator+(const expression<rhsType>& rhs) const {
-    return expressionVecVec<lhsType, rhsType, addOperator>(
-            this->asActualType(), rhs.asActualType());
+template <typename vecType>
+inline const float norm(const vecType& v) {
+    return sqrtf(norm2(v));
 }
 
-template <typename lhsType>
-template <typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, subOperator>
-expression<lhsType>::operator-(const expression<rhsType>& rhs) const {
-    return expressionVecVec<lhsType, rhsType, subOperator>(
-            this->asActualType(), rhs.asActualType());
+inline float dot(const vec2& u, const vec2& v){
+    return
+        (u.x * v.x) +
+        (u.y * v.y);
 }
 
-template <typename lhsType>
-inline const expressionVec<lhsType, negOperator>
-expression<lhsType>::operator-() const {
-    return expressionVec<lhsType, negOperator>(this->asActualType());
+inline float dot(const vec3& u, const vec3& v){
+    return
+        (u.x * v.x) +
+        (u.y * v.y) +
+        (u.z * v.z);
 }
 
-template <typename lhsType>
-template <typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, mulOperator>
-expression<lhsType>::operator*(const expression<rhsType>& rhs) const {
-    return expressionVecVec<lhsType, rhsType, mulOperator>(
-            this->asActualType(), rhs.asActualType());
+inline float dot(const vec4& u, const vec4& v){
+    return
+        (u.x * v.x) +
+        (u.y * v.y) +
+        (u.z * v.z) +
+        (u.w * v.w);
 }
 
-template <typename lhsType>
-inline const expressionVecFloat<lhsType, mulOperator>
-expression<lhsType>::operator*(const float& rhs) const {
-    return expressionVecFloat<lhsType, mulOperator>(
-            this->asActualType(), rhs);
+using std::cerr;
+using std::endl;
+inline vec3 cross(const vec3& a, const vec3& b){
+#ifdef HAVE_SSE2
+    const __m128 v1 = mulps(
+            shufps(b.vector, b.vector, shuffle(0, 1, 0, 2)),
+            shufps(a.vector, a.vector, shuffle(0, 0, 2, 1))
+        );
+    const __m128 v2 = mulps(
+            shufps(b.vector, b.vector, shuffle(0, 0, 2, 1)),
+            shufps(a.vector, a.vector, shuffle(0, 1, 0, 2))
+        );
+
+    return vec3(subps(v1, v2));
+#else
+    return vec3(
+            (a.y * b.z) - (a.z * b.y),
+            (a.z * b.x) - (a.x * b.z),
+            (a.x * b.y) - (a.y * b.x)
+        );
+#endif
 }
 
-template <typename rhsType>
-inline const expressionFloatVec<rhsType, mulOperator>
-operator*(const float& lhs, const expression<rhsType>& rhs) {
-    return expressionFloatVec<rhsType, mulOperator>(
-            lhs, rhs.asActualType());
+inline const vec2 operator*(const float& f, const vec2& u){
+    return u * f;
 }
 
-template <typename lhsType>
-template <typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, divOperator>
-expression<lhsType>::operator/(const expression<rhsType>& rhs) const {
-    return expressionVecVec<lhsType, rhsType, divOperator>(
-            this->asActualType(), rhs.asActualType());
+inline const vec3 operator*(const float& f, const vec3& u){
+    return u * f;
 }
 
-template <typename lhsType>
-inline const expressionVecFloat<lhsType, divOperator>
-expression<lhsType>::operator/(const float& rhs) const {
-    return expressionVecFloat<lhsType, divOperator>(
-            this->asActualType(), rhs);
+inline const vec4 operator*(const float& f, const vec4& u){
+    return u * f;
 }
 
-template <typename rhsType>
-inline const expressionFloatVec<rhsType, divOperator>
-operator/(const float& lhs, const expression<rhsType>& rhs) {
-    return expressionFloatVec<rhsType, divOperator>(
-            lhs, rhs.asActualType());
+inline vec2& operator*=(const float& f, vec2& u){
+    return (u *= f);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, minOperator>
-min(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, minOperator>(
-            lhs.asActualType(), rhs.asActualType());
+inline vec3& operator*=(const float& f, vec3& u){
+    return (u *= f);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, maxOperator>
-max(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, maxOperator>(
-            lhs.asActualType(), rhs.asActualType());
+inline vec4& operator*=(const float& f, vec4& u){
+    return (u *= f);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, halfVectorOperator>
-halfVector(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, halfVectorOperator>(
-            lhs.asActualType(), rhs.asActualType());
+inline const vec2 operator/(const float& f, const vec2& v){
+    return vec2(f / v.x, f / v.y);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, dotOperator>
-dot(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, dotOperator>(
-            lhs.asActualType(), rhs.asActualType());
+inline const vec3 operator/(const float& f, const vec3& v){
+    return vec3(f / v.x, f / v.y, f / v.z);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, dot4Operator>
-dot4(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, dot4Operator>(
-            lhs.asActualType(), rhs.asActualType());
+inline const vec4 operator/(const float& f, const vec4& v){
+    return vec4(f / v.x, f / v.y, f / v.z, f / v.w);
 }
 
-template <typename lhsType, typename rhsType>
-inline const expressionVecVec<lhsType, rhsType, crossOperator>
-cross(const expression<lhsType>& lhs, const expression<rhsType>& rhs) {
-    return expressionVecVec<lhsType, rhsType, crossOperator>(
-            lhs.asActualType(), rhs.asActualType());
+inline const vec3 min(const vec3& a, const vec3& b) {
+#ifdef HAVE_SSE2
+    return vec3(minps(a.vector, b.vector));
+#else
+    return vec3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
+#endif
 }
 
-template <typename type>
-inline const expressionVec<type, sqrtOperator>
-sqrt(const expression<type>& expr) {
-    return expressionVec<type, sqrtOperator>(expr.asActualType());
+inline const vec3 max(const vec3& a, const vec3& b) {
+#ifdef HAVE_SSE2
+    return vec3(maxps(a.vector, b.vector));
+#else
+    return vec3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
+#endif
 }
 
-template <typename type>
-inline const expressionVec<type, normOperator>
-norm(const expression<type>& expr) {
-    return expressionVec<type, normOperator>(expr.asActualType());
+inline const float norm2(const vec2& v) {
+    return v.x*v.x + v.y*v.y;
 }
 
-template <typename type>
-inline const expressionVec<type, norm2Operator>
-norm2(const expression<type>& expr) {
-    return expressionVec<type, norm2Operator>(expr.asActualType());
+inline const float norm2(const vec3& v) {
+    return v.x*v.x + v.y*v.y + v.z*v.z;
 }
 
-template <typename type>
-inline const expressionVec<type, normalizeOperator>
-normalize(const expression<type>& expr) {
-    return expressionVec<type, normalizeOperator>(expr.asActualType());
+inline const float norm2(const vec4& v) {
+    return v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w;
 }
 
-ostream& operator<<(ostream& out, const vec2& v);
-ostream& operator<<(ostream& out, const vec3& v);
-ostream& operator<<(ostream& out, const vec4& v);
-ostream& operator<<(ostream& out, const __m128& m);
+inline const vec3 normalize(const vec3& u){
+    return u / norm(u);
+}
+
+ostream& operator<<(ostream& out, const vec2& x);
+ostream& operator<<(ostream& out, const vec3& x);
+ostream& operator<<(ostream& out, const vec4& x);

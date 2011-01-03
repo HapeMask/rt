@@ -7,6 +7,8 @@
 #include "acceleration/intersection.hpp"
 #include "scene/scene.hpp"
 
+#include "mathlib/vector.hpp"
+
 const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
     if(parent.numLights() > 0){

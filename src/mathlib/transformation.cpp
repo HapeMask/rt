@@ -1,5 +1,6 @@
 #include "transformation.hpp"
 #include "vector.hpp"
+#include "point.hpp"
 #include "ray.hpp"
 #include "matrix.hpp"
 #include "utility.hpp"
@@ -8,7 +9,7 @@
 
 const point3 transform3d::apply(const point3& p) const {
 	const vec4 v = mat * vec4(p.x, p.y, p.z, 1.f);
-	return point3(v / v.w);
+	return point3(v.x/v.w, v.y/v.w, v.z/v.w);
 }
 
 const vec3 transform3d::apply(const vec3& v) const {
@@ -25,7 +26,7 @@ const ray transform3d::apply(const ray& r) const {
 
 const point3 transform3d::unapply(const point3& p) const {
 	const vec4 v = inv * vec4(p.x, p.y, p.z, 1.f);
-	return point3(v / v.w);
+	return point3(v.x/v.w, v.y/v.w, v.z/v.w);
 }
 
 const vec3 transform3d::unapply(const vec3& v) const {

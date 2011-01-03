@@ -42,6 +42,10 @@ inline const vec3 reflect(const vec3& w) {
     return vec3(-w.x, w.y, -w.z);
 }
 
+inline const vec3 halfVector(const vec3& a, const vec3& b) {
+    return normalize(a+b);
+}
+
 class bxdf;
 class specularBxdf;
 class bsdf {

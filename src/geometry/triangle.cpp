@@ -16,9 +16,9 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
     primitive(aabb(min(min(a, b), c), max(max(a, b), c))),
     B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
 
-	points[0] = a;
-	points[1] = b;
-	points[2] = c;
+	a_ = a;
+	b_ = b;
+	c_ = c;
 
     normal_ = cross(b-a, c-a);
     area_ = 0.5 * (float)norm(normal_);
@@ -34,7 +34,7 @@ const intersection triangle::intersect(ray& r) const {
 
     const float invD = 1.f / D;
 
-    const vec3 dir = r.origin - points[0];
+    const vec3 dir = r.origin - a_;
     const float beta = dot(dir, s1) * invD;
     if(beta < 0.f || beta > 1.f){
         return noIntersect;
@@ -83,7 +83,7 @@ const bool triangle::intersectB(const ray& r) const {
 
     const float invD = 1.f / D;
 
-    const vec3 dir = r.origin - points[0];
+    const vec3 dir = r.origin - a_;
     const float beta = dot(dir, s1) * invD;
     if(beta < 0.f || beta > 1.f){
         return false;
@@ -129,14 +129,13 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
     const float dv2 = uvs[1].y - uvs[2].y;
     const float invDetUV = 1.f / (du1*dv2 - dv1*du2);
 
-    const vec3 dp1 = points[0] - points[2];
-    const vec3 dp2 = points[1] - points[2];
+    const vec3 dp1 = a_ - c_;
+    const vec3 dp2 = b_ - c_;
 
     binormal_ = normalize((dv2 *  dp1 - dv1 * dp2) * invDetUV);
     tangent_ = normalize((-du2 *  dp1 + du1 * dp2) * invDetUV);
 }
 
-#ifdef RT_USE_QT
 void triangle::prepGL(GLfloat*& data) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
@@ -155,11 +154,13 @@ void triangle::prepGL(GLfloat*& data) const {
             ++data;
         }
 
-        (*data) = points[i].x;
+        const point3& p = (i == 0) ? a_ : ((i == 1) ? b_ : c_);
+
+        (*data) = p.x;
         ++data;
-        (*data) = points[i].y;
+        (*data) = p.y;
         ++data;
-        (*data) = points[i].z;
+        (*data) = p.z;
         ++data;
     }
 }
@@ -168,4 +169,3 @@ void triangle::drawGL() const {
     // Do nothing. This triangle's data has been dumped to the scene VBO
     // already and will be drawn as such.
 }
-#endif

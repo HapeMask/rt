@@ -7,10 +7,16 @@
 areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
     light(p, pow, c), a(vA), b(vB), normal(normalize(cross(vA,vB))),
-	tri1(point3(p - 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vB - 0.5f*vA)),
-	tri2(point3(p + 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vB + 0.5f*vA), point3(p + 0.5f*vB - 0.5f*vA)),
     area(fabsf(norm(cross(vA,vB)))), invArea(1.f/fabsf(norm(cross(vA,vB))))
-{}
+{
+    const point3 A = p - 0.5f*vA - 0.5f*vB;
+    const point3 B = p + 0.5f*vA - 0.5f*vB;
+    const point3 C = p - 0.5f*vA + 0.5f*vB;
+    const point3 D = p + 0.5f*vA + 0.5f*vB;
+
+    tri1 = triangle(A, B, C);
+    tri2 = triangle(B, D, C);
+}
 
 const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const{
     point3 samplePoint;

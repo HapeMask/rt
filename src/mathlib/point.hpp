@@ -122,12 +122,6 @@ class point3 {
 			return coords[index];
 		}
 
-#ifdef HAVE_SSE2
-        inline const __m128 getSIMD() const {
-            return vector;
-        }
-#endif
-
         inline const point3 operator+(const vec3& u) const {
             return point3(*this) += u;
         }
@@ -155,7 +149,6 @@ class point3 {
             return (x == p.x) && (y == p.y) && (z == p.z);
         }
 
-	private:
         union{
             float coords[4];
 #ifdef HAVE_SSE2
@@ -165,13 +158,14 @@ class point3 {
                 float x;
                 float y;
                 float z;
+                float w;
             };
         };
 };
 
 inline const point3 min(const point3& a, const point3& b) {
 #ifdef HAVE_SSE2
-    return point3(minps(a.getSIMD(), b.getSIMD()));
+    return point3(minps(a.vector, b.vector));
 #else
     return point3(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z));
 #endif
@@ -179,7 +173,7 @@ inline const point3 min(const point3& a, const point3& b) {
 
 inline const point3 max(const point3& a, const point3& b) {
 #ifdef HAVE_SSE2
-    return point3(maxps(a.getSIMD(), b.getSIMD()));
+    return point3(maxps(a.vector, b.vector));
 #else
     return point3(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z));
 #endif

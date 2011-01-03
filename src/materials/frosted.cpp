@@ -20,7 +20,7 @@ const rgbColor frostedGlassBsdf::sampleF(const float& u0, const float& u1, const
     if((glossTra->getType() & type) && u0 < Ft){
         f = glossTra->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossTra->getType();
-        pd = Ft;
+        pd *= Ft;
     }else if(glossRef->getType() & type){
         f = glossRef->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossRef->getType();

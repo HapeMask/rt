@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.hpp"
+#include "point.hpp"
 #include "constants.hpp"
 #include <limits>
 

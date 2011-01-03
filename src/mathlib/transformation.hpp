@@ -2,6 +2,7 @@
 
 #include "matrix.hpp"
 #include "vector.hpp"
+#include "point.hpp"
 #include "ray.hpp"
 
 class transform3d{

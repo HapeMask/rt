@@ -1,9 +1,10 @@
-/* A Bison parser, made by GNU Bison 2.4.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton interface for Bison LALR(1) parsers in C++
    
-      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free
-   Software Foundation, Inc.
+      Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software
+   Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -81,7 +82,7 @@
 
 
 /* Line 35 of lalr1.cc  */
-#line 85 "sceneparser.tab.h"
+#line 86 "sceneparser.tab.h"
 
 
 #include <string>
@@ -94,7 +95,7 @@
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 98 "sceneparser.tab.h"
+#line 99 "sceneparser.tab.h"
   class position;
   class location;
 
@@ -103,7 +104,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 107 "sceneparser.tab.h"
+#line 108 "sceneparser.tab.h"
 
 #include "location.hh"
 
@@ -150,7 +151,7 @@ do {							\
 namespace Bison {
 
 /* Line 35 of lalr1.cc  */
-#line 154 "sceneparser.tab.h"
+#line 155 "sceneparser.tab.h"
 
   /// A Bison parser.
   class Parser
@@ -186,7 +187,7 @@ namespace Bison {
 
 
 /* Line 35 of lalr1.cc  */
-#line 190 "sceneparser.tab.h"
+#line 191 "sceneparser.tab.h"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -412,7 +413,7 @@ namespace Bison {
 } // Bison
 
 /* Line 35 of lalr1.cc  */
-#line 416 "sceneparser.tab.h"
+#line 417 "sceneparser.tab.h"
 
 
 

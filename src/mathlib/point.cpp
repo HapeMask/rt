@@ -5,15 +5,15 @@
 
 using namespace std;
 
-point2::point2(const vec2& u){
-	coords[0] = u(0);
-	coords[1] = u(1);
+point2::point2(const vec2& v){
+	x = v.x;
+	y = v.y;
 }
 
-point3::point3(const vec3& u){
-	coords[0] = u(0);
-	coords[1] = u(1);
-	coords[2] = u(2);
+point3::point3(const vec3& v){
+	x = v.x;
+	y = v.y;
+	z = v.z;
 }
 
 ostream& operator<<(ostream& out, const point3& p){
