@@ -11,10 +11,15 @@
 #define maxss           _mm_max_ss
 #define minps           _mm_min_ps
 #define maxps           _mm_max_ps
-#define mulps           _mm_mul_ps
-#define divps           _mm_div_ps
 #define addps           _mm_add_ps
 #define subps           _mm_sub_ps
+#define mulps           _mm_mul_ps
+#define mulss           _mm_mul_ss
+#define divps           _mm_div_ps
+#define sqrtps          _mm_sqrt_ps
+#define shufps          _mm_shuffle_ps
+#define shuffle         _MM_SHUFFLE
+#define zerops          _mm_setzero_ps
 #define float2int(f)    _mm_cvtss_si32(_mm_load_ss(&(f)))
 #define rotatelps(ps)   _mm_shuffle_ps((ps),(ps), 0x39)
 #define muxhps(low,high) _mm_movehl_ps((low),(high))

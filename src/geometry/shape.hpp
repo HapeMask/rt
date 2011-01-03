@@ -8,8 +8,9 @@
 #include <cmath>
 #include <vector>
 #include <tr1/memory>
-using namespace std;
-using tr1::shared_ptr;
+
+using std::tr1::shared_ptr;
+using std::vector;
 
 class shape {
 	public:

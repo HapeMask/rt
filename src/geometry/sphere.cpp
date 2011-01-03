@@ -2,7 +2,6 @@
 #include "shape.hpp"
 #include "primitive.hpp"
 
-#include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
@@ -47,7 +46,7 @@ const intersection sphere::intersect(ray& r) const {
     float t = 0.f;
     if(t0 >= r.tMin && t0 <= r.tMax && t0 > 0){
         if(t1 >= r.tMin && t1 <= r.tMax && t1 > 0){
-            t = min(t0, t1);
+            t = std::min(t0, t1);
         }else{
             t = t0;
         }

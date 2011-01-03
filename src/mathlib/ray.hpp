@@ -1,9 +1,10 @@
 #pragma once
 
-#include "point.hpp"
 #include "vector.hpp"
 #include "constants.hpp"
 #include <limits>
+
+using std::numeric_limits;
 
 class ray {
 	public:

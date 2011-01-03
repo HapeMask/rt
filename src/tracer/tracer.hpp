@@ -5,15 +5,13 @@
 #include "color/color.hpp"
 
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
 #include "acceleration/intersection.hpp"
 
 #include <tr1/memory>
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
 
 const int MAX_DEPTH = 4;
 

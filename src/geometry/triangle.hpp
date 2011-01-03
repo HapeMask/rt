@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"

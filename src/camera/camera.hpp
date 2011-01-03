@@ -2,7 +2,6 @@
 
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/transformation.hpp"
 
 #include <tr1/memory>
@@ -25,11 +24,11 @@ class camera {
 
         void move(const vec3& dir);
 
-        inline const vec3& getPosition() const {
+        inline const point3& getPosition() const {
             return pos;
         }
 
-        inline const vec3& getLook() const {
+        inline const point3& getLook() const {
             return look;
         }
 
@@ -41,12 +40,12 @@ class camera {
             return fov;
         }
 
-        inline void setPosition(const vec3& p) {
+        inline void setPosition(const point3& p) {
             pos = p;
             updateMatrices();
         }
 
-        inline void setLook(const vec3& l) {
+        inline void setLook(const point3& l) {
             look = l;
             updateMatrices();
         }
@@ -64,7 +63,9 @@ class camera {
 					worldToCamera;
 
         void updateMatrices();
-        vec3 pos,look,up;
+        point3 pos, look;
+        vec3 up;
+        //vec3 pos,look,up;
 };
 
 typedef shared_ptr<camera> cameraPtr;

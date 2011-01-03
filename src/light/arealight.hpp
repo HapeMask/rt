@@ -32,7 +32,7 @@ class areaLight : public light {
         }
 
     private:
-		const vec3 a,b, normal;
-		const triangle tri1, tri2;
-        const float area, invArea;
+		vec3 a,b, normal;
+		triangle tri1, tri2;
+        float area, invArea;
 };

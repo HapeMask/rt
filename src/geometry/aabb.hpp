@@ -18,7 +18,7 @@ class aabb {
         aabb() :
             min(vec3(MAX_FLOAT)),
             max(vec3(MIN_FLOAT)),
-            mid((vec3(MAX_FLOAT) + vec3(MIN_FLOAT))/2.f) {}
+            mid(vec3(0.f)) {}
 
         aabb(const vec3& mi, const vec3& mx) : min(mi), max(mx), mid((mi+mx)/2.f) {}
 

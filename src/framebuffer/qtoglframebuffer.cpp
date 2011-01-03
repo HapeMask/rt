@@ -21,7 +21,9 @@
 #include <GL/glu.h>
 #include <GL/glext.h>
 #include <iostream>
-using namespace std;
+
+using std::cerr;
+using std::endl;
 
 GLfloat diffuse0[] = {1.0, 1.0, 1.0, 1.0};
 GLfloat ambient0[] = {0.2, 0.2, 0.2, 1.0};
@@ -42,7 +44,7 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     framebuffer(s, bpp), vbo(0), sceneData(NULL),
     viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()),
     lastPos(0.f, 0.f),
-    camPos(s.getCamera().getPosition()), camForward(s.getCamera().getLook()),
+    camPos(s.getCamera().getPosition()), camForward(s.getCamera().getPosition() - s.getCamera().getLook()),
     pixelsSampled(0), iterations(0),
     showUpdates(false), rendered(false),
     imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),

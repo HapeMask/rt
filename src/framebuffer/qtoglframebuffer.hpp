@@ -52,7 +52,8 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         float viewRotX, viewRotY, fovy;
         QPoint lastPos;
-        vec3 camPos, camForward;
+        point3 camPos;
+        vec3 camForward;
 
         uint64_t pixelsSampled, iterations;
 		bool showUpdates, rendered;

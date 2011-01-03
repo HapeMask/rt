@@ -15,11 +15,11 @@ inline const float blinn::D(const vec3& wh) const {
 void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     const float phiH = u1 * TWOPI;
     const float cosThetaH = powf(u0, 1.f / (exp+1.f));
-    const float sinThetaH = sqrtf(max(0.f, 1.f - cosThetaH*cosThetaH));
+    const float sinThetaH = sqrtf(std::max(0.f, 1.f - cosThetaH*cosThetaH));
 
     vec3 wh;
     sphericalToDirection(wh, sinThetaH, cosThetaH, phiH);
-    wh.normalize();
+    wh = normalize(wh);
 
     if(wh.y > 0){
         wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;

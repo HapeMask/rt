@@ -1,6 +1,5 @@
 #include "transformation.hpp"
 #include "vector.hpp"
-#include "point.hpp"
 #include "ray.hpp"
 #include "matrix.hpp"
 #include "utility.hpp"
@@ -8,19 +7,15 @@
 #include <cmath>
 
 const point3 transform3d::apply(const point3& p) const {
-	const vec4 v = mat * vec4(vec3(p), 1.f);
-	return point3(vec3(v.x, v.y, v.z) / v.w);
+	const vec4 v = mat * vec4(p.x, p.y, p.z, 1.f);
+	return point3(v / v.w);
 }
 
 const vec3 transform3d::apply(const vec3& v) const {
-	const float& x = v.x;
-    const float& y = v.y;
-    const float& z = v.z;
-
 	return vec3(
-			mat(0,0)*x + mat(0,1)*y + mat(0,2)*z,
-			mat(1,0)*x + mat(1,1)*y + mat(1,2)*z,
-			mat(2,0)*x + mat(2,1)*y + mat(2,2)*z
+			mat(0,0) * v.x + mat(0,1) * v.y + mat(0,2) * v.z,
+			mat(1,0) * v.x + mat(1,1) * v.y + mat(1,2) * v.z,
+			mat(2,0) * v.x + mat(2,1) * v.y + mat(2,2) * v.z
 		);
 }
 
@@ -29,19 +24,15 @@ const ray transform3d::apply(const ray& r) const {
 }
 
 const point3 transform3d::unapply(const point3& p) const {
-	const vec4 v = inv * vec4(vec3(p), 1.f);
-	return point3(vec3(v.x, v.y, v.z) / v.w);
+	const vec4 v = inv * vec4(p.x, p.y, p.z, 1.f);
+	return point3(v / v.w);
 }
 
 const vec3 transform3d::unapply(const vec3& v) const {
-	const float& x = v.x;
-    const float& y = v.y;
-    const float& z = v.z;
-
 	return vec3(
-			inv(0,0)*x + inv(0,1)*y + inv(0,2)*z,
-			inv(1,0)*x + inv(1,1)*y + inv(1,2)*z,
-			inv(2,0)*x + inv(2,1)*y + inv(2,2)*z
+			inv(0,0) * v.x + inv(0,1) * v.y + inv(0,2) * v.z,
+			inv(1,0) * v.x + inv(1,1) * v.y + inv(1,2) * v.z,
+			inv(2,0) * v.x + inv(2,1) * v.y + inv(2,2) * v.z
 		);
 }
 

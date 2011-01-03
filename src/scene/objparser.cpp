@@ -10,7 +10,12 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
-using namespace std;
+
+using std::find;
+using std::ifstream;
+using std::vector;
+using std::cerr;
+using std::endl;
 
 typedef struct tps{
     int a;

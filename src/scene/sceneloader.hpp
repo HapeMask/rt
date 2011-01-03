@@ -2,7 +2,10 @@
 
 #include <iostream>
 #include "scanner.hpp"
-using namespace std;
+
+using std::istream;
+using std::cerr;
+using std::endl;
 
 class sceneloader{
     public:

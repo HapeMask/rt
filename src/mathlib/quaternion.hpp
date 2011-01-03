@@ -1,9 +1,7 @@
 #ifndef __QUATERNION__
 #define __QUATERNION__
-#include <iostream>
 
 #include "vector.hpp"
-using namespace std;
 
 class quaternion{
 	public:

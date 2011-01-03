@@ -11,7 +11,8 @@
 #include <cmath>
 #include <vector>
 #include <tr1/memory>
-using namespace std;
+
+using std::vector;
 
 class triangleMesh : public shape {
 	public:
@@ -47,4 +48,4 @@ class triangleMesh : public shape {
         long totalVertices;
 };
 
-typedef tr1::shared_ptr<triangleMesh> triangleMeshPtr;
+typedef std::tr1::shared_ptr<triangleMesh> triangleMeshPtr;

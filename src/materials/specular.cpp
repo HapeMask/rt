@@ -29,8 +29,7 @@ inline const float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
 
 const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
-    wi = vec3(-wo.x, wo.y, -wo.z);
-    wi.normalize();
+    wi = normalize(vec3(-wo.x, wo.y, -wo.z));
 
     const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
     return Fr * kR / fabsf(bsdf::cosTheta(wi));
@@ -60,11 +59,11 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
         -sqrtf(1.f - sin2ThetaT) :
         sqrtf(1.f - sin2ThetaT);
 
-    wi.x = eta * -wo.x;
-    wi.y = cosThetaT;
-    wi.z = eta * -wo.z;
-
-    wi.normalize();
+    wi = normalize(vec3(
+                eta * -wo.x,
+                eta * cosThetaT,
+                eta * -wo.z
+            ));
 
     const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
     return eta2 * (rgbColor(1.f) - Fr) * kT / fabsf(bsdf::cosTheta(wi));

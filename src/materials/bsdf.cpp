@@ -8,7 +8,10 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
 using std::vector;
+using std::cerr;
+using std::endl;
 
 const bool bsdf::isSupertype(bxdfType a, bxdfType b) {
     return (a & b);
@@ -24,7 +27,7 @@ const float bsdf::cos2Theta(const vec3& v){
 
 const float bsdf::sinTheta(const vec3& v){
     // sintheta(v) = sqrt(1 - cos2theta(v))
-    return sqrtf(max(0.f, 1.f - v.y*v.y));
+    return sqrtf(std::max(0.f, 1.f - v.y*v.y));
 }
 
 const float bsdf::sin2Theta(const vec3& v){

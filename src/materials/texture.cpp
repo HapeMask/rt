@@ -6,7 +6,10 @@
 #include "utility.hpp"
 
 #include <cmath>
-using namespace std;
+#include <iostream>
+
+using std::cerr;
+using std::endl;
 
 bool texture2D::lookupInitialized;
 rgbColor** texture2D::lookupCache;

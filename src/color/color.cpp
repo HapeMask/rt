@@ -1,6 +1,6 @@
 #include "color.hpp"
 #include <iostream>
-using namespace std;
+using std::ostream;
 
 rgbColor::rgbColor(const float& f) : r(f), g(f), b(f)
 {}

@@ -6,7 +6,6 @@
 #include "acceleration/intersection.hpp"
 
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "scene/scene.hpp"
 
 const rgbColor bdpt::L(const ray& r) const {

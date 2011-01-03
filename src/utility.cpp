@@ -1,6 +1,4 @@
 #include <cmath>
-#include <iostream>
-using namespace std;
 
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
@@ -23,26 +21,22 @@ const float degrees(const float& rad){
 
 rgbColor clamp(const rgbColor& c){
 	rgbColor c1(c);
-	c1.r = min(max(c.r, 0.f), 1.f);
-	c1.g = min(max(c.g, 0.f), 1.f);
-	c1.b = min(max(c.b, 0.f), 1.f);
+	c1.r = std::min(std::max(c.r, 0.f), 1.f);
+	c1.g = std::min(std::max(c.g, 0.f), 1.f);
+	c1.b = std::min(std::max(c.b, 0.f), 1.f);
 	return c1;
 }
 
 vec3 clamp(const vec3& v){
-	vec3 v1(v);
-	v1.x = min(max(v.x, 0.f), 1.f);
-	v1.y = min(max(v.y, 0.f), 1.f);
-	v1.z = min(max(v.z, 0.f), 1.f);
-	return v1;
+    return vec3(min(max(v, vec3(0.f)), vec3(1.f)));
 }
 
 float clamp(const float& f){
-	return min(max(f, 0.f), 1.f);
+	return std::min(std::max(f, 0.f), 1.f);
 }
 
 vec3 reflect(const vec3& v, const vec3& n){
-	return v - (2*dot(v,n)*n);
+	return v - (2.f * dot(v,n)*n);
 }
 
 const int roundUpToMultiple(int n, int m){

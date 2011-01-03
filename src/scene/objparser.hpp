@@ -5,8 +5,6 @@
 #include "geometry/shape.hpp"
 
 #include "mathlib/vector.hpp"
-#include <vector>
-using namespace std;
 
 class objParser{
     public:

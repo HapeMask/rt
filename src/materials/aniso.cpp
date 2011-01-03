@@ -35,10 +35,10 @@ void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
         phi = TWOPI - phi;
     }
 
-    const float sintheta = sqrtf(max(0.f, 1.f - costheta*costheta));
+    const float sintheta = sqrtf(std::max(0.f, 1.f - costheta*costheta));
     vec3 wh;
     sphericalToDirection(wh, sintheta, costheta, phi);
-    wh.normalize();
+    wh = normalize(wh);
 
     wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;
     pd = pdf(wo, wi);

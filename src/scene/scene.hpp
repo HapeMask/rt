@@ -10,7 +10,6 @@
 #include "camera/camera.hpp"
 
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 
 #include "geometry/shape.hpp"
 #include "geometry/aabb.hpp"
@@ -25,8 +24,8 @@
 #include <GL/gl.h>
 #endif
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
+using std::vector;
 
 class scene {
 	public:

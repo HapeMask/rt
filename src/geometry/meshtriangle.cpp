@@ -5,7 +5,6 @@
 #include "scene/scene.hpp"
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 #include "acceleration/intersection.hpp"
 
@@ -35,7 +34,7 @@ meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMes
 
     normal_ = cross(B, C);
 
-    area_ = 0.5 * normal_.length();
+    area_ = 0.5 * (float)norm(normal_);
 	normal_ = normalize(normal_);
 }
 

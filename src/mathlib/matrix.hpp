@@ -1,10 +1,6 @@
 #pragma once
 
-#include <iostream>
 #include "vector.hpp"
-#include "point.hpp"
-
-using namespace std;
 
 class mat4 {
 	public:

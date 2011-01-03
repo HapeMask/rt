@@ -2,13 +2,11 @@
 
 #include <tr1/memory>
 
-#include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "bsdf.hpp"
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
 
 class material {
     public:

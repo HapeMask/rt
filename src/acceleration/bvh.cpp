@@ -14,10 +14,18 @@
 
 #include <sys/time.h>
 #include <algorithm>
+#include <vector>
+#include <iostream>
 
 #include "datastructs/arraylist.hpp"
 #include "datastructs/linkedlist.hpp"
-using namespace std;
+
+using std::cerr;
+using std::endl;
+
+using std::sort;
+
+using std::vector;
 
 #ifdef RT_DEBUG
 int boxesTested = 0;

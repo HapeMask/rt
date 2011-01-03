@@ -8,7 +8,7 @@
 #include <cmath>
 #include <stdint.h>
 #include <iostream>
-using namespace std;
+using std::ostream;
 
 class color {
 	public:

@@ -4,7 +4,6 @@
 using std::tr1::shared_ptr;
 
 #include <cmath>
-using namespace std;
 
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"
@@ -37,10 +36,6 @@ inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, co
 
 inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
 	return r0 + (rgbColor(1.f) - r0) * powf(1.f - cosTheta, 5);
-}
-
-inline const vec3 halfVector(const vec3& wo, const vec3& wi){
-    return normalize(wo + wi);
 }
 
 inline const vec3 reflect(const vec3& w) {

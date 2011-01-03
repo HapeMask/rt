@@ -6,8 +6,8 @@
 #include "geometry/aabb.hpp"
 
 #include <sys/time.h>
-#include <algorithm>
-using namespace std;
+#include <vector>
+using std::vector;
 
 void octree::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();

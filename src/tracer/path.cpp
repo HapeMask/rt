@@ -6,7 +6,6 @@
 #include "acceleration/intersection.hpp"
 #include "scene/scene.hpp"
 #include <cmath>
-using namespace std;
 
 const rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
@@ -28,7 +27,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         if(!isect.hit || isect.li){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(size_t i=0; i<parent.numLights(); ++i){
-                    const float lightDist = (parent.getLight(i)->getPosition() - rOrig.origin).length();
+                    const float lightDist = norm(parent.getLight(i)->getPosition() - rOrig.origin);
                     ray lightRay(rOrig, EPSILON, lightDist);
 
                     const intersection isectL = parent.getLight(i)->intersect(rOrig);

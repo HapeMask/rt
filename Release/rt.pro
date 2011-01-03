@@ -81,7 +81,6 @@ HEADERS += ../src/utility.hpp \
            ../src/materials/material.hpp \
            ../src/mathlib/constants.hpp \
            ../src/mathlib/matrix.hpp \
-           ../src/mathlib/point.hpp \
            ../src/mathlib/quaternion.hpp \
            ../src/mathlib/ray.hpp \
            ../src/mathlib/SFMT-alti.h \
@@ -139,7 +138,6 @@ SOURCES += ../src/main.cpp \
            ../src/materials/substrate.cpp \
            ../src/materials/ward.cpp \
            ../src/mathlib/matrix.cpp \
-           ../src/mathlib/point.cpp \
            ../src/mathlib/SFMT.cpp \
            ../src/mathlib/transformation.cpp \
            ../src/mathlib/vector.cpp \

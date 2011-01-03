@@ -24,7 +24,9 @@
 #include "utility.hpp"
 #include <QImage>
 
-using namespace std;
+using std::cerr;
+using std::endl;
+using std::ifstream;
 
 int main(int argc, char* args[]){
     // SFMT

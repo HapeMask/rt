@@ -47,7 +47,7 @@ const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
     // at that point.
     const rgbColor Li = li.sampleL(p, wi, sampleUniform(), sampleUniform(), lightPdf);
 
-    const float lightDist = wi.length();
+    const float lightDist = norm(wi);
     wi = normalize(wi);
 
     // Evaluate the BSDF using the direction sampled from the light.

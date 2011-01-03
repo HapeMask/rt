@@ -2,7 +2,6 @@
 
 #include "samplers/samplers.hpp"
 #include "aabb.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 
 #include <vector>
@@ -15,8 +14,8 @@
 #include <GL/gl.h>
 #endif
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
+using std::vector;
 
 class shape;
 typedef shared_ptr<shape> shapePtr;

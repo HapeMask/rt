@@ -5,7 +5,7 @@ inline const float microfacetDistribution::G(const vec3& wo, const vec3& wi, con
     const float ndotwi = fabsf(bsdf::cosTheta(wi));
     const float ndotwh = fabsf(bsdf::cosTheta(wh));
     const float wodotwh = fabsf(dot(wo, wh));
-    return min(1.f, min(2.f * ndotwh * ndotwo / wodotwh,
+    return std::min(1.f, std::min(2.f * ndotwh * ndotwo / wodotwh,
                 2.f * ndotwh * ndotwi / wodotwh));
 }
 

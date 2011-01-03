@@ -39,7 +39,7 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     const vec3 u = normalize(cross(w, vec3(0,1,0)));
     const vec3 v = normalize(cross(u, w));
 
-    const float distanceTerm = sqrtf(1.f - radius2 / (p-position).length2());
+    const float distanceTerm = sqrtf(1.f - radius2 / norm2(p-position));
     const float phi = TWOPI * u1;
 
     // Theta itself is never actually needed anywhere, so no need to calculate
@@ -92,7 +92,7 @@ const intersection sphereLight::intersect(const ray& r) const {
     float t = 0.f;
     if(t0 >= r.tMin && t0 <= r.tMax && t0 > 0){
         if(t1 >= r.tMin && t1 <= r.tMax && t1 > 0){
-            t = min(t0, t1);
+            t = std::min(t0, t1);
         }else{
             t = t0;
         }

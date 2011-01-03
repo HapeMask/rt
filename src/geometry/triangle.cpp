@@ -5,7 +5,6 @@
 #include "scene/scene.hpp"
 #include "mathlib/constants.hpp"
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/ray.hpp"
 #include "acceleration/intersection.hpp"
 
@@ -22,7 +21,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 	points[2] = c;
 
     normal_ = cross(b-a, c-a);
-    area_ = 0.5 * normal_.length();
+    area_ = 0.5 * (float)norm(normal_);
 	normal_ = normalize(normal_);
 }
 

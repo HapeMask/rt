@@ -52,7 +52,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         if(li->isPointSource()){
             vec3 lightDir;
             const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
-            const float lightDist = lightDir.length();
+            const float lightDist = norm(lightDir);
             lightDir = normalize(lightDir);
 
             // Test for shadowing early.
@@ -72,7 +72,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                 const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
-                shadowRay.tMax = lightDir.length() + EPSILON;
+                shadowRay.tMax = norm(lightDir) + EPSILON;
 
 				if(!parent.intersectB(shadowRay) && li->intersect(shadowRay).hit){
 					lightDir = normalize(lightDir);

@@ -29,7 +29,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
 
     vec3 wh;
     sphericalToDirection(wh, sinf(theta), cosf(theta), phi);
-    wh.normalize();
+    wh = normalize(wh);
 
 	// Find the incident direction that corresponds to this half vector and the
 	// reflected direction.

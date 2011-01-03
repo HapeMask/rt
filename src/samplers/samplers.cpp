@@ -3,7 +3,6 @@
 #include "mathlib/SFMT.h"
 
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/constants.hpp"
 #include "geometry/triangle.hpp"
 
@@ -16,7 +15,7 @@ const float sampleUniform(){
 }
 
 const int sampleRange(const float& u0, const int& a, const int& b){
-    return a + min((u0*(b-a+1)), (float)b-a);
+    return a + std::min((u0*(b-a+1)), (float)b-a);
 }
 
 void sampleDisk(vec3& v, const float& u0, const float& u1){
@@ -30,7 +29,7 @@ void sampleHemisphere(vec3& v, const float& u0, const float& u1) {
 	v.y = u0;
     // Sqrt of r normalizes the distance distribution from the center (since it
     // takes up ~r^2 less area as radius decreases).
-	const float r = sqrtf(max(0.f, 1.f - u0*u0));
+	const float r = sqrtf(std::max(0.f, 1.f - u0*u0));
 	const float phi = TWOPI * u1;
 	v.x = r * cos(phi);
 	v.z = r * sin(phi);
@@ -79,7 +78,7 @@ void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point
 
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1){
 	sampleDisk(v, u0, u1);
-    v.y = sqrtf(max(0.f, 1.f - v.x*v.x - v.z*v.z));
+    v.y = sqrtf(std::max(0.f, 1.f - v.x*v.x - v.z*v.z));
 }
 
 const float radicalInverse(int n, const int& base){

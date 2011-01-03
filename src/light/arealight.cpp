@@ -1,6 +1,5 @@
 #include "arealight.hpp"
 #include "samplers/samplers.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "color/color.hpp"
@@ -8,9 +7,9 @@
 areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
     light(p, pow, c), a(vA), b(vB), normal(normalize(cross(vA,vB))),
-	tri1(p - 0.5f*vA - 0.5f*vB, p + 0.5f*vA - 0.5f*vB, p + 0.5f*vB - 0.5f*vA),
-	tri2(p + 0.5f*vA - 0.5f*vB, p + 0.5f*vB + 0.5f*vA, p + 0.5f*vB - 0.5f*vA),
-    area(fabsf(cross(vA,vB).length())), invArea(1.f/fabsf(cross(vA,vB).length()))
+	tri1(point3(p - 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vB - 0.5f*vA)),
+	tri2(point3(p + 0.5f*vA - 0.5f*vB), point3(p + 0.5f*vB + 0.5f*vA), point3(p + 0.5f*vB - 0.5f*vA)),
+    area(fabsf(norm(cross(vA,vB)))), invArea(1.f/fabsf(norm(cross(vA,vB))))
 {}
 
 const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const{
@@ -20,7 +19,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     wi = samplePoint - p;
     const float cosTheta = dot(-wi, normal);
     if(cosTheta > 0){
-        pd = wi.length2() / (cosTheta * area);
+        pd = norm2(wi) / (cosTheta * area);
         return lightColor * power;
     }else{
         pd = 0.f;

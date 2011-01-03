@@ -8,8 +8,8 @@
 #include "scene/scene.hpp"
 #include "geometry/primitive.hpp"
 
-using namespace std;
-using tr1::shared_ptr;
+using std::vector;
+using std::tr1::shared_ptr;
 
 /**
  * Default "acceleration structure." Just checks all
@@ -17,6 +17,8 @@ using tr1::shared_ptr;
  */
 class defaultAccelerator : public accelerator {
 	public:
+        defaultAccelerator() {}
+
 		virtual const intersection intersect(ray& r) const;
 		virtual const bool intersectB(const ray& r) const;
 

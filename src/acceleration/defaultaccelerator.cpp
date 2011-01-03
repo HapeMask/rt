@@ -4,8 +4,8 @@
 #include "defaultaccelerator.hpp"
 #include "geometry/primitive.hpp"
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
+using std::vector;
 
 const intersection defaultAccelerator::intersect(ray& r) const{
 	// Just check every shape we have.

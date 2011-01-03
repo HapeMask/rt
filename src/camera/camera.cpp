@@ -2,7 +2,6 @@
 #include "camera.hpp"
 
 #include "mathlib/ray.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/matrix.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/transformation.hpp"
@@ -55,5 +54,5 @@ const ray camera::getRay(const float& x, const float& y) const{
 	const point3 rasterPos(x, y, 0.f);
 	const point3 cameraPos = rasterToCamera.apply(rasterPos);
 
-    return worldToCamera.unapply(ray(cameraPos, normalize(vec3(cameraPos))));
+    return worldToCamera.unapply(ray(cameraPos, vec3(normalize(cameraPos))));
 }

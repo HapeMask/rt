@@ -21,7 +21,6 @@
     #include "geometry/sphere.hpp"
 
     #include "mathlib/vector.hpp"
-    #include "mathlib/point.hpp"
 
     #include "acceleration/bvh.hpp"
     #include "acceleration/octree.hpp"

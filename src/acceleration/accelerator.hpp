@@ -1,16 +1,10 @@
 #pragma once
-//#warning "TEST"
 
 #include "intersection.hpp"
 #include "geometry/primitive.hpp"
 
-#include <typeinfo>
-
-#include <vector>
 #include <tr1/memory>
-
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
 
 const uint8_t AXIS_X =      0;
 const uint8_t AXIS_Y =      1;

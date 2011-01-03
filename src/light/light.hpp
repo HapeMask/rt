@@ -1,8 +1,8 @@
 #pragma once
 
 #include <tr1/memory>
+#include <iostream>
 
-#include "mathlib/point.hpp"
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 
@@ -10,8 +10,9 @@
 #include "acceleration/intersection.hpp"
 #include "materials/material.hpp"
 
-using namespace std;
-using tr1::shared_ptr;
+using std::tr1::shared_ptr;
+using std::cerr;
+using std::endl;
 
 class light {
 	public:
@@ -36,7 +37,7 @@ class light {
         }
 
 		inline virtual const rgbColor L(const point3& p) const {
-            return (lightColor * power) / (position - p).length2();
+            return (lightColor * power) / norm2(position - p);
         }
 
         virtual const bool isPointSource() const = 0;

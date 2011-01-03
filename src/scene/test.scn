@@ -21,7 +21,7 @@ scene<bvh, path>{
     shape{
         triangle(-3,-3,-3, 3,-3,-3, -3,3,-3)
         triangle(3,3,-3, -3,3,-3, 3,-3,-3)
-		material(lambert<textured>(0.75,0.75,0.75, imageTexture("/Users/hape/grid.png")))
+		material(lambert<textured>(0.75,0.75,0.75, imageTexture("/home/hape/py3DSS/buddha_scale_5.0.png")))
     }
 
 	shape{

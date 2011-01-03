@@ -1,7 +1,6 @@
 #pragma once
 
 #include "mathlib/vector.hpp"
-#include "mathlib/point.hpp"
 #include "mathlib/constants.hpp"
 
 class triangle;
