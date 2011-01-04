@@ -28,7 +28,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
     vector<meshTrianglePtr> tris(0);
 
     if(!file.is_open() || !file.good()){
-        cerr << "Unable to open SMF file for reading: " << filename.c_str() << endl;
+        cerr << "Unable to open OBJ file for reading: " << filename.c_str() << endl;
     }
 
     string chunk("");
@@ -187,7 +187,7 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
     vector<trianglePtr> tris(0);
 
     if(!file.is_open() || !file.good()){
-        cerr << "Unable to open SMF file for reading: " << filename.c_str() << endl;
+        cerr << "Unable to open OBJ file for reading: " << filename.c_str() << endl;
     }
 
     string chunk("");
