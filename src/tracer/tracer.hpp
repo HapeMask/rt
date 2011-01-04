@@ -46,12 +46,15 @@ static const float pathContinueProbability = 0.5f;
 
 class pathTracer : public rayTracer {
     public:
-        pathTracer(const scene& p) : rayTracer(p) {}
+        pathTracer(const scene& p) : rayTracer(p), rrThreshold(3) {}
+        pathTracer(const scene& p, const int& rrt) : rayTracer(p), rrThreshold(rrt) {}
         virtual const rgbColor L(const ray& r) const;
 
     private:
         template <const bool recursiveSpecular>
         const rgbColor _L(ray& r, const int depth = 0) const;
+
+        int rrThreshold;
 };
 
 struct pathPoint{
