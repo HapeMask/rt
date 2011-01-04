@@ -51,6 +51,7 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     const float sin2ThetaT = eta2 * bsdf::sin2Theta(wo);
     // Total Internal Reflection
     if(sin2ThetaT > 1.f){
+        pd = 0.f;
         return rgbColor(255, 0, 0);
     }
 
@@ -61,7 +62,7 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
 
     wi = normalize(vec3(
                 eta * -wo.x,
-                eta * cosThetaT,
+                eta * cosThetaT - wo.y,
                 eta * -wo.z
             ));
 
