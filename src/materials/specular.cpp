@@ -62,7 +62,7 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
 
     wi = normalize(vec3(
                 eta * -wo.x,
-                eta * cosThetaT - wo.y,
+                cosThetaT,
                 eta * -wo.z
             ));
 
