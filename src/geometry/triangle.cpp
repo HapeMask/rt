@@ -28,7 +28,7 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
 const intersection triangle::intersect(ray& r) const {
     const vec3 s1 = cross(C, r.direction);
     const float D = dot(s1, B);
-    if(abs(D) < EPSILON){
+    if(fabsf(D) < EPSILON){
         return noIntersect;
     }
 
@@ -47,7 +47,7 @@ const intersection triangle::intersect(ray& r) const {
     }
 
     const float t = dot(C, s2) * invD;
-	if(t < r.tMin || t >= r.tMax){
+	if(t < r.tMin || t > r.tMax){
 		return noIntersect;
 	}
 

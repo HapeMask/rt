@@ -79,11 +79,13 @@ const rgbColor microfacetBtdf::sampleF(const float& u0, const float& u1,
         sqrtf(1.f - sin2ThetaT);
 
     wi = normalize(etaR * -wo + (etaR * cosThetaO + cosThetaT) * m);
+
     /*
     const vec3 whT = -halfVector(etaO * wo, etaT * wi);
     const float jacobian = (etaT*etaT * fabsf(dot(wi, m))) / powf(etaO * dot(wo, m) + etaT * dot(wo, m), 2);
-    pd = distrib->D(m) * fabsf(bsdf::cosTheta(m)) * jacobian;
+    pd *= jacobian;
     */
+
     pd = 1.f;
 
     const rgbColor Fr = rescaledApproxFresnel(eta, k, fabsf(bsdf::cosTheta(wo)));
