@@ -1,6 +1,13 @@
 #include "bsdf.hpp"
 #include "samplers/samplers.hpp"
 
+microfacetBrdf::microfacetBrdf(const float& e, const float& K, microfacetDistribution* d) :
+    bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d) {}
+
+microfacetBrdf::~microfacetBrdf(){
+    delete distrib;
+}
+
 inline const float microfacetDistribution::G(const vec3& wo, const vec3& wi, const vec3& wh) const {
     const float ndotwo = fabsf(bsdf::cosTheta(wo));
     const float ndotwi = fabsf(bsdf::cosTheta(wi));
@@ -15,11 +22,15 @@ const rgbColor microfacetBrdf::f(const vec3& wo, const vec3& wi) const {
     const float cosThetaO = fabsf(bsdf::cosTheta(wo));
     const float cosThetaT = fabsf(bsdf::cosTheta(wi));
     const float cosThetaH = dot(wi, wh);
-    const rgbColor F = rescaledApproxFresnel(eta, k, cosThetaH);
+    const rgbColor F = evalFresnel(cosThetaH);
 
     return 
         F * distrib->rho * distrib->D(wh) * distrib->G(wo, wi, wh) /
         (4.f * cosThetaO * cosThetaT);
+}
+
+const rgbColor microfacetBrdf::evalFresnel(const float& cosTheta) const {
+    return rescaledApproxFresnel(eta, k, cosTheta);
 }
 
 inline const rgbColor microfacetBrdf::sampleF(const float& u0, const float& u1,
@@ -32,20 +43,20 @@ inline const float microfacetBrdf::pdf(const vec3& wo, const vec3& wi) const {
     return distrib->pdf(wo, wi);
 }
 
-microfacetBrdf::~microfacetBrdf(){
-    delete distrib;
-}
+microfacetBtdf::microfacetBtdf(const float& e, const float& K, microfacetDistribution* d) :
+    bxdf(bxdfType(GLOSSY | TRANSMISSION)), eta(e), k(K), distrib(d)
+{}
 
 microfacetBtdf::~microfacetBtdf(){
     delete distrib;
 }
 
-microfacetBtdf::microfacetBtdf(const float& e, const float& K, microfacetDistribution* d) :
-    bxdf(bxdfType(GLOSSY | TRANSMISSION)), eta(e), k(K), distrib(d)
-{}
-
 const rgbColor microfacetBtdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
+}
+
+const rgbColor microfacetBtdf::evalFresnel(const float& cosTheta) const {
+    return rescaledApproxFresnel(eta, k, cosTheta);
 }
 
 const rgbColor microfacetBtdf::sampleF(const float& u0, const float& u1,

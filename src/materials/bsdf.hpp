@@ -64,7 +64,7 @@ class bsdf {
 
         void addBxdf(bxdf* b);
 
-        static const bool isSupertype(bxdfType a, bxdfType b);
+        static const bool isSubtype(bxdfType a, bxdfType b);
         static const float cosTheta(const vec3& v);
         static const float cos2Theta(const vec3& v);
         static const float sinTheta(const vec3& v);
@@ -212,9 +212,7 @@ class microfacetDistribution {
  */
 class microfacetBrdf : public bxdf {
     public:
-        microfacetBrdf(const float& e, const float& K, microfacetDistribution* d) :
-            bxdf(bxdfType(GLOSSY | REFLECTION)), eta(e), k(K), distrib(d) {}
-
+        microfacetBrdf(const float& e, const float& K, microfacetDistribution* d);
         virtual ~microfacetBrdf();
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi) const;
@@ -223,6 +221,8 @@ class microfacetBrdf : public bxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
         virtual void updateFromUVTexture(const vec2& uv) {}
+
+        const rgbColor evalFresnel(const float& cosTheta) const;
 
         float eta, k;
         microfacetDistribution* distrib;
@@ -239,6 +239,8 @@ class microfacetBtdf : public bxdf {
         virtual const float pdf(const vec3& wo, const vec3& wi) const;
 
         virtual void updateFromUVTexture(const vec2& uv) {}
+
+        const rgbColor evalFresnel(const float& cosTheta) const;
 
         float eta, k;
         microfacetDistribution* distrib;
@@ -363,6 +365,27 @@ class substrate : public bxdf {
         rgbColor ecTerm;
         microfacetDistribution* distrib;
 };
+
+inline const bool bsdf::isSubtype(bxdfType a, bxdfType b) {
+    return ((a & b) == a);
+}
+
+inline const float bsdf::cosTheta(const vec3& v){
+    return v.y;
+}
+
+inline const float bsdf::cos2Theta(const vec3& v){
+    return v.y*v.y;
+}
+
+inline const float bsdf::sinTheta(const vec3& v){
+    return sqrtf(std::max(0.f, 1.f - v.y*v.y));
+}
+
+inline const float bsdf::sin2Theta(const vec3& v){
+    const float c = cosTheta(v);
+    return 1.f - c*c;
+}
 
 typedef shared_ptr<bsdf> bsdfPtr;
 typedef shared_ptr<bxdf> bxdfPtr;

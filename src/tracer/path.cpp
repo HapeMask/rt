@@ -27,8 +27,10 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         if(!isect.hit || isect.li){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(size_t i=0; i<parent.numLights(); ++i){
-                    const float lightDist = norm(parent.getLight(i)->getPosition() - rOrig.origin);
-                    ray lightRay(rOrig, EPSILON, lightDist);
+                    const vec3 lightDir = parent.getLight(i)->getPosition() - r.origin;
+                    const float lightDist = norm(lightDir);
+
+                    ray lightRay(r.origin, normalize(lightDir), EPSILON, lightDist);
 
                     const intersection isectL = parent.getLight(i)->intersect(rOrig);
                     if(isectL.hit && !parent.intersectB(lightRay)){
@@ -47,9 +49,8 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
             break;
         }
 
-		// Handle direct light bounces from a specular surface (also if a ray
-		// hits a light source on the first bounce).
-        if((pathLength == 0 || lastBounceWasSpecular) && isect.li){
+		// Handle direct light bounces from a specular surface.
+        if(lastBounceWasSpecular && isect.li){
             L += throughput * isect.li->L(rOrig);
         }
 
@@ -106,7 +107,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 					L += ft * _L<true>(r2, depth+1) * fabsf(dot(specDir, normal)) / pdf;
 				}
 			}
-			break;
+			return L;
         }
 
         wi = normalize(bsdfToWorld(wi, isect));

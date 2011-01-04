@@ -13,28 +13,6 @@ using std::vector;
 using std::cerr;
 using std::endl;
 
-const bool bsdf::isSupertype(bxdfType a, bxdfType b) {
-    return (a & b);
-}
-
-const float bsdf::cosTheta(const vec3& v){
-    return v.y;
-}
-
-const float bsdf::cos2Theta(const vec3& v){
-    return v.y*v.y;
-}
-
-const float bsdf::sinTheta(const vec3& v){
-    // sintheta(v) = sqrt(1 - cos2theta(v))
-    return sqrtf(std::max(0.f, 1.f - v.y*v.y));
-}
-
-const float bsdf::sin2Theta(const vec3& v){
-    const float c = cosTheta(v);
-    return 1.f - c*c;
-}
-
 bsdf::~bsdf(){
     if(specTra){
         delete specTra;
@@ -132,16 +110,16 @@ const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
         type = bxdfType(type & ~REFLECTION);
     }
 
-    if(isSupertype(REFLECTION, type)){
-        if(isSupertype(DIFFUSE, type) && diffRef) f += diffRef->f(wo, wi);
-        if(isSupertype(SPECULAR, type) && specRef) f += specRef->f(wo, wi);
-        if(isSupertype(GLOSSY, type) && glossRef) f += glossRef->f(wo, wi);
+    if(isSubtype(REFLECTION, type)){
+        if(isSubtype(DIFFUSE, type) && diffRef) f += diffRef->f(wo, wi);
+        if(isSubtype(SPECULAR, type) && specRef) f += specRef->f(wo, wi);
+        if(isSubtype(GLOSSY, type) && glossRef) f += glossRef->f(wo, wi);
     }
 
-    if(isSupertype(TRANSMISSION, type)){
-        if(isSupertype(DIFFUSE, type) && diffTra) f += diffTra->f(wo, wi);
-        if(isSupertype(SPECULAR, type) && specTra) f += specTra->f(wo, wi);
-        if(isSupertype(GLOSSY, type) && glossTra) f += glossTra->f(wo, wi);
+    if(isSubtype(TRANSMISSION, type)){
+        if(isSubtype(DIFFUSE, type) && diffTra) f += diffTra->f(wo, wi);
+        if(isSubtype(SPECULAR, type) && specTra) f += specTra->f(wo, wi);
+        if(isSubtype(GLOSSY, type) && glossTra) f += glossTra->f(wo, wi);
     }
 
     return f;
@@ -151,31 +129,31 @@ const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
     float p = 0;
     int matches = 0;
 
-    if(isSupertype(REFLECTION, type)){
-        if(isSupertype(DIFFUSE, type) && diffRef){
+    if(isSubtype(REFLECTION, type)){
+        if(isSubtype(DIFFUSE, type) && diffRef){
             p += diffRef->pdf(wo, wi);
             ++matches;
         }
-        if(isSupertype(SPECULAR, type) && specRef){
+        if(isSubtype(SPECULAR, type) && specRef){
             p += specRef->pdf(wo, wi);
             ++matches;
         }
-        if(isSupertype(GLOSSY, type) && glossRef){
+        if(isSubtype(GLOSSY, type) && glossRef){
             p += glossRef->pdf(wo, wi);
             ++matches;
         }
     }
 
-    if(isSupertype(TRANSMISSION, type)){
-        if(isSupertype(DIFFUSE, type) && diffTra) {
+    if(isSubtype(TRANSMISSION, type)){
+        if(isSubtype(DIFFUSE, type) && diffTra) {
             p += diffTra->pdf(wo, wi);
             ++matches;
         }
-        if(isSupertype(SPECULAR, type) && specTra) {
+        if(isSubtype(SPECULAR, type) && specTra) {
             p += specTra->pdf(wo, wi);
             ++matches;
         }
-        if(isSupertype(GLOSSY, type) && glossTra) {
+        if(isSubtype(GLOSSY, type) && glossTra) {
             p += glossTra->pdf(wo, wi);
             ++matches;
         }
@@ -192,26 +170,26 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     vector<bxdf*> matches;
 
     // Find all matching bxdfs.
-    if(isSupertype(REFLECTION, type)){
-        if(isSupertype(DIFFUSE, type) && diffRef){
+    if(isSubtype(REFLECTION, type)){
+        if(isSubtype(DIFFUSE, type) && diffRef){
             matches.push_back(diffRef);
         }
-        if(isSupertype(SPECULAR, type) && specRef){
+        if(isSubtype(SPECULAR, type) && specRef){
             matches.push_back(specRef);
         }
-        if(isSupertype(GLOSSY, type) && glossRef){
+        if(isSubtype(GLOSSY, type) && glossRef){
             matches.push_back(glossRef);
         }
     }
 
-    if(isSupertype(TRANSMISSION, type)){
-        if(isSupertype(DIFFUSE, type) && diffTra) {
+    if(isSubtype(TRANSMISSION, type)){
+        if(isSubtype(DIFFUSE, type) && diffTra) {
             matches.push_back(diffTra);
         }
-        if(isSupertype(SPECULAR, type) && specTra) {
+        if(isSubtype(SPECULAR, type) && specTra) {
             matches.push_back(specTra);
         }
-        if(isSupertype(GLOSSY, type) && glossTra) {
+        if(isSubtype(GLOSSY, type) && glossTra) {
             matches.push_back(glossTra);
         }
     }

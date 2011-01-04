@@ -1,4 +1,4 @@
-scene<bvh, path>{
+scene<bvh, whitted>{
 	camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
     light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
     //light<point>(0,2.8,0, 16, 1,1,1)
@@ -22,7 +22,8 @@ scene<bvh, path>{
         triangle(-3,-3,-3, 3,-3,-3, -3,3,-3)
         triangle(3,3,-3, -3,3,-3, 3,-3,-3)
         //material(lambert(0.75,0.75,0.75))
-		material(lambert<textured>(0.75,0.75,0.75, imageTexture("/home/hape/py3DSS/buddha_scale_5.0.png")))
+		//material(lambert<textured>(0.75,0.75,0.75, imageTexture("/home/hape/py3DSS/buddha_scale_5.0.png")))
+        material(lambert(0.7,0.7,0.7))
     }
 
 	shape{
@@ -37,10 +38,10 @@ scene<bvh, path>{
 
     shape{
         sphere(0,0,0,1.5)
-        //material(specular<dielectric>(0.9,0.9,0.9, 1.6))
+        //material(specular<dielectric>(0.1,0.6,0.9, 1.6))
         material(frosted(
-            microfacet(1.6, 0, blinn(0.4,0.4,0.4, 5000)),
-            microfacet(1.6, 0, blinn(0.6,0.6,0.6, 5000))
+            microfacet(1.6, 1, blinn(0.4,0.4,0.4, 50000)),
+            microfacet(1.6, 1, blinn(0.1,0.6,0.9, 50000))
             ))
     }
 }

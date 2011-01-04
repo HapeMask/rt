@@ -32,7 +32,6 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         return isect.li->L(r);
     }
 
-    // Handle emissive and specular materials.
 	material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
 	const vec3& normal = isect.shadingNormal;
 	const bsdf& bsdf = mat.getBsdf(isect.uv);
@@ -42,7 +41,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     rgbColor L(0.f);
 
 	if(isect.s->getMaterial()->isEmissive()){
-		return clamp(mat.Le());
+		return mat.Le();
 	}
 
     // Diffuse calculations.
