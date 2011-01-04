@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QFileDialog>
 #include <QtGui>
 
 #include "framebuffer/qtoglframebuffer.hpp"
@@ -19,6 +20,11 @@ rtGUI::rtGUI(scene& s, QWidget* parent) : QMainWindow(parent),
     connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(fb, SIGNAL(iterated(uint64_t, float)),
             this, SLOT(iterated(uint64_t, float)));
+
+    QAction* save = new QAction("&Save", this);
+    save->setShortcut(tr("CTRL+S"));
+    file->addAction(save);
+    connect(save, SIGNAL(triggered()), this, SLOT(save()));
 
     fb->resize(scn.getCamera().width(), scn.getCamera().height());
     QWidget* win = new QWidget(this);
@@ -40,4 +46,9 @@ rtGUI::rtGUI(scene& s, QWidget* parent) : QMainWindow(parent),
 void rtGUI::iterated(uint64_t iterations, float samplesPerSec) {
     iterLabel->setText(tr("Iterations: ") + QString::number(iterations));
     spsLabel->setText(tr("Samples/sec: ") + QString::number(samplesPerSec));
+}
+
+void rtGUI::save() {
+    const QString filename =  QFileDialog::getSaveFileName(this, tr("Save Image"), "~", tr("Image Files (*.png *.jpg *.bmp"));
+    fb->saveToImage(filename);
 }

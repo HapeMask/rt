@@ -29,6 +29,8 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
             return iterations;
         }
 
+        void saveToImage(const QString& filename) const;
+
     protected:
         void _render(QPainter& painter);
         void initializeGL();

@@ -495,3 +495,7 @@ void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cor
                     QRect(cornerX, cornerY, blockWidth, blockHeight));
         }
 }
+
+void qtOpenGLFramebuffer::saveToImage(const QString& filename) const {
+    imgBuffer.save(filename);
+}

@@ -19,4 +19,5 @@ class rtGUI : public QMainWindow {
 
     public slots:
         void iterated(uint64_t iterations, float samplesPerSec);
+        void save();
 };
