@@ -63,6 +63,14 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     buffer = new rgbColor[_width*_height];
     sumOfSquares = new rgbColor[_width*_height];
     samplesPerPixel = new int[_width*_height];
+
+    const float sigma = 0.4f;
+    for(int i=-2; i<=2; ++i){
+        for(int j=-2; j<=2; ++j){
+            gkern[i+2][j+2] = evaluate2DGaussian(i, j, sigma) /
+                gaussian2DNormalization(sigma);
+        }
+    }
 }
 
 qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
@@ -384,10 +392,12 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
                 const float yOffset = sampleUniform() - 0.5f;
                 const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
 
-                const float sigma = 1.f;
-                addSample(x, y,
-                        L * evaluate2DGaussian(xOffset, yOffset, sigma) /
-                        gaussian2DNormalization(sigma));
+#ifdef RT_MULTITHREADED
+#pragma omp critical
+#endif
+                {
+                addSample(x, y, L);
+                }
             }
         }
 
@@ -413,15 +423,21 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
 }
 
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
-    const size_t offset = y * _width + x;
-    buffer[offset] += c;
-    sumOfSquares[offset] += c * c;
-    ++samplesPerPixel[offset];
 
-#ifdef RT_MULTITHREADED
-#pragma omp atomic
-#endif
-            ++pixelsSampled;
+    for(int i=0; i<5; ++i){
+        for(int j=0; j<5; ++j){
+            const size_t offset = (y + 2-i) * _width + x + 2 - j;
+            if(offset > 0 && offset < _width*_height){
+                const rgbColor C = c * gkern[i][j];
+                buffer[offset] += C;
+                sumOfSquares[offset] += C * C;
+            }
+        }
+    }
+
+    const size_t offset = y * _width + x;
+    ++samplesPerPixel[offset];
+    ++pixelsSampled;
 }
 
 void qtOpenGLFramebuffer::enableGLOptions() {

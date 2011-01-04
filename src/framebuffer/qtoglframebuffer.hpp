@@ -72,6 +72,8 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         void clearBuffers();
 
+        float gkern[5][5];
+
     signals:
         void iterated(uint64_t iterations, float samplesPerSec);
 };
