@@ -67,4 +67,22 @@ class triangle : public primitive {
         bool hasVertNormals, hasUVs;
 };
 
+inline const point3 triangle::sampleSurface(const float& u0, const float& u1) const {
+    point3 ret;
+    sampleTriangle(ret, *this, u0, u1);
+    return ret;
+}
+
+inline void triangle::setVertNormals(const vec3& an, const vec3& bn, const vec3& cn){
+    vertNormals[0] = an;
+    vertNormals[1] = bn;
+    vertNormals[2] = cn;
+    hasVertNormals = true;
+}
+
+inline void triangle::drawGL() const {
+    // Do nothing. This triangle's data has been dumped to the scene VBO
+    // already and will be drawn as such.
+}
+
 typedef std::tr1::shared_ptr<triangle> trianglePtr;

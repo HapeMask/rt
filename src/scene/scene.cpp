@@ -72,3 +72,17 @@ void scene::build(){
 		needsBuilding = false;
 	}
 }
+
+void scene::dumpToVbo(GLfloat* vbo) const {
+    GLfloat* p = vbo;
+
+    for(size_t i=0; i<shapes.size(); ++i){
+        shapes[i]->prepGL(p);
+    }
+}
+
+void scene::drawGL() const {
+    for(size_t i=0; i<shapes.size(); ++i){
+        shapes[i]->drawGL();
+    }
+}

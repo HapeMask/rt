@@ -22,12 +22,6 @@ const float sphereLight::pdf(const point3& p, const vec3& wi) const {
 }
 
 const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const {
-    /*
-    vec3 v;
-    uniformSampleSphere(v);
-    const point3 samplePoint = position + radius * v;
-    */
-
     // Create an arbitrary basis around w (direction towards the light) for the
     // transformation from that space to world space.
     //
@@ -65,7 +59,6 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
 
     wi = samplePoint - p;
     pd = dot(-wi, normal) / ( TWOPI * isect.t * isect.t * (1.f - distanceTerm) );
-    //pd = pdf(p, wi);
     return lightColor * power;
 }
 

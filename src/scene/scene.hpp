@@ -37,6 +37,7 @@ class scene {
 		 * NOTE: Destroys the previous accelerator.
 		 */
 		void setAccelerator(acceleratorPtr a);
+
 		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
@@ -74,15 +75,18 @@ class scene {
             rt = p;
         }
 
-        const camera& getCamera() const {
+        inline const camera& getCamera() const {
             return *cam;
         }
 
-        camera& getCamera() {
+        inline camera& getCamera() {
             return *cam;
         }
 
 		void build();
+
+        void dumpToVbo(GLfloat* vbo) const;
+        void drawGL() const;
 
         inline const rgbColor L(const float& x, const float& y) const {
             return rt->L(cam->getRay(x, y));
@@ -91,22 +95,6 @@ class scene {
         inline const long vertexCount() const {
             return totalVertices;
         }
-
-#ifdef RT_USE_QT
-        void dumpToVbo(GLfloat* vbo) const {
-            GLfloat* p = vbo;
-
-            for(size_t i=0; i<shapes.size(); ++i){
-                shapes[i]->prepGL(p);
-            }
-        }
-
-        void drawGL() const {
-            for(size_t i=0; i<shapes.size(); ++i){
-                shapes[i]->drawGL();
-            }
-        }
-#endif
 
 	private:
 		vector<shapePtr> shapes;

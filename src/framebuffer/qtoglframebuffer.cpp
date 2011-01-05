@@ -65,10 +65,17 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     samplesPerPixel = new int[_width*_height];
 
     const float sigma = 0.4f;
+    float sum = 0.f;
     for(int i=-2; i<=2; ++i){
         for(int j=-2; j<=2; ++j){
-            gkern[i+2][j+2] = evaluate2DGaussian(i, j, sigma) /
-                gaussian2DNormalization(sigma);
+            gkern[i+2][j+2] = evaluate2DGaussian(i, j, sigma);
+            sum += gkern[i+1][j+2];
+        }
+    }
+
+    for(int i=0; i<5; ++i){
+        for(int j=0; j<5; ++j){
+            gkern[i][j] /= sum;
         }
     }
 }
@@ -236,6 +243,7 @@ void qtOpenGLFramebuffer::clearBuffers() {
 
     const rgbColor black(0.f);
     for(int i=0; i<_width*_height; ++i){
+        sumOfSquares[i] = rgbColor(0.f);
         buffer[i] = black;
         samplesPerPixel[i] = 0;
     }
@@ -430,7 +438,12 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
             if(offset > 0 && offset < _width*_height){
                 const rgbColor C = c * gkern[i][j];
                 buffer[offset] += C;
-                sumOfSquares[offset] += C * C;
+
+                // Don't use weighted values in the statistics data, only use
+                // the actual (center) value.
+                if(i == 2 && j == 2){
+                    sumOfSquares[offset] += c * c;
+                }
             }
         }
     }
@@ -482,8 +495,10 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
 #endif
     for(int y = 0; y <_height; y++){
         for(int x = 0; x < _width; x++){
-            setPixel(x, y,
-                    clamp(buffer[y * framebuffer::width() + x] / (float)samplesPerPixel[y * framebuffer::width() + x]));
+            const int offset = y * _width + x;
+            setPixel(
+                    x, y,
+                    clamp(buffer[offset] / (float)samplesPerPixel[offset]));
         }
     }
 
@@ -496,20 +511,22 @@ void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cor
 #endif
     for(int y = cornerY; y < cornerY + blockHeight; y++){
         for(int x = cornerX; x < cornerX + blockWidth; x++){
-            setPixel(x, y,
-                    clamp(buffer[y * framebuffer::width() + x] / (float)samplesPerPixel[y * framebuffer::width() + x]));
+            const int offset = y * _width + x;
+            setPixel(
+                    x, y,
+                    clamp(buffer[offset] / (float)samplesPerPixel[offset]));
         }
     }
 
 #ifdef RT_MULTITHREADED
 #pragma omp critical
 #endif
-        {
-            painter.drawPixmap(
-                    QPoint(cornerX, cornerY),
-                    QPixmap::fromImage(imgBuffer),
-                    QRect(cornerX, cornerY, blockWidth, blockHeight));
-        }
+    {
+    painter.drawPixmap(
+            QPoint(cornerX, cornerY),
+            QPixmap::fromImage(imgBuffer),
+            QRect(cornerX, cornerY, blockWidth, blockHeight));
+    }
 }
 
 void qtOpenGLFramebuffer::saveToImage(const QString& filename) const {
