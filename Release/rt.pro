@@ -17,13 +17,12 @@ DEFINES += RT_NO_EXECPTIONS \
     GL_GLEXT_PROTOTYPES
 
 QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
-	-msse4 -msse4.1 -msse4.2 -ffast-math \
-	-mfpmath=sse -mrecip -fomit-frame-pointer -ftree-vectorize -pipe \
-	-fexpensive-optimizations -funsafe-loop-optimizations -fno-finite-math-only \
-	-fno-exceptions -fopenmp \
-	-fgcse-sm -fgcse-las
+	-msse4 -msse4.1 -msse4.2 -ffast-math -freciprocal-math \
+	-mfpmath=sse -mrecip -fomit-frame-pointer -pipe -fexpensive-optimizations \
+	-funsafe-loop-optimizations -fsingle-precision-constant \
+	-fno-exceptions -fopenmp -fgcse-sm -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline
 
-QMAKE_LFLAGS += -fwhole-program -fopenmp $(CXXFLAGS)
+QMAKE_LFLAGS += -fopenmp $(CXXFLAGS)
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
 INCLUDEPATH += ../src \
