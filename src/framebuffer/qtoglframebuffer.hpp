@@ -12,9 +12,12 @@
 #include "scene/scene.hpp"
 #include "mathlib/vector.hpp"
 
+#include "renderthread.hpp"
 class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
     // Only if you use signals/slots.
     Q_OBJECT
+
+    friend class renderThread;
 
     public:
         qtOpenGLFramebuffer(scene& s, const int bpp=32, QWidget* parent = NULL);
@@ -32,7 +35,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void saveToImage(const QString& filename) const;
 
     protected:
-        void _render(QPainter& painter);
+        void _render();
         void initializeGL();
         void resizeGL(int width, int height);
 
@@ -55,7 +58,8 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         vec3 camForward;
 
         uint64_t pixelsSampled, iterations;
-		bool showUpdates, rendered;
+        float averageSamplesPerSec;
+		bool showUpdates, showRenderView, rendering;
 
         rgbColor* buffer;
         rgbColor* sumOfSquares;
@@ -73,7 +77,12 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void clearBuffers();
 
         float gkern[5][5];
+        renderThread rthread;
 
     signals:
         void iterated(uint64_t iterations, float samplesPerSec);
+
+    private slots:
+        void redraw();
+        void toggleRendering();
 };

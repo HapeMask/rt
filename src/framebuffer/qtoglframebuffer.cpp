@@ -1,4 +1,14 @@
+#include <QPixmap>
+#include <sys/time.h>
+#include <unistd.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <iostream>
+
 #include "qtoglframebuffer.hpp"
+#include "renderthread.hpp"
 
 #include "mathlib/constants.hpp"
 #include "mathlib/quaternion.hpp"
@@ -8,15 +18,6 @@
 
 #include "utility.hpp"
 #include "mathlib/constants.hpp"
-
-#include <QPixmap>
-#include <sys/time.h>
-#include <unistd.h>
-
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
-#include <iostream>
 
 using std::cerr;
 using std::endl;
@@ -42,9 +43,9 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     lastPos(0.f, 0.f),
     camPos(s.getCamera().getPosition()), camForward(s.getCamera().getPosition() - s.getCamera().getLook()),
     pixelsSampled(0), iterations(0),
-    showUpdates(false), rendered(false),
+    showUpdates(false), showRenderView(false), rendering(false),
     imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),
-    paused(false)
+    paused(false), averageSamplesPerSec(0.f), rthread(this)
 {
     setAutoFillBackground(false);
 
@@ -69,7 +70,7 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     for(int i=-2; i<=2; ++i){
         for(int j=-2; j<=2; ++j){
             gkern[i+2][j+2] = evaluate2DGaussian(i, j, sigma);
-            sum += gkern[i+1][j+2];
+            sum += gkern[i+2][j+2];
         }
     }
 
@@ -78,9 +79,15 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
             gkern[i][j] /= sum;
         }
     }
+
+    connect(&rthread, SIGNAL(rendered()), this, SLOT(redraw()));
+    rthread.start();
 }
 
 qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
+    rthread.shutdown();
+    rthread.wait(10000);
+
     if(sceneData) delete[] sceneData;
     if(buffer) delete[] buffer;
     if(sumOfSquares) delete[] sumOfSquares;
@@ -108,37 +115,37 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
     switch(event->key()){
         case Qt::Key_W:
 			camPos += camForward / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_A:
 			camPos -= right / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_S:
 			camPos -= camForward / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_D:
 			camPos += right / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_Space:
 			camPos += up / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_Z:
 			camPos -= up / 5.f;
-            rendered = false;
+            showRenderView = false;
 			break;
         case Qt::Key_Plus:
         case Qt::Key_Equal:
             fovy += 2;
-            rendered = false;
+            showRenderView = false;
             break;
         case Qt::Key_Minus:
         case Qt::Key_Underscore:
             fovy -= 2;
-            rendered = false;
+            showRenderView = false;
             break;
         case Qt::Key_P:
             paused = !paused;
@@ -147,23 +154,14 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
             paused = true;
             break;
         case Qt::Key_R:
-            {
-            //QPainter painter(this);
-            //painter.beginNativePainting();
-            disableGLOptions();
-            QPainter painter;
-            painter.begin(this);
-            _render(painter);
-            painter.end();
-            //painter.endNativePainting();
+            toggleRendering();
             break;
-            }
         case Qt::Key_U:
             showUpdates = !showUpdates;
             break;
     }
 
-    if(!rendered && iterations != 0){
+    if(!showRenderView && iterations != 0){
         emit iterated(0,0);
     }
 
@@ -184,9 +182,9 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
     const int dy = event->y() - lastPos.y();
 
     if(dx != 0 || dy != 0){
-        if(rendered){
+        if(showRenderView){
             emit iterated(0,0);
-            rendered = false;
+            showRenderView = false;
         }
 
         // Derp multiple inheritance...
@@ -340,24 +338,33 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.beginNativePainting();
     //painter.fillRect(0,0,128,128, QColor(0,255,0,128));
-    //_render(painter);
 
-    if(rendered){
+    if(showRenderView){
         painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
     }
     painter.endNativePainting();
 }
 
 void qtOpenGLFramebuffer::render() {
-    QPainter painter(this);
-    painter.beginNativePainting();
-    _render(painter);
-    painter.endNativePainting();
 }
 
-void qtOpenGLFramebuffer::_render(QPainter& painter) {
-    if(!rendered){
+void qtOpenGLFramebuffer::redraw() {
+    //QPainter painter(this);
+    //painter.beginNativePainting();
+    //painter.endNativePainting();
+
+    disableGLOptions();
+    QPainter painter;
+    painter.begin(this);
+    tonemapAndUpdateScreen(painter);
+    emit iterated(iterations, averageSamplesPerSec);
+    painter.end();
+}
+
+void qtOpenGLFramebuffer::_render() {
+    if(!showRenderView){
         clearBuffers();
+        showRenderView = true;
     }
 
     struct timeval start, now;
@@ -370,19 +377,6 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
     for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
         int blockCornerX=0, blockCornerY=0;
         getNextBlock(blockCornerY, blockCornerX);
-
-        if(showUpdates){
-#ifdef RT_MULTITHREADED
-#pragma omp critical
-#endif
-            {
-                painter.eraseRect(blockCornerX, blockCornerY, _width, _height);
-                painter.fillRect(
-                        blockCornerX, blockCornerY,
-                        blockWidth, blockHeight, Qt::green);
-                swapBuffers();
-            }
-        }
 
         // Render the pixels in block.
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
@@ -400,41 +394,33 @@ void qtOpenGLFramebuffer::_render(QPainter& painter) {
                 const float yOffset = sampleUniform() - 0.5f;
                 const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
 
-#ifdef RT_MULTITHREADED
 #pragma omp critical
-#endif
                 {
                 addSample(x, y, L);
                 }
             }
         }
-
-        /*
-#pragma omp critical
-        {
-        tonemapAndUpdateRect(painter, blockCornerX, blockCornerY);
-        }
-        */
     }
-
-    tonemapAndUpdateScreen(painter);
 
     gettimeofday(&now, NULL);
     const float timeElapsed = now.tv_sec - start.tv_sec +
         ((now.tv_usec - start.tv_usec) / 1e6);
 
+    // Lazy.
+    averageSamplesPerSec = ((averageSamplesPerSec*iterations) +
+        (float)(_width*_height)/timeElapsed) / (iterations+1.f);
+
     ++iterations;
-    emit iterated(iterations, (float)(_width*_height)/timeElapsed);
 
     blocksUsed = 0;
-    rendered = true;
 }
 
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
-
+    /*
     for(int i=0; i<5; ++i){
         for(int j=0; j<5; ++j){
             const size_t offset = (y + 2-i) * _width + x + 2 - j;
+
             if(offset > 0 && offset < _width*_height){
                 const rgbColor C = c * gkern[i][j];
                 buffer[offset] += C;
@@ -447,8 +433,10 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
             }
         }
     }
+    */
 
     const size_t offset = y * _width + x;
+    buffer[offset] += c;
     ++samplesPerPixel[offset];
     ++pixelsSampled;
 }
@@ -531,4 +519,15 @@ void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cor
 
 void qtOpenGLFramebuffer::saveToImage(const QString& filename) const {
     imgBuffer.save(filename);
+}
+
+void qtOpenGLFramebuffer::toggleRendering() {
+    rendering = !rendering;
+
+    // Wakes up the render thread so it can go to work.
+    if(rendering){
+        rthread.wakeup();
+    }else {
+        rthread.pause();
+    }
 }
