@@ -68,6 +68,7 @@ HEADERS += ../src/utility.hpp \
            ../src/datastructs/linkedlist.hpp \
            ../src/framebuffer/framebuffer.hpp \
            ../src/framebuffer/qtoglframebuffer.hpp \
+           ../src/framebuffer/renderthread.hpp \
            ../src/geometry/aabb.hpp \
            ../src/geometry/meshtriangle.hpp \
            ../src/geometry/primitive.hpp \
@@ -116,6 +117,7 @@ SOURCES += ../src/main.cpp \
            ../src/camera/camera.cpp \
            ../src/color/color.cpp \
            ../src/framebuffer/qtoglframebuffer.cpp \
+           ../src/framebuffer/renderthread.cpp \
            ../src/geometry/aabb.cpp \
            ../src/geometry/meshtriangle.cpp \
            ../src/geometry/shape.cpp \
