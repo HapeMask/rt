@@ -31,7 +31,7 @@ rtGUI::rtGUI(scene& s, QWidget* parent) : QMainWindow(parent),
     QHBoxLayout* hbox = new QHBoxLayout;
     QVBoxLayout* vbox = new QVBoxLayout;
 
-    QPushButton* renderButton = new QPushButton("Render");
+    QPushButton* renderButton = new QPushButton("Render", this);
     vbox->addWidget(renderButton);
     connect(renderButton, SIGNAL(clicked()), fb, SLOT(toggleRendering()));
 
