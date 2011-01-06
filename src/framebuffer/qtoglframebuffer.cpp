@@ -108,6 +108,10 @@ void qtOpenGLFramebuffer::initializeGL(){
 }
 
 void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
+    if(rendering && event->key() != Qt::Key_R) {
+        return;
+    }
+
 	// Camera side vector.
 	vec3 right = normalize(cross(camForward, vec3(0, 1, 0)));
     vec3 up = normalize(cross(right, camForward));
@@ -173,11 +177,18 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
 }
 
 void qtOpenGLFramebuffer::mousePressEvent(QMouseEvent* event) {
-    lastPos = event->pos();
+    if(!rendering) {
+        lastPos = event->pos();
+    }
+
     setFocus(Qt::MouseFocusReason);
 }
 
 void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
+    if(rendering) {
+        return;
+    }
+
     const int dx = event->x() - lastPos.x();
     const int dy = event->y() - lastPos.y();
 
