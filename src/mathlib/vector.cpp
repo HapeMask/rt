@@ -14,7 +14,7 @@ vec3::vec3(const point3& p){
     x = p.x;
     y = p.y;
     z = p.z;
-    values[3] = 0;
+    w = 0;
 #endif
 }
 
