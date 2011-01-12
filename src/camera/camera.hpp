@@ -1,11 +1,11 @@
 #pragma once
+#include <memory>
 
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "mathlib/transformation.hpp"
 
-#include <tr1/memory>
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 
 class camera {
 	public:

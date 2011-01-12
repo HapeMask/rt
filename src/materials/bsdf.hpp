@@ -1,9 +1,8 @@
 #pragma once
 
-#include <tr1/memory>
-using std::tr1::shared_ptr;
-
+#include <memory>
 #include <cmath>
+using std::shared_ptr;
 
 #include "color/color.hpp"
 #include "mathlib/vector.hpp"

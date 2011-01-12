@@ -1,10 +1,9 @@
 #include <vector>
-#include <tr1/memory>
 
 #include "defaultaccelerator.hpp"
 #include "geometry/primitive.hpp"
 
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 using std::vector;
 
 const intersection defaultAccelerator::intersect(ray& r) const{

@@ -1,12 +1,11 @@
 #pragma once
-
-#include <tr1/memory>
+#include <memory>
 
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "bsdf.hpp"
 
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 
 class material {
     public:

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <tr1/memory>
+#include <memory>
 #include <string>
 
 using std::string;
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 
 #ifdef RT_MULTITHREADED
 #include <omp.h>

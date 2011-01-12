@@ -18,7 +18,7 @@
 #define divps           _mm_div_ps
 #define sqrtps          _mm_sqrt_ps
 #define shufps          _mm_shuffle_ps
-#define shuffle         _MM_SHUFFLE
+#define shufarg         _MM_SHUFFLE
 #define zerops          _mm_setzero_ps
 #define set1ps          _mm_set1_ps
 #define float2int(f)    _mm_cvtss_si32(_mm_load_ss(&(f)))

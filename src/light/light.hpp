@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tr1/memory>
+#include <memory>
 #include <iostream>
 
 #include "mathlib/vector.hpp"
@@ -10,7 +10,7 @@
 #include "acceleration/intersection.hpp"
 #include "materials/material.hpp"
 
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 using std::cerr;
 using std::endl;
 

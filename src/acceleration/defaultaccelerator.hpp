@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <tr1/memory>
+#include <memory>
 
 #include "intersection.hpp"
 #include "accelerator.hpp"
@@ -9,7 +9,7 @@
 #include "geometry/primitive.hpp"
 
 using std::vector;
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 
 /**
  * Default "acceleration structure." Just checks all

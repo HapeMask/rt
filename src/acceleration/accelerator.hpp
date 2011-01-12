@@ -3,8 +3,8 @@
 #include "intersection.hpp"
 #include "geometry/primitive.hpp"
 
-#include <tr1/memory>
-using std::tr1::shared_ptr;
+#include <memory>
+using std::shared_ptr;
 
 const uint8_t AXIS_X =      0;
 const uint8_t AXIS_Y =      1;
