@@ -108,31 +108,31 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
     tangent_ = normalize((-du2 *  dp1 + du1 * dp2) * invDetUV);
 }
 
-void triangle::prepGL(GLfloat*& data) const {
+void triangle::prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*data) = vertNormals[i].x;
-            ++data;
-            (*data) = vertNormals[i].y;
-            ++data;
-            (*data) = vertNormals[i].z;
-            ++data;
+            (*normalData) = vertNormals[i].x;
+            ++normalData;
+            (*normalData) = vertNormals[i].y;
+            ++normalData;
+            (*normalData) = vertNormals[i].z;
+            ++normalData;
         }else{
-            (*data) = normal_.x;
-            ++data;
-            (*data) = normal_.y;
-            ++data;
-            (*data) = normal_.z;
-            ++data;
+            (*normalData) = normal_.x;
+            ++normalData;
+            (*normalData) = normal_.y;
+            ++normalData;
+            (*normalData) = normal_.z;
+            ++normalData;
         }
 
         const point3& p = (i == 0) ? a_ : ((i == 1) ? b_ : c_);
 
-        (*data) = p.x;
-        ++data;
-        (*data) = p.y;
-        ++data;
-        (*data) = p.z;
-        ++data;
+        (*vertexData) = p.x;
+        ++vertexData;
+        (*vertexData) = p.y;
+        ++vertexData;
+        (*vertexData) = p.z;
+        ++vertexData;
     }
 }

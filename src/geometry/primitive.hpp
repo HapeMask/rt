@@ -1,17 +1,16 @@
 #pragma once
+#include <memory>
+#include <vector>
+
+#ifdef RT_USE_QT
+#include <GL/glew.h>
+#endif
 
 #include "samplers/samplers.hpp"
 #include "aabb.hpp"
 #include "mathlib/ray.hpp"
 
-#include <vector>
-#include <tr1/memory>
-
-#ifdef RT_USE_QT
-#include <GL/gl.h>
-#endif
-
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 using std::vector;
 
 class shape;
@@ -57,7 +56,7 @@ class primitive {
          *
          * Data is usually a vertex array.
          */
-        virtual void prepGL(GLfloat*& data) const = 0;
+        virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const = 0;
 
         /**
          * Performs the required GL draw calls to draw this shape.

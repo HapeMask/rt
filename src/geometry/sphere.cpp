@@ -101,7 +101,7 @@ const vec3 sphere::getNormal(const point3& p) const{
 }
 
 #ifdef RT_USE_QT
-void sphere::prepGL(GLfloat*& data) const {
+void sphere::prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
     // Do nothing. Spheres can't be drawn using the VBO (not easily) so use GLU
     // quadrics instead.
 }

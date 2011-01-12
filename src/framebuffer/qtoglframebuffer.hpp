@@ -1,12 +1,12 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <QImage>
 #include <QGLWidget>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QKeyEvent>
-
-#include <GL/gl.h>
 
 #include "framebuffer.hpp"
 #include "scene/scene.hpp"
@@ -49,8 +49,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         virtual void setPixel(const int& x, const int& y, const rgbColor& c);
 
     private:
-        GLuint vbo;
-        GLfloat* sceneData;
+        GLuint vertexVbo, normalVbo;
 
         float viewRotX, viewRotY, fovy;
         QPoint lastPos;
@@ -77,6 +76,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         void clearBuffers();
 
         float gkern[5][5];
+
         renderThread rthread;
 
     signals:

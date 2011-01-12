@@ -1,13 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <cmath>
 
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"
 #include "acceleration/intersection.hpp"
-
-#include <tr1/memory>
 
 class triangle : public primitive {
 	public:
@@ -48,7 +47,7 @@ class triangle : public primitive {
         }
 
 #ifdef RT_USE_QT
-        virtual void prepGL(GLfloat*& data) const;
+        virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const;
         virtual void drawGL() const;
 #endif
 
@@ -85,4 +84,4 @@ inline void triangle::drawGL() const {
     // already and will be drawn as such.
 }
 
-typedef std::tr1::shared_ptr<triangle> trianglePtr;
+typedef std::shared_ptr<triangle> trianglePtr;

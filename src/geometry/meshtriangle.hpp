@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <cmath>
 
 #include "trianglemesh.hpp"
 
@@ -6,9 +8,6 @@
 #include "mathlib/ray.hpp"
 #include "primitive.hpp"
 #include "acceleration/intersection.hpp"
-
-#include <cmath>
-#include <tr1/memory>
 
 class meshTriangle : public primitive {
 	public:
@@ -58,7 +57,7 @@ class meshTriangle : public primitive {
         }
 
 #ifdef RT_USE_QT
-        virtual void prepGL(GLfloat*& data) const;
+        virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const;
         virtual void drawGL() const;
 #endif
 
@@ -81,4 +80,4 @@ class meshTriangle : public primitive {
         triangleMesh* meshParent;
 };
 
-typedef std::tr1::shared_ptr<meshTriangle> meshTrianglePtr;
+typedef std::shared_ptr<meshTriangle> meshTrianglePtr;

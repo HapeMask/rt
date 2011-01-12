@@ -1,15 +1,14 @@
 #pragma once
+#include <memory>
+#include <cmath>
+#include <vector>
 
 #include "primitive.hpp"
 #include "materials/material.hpp"
 #include "color/color.hpp"
 #include "samplers/samplers.hpp"
 
-#include <cmath>
-#include <vector>
-#include <tr1/memory>
-
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 using std::vector;
 
 class shape {
@@ -66,9 +65,9 @@ class shape {
          *
          * Data is usually a vertex array.
          */
-        virtual void prepGL(GLfloat*& data) const {
+        virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
             for(size_t i=0; i<prims.size(); ++i){
-                prims[i]->prepGL(data);
+                prims[i]->prepGL(vertexData, normalData);
             }
         }
 

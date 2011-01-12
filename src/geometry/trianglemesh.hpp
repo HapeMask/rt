@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+#include <cmath>
+#include <vector>
+
 #include "shape.hpp"
 #include "triangle.hpp"
 #include "primitive.hpp"
@@ -7,10 +11,6 @@
 #include "materials/material.hpp"
 #include "color/color.hpp"
 #include "samplers/samplers.hpp"
-
-#include <cmath>
-#include <vector>
-#include <tr1/memory>
 
 using std::vector;
 
@@ -48,4 +48,4 @@ class triangleMesh : public shape {
         long totalVertices;
 };
 
-typedef std::tr1::shared_ptr<triangleMesh> triangleMeshPtr;
+typedef std::shared_ptr<triangleMesh> triangleMeshPtr;

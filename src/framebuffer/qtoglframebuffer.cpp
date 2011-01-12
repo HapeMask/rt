@@ -2,9 +2,8 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
+#include <GL/glew.h>
+
 #include <iostream>
 
 #include "qtoglframebuffer.hpp"
@@ -38,7 +37,7 @@ GLfloat shine = 100;
 
 qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* parent) :
     QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), parent),
-    framebuffer(s, bpp), vbo(0), sceneData(NULL),
+    framebuffer(s, bpp), vertexVbo(0), normalVbo(0),
     viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()),
     lastPos(0.f, 0.f),
     camPos(s.getCamera().getPosition()), camForward(s.getCamera().getPosition() - s.getCamera().getLook()),
@@ -49,17 +48,44 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
 {
     setAutoFillBackground(false);
 
-    // 3 floats per vertex and 3 floats per vertex normal.
-    sceneData = new GLfloat[2 * 3 * s.vertexCount()];
-    s.dumpToVbo(sceneData);
+    makeCurrent();
+    GLenum ret = glewInit();
+    if(ret != GLEW_OK) {
+        cerr << "Error initializing glew: " << glewGetErrorString(ret) << endl;
+        return;
+    }else{
+        cerr << "Using GLEW version: " << glewGetString(GLEW_VERSION) << endl;
+    }
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // 3 floats per vertex and 3 floats per vertex normal.
+    GLfloat* vertexData = new GLfloat[3 * scn.vertexCount()];
+    GLfloat* normalData = new GLfloat[3 * scn.vertexCount()];
+
+    // Dump all triangle vertices and normals into the vbo.
+    scn.dumpToVbo(vertexData, normalData);
+
+    // Make a buffer for vertices and normals, then copy the data into them.
+    glGenBuffers(1, &vertexVbo);
+    glGenBuffers(1, &normalVbo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
     glBufferData(
             GL_ARRAY_BUFFER,
-            2 * 3 * s.vertexCount() * sizeof(GLfloat),
-            sceneData,
+            scn.vertexCount() * (3 * sizeof(GLfloat)),
+            vertexData,
             GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, normalVbo);
+    glBufferData(
+            GL_ARRAY_BUFFER,
+            scn.vertexCount() * (3 * sizeof(GLfloat)),
+            normalData,
+            GL_STATIC_DRAW);
+
+    // The arrays can be deleted after use, the data is now on the graphics
+    // card.
+    delete[] vertexData;
+    delete[] normalData;
 
     buffer = new rgbColor[_width*_height];
     sumOfSquares = new rgbColor[_width*_height];
@@ -88,10 +114,12 @@ qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
     rthread.shutdown();
     rthread.wait(10000);
 
-    if(sceneData) delete[] sceneData;
     if(buffer) delete[] buffer;
     if(sumOfSquares) delete[] sumOfSquares;
     if(samplesPerPixel) delete[] samplesPerPixel;
+
+    glDeleteBuffers(1, &vertexVbo);
+    glDeleteBuffers(1, &normalVbo);
 }
 
 QSize qtOpenGLFramebuffer::minimumSizeHint() const {
@@ -103,7 +131,6 @@ QSize qtOpenGLFramebuffer::sizeHint() const {
 }
 
 void qtOpenGLFramebuffer::initializeGL(){
-    glEnable(GL_MULTISAMPLE);
     enableGLOptions();
 }
 
@@ -274,12 +301,6 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-
-    glInterleavedArrays(GL_N3F_V3F, 0, sceneData);
-
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat0);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat0);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat0);
@@ -287,7 +308,20 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
 
     glPushMatrix();
 
+    // Set the locations for the normal and vertex arrays.
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
+    glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+    glBindBuffer(GL_ARRAY_BUFFER, normalVbo);
+    glNormalPointer(GL_FLOAT, 0, NULL);
+
     glDrawArrays(GL_TRIANGLES, 0, scn.vertexCount());
+
+    const GLenum err = glGetError();
+    if(err != GL_NO_ERROR) {
+        cerr << gluErrorString(glGetError()) << endl;
+    }
+
     scn.drawGL();
 
     /* SAMPLER DEMO CODE
@@ -340,8 +374,6 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
 
     glPopMatrix();
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     disableGLOptions();
@@ -454,6 +486,7 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
 
 void qtOpenGLFramebuffer::enableGLOptions() {
 	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
     glShadeModel(GL_SMOOTH);
@@ -466,6 +499,9 @@ void qtOpenGLFramebuffer::enableGLOptions() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
 }
 
 void qtOpenGLFramebuffer::disableGLOptions() {
@@ -476,6 +512,9 @@ void qtOpenGLFramebuffer::disableGLOptions() {
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c) {

@@ -27,7 +27,7 @@ class sphere : public primitive {
         }
 
 #ifdef RT_USE_QT
-        virtual void prepGL(GLfloat*& data) const;
+        virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const;
         virtual void drawGL() const;
 #endif
 

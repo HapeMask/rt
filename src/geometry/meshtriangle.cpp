@@ -163,30 +163,30 @@ void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
 }
 
 #ifdef RT_USE_QT
-void meshTriangle::prepGL(GLfloat*& data) const {
+void meshTriangle::prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).x;
-            ++data;
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).y;
-            ++data;
-            (*data) = meshParent->vertNormalLookup(vertNormals[i]).z;
-            ++data;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).x;
+            ++normalData;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).y;
+            ++normalData;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).z;
+            ++normalData;
         }else{
-            (*data) = normal_.x;
-            ++data;
-            (*data) = normal_.y;
-            ++data;
-            (*data) = normal_.z;
-            ++data;
+            (*normalData) = normal_.x;
+            ++normalData;
+            (*normalData) = normal_.y;
+            ++normalData;
+            (*normalData) = normal_.z;
+            ++normalData;
         }
 
-        (*data) = meshParent->pointLookup(points[i]).x;
-        ++data;
-        (*data) = meshParent->pointLookup(points[i]).y;
-        ++data;
-        (*data) = meshParent->pointLookup(points[i]).z;
-        ++data;
+        (*vertexData) = meshParent->pointLookup(points[i]).x;
+        ++vertexData;
+        (*vertexData) = meshParent->pointLookup(points[i]).y;
+        ++vertexData;
+        (*vertexData) = meshParent->pointLookup(points[i]).z;
+        ++vertexData;
     }
 }
 

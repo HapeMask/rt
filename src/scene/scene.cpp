@@ -73,11 +73,12 @@ void scene::build(){
 	}
 }
 
-void scene::dumpToVbo(GLfloat* vbo) const {
-    GLfloat* p = vbo;
+void scene::dumpToVbo(GLfloat* vertexBuffer, GLfloat* normalBuffer) const {
+    GLfloat* pv = vertexBuffer;
+    GLfloat* pn = normalBuffer;
 
     for(size_t i=0; i<shapes.size(); ++i){
-        shapes[i]->prepGL(p);
+        shapes[i]->prepGL(pv, pn);
     }
 }
 

@@ -1,7 +1,11 @@
 #pragma once
 
 #include <vector>
-#include <tr1/memory>
+#include <memory>
+
+#ifdef RT_USE_QT
+#include <GL/glew.h>
+#endif
 
 #include "acceleration/accelerator.hpp"
 #include "acceleration/intersection.hpp"
@@ -17,9 +21,7 @@
 
 #include "tracer/tracer.hpp"
 
-#include <GL/gl.h>
-
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 using std::vector;
 
 class scene {
@@ -85,7 +87,7 @@ class scene {
 
 		void build();
 
-        void dumpToVbo(GLfloat* vbo) const;
+        void dumpToVbo(GLfloat* vertexVbo, GLfloat* normalVbo) const;
         void drawGL() const;
 
         inline const rgbColor L(const float& x, const float& y) const {
