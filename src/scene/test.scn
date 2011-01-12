@@ -1,4 +1,4 @@
-scene<bvh, path>{
+scene<default, path>{
 	camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
     light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
     //light<point>(0,2.8,0, 16, 1,1,1)

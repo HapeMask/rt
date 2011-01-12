@@ -11,8 +11,10 @@
 using std::cerr;
 using std::endl;
 
+#ifdef RT_MULTITHREADED
 bool texture2D::lookupInitialized;
 rgbColor** texture2D::lookupCache;
+#endif
 
 rgbColor texture2D::lookup(const vec2& uv) const {
     // Use bilinear interpolation. TODO: Maybe use the GPU for this

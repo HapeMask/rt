@@ -3,14 +3,18 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG = qt debug stl opengl
+CONFIG = qt debug stl
+#CONFIG += sse2
 QT += opengl
 
 TARGET = rt
 
-DEFINES += GL_GLEXT_PROTOTYPES MEXP=19937 DEBUG
+DEFINES += MEXP=19937 \
+    DEBUG \
+    RT_USE_QT
 
-QMAKE_CXXFLAGS = -g -O0 -Wall -march=native
+QMAKE_CXXFLAGS = -g -O0 -Wall -march=native -std=c++0x
+QMAKE_LIBS += -lGLEW
 
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
@@ -31,7 +35,11 @@ bison.commands = bison ${QMAKE_FILE_IN} \
     && rm sceneparser.tab.c
 bison.input = BISONSOURCES
 bison.variable_out = SOURCES
-bison.output = ../src/scene/sceneparser.tab.cpp
+bison.output = ../src/scene/sceneparser.tab.cpp \
+    ../src/scene/sceneparser.tab.h \
+    ../src/scene/position.hh \
+    ../src/scene/location.hh \
+    ../src/scene/stack.hh
 bison.name = bison
 QMAKE_EXTRA_COMPILERS += bison
 
@@ -57,6 +65,7 @@ HEADERS += ../src/utility.hpp \
            ../src/datastructs/linkedlist.hpp \
            ../src/framebuffer/framebuffer.hpp \
            ../src/framebuffer/qtoglframebuffer.hpp \
+           ../src/framebuffer/renderthread.hpp \
            ../src/geometry/aabb.hpp \
            ../src/geometry/meshtriangle.hpp \
            ../src/geometry/primitive.hpp \
@@ -66,10 +75,10 @@ HEADERS += ../src/utility.hpp \
            ../src/geometry/trianglemesh.hpp \
            ../src/light/light.hpp \
            ../src/materials/bsdf.hpp \
+           ../src/materials/texture.hpp \
            ../src/materials/material.hpp \
            ../src/mathlib/constants.hpp \
            ../src/mathlib/matrix.hpp \
-           ../src/mathlib/point.hpp \
            ../src/mathlib/quaternion.hpp \
            ../src/mathlib/ray.hpp \
            ../src/mathlib/SFMT-alti.h \
@@ -89,6 +98,7 @@ HEADERS += ../src/utility.hpp \
            ../src/mathlib/sse.hpp \
            ../src/mathlib/transformation.hpp \
            ../src/mathlib/vector.hpp \
+           ../src/mathlib/point.hpp \
            ../src/qtgui/qtmainwin.hpp \
            ../src/samplers/samplers.hpp \
            ../src/scene/objparser.hpp \
@@ -97,12 +107,14 @@ HEADERS += ../src/utility.hpp \
            ../src/scene/sceneloader.hpp \
            ../src/tracer/tracer.hpp
 SOURCES += ../src/main.cpp \
+           ../src/utility.cpp \
            ../src/acceleration/bvh.cpp \
            ../src/acceleration/defaultaccelerator.cpp \
            ../src/acceleration/octree.cpp \
            ../src/camera/camera.cpp \
            ../src/color/color.cpp \
            ../src/framebuffer/qtoglframebuffer.cpp \
+           ../src/framebuffer/renderthread.cpp \
            ../src/geometry/aabb.cpp \
            ../src/geometry/meshtriangle.cpp \
            ../src/geometry/shape.cpp \
@@ -112,9 +124,13 @@ SOURCES += ../src/main.cpp \
            ../src/light/spherelight.cpp \
            ../src/light/pointlight.cpp \
            ../src/materials/aniso.cpp \
+           ../src/materials/texture.cpp \
            ../src/materials/beckmann.cpp \
+           ../src/materials/microfacet.cpp \
            ../src/materials/blinn.cpp \
            ../src/materials/bsdf.cpp \
+           ../src/materials/frosted.cpp \
+           ../src/materials/bxdf.cpp \
            ../src/materials/material.cpp \
            ../src/materials/phong.cpp \
            ../src/materials/lambertian.cpp \
@@ -122,10 +138,10 @@ SOURCES += ../src/main.cpp \
            ../src/materials/substrate.cpp \
            ../src/materials/ward.cpp \
            ../src/mathlib/matrix.cpp \
-           ../src/mathlib/point.cpp \
            ../src/mathlib/SFMT.cpp \
            ../src/mathlib/transformation.cpp \
            ../src/mathlib/vector.cpp \
+           ../src/mathlib/point.cpp \
            ../src/qtgui/qtmainwin.cpp \
            ../src/samplers/samplers.cpp \
            ../src/scene/objparser.cpp \

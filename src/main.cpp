@@ -65,7 +65,9 @@ int main(int argc, char* args[]){
         return 1;
     }
 
+#ifdef RT_MULTITHREADED
     omp_set_num_threads(numThreads);
+#endif
 
     sceneloader::load(in, scn);
     in.close();
