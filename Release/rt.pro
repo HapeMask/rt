@@ -22,7 +22,7 @@ QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
     -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
 
 QMAKE_LIBS += -lGLEW
-QMAKE_LFLAGS += -fopenmp -O3
+QMAKE_LFLAGS += -fopenmp -O3 $(CXXFLAGS)
 
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
