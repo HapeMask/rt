@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <omp.h>
 
 #include "color/color.hpp"
@@ -9,9 +10,7 @@
 
 #include "acceleration/intersection.hpp"
 
-#include <tr1/memory>
-
-using std::tr1::shared_ptr;
+using std::shared_ptr;
 
 const int MAX_DEPTH = 4;
 
