@@ -524,12 +524,12 @@ using std::endl;
 inline vec3 cross(const vec3& a, const vec3& b){
 #ifdef HAVE_SSE2
     const __m128 v1 = mulps(
-            shufps(b.vector, b.vector, shuffle(0, 1, 0, 2)),
-            shufps(a.vector, a.vector, shuffle(0, 0, 2, 1))
+            shufps(b.vector, b.vector, shufarg(0, 1, 0, 2)),
+            shufps(a.vector, a.vector, shufarg(0, 0, 2, 1))
         );
     const __m128 v2 = mulps(
-            shufps(b.vector, b.vector, shuffle(0, 0, 2, 1)),
-            shufps(a.vector, a.vector, shuffle(0, 1, 0, 2))
+            shufps(b.vector, b.vector, shufarg(0, 0, 2, 1)),
+            shufps(a.vector, a.vector, shufarg(0, 1, 0, 2))
         );
 
     return vec3(subps(v1, v2));
