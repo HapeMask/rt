@@ -13,16 +13,17 @@ DEFINES += RT_NO_EXECPTIONS \
     RT_MULTITHREADED \
     HAVE_SSE2 \
     MEXP=19937 \
-    RT_USE_QT \
-    GL_GLEXT_PROTOTYPES
+    RT_USE_QT
 
 QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
 	-msse4 -msse4.1 -msse4.2 -ffast-math -freciprocal-math \
 	-mfpmath=sse -mrecip -fomit-frame-pointer -pipe -fexpensive-optimizations \
-	-funsafe-loop-optimizations -fsingle-precision-constant \
-	-fno-exceptions -fopenmp -fgcse-sm -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline
+	-funsafe-loop-optimizations -fno-exceptions -fopenmp -fgcse-sm -fgcse-las \
+    -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
 
-QMAKE_LFLAGS += -fopenmp $(CXXFLAGS)
+QMAKE_LIBS += -lGLEW
+QMAKE_LFLAGS += -fopenmp -O3
+
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
 INCLUDEPATH += ../src \
@@ -42,7 +43,11 @@ bison.commands = bison ${QMAKE_FILE_IN} \
     && rm sceneparser.tab.c
 bison.input = BISONSOURCES
 bison.variable_out = SOURCES
-bison.output = ../src/scene/sceneparser.tab.cpp
+bison.output = ../src/scene/sceneparser.tab.cpp \
+    ../src/scene/sceneparser.tab.h \
+    ../src/scene/position.hh \
+    ../src/scene/location.hh \
+    ../src/scene/stack.hh
 bison.name = bison
 QMAKE_EXTRA_COMPILERS += bison
 
