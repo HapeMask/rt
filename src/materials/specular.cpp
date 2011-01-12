@@ -51,8 +51,14 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     const float sin2ThetaT = eta2 * bsdf::sin2Theta(wo);
     // Total Internal Reflection
     if(sin2ThetaT > 1.f){
-        pd = 0.f;
-        return rgbColor(0.f);
+        if(entering) {
+            wi = normalize(vec3(-wo.x, wo.y, -wo.z));
+        }else{
+            wi = normalize(vec3(-wo.x, -wo.y, -wo.z));
+        }
+
+        const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
+        return Fr / fabsf(bsdf::cosTheta(wi));
     }
 
     // Flip the normal if we're entering the surface.
@@ -66,6 +72,6 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
                 eta * -wo.z
             ));
 
-    const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
-    return eta2 * (rgbColor(1.f) - Fr) * kT / fabsf(bsdf::cosTheta(wi));
+    const rgbColor Ft = rgbColor(1.f) - evalFresnel(fabsf(bsdf::cosTheta(wo)));
+    return eta2 * Ft * kT / fabsf(bsdf::cosTheta(wi));
 }
