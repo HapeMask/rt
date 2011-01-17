@@ -7,6 +7,8 @@
 
 using std::shared_ptr;
 
+#undef near
+#undef far
 class camera {
 	public:
 		camera(const float& w, const float& h, const float& nr, const float& fr,
