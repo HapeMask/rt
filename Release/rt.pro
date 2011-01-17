@@ -3,26 +3,30 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG = qt release stl
-CONFIG += thread mmx sse sse2
+CONFIG += qt release static
+CONFIG += mmx sse sse2
 QT += opengl
 
 TARGET = rt
+
+DESTDIR = ./
 
 DEFINES += RT_NO_EXECPTIONS \
     RT_MULTITHREADED \
     HAVE_SSE2 \
     MEXP=19937 \
-    RT_USE_QT
+    RT_USE_QT \
+    QT_STATIC_BUILD \
+    GLEW_STATIC
 
-QMAKE_CXXFLAGS = -march=native -O3 -mmmx -msse -msse2 -msse3 -mssse3 \
-	-msse4 -msse4.1 -msse4.2 -ffast-math -freciprocal-math \
-	-mfpmath=sse -mrecip -fomit-frame-pointer -pipe -fexpensive-optimizations \
-	-funsafe-loop-optimizations -fno-exceptions -fopenmp -fgcse-sm -fgcse-las \
-    -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
+QMAKE_CXXFLAGS = -fno-rtti -fno-exceptions -m64 -march=native -O3 -mmmx -msse \
+    -msse2 -msse3 -mssse3 -msse4 -msse4.1 -msse4.2 -ffast-math \
+    -freciprocal-math -mfpmath=sse -mrecip -fomit-frame-pointer -pipe \
+    -fexpensive-optimizations -funsafe-loop-optimizations -fopenmp -fgcse-sm \
+    -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
 
-QMAKE_LIBS += -lGLEW
-QMAKE_LFLAGS += -fopenmp -O3 $(CXXFLAGS)
+QMAKE_LIBS += -lglew32
+QMAKE_LFLAGS += -static -static-libgcc -fopenmp -O3 $(CXXFLAGS)
 
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
