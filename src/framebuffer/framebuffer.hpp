@@ -40,7 +40,7 @@ class framebuffer {
         inline const bool getNextBlock(int& x, int& y){
             bool done = false;
 
-            // Critical section protects race conditions on blocksUsed.
+            // Critical section protects against race conditions on blocksUsed.
 #ifdef RT_MULTITHREADED
 #pragma omp critical
 #endif
