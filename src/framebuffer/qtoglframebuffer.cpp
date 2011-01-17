@@ -250,7 +250,7 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
 void qtOpenGLFramebuffer::positionCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    gluPerspective(fovy, _width / _height, 0.5, 100);
+    gluPerspective(fovy, (float)_width / _height, 0.5, 100);
 
 	// Construct quaternions for composite rotation around
 	// Y and X axes.
@@ -419,7 +419,7 @@ void qtOpenGLFramebuffer::_render() {
     // Fill blocks as long as the thread can get new ones.
     for(int i=0; i<(HORIZ_BLOCKS * VERT_BLOCKS); ++i){
         int blockCornerX=0, blockCornerY=0;
-        getNextBlock(blockCornerY, blockCornerX);
+        getNextBlock(blockCornerX, blockCornerY);
 
         // Render the pixels in block.
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
