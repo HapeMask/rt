@@ -103,7 +103,7 @@ class vec2 {
             return (*this);
         }
 
-        inline const bool operator==(const vec2& v) const {
+        inline bool operator==(const vec2& v) const {
             return (x == v.x) && (y == v.y);
         }
 
@@ -294,7 +294,7 @@ class vec3 {
             return (*this);
         }
 
-        inline const bool operator==(const vec3& v) const {
+        inline bool operator==(const vec3& v) const {
             return
                 (x == v.x) &&
                 (y == v.y) &&
@@ -472,7 +472,7 @@ class vec4 {
             return (*this);
         }
 
-        inline const bool operator==(const vec4& v) const {
+        inline bool operator==(const vec4& v) const {
             return
                 (x == v.x) &&
                 (y == v.y) &&
@@ -494,7 +494,7 @@ class vec4 {
 };
 
 template <typename vecType>
-inline const float norm(const vecType& v) {
+inline float norm(const vecType& v) {
     return sqrtf(norm2(v));
 }
 
@@ -594,15 +594,15 @@ inline const vec3 max(const vec3& a, const vec3& b) {
 #endif
 }
 
-inline const float norm2(const vec2& v) {
+inline float norm2(const vec2& v) {
     return v.x*v.x + v.y*v.y;
 }
 
-inline const float norm2(const vec3& v) {
+inline float norm2(const vec3& v) {
     return v.x*v.x + v.y*v.y + v.z*v.z;
 }
 
-inline const float norm2(const vec4& v) {
+inline float norm2(const vec4& v) {
     return v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w;
 }
 

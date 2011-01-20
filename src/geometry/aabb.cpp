@@ -10,7 +10,7 @@ ostream& operator<<(ostream& out, const aabb& b){
 	return out;
 }
 
-const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
+bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
 #ifdef HAVE_SSE2
     const __m128 boxMin = min.vector;
     const __m128 boxMax = max.vector;
@@ -63,7 +63,7 @@ const bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
 #endif
 }
 
-const bool aabb::intersect(const aabb& box) const {
+bool aabb::intersect(const aabb& box) const {
 #ifdef HAVE_SSE2
     const __m128 aMin = min.vector;
     const __m128 aMax = max.vector;

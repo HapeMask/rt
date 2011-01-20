@@ -17,7 +17,7 @@ class accelerator {
         virtual ~accelerator() {}
 
 		virtual const intersection intersect(ray& r) const = 0;
-		virtual const bool intersectB(const ray& r) const = 0;
+		virtual bool intersectB(const ray& r) const = 0;
 
 		virtual void build(const scene& s) = 0;
 };

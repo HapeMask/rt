@@ -34,7 +34,7 @@ const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
     }
 }
 
-const float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
+float phongBrdf::pdf(const vec3& wo, const vec3& wi) const {
     const float cosAlpha = dot(wo, reflect(wi));
     if(cosAlpha < 0){
         return 0.f;

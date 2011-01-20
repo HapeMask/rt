@@ -101,7 +101,7 @@ const intersection octree::intersect(ray& r) const{
     return s;
 }
 
-const bool octree::intersectB(const ray& r) const{
+bool octree::intersectB(const ray& r) const{
     return _intersectB(root, r);
 }
 
@@ -174,6 +174,6 @@ const intersection octree::_intersect(const octreeNode* node, ray& r) const{
     return isect;
 }
 
-const bool octree::_intersectB(const octreeNode* node, const ray& r) const{
+bool octree::_intersectB(const octreeNode* node, const ray& r) const{
     return false;
 }

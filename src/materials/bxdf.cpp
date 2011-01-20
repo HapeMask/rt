@@ -2,11 +2,11 @@
 #include "texture.hpp"
 #include "color/color.hpp"
 
-const bxdfType bxdf::getType() const {
+bxdfType bxdf::getType() const {
     return type;
 }
 
-inline const bool bxdf::isType(const bxdfType t) const {
+bool bxdf::isType(const bxdfType t) const {
     return (type & t) == type;
 }
 

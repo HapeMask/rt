@@ -73,7 +73,7 @@ const intersection sphere::intersect(ray& r) const {
 	return isect;
 }
 
-const bool sphere::intersectB(const ray& r) const {
+bool sphere::intersectB(const ray& r) const {
 	const vec3 dir(r.origin - location);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);

@@ -33,7 +33,7 @@ const rgbColor areaLight::sampleL(const point3& p, vec3& wi, const float& u0, co
     }
 }
 
-const float areaLight::pdf(const point3& p, const vec3& wi) const {
+float areaLight::pdf(const point3& p, const vec3& wi) const {
     const intersection isect = intersect(ray(p, normalize(wi)));
 
     if(isect.hit){
@@ -65,6 +65,6 @@ const intersection areaLight::intersect(const ray& r) const {
     }
 }
 
-const bool areaLight::intersectB(const ray& r) const{
+bool areaLight::intersectB(const ray& r) const{
 	return (tri1.intersectB(r) || tri2.intersectB(r));
 }

@@ -20,7 +20,7 @@ class defaultAccelerator : public accelerator {
         defaultAccelerator() {}
 
 		virtual const intersection intersect(ray& r) const;
-		virtual const bool intersectB(const ray& r) const;
+		virtual bool intersectB(const ray& r) const;
 
 		virtual void build(const scene& s);
 

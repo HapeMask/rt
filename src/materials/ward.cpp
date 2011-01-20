@@ -61,7 +61,7 @@ const rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
         (4.f * PI * alpha * beta * sqrtf(wo.y*wi.y));
 }
 
-const float newWard::pdf(const vec3& wo, const vec3& wi) const{
+float newWard::pdf(const vec3& wo, const vec3& wi) const{
 	if(wo.y*wi.y < 0.f){
 		return 0.f;
 	}

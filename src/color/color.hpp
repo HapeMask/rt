@@ -12,27 +12,27 @@ using std::ostream;
 
 class color {
 	public:
-		virtual const float red() const = 0;
-		virtual const float green() const = 0;
-		virtual const float blue() const = 0;
+		virtual float red() const = 0;
+		virtual float green() const = 0;
+		virtual float blue() const = 0;
 
-		const uint8_t R() const {
+		uint8_t R() const {
 			return 255.f * red();
 		}
 
-		const uint8_t G() const {
+		uint8_t G() const {
 			return 255.f * green();
 		}
 
-		const uint8_t B() const {
+		uint8_t B() const {
 			return 255.f * blue();
 		}
 
-        inline const float gray() const {
+        inline float gray() const {
             return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
         }
 
-        inline const float avg() const {
+        inline float avg() const {
             return (red() + blue() + green()) / 3.f;
         }
 
@@ -51,19 +51,19 @@ class rgbColor : public color {
 		const rgbColor inverse() const;
 		virtual void invert();
 
-		virtual const float red() const {
+		virtual float red() const {
 			return r;
 		}
 
-		virtual const float green() const {
+		virtual float green() const {
 			return g;
 		}
 
-		virtual const float blue() const {
+		virtual float blue() const {
 			return b;
 		}
 
-        inline const bool isBlack() const {
+        inline bool isBlack() const {
             return (r <= 0 && g <= 0 && b <= 0);
         }
 
@@ -135,7 +135,7 @@ class rgbColor : public color {
             return QColor(255.f * r, 255.f * g, 255.f * b);
         }
 
-        inline const uint toUint() const {
+        inline uint toUint() const {
             return QColormap::instance().pixel(qcolor());
         }
 #endif

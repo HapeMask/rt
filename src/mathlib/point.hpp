@@ -65,7 +65,7 @@ class point2 {
             return vec2(x, y) - vec2(p.x, p.y);
         }
 
-        inline const bool operator==(const point2& p) const {
+        inline bool operator==(const point2& p) const {
             return
                 (x == p.x) &&
                 (y == p.y);
@@ -145,7 +145,7 @@ class point3 {
             return vec3(x - p.x, y - p.y, z - p.z);
         }
 
-        inline const bool operator==(const point3& p) const {
+        inline bool operator==(const point3& p) const {
             return (x == p.x) && (y == p.y) && (z == p.z);
         }
 

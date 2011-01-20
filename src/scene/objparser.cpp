@@ -107,6 +107,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
             uv1 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert1 = strtol(chunk.c_str(), NULL, 10);
+            uv1 = 0;
         }
 
         file >> chunk;
@@ -115,6 +116,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
             uv2 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert2 = strtol(chunk.c_str(), NULL, 10);
+            uv2 = 0;
         }
 
         file >> chunk;
@@ -123,6 +125,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
             uv3 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert3 = strtol(chunk.c_str(), NULL, 10);
+            uv3 = 0;
         }
 
         meshTrianglePtr tri(new meshTriangle(vert1-1, vert2-1, vert3-1, p));
@@ -249,6 +252,7 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
             uv1 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert1 = strtol(chunk.c_str(), NULL, 10);
+            uv1 = 0;
         }
 
         file >> chunk;
@@ -257,6 +261,7 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
             uv2 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert2 = strtol(chunk.c_str(), NULL, 10);
+            uv2 = 0;
         }
 
         file >> chunk;
@@ -265,6 +270,7 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
             uv3 = strtol(chunk.substr(chunk.find('/')+1, chunk.length()).c_str(), NULL, 10);
         }else{
             vert3 = strtol(chunk.c_str(), NULL, 10);
+            uv3 = 0;
         }
 
         trianglePtr tri(new triangle(points[vert1-1], points[vert2-1], points[vert3-1]));

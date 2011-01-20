@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-inline const float blinn::D(const vec3& wh) const {
+float blinn::D(const vec3& wh) const {
     return (exp+2.f) * INVTWOPI * powf(bsdf::cosTheta(wh), exp);
 }
 
@@ -30,7 +30,7 @@ void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
     }
 }
 
-const float blinn::pdf(const vec3& wo, const vec3& wi) const {
+float blinn::pdf(const vec3& wo, const vec3& wi) const {
     const vec3 wh = halfVector(wo, wi);
     if(wh.y > 0){
         return ((exp + 2.f) * powf(bsdf::cosTheta(wh), exp)) / (4.f * TWOPI * dot(wo, wh));

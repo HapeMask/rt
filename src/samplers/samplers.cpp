@@ -9,12 +9,12 @@
 #include <cstdlib>
 #include <cmath>
 
-const float sampleUniform(){
+float sampleUniform(){
 	//return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
     return genrand_real1();
 }
 
-const int sampleRange(const float& u0, const int& a, const int& b){
+int sampleRange(const float& u0, const int& a, const int& b){
     return a + std::min((u0*(b-a+1)), (float)b-a);
 }
 
@@ -81,7 +81,7 @@ void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1){
     v.y = sqrtf(std::max(0.f, 1.f - v.x*v.x - v.z*v.z));
 }
 
-const float radicalInverse(int n, const int& base){
+float radicalInverse(int n, const int& base){
     float val = 0.f;
     const double invBase = 1.f / base;
     float invBi = invBase;
@@ -113,13 +113,13 @@ void getLDSamples3D(float* samples, const int& count){
     }
 }
 
-const float powerHeuristic(int nf, float fPdf, int ng, float gPdf){
+float powerHeuristic(int nf, float fPdf, int ng, float gPdf){
     const float f = nf*fPdf;
     const float g = ng*gPdf;
     return (f*f) / (f*f + g*g);
 }
 
-const float balanceHeuristic(int nf, float fPdf, int ng, float gPdf){
+float balanceHeuristic(int nf, float fPdf, int ng, float gPdf){
     return (nf * fPdf) / (nf * fPdf + ng * gPdf);
 }
 
@@ -136,6 +136,6 @@ void sampleFirstQuadrant(const float& u0, const float& u1, const float& nu, cons
         nv * sinphi * sinphi + 1.f));
 }
 
-const float evaluate2DGaussian(const float& x, const float& y, const float& sigma) {
+float evaluate2DGaussian(const float& x, const float& y, const float& sigma) {
     return exp(-(x*x + y*y) / (2 *sigma*sigma)) / (TWOPI * sigma*sigma);
 }

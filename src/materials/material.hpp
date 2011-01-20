@@ -23,7 +23,7 @@ class material {
             return *b;
         }
 
-        inline const bool isEmissive(){
+        inline const bool& isEmissive(){
             return emissive;
         }
 

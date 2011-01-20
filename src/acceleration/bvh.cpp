@@ -1,3 +1,15 @@
+#include <sys/time.h>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+
+using std::cerr;
+using std::endl;
+
+using std::sort;
+
+using std::vector;
+
 #include "bvh.hpp"
 #include "intersection.hpp"
 #include "utility.hpp"
@@ -11,21 +23,6 @@
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
 #include "mathlib/sse.hpp"
-
-#include <sys/time.h>
-#include <algorithm>
-#include <vector>
-#include <iostream>
-
-#include "datastructs/arraylist.hpp"
-#include "datastructs/linkedlist.hpp"
-
-using std::cerr;
-using std::endl;
-
-using std::sort;
-
-using std::vector;
 
 #ifdef RT_DEBUG
 int boxesTested = 0;
@@ -44,7 +41,7 @@ const intersection bvh::intersect(ray& r) const{
     return isect;
 }
 
-const bool bvh::intersectB(const ray& r) const{
+bool bvh::intersectB(const ray& r) const{
     return _intersectB(0, r);
 }
 
@@ -114,7 +111,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
 /**
  * Used for shadow rays, returns as soon as it finds a hit.
  */
-const bool bvh::_intersectB(const int& index, const ray& r) const{
+bool bvh::_intersectB(const int& index, const ray& r) const{
     float tLeftMin=0, tRightMin=0;
     float tLeftMax=0, tRightMax=0;
 
@@ -161,7 +158,7 @@ void bvh::build(const scene& s){
 
     // Allocate primitive array.
     //primitives = new primitive*[numPrims];
-    primitives = arraylist<primitive*>(numPrims);
+    primitives = vector<primitive*>(numPrims);
 
     // Fill the list of primitives.
     int k = 0;

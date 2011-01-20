@@ -43,13 +43,13 @@ class scene {
 		acceleratorPtr getAccelerator() { return accel; }
 
 		const intersection intersect(ray& r) const;
-		const bool intersectB(const ray& r) const;
+		bool intersectB(const ray& r) const;
 
 		const vector<shapePtr>& getShapes() const {
 			return shapes;
 		}
 
-		const size_t numLights() const {
+		int numLights() const {
 			return lights.size();
 		}
 
@@ -57,7 +57,7 @@ class scene {
 			return lights[i];
 		}
 
-        const size_t numEmitters() const {
+        size_t numEmitters() const {
             return emitters.size();
         }
 
@@ -94,7 +94,7 @@ class scene {
             return rt->L(cam->getRay(x, y));
         }
 
-        inline const long vertexCount() const {
+        inline long vertexCount() const {
             return totalVertices;
         }
 

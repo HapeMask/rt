@@ -125,7 +125,7 @@ const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     return f;
 }
 
-const float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
+float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
     float p = 0;
     int matches = 0;
 

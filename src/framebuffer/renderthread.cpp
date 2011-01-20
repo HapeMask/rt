@@ -2,7 +2,7 @@
 #include "qtoglframebuffer.hpp"
 #include <omp.h>
 
-renderThread::renderThread(qtOpenGLFramebuffer* f) : fb(f), shouldExit(false), rendering(false) {}
+renderThread::renderThread(qtOpenGLFramebuffer* f) : shouldExit(false), rendering(false), fb(f) {}
 
 void renderThread::run() {
     while(!shouldExit) {

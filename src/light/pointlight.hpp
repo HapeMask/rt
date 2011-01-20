@@ -4,7 +4,7 @@ class pointLight : public light {
 	public:
 		pointLight(const point3& p, const float& pow, const rgbColor& c);
 
-        inline virtual const bool isPointSource() const {
+        inline virtual bool isPointSource() const {
             return true;
         }
 

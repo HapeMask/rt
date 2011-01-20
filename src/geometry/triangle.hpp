@@ -16,17 +16,17 @@ class triangle : public primitive {
 		virtual ~triangle() {}
 
 		virtual const intersection intersect(ray& r) const;
-		virtual const bool intersectB(const ray& r) const;
+		virtual bool intersectB(const ray& r) const;
 
-		const point3& a() const{
+		inline const point3& a() const{
 			return a_;
 		}
 
-		const point3& b() const{
+		inline const point3& b() const{
 			return b_;
 		}
 
-		const point3& c() const{
+		inline const point3& c() const{
 			return c_;
 		}
 
@@ -42,7 +42,7 @@ class triangle : public primitive {
         void setUVs(const vec2& auv, const vec2& buv, const vec2& cuv);
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
-        inline virtual const float area() const {
+        inline virtual float area() const {
             return area_;
         }
 
@@ -51,7 +51,7 @@ class triangle : public primitive {
         virtual void drawGL() const;
 #endif
 
-        inline virtual const long vertexCount() const {
+        inline virtual long vertexCount() const {
             return 3;
         }
 

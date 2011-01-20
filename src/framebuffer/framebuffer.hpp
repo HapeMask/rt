@@ -37,7 +37,7 @@ class framebuffer {
          * Generates upper-left coordinates for the next block in the sequence of image
          * blocks.
          */
-        inline const bool getNextBlock(int& x, int& y){
+        inline bool getNextBlock(int& x, int& y){
             bool done = false;
 
             // Critical section protects against race conditions on blocksUsed.

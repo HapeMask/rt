@@ -37,7 +37,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	return closestIntersection;
 }
 
-const bool defaultAccelerator::intersectB(const ray& r) const{
+bool defaultAccelerator::intersectB(const ray& r) const{
 	ray r2(r);
 	for(size_t i=0; i<shapes.size(); ++i){
 		if(shapes[i]->intersect(r2).hit){

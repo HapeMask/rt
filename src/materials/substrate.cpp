@@ -43,7 +43,7 @@ const rgbColor substrate::f(const vec3& wo, const vec3& wi) const{
     return diffuse + specular;
 }
 
-const float substrate::pdf(const vec3& wo, const vec3& wi) const{
+float substrate::pdf(const vec3& wo, const vec3& wi) const{
     if(wo.y * wi.y >= 0){
         return 0.5f * (bsdf::cosTheta(wi) * INVPI + distrib->pdf(wo, wi));
     }else{

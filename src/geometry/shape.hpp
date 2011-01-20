@@ -21,15 +21,15 @@ class shape {
 		void setMaterial(material* m);
 		void addPrimitive(primitive* p);
 
-		materialPtr getMaterial() const {
+		inline materialPtr getMaterial() const {
 			return mat;
 		}
 
-		const vector<primitivePtr>& getPrimitives() const {
+		inline const vector<primitivePtr>& getPrimitives() const {
 			return prims;
 		}
 
-		const aabb& getBounds(){
+		inline const aabb& getBounds(){
 			return bounds;
 		}
 
@@ -48,7 +48,7 @@ class shape {
             return area_;
         }
 
-        virtual const long vertexCount() const {
+        virtual long vertexCount() const {
             long count = 0;
 
             for(size_t i=0; i<prims.size(); ++i){

@@ -69,7 +69,7 @@ const intersection triangle::intersect(ray& r) const {
     }
 }
 
-const bool triangle::intersectB(const ray& r) const {
+bool triangle::intersectB(const ray& r) const {
     const vec3 v1 = cross(C, r.direction);
     const float D = dot(v1, B);
     const float invD = 1.f / D;

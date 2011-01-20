@@ -27,7 +27,7 @@ class primitive {
 		virtual ~primitive() {}
 
 		virtual const intersection intersect(ray& r) const = 0;
-		virtual const bool intersectB(const ray& r) const = 0;
+		virtual bool intersectB(const ray& r) const = 0;
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const = 0;
         virtual const point3 uniformSampleSurface() const {
@@ -35,7 +35,7 @@ class primitive {
         }
 
         virtual const vec3 getNormal(const point3& p) const = 0;
-        virtual const float area() const = 0;
+        virtual float area() const = 0;
 
 		void setParent(shape* p){
             parent = p;
@@ -64,7 +64,7 @@ class primitive {
         virtual void drawGL() const = 0;
 #endif
 
-        virtual const long vertexCount() const = 0;
+        virtual long vertexCount() const = 0;
 
         ray* lastRayTested;
 

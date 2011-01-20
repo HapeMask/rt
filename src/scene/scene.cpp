@@ -62,7 +62,7 @@ const intersection scene::intersect(ray& r) const{
     return closestIsect;
 }
 
-const bool scene::intersectB(const ray& r) const{
+bool scene::intersectB(const ray& r) const{
 	return accel->intersectB(r);
 }
 

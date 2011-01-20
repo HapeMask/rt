@@ -81,6 +81,6 @@ colorTexture2D::colorTexture2D(const string& filename) :
     }
 }
 
-inline const rgbColor& colorTexture2D::_lookup(const int& x, const int& y) const {
+const rgbColor& colorTexture2D::_lookup(const int& x, const int& y) const {
     return texels[y][x];
 }

@@ -25,19 +25,19 @@ class triangleMesh : public shape {
             if(uvHeap) delete[] uvHeap;
         }
 
-        inline point3 pointLookup(const int& i) const{
+        inline const point3& pointLookup(const int& i) const{
             return pointHeap[i];
         }
 
-        inline vec3 vertNormalLookup(const int& i) const{
+        inline const vec3& vertNormalLookup(const int& i) const{
             return vertexNormalHeap[i];
         }
 
-        inline vec2 uvLookup(const int& i) const{
+        inline const vec2& uvLookup(const int& i) const{
             return uvHeap[i];
         }
 
-        inline virtual const long vertexCount() const {
+        inline virtual long vertexCount() const {
             return totalVertices;
         }
 

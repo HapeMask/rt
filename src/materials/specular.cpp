@@ -11,19 +11,19 @@ const rgbColor specularBxdf::evalFresnel(const float& cosThetaO) const {
     return rescaledApproxFresnel(ior, k, cosThetaO);
 }
 
-inline const rgbColor specularBrdf::f(const vec3& wo, const vec3& wi) const {
+const rgbColor specularBrdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
 }
 
-inline const float specularBrdf::pdf(const vec3& wo, const vec3& wi) const {
+float specularBrdf::pdf(const vec3& wo, const vec3& wi) const {
     return 0.f;
 }
 
-inline const rgbColor specularBtdf::f(const vec3& wo, const vec3& wi) const {
+const rgbColor specularBtdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
 }
 
-inline const float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
+float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
     return 0.f;
 }
 

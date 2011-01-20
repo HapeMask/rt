@@ -14,7 +14,7 @@ class meshTriangle : public primitive {
 		meshTriangle(const int& a, const int& b, const int& c, triangleMesh* parent);
 
 		virtual const intersection intersect(ray& r) const;
-		virtual const bool intersectB(const ray& r) const;
+		virtual bool intersectB(const ray& r) const;
 
 		const int& aIndex() const{
 			return points[0];
@@ -52,7 +52,7 @@ class meshTriangle : public primitive {
         void setUVs(const int& auv, const int& buv, const int& cuv);
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const;
-        inline virtual const float area() const {
+        inline virtual float area() const {
             return area_;
         }
 
@@ -61,7 +61,7 @@ class meshTriangle : public primitive {
         virtual void drawGL() const;
 #endif
 
-        inline virtual const long vertexCount() const {
+        inline virtual long vertexCount() const {
             return 3;
         }
 

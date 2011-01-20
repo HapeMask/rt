@@ -11,7 +11,9 @@
 %code requires {
     #include <string>
     #include <map>
+    #include <vector>
     using std::map;
+    using std::vector;
 
     #include "scene/scene.hpp"
     #include "scene/objparser.hpp"
@@ -32,8 +34,6 @@
 
     #include "materials/material.hpp"
     #include "materials/texture.hpp"
-
-    #include "datastructs/arraylist.hpp"
 
     #include "tracer/tracer.hpp"
 
@@ -57,7 +57,7 @@
 %union{
     float fval;
     char* sval;
-    arraylist<primitive*>* listval;
+    vector<primitive*>* listval;
     primitive* pval;
     camera* cval;
     light* lval;
@@ -182,7 +182,7 @@ shape :
        SHAPE '{' primitive_list material '}'
        {
            shapePtr shp(new shape());
-           arraylist<primitive*>::iterator it;
+           vector<primitive*>::iterator it;
            for(it = $3->begin(); it != $3->end(); ++it){
                shp->addPrimitive(*it);
            }
@@ -199,8 +199,8 @@ objfile :
         { triangleMesh* tm = new triangleMesh(); objParser::parse(stripQuotes($6), tm, false); $$ = tm; }
         ;
 
-primitive_list : primitive primitive_list { $2->add($1); $$ = $2; } |
-               primitive { arraylist<primitive*>* l = new arraylist<primitive*>(); l->add($1); $$ = l; }
+primitive_list : primitive primitive_list { $2->push_back($1); $$ = $2; } |
+               primitive { vector<primitive*>* l = new vector<primitive*>(); l->push_back($1); $$ = l; }
                ;
 
 primitive :

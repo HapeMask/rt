@@ -8,7 +8,7 @@ microfacetBrdf::~microfacetBrdf(){
     delete distrib;
 }
 
-inline const float microfacetDistribution::G(const vec3& wo, const vec3& wi, const vec3& wh) const {
+float microfacetDistribution::G(const vec3& wo, const vec3& wi, const vec3& wh) const {
     const float ndotwo = fabsf(bsdf::cosTheta(wo));
     const float ndotwi = fabsf(bsdf::cosTheta(wi));
     const float ndotwh = fabsf(bsdf::cosTheta(wh));
@@ -33,13 +33,13 @@ const rgbColor microfacetBrdf::evalFresnel(const float& cosTheta) const {
     return rescaledApproxFresnel(eta, k, cosTheta);
 }
 
-inline const rgbColor microfacetBrdf::sampleF(const float& u0, const float& u1,
+const rgbColor microfacetBrdf::sampleF(const float& u0, const float& u1,
         const vec3& wo, vec3& wi, float& pd) const {
     distrib->sampleF(u0, u1, wo, wi, pd);
     return f(wo, wi);
 }
 
-inline const float microfacetBrdf::pdf(const vec3& wo, const vec3& wi) const {
+float microfacetBrdf::pdf(const vec3& wo, const vec3& wi) const {
     return distrib->pdf(wo, wi);
 }
 
@@ -103,6 +103,6 @@ const rgbColor microfacetBtdf::sampleF(const float& u0, const float& u1,
     return eta2 * (rgbColor(1.f) - Fr) * distrib->rho / fabsf(bsdf::cosTheta(wi));
 }
 
-const float microfacetBtdf::pdf(const vec3& wo, const vec3& wi) const {
+float microfacetBtdf::pdf(const vec3& wo, const vec3& wi) const {
     return 0.f;
 }

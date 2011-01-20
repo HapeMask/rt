@@ -36,7 +36,7 @@ class octree : public accelerator {
         }
 
 		virtual const intersection intersect(ray& r) const;
-		virtual const bool intersectB(const ray& r) const;
+		virtual bool intersectB(const ray& r) const;
 
 		virtual void build(const scene& s);
 
@@ -45,7 +45,7 @@ class octree : public accelerator {
                 const arraylist<primitive*>& prims);
 
         const intersection _intersect(const octreeNode* node, ray& r) const;
-        const bool _intersectB(const octreeNode* node, const ray& r) const;
+        bool _intersectB(const octreeNode* node, const ray& r) const;
         const intersection leafTest(const octreeNode& node, const ray& r) const;
 
         octreeNode* root;

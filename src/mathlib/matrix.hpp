@@ -59,7 +59,7 @@ class mat4 {
 
 		const mat4 inverse() const;
 		const mat4 transpose() const;
-		const float det() const;
+		float det() const;
 
 		// Solve Ax = b where A = *this, return x.
 		const vec4 solve(const vec4& b);
@@ -71,7 +71,7 @@ class mat4 {
 		mat4& operator*=(const mat4& m);
 		const mat4 operator*(const mat4& m) const;
 
-		const bool operator==(const mat4& m) const;
+		bool operator==(const mat4& m) const;
 
 		const vec4 hslice(const short& i) const {
 #ifdef DEBUG

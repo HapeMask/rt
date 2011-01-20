@@ -43,7 +43,7 @@ class linkedlist{
             return _size;
         }
 
-        inline const bool empty() const {
+        inline bool empty() const {
             return _size == 0;
         }
 

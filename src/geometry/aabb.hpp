@@ -94,8 +94,8 @@ class aabb {
             updateMid();
         }
 
-        const bool intersect(const ray& r, float& tmin, float& tmax) const;
-        const bool intersect(const aabb& box) const;
+        bool intersect(const ray& r, float& tmin, float& tmax) const;
+        bool intersect(const aabb& box) const;
 
         vec3 min, max, mid;
 

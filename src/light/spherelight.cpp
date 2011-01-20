@@ -6,7 +6,7 @@ sphereLight::sphereLight(const point3& p, const float& pow, const rgbColor& c, c
     area(4.f * PI * r*r), invArea(1.f/(4.f * PI * r*r))
 {}
 
-const float sphereLight::pdf(const point3& p, const vec3& wi) const {
+float sphereLight::pdf(const point3& p, const vec3& wi) const {
     // P(wi) = r^2 / cosTheta * A
     const vec3 dir = normalize(wi);
     const intersection isect = intersect(ray(p, dir));
@@ -98,7 +98,7 @@ const intersection sphereLight::intersect(const ray& r) const {
 	return isect;
 }
 
-const bool sphereLight::intersectB(const ray& r) const {
+bool sphereLight::intersectB(const ray& r) const {
 	const vec3 dir(r.origin - position);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);

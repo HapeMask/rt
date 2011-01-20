@@ -11,19 +11,19 @@
 
 #include "utility.hpp"
 
-const float radians(const float& deg){
+float radians(const float& deg){
 	return (deg / 180.f) * PI;
 }
 
-const float degrees(const float& rad){
+float degrees(const float& rad){
 	return (rad / PI) * 180.f;
 }
 
-const bool isFinite(const float& f){
+bool isFinite(const float& f){
     return (f > MIN_FLOAT && f < MAX_FLOAT);
 }
 
-rgbColor clamp(const rgbColor& c){
+const rgbColor clamp(const rgbColor& c){
     if(!(isFinite(c.r) && isFinite(c.g) && isFinite(c.b))){
         return rgbColor(0.f);
     }else{
@@ -34,7 +34,7 @@ rgbColor clamp(const rgbColor& c){
     }
 }
 
-vec3 clamp(const vec3& v){
+const vec3 clamp(const vec3& v){
     return vec3(min(max(v, vec3(0.f)), vec3(1.f)));
 }
 
@@ -42,11 +42,11 @@ float clamp(const float& f){
 	return std::min(std::max(f, 0.f), 1.f);
 }
 
-vec3 reflect(const vec3& v, const vec3& n){
+const vec3 reflect(const vec3& v, const vec3& n){
 	return v - (2.f * dot(v,n)*n);
 }
 
-const int roundUpToMultiple(int n, int m){
+int roundUpToMultiple(int n, int m){
     return ceil((float)n/(float)m) * m;
 }
 
@@ -125,7 +125,7 @@ int Ceil2Int(const double val) {
  * Computes the double integral of the 2D Gaussian with stddev sigma for X and
  * Y in the range [-0.5, 0.5]
  */
-const float gaussian2DNormalization(const float& sigma) {
+float gaussian2DNormalization(const float& sigma) {
     return 0.3989422804f * fabsf(1.f/sigma) * erf(0.353553389f *
             fabsf(1.f/sigma)) * (-1.25331413f * sigma *
             erf(-0.353553389f/sigma) + 1.25331413f * sigma *

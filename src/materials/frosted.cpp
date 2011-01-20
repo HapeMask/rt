@@ -41,7 +41,7 @@ const rgbColor frostedGlassBsdf::f(const vec3& wo, const vec3& wi, bxdfType type
     }
 }
 
-const float frostedGlassBsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const {
+float frostedGlassBsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const {
     float p = 0.f;
     float count = 0;
 

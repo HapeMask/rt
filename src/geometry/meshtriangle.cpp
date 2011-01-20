@@ -97,7 +97,7 @@ const intersection meshTriangle::intersect(ray& r) const {
 	return isect;
 }
 
-const bool meshTriangle::intersectB(const ray& r) const {
+bool meshTriangle::intersectB(const ray& r) const {
     const vec3 s1 = cross(C, r.direction);
     const float D = dot(s1, B);
     if(abs(D) < EPSILON){

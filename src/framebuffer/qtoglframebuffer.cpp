@@ -42,9 +42,9 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     lastPos(0.f, 0.f),
     camPos(s.getCamera().getPosition()), camForward(s.getCamera().getPosition() - s.getCamera().getLook()),
     pixelsSampled(0), iterations(0),
+    averageSamplesPerSec(0.f),
     showUpdates(false), showRenderView(false), rendering(false),
-    imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32),
-    paused(false), averageSamplesPerSec(0.f), rthread(this)
+    imgBuffer(s.getCamera().width(), s.getCamera().height(), QImage::Format_RGB32), rthread(this)
 {
     setAutoFillBackground(false);
 
@@ -178,11 +178,10 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
             fovy -= 2;
             showRenderView = false;
             break;
-        case Qt::Key_P:
-            paused = !paused;
-            break;
         case Qt::Key_Escape:
-            paused = true;
+            if(rendering) {
+                toggleRendering();
+            }
             break;
         case Qt::Key_R:
             toggleRendering();
@@ -461,7 +460,7 @@ void qtOpenGLFramebuffer::_render() {
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
     for(int i=0; i<7; ++i){
         for(int j=0; j<7; ++j){
-            const size_t offset = (y + 3-i) * _width + x + 3 - j;
+            const int offset = (y + 3-i) * _width + x + 3 - j;
 
             if(offset > 0 && offset < _width*_height){
                 const rgbColor C = c * gkern[i][j];
@@ -470,7 +469,7 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
         }
     }
 
-    const size_t offset = y * _width + x;
+    const int offset = y * _width + x;
     ++samplesPerPixel[offset];
     ++pixelsSampled;
 

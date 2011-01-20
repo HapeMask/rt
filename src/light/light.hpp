@@ -28,7 +28,7 @@ class light {
             return noIntersect;
         }
 
-        virtual const bool intersectB(const ray& r) const {
+        virtual bool intersectB(const ray& r) const {
             return false;
         }
 
@@ -40,7 +40,7 @@ class light {
             return (lightColor * power) / norm2(position - p);
         }
 
-        virtual const bool isPointSource() const = 0;
+        virtual bool isPointSource() const = 0;
 
         const point3& getPosition() const {
             return position;
@@ -55,13 +55,13 @@ class light {
 		}
 
         // PDF of for generating point p on the surface of the light.
-        virtual const float pdf(const point3& p) const {
+        virtual float pdf(const point3& p) const {
             return 0.f;
         }
 
         // PDF for generating vector wi with respect to the solid angle
         // subtended by the light at point p.
-        virtual const float pdf(const point3& p, const vec3& wi) const {
+        virtual float pdf(const point3& p, const vec3& wi) const {
             return 0.f;
         }
 

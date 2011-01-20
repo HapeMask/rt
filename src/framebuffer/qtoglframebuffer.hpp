@@ -64,7 +64,6 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         rgbColor* sumOfSquares;
         int* samplesPerPixel;
         QImage imgBuffer;
-        bool paused;
 
         void tonemapAndUpdateScreen(QPainter& painter);
 

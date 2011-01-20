@@ -44,7 +44,7 @@ const mat4 mat4::operator*(const mat4& m) const{
 	return n;
 }
 
-const bool mat4::operator==(const mat4& m) const{
+bool mat4::operator==(const mat4& m) const{
 	for(int i=0; i<4; i++){
 		for(int j=0; j<4; j++){
 			if(values[i][j] != m(i,j)) return false;
@@ -53,7 +53,7 @@ const bool mat4::operator==(const mat4& m) const{
 	return true;
 }
 
-const float mat4::det() const{
+float mat4::det() const{
 	return
 		values[0][0]*values[1][1]*values[2][2]*values[3][3] + values[0][0]*values[1][2]*values[2][3]*values[3][1] + values[0][0]*values[1][3]*values[2][1]*values[3][2] +
 		values[0][1]*values[1][0]*values[2][3]*values[3][2] + values[0][1]*values[1][2]*values[2][0]*values[3][3] + values[0][1]*values[1][3]*values[2][2]*values[3][0] +
