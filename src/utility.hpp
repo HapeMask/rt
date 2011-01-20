@@ -11,6 +11,8 @@
 const float radians(const float& deg);
 const float degrees(const float& rad);
 
+const bool isFinite(const float& f);
+
 rgbColor clamp(const rgbColor& c);
 vec3 clamp(const vec3& v);
 float clamp(const float& f);

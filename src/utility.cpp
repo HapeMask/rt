@@ -19,12 +19,19 @@ const float degrees(const float& rad){
 	return (rad / PI) * 180.f;
 }
 
+const bool isFinite(const float& f){
+    return (f > MIN_FLOAT && f < MAX_FLOAT);
+}
+
 rgbColor clamp(const rgbColor& c){
-	rgbColor c1(c);
-	c1.r = std::min(std::max(c.r, 0.f), 1.f);
-	c1.g = std::min(std::max(c.g, 0.f), 1.f);
-	c1.b = std::min(std::max(c.b, 0.f), 1.f);
-	return c1;
+    if(!(isFinite(c.r) && isFinite(c.g) && isFinite(c.b))){
+        return rgbColor(0.f);
+    }else{
+        const float r = std::min(std::max(c.r, 0.f), 1.f);
+        const float g = std::min(std::max(c.g, 0.f), 1.f);
+        const float b = std::min(std::max(c.b, 0.f), 1.f);
+        return rgbColor(r,g,b);
+    }
 }
 
 vec3 clamp(const vec3& v){
