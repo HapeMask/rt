@@ -67,7 +67,6 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
         bool paused;
 
         void tonemapAndUpdateScreen(QPainter& painter);
-        void tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY);
 
         void positionCamera();
         void enableGLOptions();
@@ -75,7 +74,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         void clearBuffers();
 
-        float gkern[5][5];
+        float gkern[7][7];
 
         renderThread rthread;
 

@@ -91,17 +91,17 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     sumOfSquares = new rgbColor[_width*_height];
     samplesPerPixel = new int[_width*_height];
 
-    const float sigma = 0.4f;
+    static const float sigma = 0.45f;
     float sum = 0.f;
-    for(int i=-2; i<=2; ++i){
-        for(int j=-2; j<=2; ++j){
-            gkern[i+2][j+2] = evaluate2DGaussian(i, j, sigma);
-            sum += gkern[i+2][j+2];
+    for(int i=-3; i<=3; ++i){
+        for(int j=-3; j<=3; ++j){
+            gkern[i+3][j+3] = evaluate2DGaussian(i, j, sigma);
+            sum += gkern[i+3][j+3];
         }
     }
 
-    for(int i=0; i<5; ++i){
-        for(int j=0; j<5; ++j){
+    for(int i=0; i<7; ++i){
+        for(int j=0; j<7; ++j){
             gkern[i][j] /= sum;
         }
     }
@@ -459,29 +459,24 @@ void qtOpenGLFramebuffer::_render() {
 }
 
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
-    /*
-    for(int i=0; i<5; ++i){
-        for(int j=0; j<5; ++j){
-            const size_t offset = (y + 2-i) * _width + x + 2 - j;
+    for(int i=0; i<7; ++i){
+        for(int j=0; j<7; ++j){
+            const size_t offset = (y + 3-i) * _width + x + 3 - j;
 
             if(offset > 0 && offset < _width*_height){
                 const rgbColor C = c * gkern[i][j];
                 buffer[offset] += C;
-
-                // Don't use weighted values in the statistics data, only use
-                // the actual (center) value.
-                if(i == 2 && j == 2){
-                    sumOfSquares[offset] += c * c;
-                }
             }
         }
     }
-    */
 
     const size_t offset = y * _width + x;
-    buffer[offset] += c;
     ++samplesPerPixel[offset];
     ++pixelsSampled;
+
+    // Don't use weighted values in the statistics data, only use
+    // the actual (center) value.
+    sumOfSquares[offset] += c * c;
 }
 
 void qtOpenGLFramebuffer::enableGLOptions() {
@@ -518,13 +513,7 @@ void qtOpenGLFramebuffer::disableGLOptions() {
 }
 
 void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c) {
-    const float gamma = 1.f/2.2f;
-    const rgbColor gammaC = clamp(rgbColor(
-            powf(c.red(), gamma),
-            powf(c.green(), gamma),
-            powf(c.blue(), gamma)));
-
-    imgBuffer.setPixel(x, y, qRgb(gammaC.R(), gammaC.G(), gammaC.B()));
+    imgBuffer.setPixel(x, y, qRgb(c.R(), c.G(), c.B()));
 }
 
 void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
@@ -534,37 +523,21 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
     for(int y = 0; y <_height; y++){
         for(int x = 0; x < _width; x++){
             const int offset = y * _width + x;
-            setPixel(
-                    x, y,
-                    clamp(buffer[offset] / (float)samplesPerPixel[offset]));
+
+            static const float gamma = 1.f/2.2f;
+            const rgbColor& c = buffer[offset] /
+                (float)samplesPerPixel[offset];
+
+            const rgbColor gammaC = clamp(rgbColor(
+                    powf(c.r, gamma),
+                    powf(c.g, gamma),
+                    powf(c.b, gamma)));
+
+            setPixel(x, y, gammaC);
         }
     }
 
     painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
-}
-
-void qtOpenGLFramebuffer::tonemapAndUpdateRect(QPainter& painter, const int& cornerX, const int& cornerY){
-#ifdef RT_MULTITHREADED
-#pragma omp parallel for collapse(2)
-#endif
-    for(int y = cornerY; y < cornerY + blockHeight; y++){
-        for(int x = cornerX; x < cornerX + blockWidth; x++){
-            const int offset = y * _width + x;
-            setPixel(
-                    x, y,
-                    clamp(buffer[offset] / (float)samplesPerPixel[offset]));
-        }
-    }
-
-#ifdef RT_MULTITHREADED
-#pragma omp critical
-#endif
-    {
-    painter.drawPixmap(
-            QPoint(cornerX, cornerY),
-            QPixmap::fromImage(imgBuffer),
-            QRect(cornerX, cornerY, blockWidth, blockHeight));
-    }
 }
 
 void qtOpenGLFramebuffer::saveToImage(const QString& filename) const {
