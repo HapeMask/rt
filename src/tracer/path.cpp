@@ -130,11 +130,8 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         r.tMin = EPSILON;
     }
 
-    // TODO: Really need to find out what's causing this.
-    if(L.r < 0.f || L.g < 0.f || L.b < 0.f ||
-            isnan(L.r) || isnan(L.g) || isnan(L.b))
-    {
-        return rgbColor(0.f);
+    if(!(isFinite(L.r) && isFinite(L.g) && isFinite(L.b))){
+        return rgbColor(0.f, 0.f, 0.f);
     }else{
         return L;
     }
