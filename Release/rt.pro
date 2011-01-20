@@ -3,8 +3,11 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG += qt release static
-CONFIG += mmx sse sse2
+CONFIG += qt release mmx sse sse2
+win32 {
+    CONFIG += console
+}
+
 QT += opengl
 
 TARGET = rt
@@ -15,9 +18,7 @@ DEFINES += RT_NO_EXECPTIONS \
     RT_MULTITHREADED \
     HAVE_SSE2 \
     MEXP=19937 \
-    RT_USE_QT \
-    QT_STATIC_BUILD \
-    GLEW_STATIC
+    RT_USE_QT
 
 QMAKE_CXXFLAGS = -fno-rtti -fno-exceptions -m64 -march=native -O3 -mmmx -msse \
     -msse2 -msse3 -mssse3 -msse4 -msse4.1 -msse4.2 -ffast-math \
@@ -25,13 +26,21 @@ QMAKE_CXXFLAGS = -fno-rtti -fno-exceptions -m64 -march=native -O3 -mmmx -msse \
     -fexpensive-optimizations -funsafe-loop-optimizations -fopenmp -fgcse-sm \
     -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
 
-QMAKE_LIBS += -lglew32
-QMAKE_LFLAGS += -static -static-libgcc -fopenmp -O3 $(CXXFLAGS)
+win32{
+    QMAKE_LIBS += -lglew32
+}
+unix{
+    QMAKE_LIBS += -lGLEW
+}
+
+QMAKE_LFLAGS += -fopenmp -O3 $(CXXFLAGS)
 
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
-INCLUDEPATH += ../src \
-    /usr/X11/include
+INCLUDEPATH += ../src
+uniz{
+    INCLUDEPATH += /usr/X11/include
+}
 
 flex.commands = flex ${QMAKE_FILE_IN} && mv lex.yy.cc ../src//scene/
 flex.input = FLEXSOURCES
