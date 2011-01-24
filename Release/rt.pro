@@ -11,7 +11,6 @@ win32 {
 QT += opengl
 
 TARGET = rt
-
 DESTDIR = ./
 
 DEFINES += RT_NO_EXECPTIONS \
@@ -24,7 +23,7 @@ QMAKE_CXXFLAGS = -fno-rtti -fno-exceptions -m64 -march=native -O3 -mmmx -msse \
     -msse2 -msse3 -mssse3 -msse4 -msse4.1 -msse4.2 -ffast-math \
     -freciprocal-math -mfpmath=sse -mrecip -fomit-frame-pointer -pipe \
     -fexpensive-optimizations -funsafe-loop-optimizations -fopenmp -fgcse-sm \
-    -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x
+    -fgcse-las -funroll-loops -ftree-vectorize -Wno-inline -std=gnu++0x -Wno-unused-parameter
 
 win32{
     QMAKE_LIBS += -lglew32
@@ -38,7 +37,7 @@ QMAKE_LFLAGS += -fopenmp -O3 $(CXXFLAGS)
 OBJECTS_DIR = ./obj
 DEPENDPATH += ../src
 INCLUDEPATH += ../src
-uniz{
+unix {
     INCLUDEPATH += /usr/X11/include
 }
 
