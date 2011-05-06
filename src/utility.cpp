@@ -20,7 +20,7 @@ float degrees(const float& rad){
 }
 
 bool isFinite(const float& f){
-    return (f > MIN_FLOAT && f < MAX_FLOAT);
+    return (f >= -MAX_FLOAT && f <= MAX_FLOAT);
 }
 
 const rgbColor clamp(const rgbColor& c){
