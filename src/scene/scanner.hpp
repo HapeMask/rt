@@ -9,7 +9,7 @@
 #define YY_DECL int scanner::yylex()
 
 #include <iostream>
-#include "sceneparser.tab.h"
+#include "sceneparser.tab.hpp"
 
 class scanner : public yyFlexLexer{
     public:

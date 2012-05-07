@@ -4,7 +4,6 @@
 #include "geometry/primitive.hpp"
 
 #include <memory>
-using std::shared_ptr;
 
 const uint8_t AXIS_X =      0;
 const uint8_t AXIS_Y =      1;
@@ -22,7 +21,7 @@ class accelerator {
 		virtual void build(const scene& s) = 0;
 };
 
-typedef shared_ptr<accelerator> acceleratorPtr;
+typedef std::shared_ptr<accelerator> acceleratorPtr;
 
 inline bool aabbMidCmpX(primitive* a, primitive* b) { return (a->getBounds().mid.x < b->getBounds().mid.x); }
 inline bool aabbMidCmpY(primitive* a, primitive* b) { return (a->getBounds().mid.y < b->getBounds().mid.y); }

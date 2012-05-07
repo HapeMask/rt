@@ -321,8 +321,6 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
         cerr << gluErrorString(glGetError()) << endl;
     }
 
-    scn.drawGL();
-
     /* SAMPLER DEMO CODE
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
@@ -371,16 +369,13 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glEnd();
     */
 
+    scn.drawGL();
     glPopMatrix();
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     disableGLOptions();
 
     QPainter painter(this);
     painter.beginNativePainting();
-    //painter.fillRect(0,0,128,128, QColor(0,255,0,128));
-
     if(showRenderView){
         painter.drawPixmap(0,0, QPixmap::fromImage(imgBuffer));
     }

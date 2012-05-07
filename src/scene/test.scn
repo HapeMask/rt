@@ -21,8 +21,8 @@ scene<default, path>{
     shape{
         triangle(-3,-3,-3, 3,-3,-3, -3,3,-3)
         triangle(3,3,-3, -3,3,-3, 3,-3,-3)
-        //material(lambert(0.75,0.75,0.75))
-		material(lambert<textured>(0.75,0.75,0.75, imageTexture("/home/hape/py3DSS/scale_3.png")))
+        material(lambert(0.75,0.75,0.75))
+		//material(lambert<textured>(0.75,0.75,0.75, imageTexture("/home/hape/py3DSS/scale_3.png")))
     }
 
 	shape{
@@ -37,10 +37,10 @@ scene<default, path>{
 
     shape{
         sphere(0,0,0,1.5)
-        //material(specular<dielectric>(0.1,0.6,0.9, 1.6))
-        material(frosted(
-            microfacet(1.8, 1, blinn(0.4,0.4,0.4, 200)),
-            microfacet(1.8, 1, blinn(0.9,0.9,0.9, 200))
-            ))
+        material(specular<dielectric>(0.1,0.6,0.9, 1.6))
+        //material(frosted(
+        //    microfacet(1.8, 1, blinn(0.4,0.4,0.4, 200)),
+        //    microfacet(1.8, 1, blinn(0.9,0.9,0.9, 200))
+        //    ))
     }
 }
