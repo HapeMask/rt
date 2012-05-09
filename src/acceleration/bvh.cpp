@@ -149,20 +149,19 @@ bool bvh::_intersectB(const int& index, const ray& r) const{
 }
 
 void bvh::build(const scene& s){
-    const vector<shapePtr>& shapes = s.getShapes();
-
     numPrims = 0;
-    for(auto shape : shapes){
+    const vector<shared_ptr<shape>>& shapes = s.getShapes();
+    for(const auto& shape : s.getShapes()){
         numPrims += shape->getPrimitives().size();
     }
 
-    primitives = vector<primitivePtr>(numPrims);
+    primitives = vector<primitive*>(numPrims);
 
     // Fill the list of primitives.
     int k = 0;
-    for(auto shape : shapes){
-        for(auto prim : shape->getPrimitives()){
-            primitives[k] = prim;
+    for(const auto& shape : shapes){
+        for(const auto& prim : shape->getPrimitives()){
+            primitives[k] = prim.get();
             ++k;
         }
     }
@@ -199,7 +198,7 @@ int bvh::_build(const aabb& box, int start, int end, int index){
     int bestSplit = start+1;
     float bestCost = MAX_FLOAT;
     aabb bestLeftBox, bestRightBox;
-    vector<primitivePtr> tempPrimitives(primitives);
+    vector<primitive*> tempPrimitives(primitives);
 
     for(int axis=0; axis<3; ++axis) {
         auto cmp = (axis == AXIS_X) ? aabbMidCmpX : ((axis == AXIS_Y) ? aabbMidCmpY : aabbMidCmpZ);

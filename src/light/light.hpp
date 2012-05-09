@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <iostream>
 
 #include "mathlib/vector.hpp"
@@ -10,14 +9,10 @@
 #include "acceleration/intersection.hpp"
 #include "materials/material.hpp"
 
-using std::shared_ptr;
-using std::cerr;
-using std::endl;
-
 class light {
 	public:
 		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {
-            bsdfPtr b(new bsdf());
+            bsdf* b = new bsdf();
             b->addBxdf(new lambertianBrdf(rgbColor(1.f)));
             mat = materialPtr(new material(b));
         }
@@ -69,15 +64,8 @@ class light {
             return mat;
         }
 
-        virtual const vec3 getNormal(const point3& p) const {
-            cerr << "ERROR: light::getNormal() not implemented." << endl;
-            exit(1);
-        }
-
-        virtual const point3 uniformSampleSurface() const {
-            cerr << "ERROR: light::uniformSampleSurface() not implemented." << endl;
-            exit(1);
-        }
+        virtual const vec3 getNormal(const point3& p) const = 0;
+        virtual const point3 uniformSampleSurface() const = 0;
 
 	protected:
         point3 position;
@@ -85,5 +73,3 @@ class light {
 		rgbColor lightColor;
         materialPtr mat;
 };
-
-typedef shared_ptr<light> lightPtr;

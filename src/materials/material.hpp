@@ -9,7 +9,7 @@ using std::shared_ptr;
 
 class material {
     public:
-        material(bsdfPtr br);
+        material(bsdf* br);
         material(const rgbColor& c, const float& pow);
 
         const rgbColor Le() const;
@@ -28,7 +28,7 @@ class material {
         }
 
     protected:
-        bsdfPtr b;
+        unique_ptr<bsdf> b;
         bool emissive;
         rgbColor emitColor;
         float emitPower;

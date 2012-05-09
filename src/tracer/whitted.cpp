@@ -47,10 +47,10 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     // Diffuse calculations.
 	float lightPdf = 0.f;
 	for(int i=0; i<parent.numLights(); ++i){
-        const lightPtr li = parent.getLight(i);
-        if(li->isPointSource()){
+        const light& li = parent.getLight(i);
+        if(li.isPointSource()){
             vec3 lightDir;
-            const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
+            const rgbColor Li = li.sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
             const float lightDist = norm(lightDir);
             lightDir = normalize(lightDir);
 
@@ -68,12 +68,12 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             for(int i=0; i<areaSamples; ++i){
                 vec3 lightDir;
 
-                const rgbColor Li = li->sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
+                const rgbColor Li = li.sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
 
                 ray shadowRay(r.origin, normalize(lightDir));
                 shadowRay.tMax = norm(lightDir) + EPSILON;
 
-				if(!parent.intersectB(shadowRay) && li->intersect(shadowRay).hit){
+				if(!parent.intersectB(shadowRay) && li.intersect(shadowRay).hit){
 					lightDir = normalize(lightDir);
 					const vec3 wi = worldToBsdf(lightDir, isect);
 

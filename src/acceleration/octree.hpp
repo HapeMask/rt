@@ -14,7 +14,7 @@ typedef struct on{
     aabb box;
 
     on* children[8];
-    vector<primitivePtr> contents;
+    vector<primitive*> contents;
 
     on() : isLeaf(false) {
         for(int i=0;i<8;++i) children[i] = NULL;
@@ -40,7 +40,7 @@ class octree : public accelerator {
 
     private:
         octreeNode* _build(const int depth, const aabb& box,
-                const vector<primitivePtr>& prims);
+                const vector<primitive*>& prims);
 
         const intersection _intersect(const octreeNode* node, ray& r) const;
         bool _intersectB(const octreeNode* node, const ray& r) const;

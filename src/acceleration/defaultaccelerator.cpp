@@ -49,9 +49,9 @@ bool defaultAccelerator::intersectB(const ray& r) const{
 }
 
 void defaultAccelerator::build(const scene& s){
-	for(auto shape : s.getShapes()){
-		for(auto prim : shape->getPrimitives()){
-			shapes.push_back(prim);
+	for(const auto& shape : s.getShapes()){
+		for(const auto& prim : shape->getPrimitives()){
+			shapes.push_back(prim.get());
 		}
 	}
 }

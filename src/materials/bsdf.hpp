@@ -47,13 +47,10 @@ inline const vec3 halfVector(const vec3& a, const vec3& b) {
 
 class bxdf;
 class specularBxdf;
+
 class bsdf {
     public:
-        bsdf() : diffTra(NULL), diffRef(NULL),
-        glossTra(NULL), glossRef(NULL),
-        specTra(NULL), specRef(NULL) {}
-
-        ~bsdf();
+        bsdf() {}
 
         virtual const rgbColor f(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
         virtual const rgbColor sampleF(const float& u0, const float& u1, const float&
@@ -61,6 +58,9 @@ class bsdf {
                 float& pd) const;
         virtual float pdf(const vec3& wo, const vec3& wi, bxdfType type = ALL) const;
 
+        /**
+         * NOTE: Takes ownership of bxdf b
+         */
         void addBxdf(bxdf* b);
 
         static bool isSubtype(bxdfType a, bxdfType b);
@@ -72,10 +72,8 @@ class bsdf {
         void updateFromUVTexture(const vec2& uv);
 
     protected:
-        bxdf* diffTra, *diffRef,
-             *glossTra, *glossRef;
-
-        specularBxdf* specTra, *specRef;
+        unique_ptr<bxdf> diffTra, diffRef, glossTra, glossRef;
+        unique_ptr<specularBxdf> specTra, specRef;
 };
 
 class testBsdf : public bsdf {
@@ -385,6 +383,3 @@ inline float bsdf::sin2Theta(const vec3& v){
     const float c = cosTheta(v);
     return 1.f - c*c;
 }
-
-typedef shared_ptr<bsdf> bsdfPtr;
-typedef shared_ptr<bxdf> bxdfPtr;

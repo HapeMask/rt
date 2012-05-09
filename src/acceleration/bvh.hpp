@@ -54,5 +54,5 @@ class bvh : public accelerator {
         int numNodes;
         int numPrims;
         vector<bvhNode> nodes;
-        vector<primitivePtr> primitives;
+        vector<primitive*> primitives;
 };

@@ -13,27 +13,6 @@ using std::vector;
 using std::cerr;
 using std::endl;
 
-bsdf::~bsdf(){
-    if(specTra){
-        delete specTra;
-    }
-    if(specRef){
-        delete specRef;
-    }
-    if(diffTra){
-        delete diffTra;
-    }
-    if(diffRef){
-        delete diffRef;
-    }
-    if(glossTra){
-        delete glossTra;
-    }
-    if(glossRef){
-        delete glossRef;
-    }
-}
-
 void bsdf::updateFromUVTexture(const vec2& uv) {
     if(diffRef) {
         diffRef->updateFromUVTexture(uv);
@@ -57,42 +36,24 @@ void bsdf::updateFromUVTexture(const vec2& uv) {
 }
 
 void bsdf::addBxdf(bxdf* b){
-    switch((int)b->getType()){
+    switch(b->getType()){
         case (SPECULAR | TRANSMISSION):
-            if(specTra){
-                delete specTra;
-            }
-            specTra = (specularBxdf*)b;
+            specTra.reset(static_cast<specularBxdf*>(b));
             break;
         case (SPECULAR | REFLECTION):
-            if(specRef){
-                delete specRef;
-            }
-            specRef = (specularBxdf*)b;
+            specRef.reset(static_cast<specularBxdf*>(b));
             break;
         case (DIFFUSE | TRANSMISSION):
-            if(diffTra){
-                delete diffTra;
-            }
-            diffTra = b;
+            diffTra.reset(b);
             break;
         case (DIFFUSE | REFLECTION):
-            if(diffRef){
-                delete diffRef;
-            }
-            diffRef = b;
+            diffRef.reset(b);
             break;
         case (GLOSSY | TRANSMISSION):
-            if(glossTra){
-                delete glossTra;
-            }
-            glossTra = b;
+            glossTra.reset(b);
             break;
         case (GLOSSY | REFLECTION):
-            if(glossRef){
-                delete glossRef;
-            }
-            glossRef = b;
+            glossRef.reset(b);
             break;
         default:
             cerr << "Invalid type added: " << b->getType() << endl;
@@ -167,30 +128,30 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;
     rgbColor f(0.f);
-    vector<bxdf*> matches;
+    vector<const bxdf*> matches;
 
     // Find all matching bxdfs.
     if(isSubtype(REFLECTION, type)){
         if(isSubtype(DIFFUSE, type) && diffRef){
-            matches.push_back(diffRef);
+            matches.push_back(diffRef.get());
         }
         if(isSubtype(SPECULAR, type) && specRef){
-            matches.push_back(specRef);
+            matches.push_back(specRef.get());
         }
         if(isSubtype(GLOSSY, type) && glossRef){
-            matches.push_back(glossRef);
+            matches.push_back(glossRef.get());
         }
     }
 
     if(isSubtype(TRANSMISSION, type)){
         if(isSubtype(DIFFUSE, type) && diffTra) {
-            matches.push_back(diffTra);
+            matches.push_back(diffTra.get());
         }
         if(isSubtype(SPECULAR, type) && specTra) {
-            matches.push_back(specTra);
+            matches.push_back(specTra.get());
         }
         if(isSubtype(GLOSSY, type) && glossTra) {
-            matches.push_back(glossTra);
+            matches.push_back(glossTra.get());
         }
     }
 
@@ -256,8 +217,8 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
 }
 
 testBsdf::testBsdf() {
-    glossRef = new microfacetBrdf(1.8f, 1.f, new blinn(rgbColor(0.9f,0.9f,0.9f), 50));
+    glossRef.reset(new microfacetBrdf(1.8f, 1.f, new blinn(rgbColor(0.9f,0.9f,0.9f), 50)));
     //glossRef = new lambertianBrdf(rgbColor(0,0,0));
-    glossTra = new microfacetBtdf(1.8f, 1.f, new blinn(rgbColor(64, 128, 255), 50));
+    glossTra.reset(new microfacetBtdf(1.8f, 1.f, new blinn(rgbColor(64, 128, 255), 50)));
     //glossTra = new lambertianBrdf(rgbColor(0,0,0));
 }

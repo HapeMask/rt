@@ -16,16 +16,15 @@ class shape {
 		virtual ~shape() {}
 
 		void setMaterial(materialPtr m);
-		void addPrimitive(primitivePtr p);
+		void addPrimitive(primitive* p);
 
 		void setMaterial(material* m);
-		void addPrimitive(primitive* p);
 
 		inline materialPtr getMaterial() const {
 			return mat;
 		}
 
-		inline const vector<primitivePtr>& getPrimitives() const {
+		inline const vector<shared_ptr<primitive>>& getPrimitives() const {
 			return prims;
 		}
 
@@ -51,7 +50,7 @@ class shape {
         virtual long vertexCount() const {
             long count = 0;
 
-            for(auto prim : prims){
+            for(const auto& prim : prims){
                 count += prim->vertexCount();
             }
 
@@ -66,7 +65,7 @@ class shape {
          * Data is usually a vertex array.
          */
         virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
-            for(auto prim : prims){
+            for(const auto& prim : prims){
                 prim->prepGL(vertexData, normalData);
             }
         }
@@ -75,7 +74,7 @@ class shape {
          * Performs the required GL draw calls to draw this shape.
          */
         virtual void drawGL() const {
-            for(auto prim : prims){
+            for(const auto& prim : prims){
                 prim->drawGL();
             }
         }
@@ -83,9 +82,7 @@ class shape {
 
 	protected:
         float area_, pdf_;
-		vector<primitivePtr> prims;
+		vector<shared_ptr<primitive>> prims;
 		materialPtr mat;
 		aabb bounds;
 };
-
-typedef shared_ptr<shape> shapePtr;

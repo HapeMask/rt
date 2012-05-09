@@ -27,12 +27,12 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         if(!isect.hit || isect.li){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(int i=0; i<parent.numLights(); ++i){
-                    const vec3 lightDir = parent.getLight(i)->getPosition() - r.origin;
+                    const vec3 lightDir = parent.getLight(i).getPosition() - r.origin;
                     const float lightDist = norm(lightDir);
 
                     ray lightRay(r.origin, normalize(lightDir), EPSILON, lightDist);
 
-                    const intersection isectL = parent.getLight(i)->intersect(rOrig);
+                    const intersection isectL = parent.getLight(i).intersect(rOrig);
                     if(isectL.hit && !parent.intersectB(lightRay)){
                         L += throughput * isectL.li->L(rOrig);
                     }

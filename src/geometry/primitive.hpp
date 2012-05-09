@@ -14,7 +14,6 @@ using std::shared_ptr;
 using std::vector;
 
 class shape;
-typedef shared_ptr<shape> shapePtr;
 class intersection;
 
 class primitive {
@@ -72,5 +71,3 @@ class primitive {
 		shape* parent;
 		aabb boundingBox;
 };
-
-typedef shared_ptr<primitive> primitivePtr;

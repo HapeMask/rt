@@ -25,5 +25,5 @@ class defaultAccelerator : public accelerator {
 		virtual void build(const scene& s);
 
 	private:
-		vector<primitivePtr> shapes;
+		vector<primitive*> shapes;
 };

@@ -8,9 +8,9 @@ void shape::setMaterial(materialPtr m){
 	mat = m;
 }
 
-void shape::addPrimitive(primitivePtr p){
+void shape::addPrimitive(primitive* p){
 	p->setParent(this);
-	prims.push_back(p);
+	prims.push_back(shared_ptr<primitive>(p));
 
     bounds = mergeAabb(bounds, p->getBounds());
     area_ += p->area();
@@ -19,15 +19,4 @@ void shape::addPrimitive(primitivePtr p){
 
 void shape::setMaterial(material* m){
     mat.reset(m);
-}
-
-void shape::addPrimitive(primitive* p){
-    primitivePtr pp(p);
-
-	pp->setParent(this);
-    prims.push_back(pp);
-
-    bounds = mergeAabb(bounds, p->getBounds());
-    area_ += p->area();
-    pdf_ = 1.f / area_;
 }

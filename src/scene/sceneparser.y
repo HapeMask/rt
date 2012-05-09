@@ -181,10 +181,9 @@ spherelight :
 shape :
        SHAPE '{' primitive_list material '}'
        {
-           shapePtr shp(new shape());
-           vector<primitive*>::iterator it;
-           for(it = $3->begin(); it != $3->end(); ++it){
-               shp->addPrimitive(*it);
+           shape* shp = new shape();
+           for(auto prim : *$3){
+               shp->addPrimitive(prim);
            }
            shp->setMaterial($4);
            scn.addShape(shp);
@@ -219,7 +218,7 @@ sphere :
        ;
 
 material :
-         MATERIAL '(' bsdf ')' { bsdfPtr p($3); material* mat = new material(p); $$ = mat; } |
+         MATERIAL '(' bsdf ')' { material* mat = new material($3); $$ = mat; } |
          MATERIAL '<' EMISSIVE '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
          { $$ = new material(rgbColor($6, $8, $10), $12); }
          ;
@@ -275,8 +274,8 @@ specular_dielectric :
                  SPECULAR '<' DIELECTRIC '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
                  {
                      bsdf* p = new bsdf();
-                     p->addBxdf(new specularBrdf($12, 0.f, DIELECTRIC, rgbColor(1.f,1.f,1.f)));
-                     p->addBxdf(new specularBtdf($12, rgbColor($6, $8, $10)));
+                     p->addBxdf( new specularBrdf($12, 0.f, DIELECTRIC, rgbColor(1.f,1.f,1.f)));
+                     p->addBxdf( new specularBtdf($12, rgbColor($6, $8, $10)));
                      $$ = p;
                  }
                  ;

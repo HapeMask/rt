@@ -10,13 +10,13 @@
 using std::vector;
 
 void octree::build(const scene& s){
-    const vector<shapePtr>& shapes = s.getShapes();
-    vector<primitivePtr> prims;
+    const vector<shared_ptr<shape>>& shapes = s.getShapes();
+    vector<primitive*> prims;
 
     // Fill the list of primitives.
-    for(auto shape : s.getShapes()){
-        for(auto prim : shape->getPrimitives()){
-            prims.push_back(prim);
+    for(const auto& shape : s.getShapes()){
+        for(const auto& prim : shape->getPrimitives()){
+            prims.push_back(prim.get());
         }
     }
 
@@ -33,9 +33,9 @@ void octree::build(const scene& s){
 }
 
 octreeNode* octree::_build(const int depth, const aabb& box,
-        const vector<primitivePtr>& prims){
+        const vector<primitive*>& prims){
 
-    vector<primitivePtr> boxPrims;
+    vector<primitive*> boxPrims;
 
     // Find the primitives that intersect this node's box.
     for(auto prim : prims){
@@ -106,7 +106,7 @@ bool octree::intersectB(const ray& r) const{
 
 const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
     // Check each primitive and find the closest intersection.
-    primitivePtr closestPrim;
+    primitive* closestPrim;
     ray closestRay;
     intersection closestIsect;
     bool didHit = false;

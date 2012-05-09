@@ -12,6 +12,10 @@ class pointLight : public light {
             return position;
         }
 
+        virtual const vec3 getNormal(const point3& p) const {
+            return vec3(0.f, 0.f, 0.f);
+        }
+
         virtual const rgbColor sampleL(const point3& p, vec3& wi,
                 const float& u0, const float& u1, float& pdf) const;
 };

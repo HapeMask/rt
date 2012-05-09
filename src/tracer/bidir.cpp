@@ -12,16 +12,16 @@ const rgbColor bdpt::L(const ray& r) const {
     ray eyeRay(r);
 
     // Don't bounce off lights if the eye ray hits one, just return the color.
-	if(parent.getLight(0)->intersect(r).hit){
-		return parent.getLight(0)->L(r);
+	if(parent.getLight(0).intersect(r).hit){
+		return parent.getLight(0).L(r);
 	}
 
     // Pick a random light and start a path on it in a random direction.
     int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
 
     // Sample the surface to find the start of the light path. 
-    const point3 p = parent.getLight(i)->uniformSampleSurface();
-    const vec3& normal = parent.getLight(i)->getNormal(p);
+    const point3 p = parent.getLight(i).uniformSampleSurface();
+    const vec3& normal = parent.getLight(i).getNormal(p);
 
     // Pick a random direction to start the light path.
     vec3 wi;

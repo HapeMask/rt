@@ -83,5 +83,3 @@ inline void triangle::drawGL() const {
     // Do nothing. This triangle's data has been dumped to the scene VBO
     // already and will be drawn as such.
 }
-
-typedef std::shared_ptr<triangle> trianglePtr;

@@ -9,5 +9,4 @@
 class objParser{
     public:
         static void parse(const string& filename, triangleMesh* p, const bool smooth = true);
-        static void parse(const string& filename, shape* s, const bool smooth = true);
 };

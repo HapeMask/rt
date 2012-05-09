@@ -29,11 +29,8 @@ class scene {
 		scene();
 		scene(accelerator* a);
 
-		void addShape(shapePtr s);
-		void addLight(lightPtr p);
-
-		void addShape(shape* s);
 		void addLight(light* p);
+		void addShape(shape* s);
 
 		/**
 		 * NOTE: Destroys the previous accelerator.
@@ -45,7 +42,7 @@ class scene {
 		const intersection intersect(ray& r) const;
 		bool intersectB(const ray& r) const;
 
-		const vector<shapePtr>& getShapes() const {
+		const vector<shared_ptr<shape>>& getShapes() const {
 			return shapes;
 		}
 
@@ -53,16 +50,16 @@ class scene {
 			return lights.size();
 		}
 
-		const lightPtr& getLight(const int& i) const {
-			return lights[i];
+		const light& getLight(const int& i) const {
+			return *lights[i];
 		}
 
         size_t numEmitters() const {
             return emitters.size();
         }
 
-        shapePtr getEmitter(const int& i) const {
-            return emitters[i];
+        const shape& getEmitter(const int& i) const {
+            return *emitters[i];
         }
 
 		const aabb& getBounds() const{
@@ -99,9 +96,9 @@ class scene {
         }
 
 	private:
-		vector<shapePtr> shapes;
-		vector<shapePtr> emitters;
-		vector<lightPtr> lights;
+		vector<shared_ptr<shape>> shapes;
+		vector<shared_ptr<shape>> emitters;
+		vector<unique_ptr<light>> lights;
 
 		cameraPtr cam;
         rayTracerPtr rt;
