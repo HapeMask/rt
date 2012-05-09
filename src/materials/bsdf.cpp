@@ -194,7 +194,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         }
     }
 
-    if(matches.size() == 0){
+    if(matches.empty()){
         p = 0.f;
         return rgbColor(0.f);
     }

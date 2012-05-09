@@ -11,25 +11,25 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 	vector<intersection> hits;
 
 	const point3 ro(r.origin);
-	for(int i=0; i<shapes.size(); ++i){
+	for(auto shape : shapes){
         ray rCopy(r);
-        const intersection isect = shapes[i]->intersect(rCopy);
+        const intersection isect = shape->intersect(rCopy);
 		if(isect.hit){
 			hits.push_back(isect);
 		}
 	}
 
-	if(hits.size() == 0){
+	if(hits.empty()){
 		return intersection(false);
 	}
 
 	// Grab the closest hit.
 	float minDist = POS_INF;
 	intersection closestIntersection;
-	for(int i=0; i<hits.size(); ++i){
-		if(hits[i].t < minDist){
-			minDist = hits[i].t;
-			closestIntersection = hits[i];
+	for(auto hit : hits){
+		if(hit.t < minDist){
+			minDist = hit.t;
+			closestIntersection = hit;
 		}
 	}
 
@@ -39,8 +39,8 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 
 bool defaultAccelerator::intersectB(const ray& r) const{
 	ray r2(r);
-	for(size_t i=0; i<shapes.size(); ++i){
-		if(shapes[i]->intersect(r2).hit){
+	for(auto shape : shapes){
+		if(shape->intersect(r2).hit){
 			return true;
 		}
 	}
@@ -49,10 +49,9 @@ bool defaultAccelerator::intersectB(const ray& r) const{
 }
 
 void defaultAccelerator::build(const scene& s){
-	for(size_t i = 0; i<s.getShapes().size(); ++i){
-		shapePtr shape = s.getShapes()[i];
-		for(size_t j = 0; j<shape->getPrimitives().size(); ++j){
-			shapes.push_back(shape->getPrimitives()[j]);
+	for(auto shape : s.getShapes()){
+		for(auto prim : shape->getPrimitives()){
+			shapes.push_back(prim);
 		}
 	}
 }

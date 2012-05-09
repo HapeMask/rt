@@ -6,8 +6,6 @@
 #include "geometry/primitive.hpp"
 #include "geometry/aabb.hpp"
 
-#include "datastructs/arraylist.hpp"
-
 const int OCTREE_MAX_PRIMS_PER_LEAF = 16;
 const int OCTREE_MAX_DEPTH = 64;
 
@@ -16,7 +14,7 @@ typedef struct on{
     aabb box;
 
     on* children[8];
-    arraylist<primitive*> contents;
+    vector<primitivePtr> contents;
 
     on() : isLeaf(false) {
         for(int i=0;i<8;++i) children[i] = NULL;
@@ -42,7 +40,7 @@ class octree : public accelerator {
 
     private:
         octreeNode* _build(const int depth, const aabb& box,
-                const arraylist<primitive*>& prims);
+                const vector<primitivePtr>& prims);
 
         const intersection _intersect(const octreeNode* node, ray& r) const;
         bool _intersectB(const octreeNode* node, const ray& r) const;

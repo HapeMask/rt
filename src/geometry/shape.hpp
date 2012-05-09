@@ -51,8 +51,8 @@ class shape {
         virtual long vertexCount() const {
             long count = 0;
 
-            for(size_t i=0; i<prims.size(); ++i){
-                count += prims[i]->vertexCount();
+            for(auto prim : prims){
+                count += prim->vertexCount();
             }
 
             return count;
@@ -66,8 +66,8 @@ class shape {
          * Data is usually a vertex array.
          */
         virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
-            for(size_t i=0; i<prims.size(); ++i){
-                prims[i]->prepGL(vertexData, normalData);
+            for(auto prim : prims){
+                prim->prepGL(vertexData, normalData);
             }
         }
 
@@ -75,8 +75,8 @@ class shape {
          * Performs the required GL draw calls to draw this shape.
          */
         virtual void drawGL() const {
-            for(size_t i=0; i<prims.size(); ++i){
-                prims[i]->drawGL();
+            for(auto prim : prims){
+                prim->drawGL();
             }
         }
 #endif

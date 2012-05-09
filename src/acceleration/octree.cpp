@@ -11,13 +11,12 @@ using std::vector;
 
 void octree::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();
-    arraylist<primitive*> prims;
+    vector<primitivePtr> prims;
 
     // Fill the list of primitives.
-    for(size_t i=0; i<shapes.size(); ++i){
-        const vector<primitivePtr>& p = shapes[i]->getPrimitives();
-        for(size_t j=0; j<p.size(); ++j){
-            prims.add(p[j].get());
+    for(auto shape : s.getShapes()){
+        for(auto prim : shape->getPrimitives()){
+            prims.push_back(prim);
         }
     }
 
@@ -34,14 +33,14 @@ void octree::build(const scene& s){
 }
 
 octreeNode* octree::_build(const int depth, const aabb& box,
-        const arraylist<primitive*>& prims){
+        const vector<primitivePtr>& prims){
 
-    arraylist<primitive*> boxPrims;
+    vector<primitivePtr> boxPrims;
 
     // Find the primitives that intersect this node's box.
-    for(int i=0; i<prims.size(); ++i){
-        if(prims[i]->getBounds().intersect(box)){
-            boxPrims.add(prims[i]);
+    for(auto prim : prims){
+        if(prim->getBounds().intersect(box)){
+            boxPrims.push_back(prim);
         }
     }
 
@@ -107,7 +106,7 @@ bool octree::intersectB(const ray& r) const{
 
 const intersection octree::leafTest(const octreeNode& node, const ray& r) const{
     // Check each primitive and find the closest intersection.
-    primitive* closestPrim;
+    primitivePtr closestPrim;
     ray closestRay;
     intersection closestIsect;
     bool didHit = false;

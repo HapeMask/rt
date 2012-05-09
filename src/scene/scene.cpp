@@ -51,8 +51,8 @@ const intersection scene::intersect(ray& r) const{
 	const intersection isectG = accel->intersect(r);
     intersection closestIsect = isectG;
 
-    for(int i=0; i<numLights(); ++i){
-        const intersection isectL = lights[i]->intersect(rCopy);
+    for(auto light : lights){
+        const intersection isectL = light->intersect(rCopy);
 
         if(isectL.hit && isectL.t <= closestIsect.t){
             closestIsect = isectL;
@@ -77,13 +77,13 @@ void scene::dumpToVbo(GLfloat* vertexBuffer, GLfloat* normalBuffer) const {
     GLfloat* pv = vertexBuffer;
     GLfloat* pn = normalBuffer;
 
-    for(size_t i=0; i<shapes.size(); ++i){
-        shapes[i]->prepGL(pv, pn);
+    for(auto shape : shapes){
+        shape->prepGL(pv, pn);
     }
 }
 
 void scene::drawGL() const {
-    for(size_t i=0; i<shapes.size(); ++i){
-        shapes[i]->drawGL();
+    for(auto shape : shapes){
+        shape->drawGL();
     }
 }

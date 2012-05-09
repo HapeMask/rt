@@ -57,7 +57,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
 
     // Fill in the scene's point heap.
     p->pointHeap = new point3[points.size()];
-    for(size_t i=0;i<points.size(); ++i){
+    for(size_t i=0; i<points.size(); ++i){
         p->pointHeap[i] = points[i];
     }
 
@@ -153,10 +153,10 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
             vec3 normal(0.f);
 
             vector<vec3> addedNorms;
-            for(size_t j=0; j<vps.size(); ++j){
+            for(auto vp : vps){
                 // TODO: THIS SUCKS...
-                if(find(addedNorms.begin(), addedNorms.end(), vps[j]->normal()) == addedNorms.end()){
-                    addedNorms.push_back(vps[j]->normal());
+                if(find(addedNorms.begin(), addedNorms.end(), vp->normal()) == addedNorms.end()){
+                    addedNorms.push_back(vp->normal());
                     normal += addedNorms[addedNorms.size() - 1];
                 }
             }
@@ -304,10 +304,10 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
             vec3 normal(0.f);
 
             vector<vec3> addedNorms;
-            for(size_t j=0; j<vps.size(); ++j){
+            for(auto vp : vps){
                 // TODO: THIS SUCKS...
-                if(find(addedNorms.begin(), addedNorms.end(), vps[j]->normal()) == addedNorms.end()){
-                    addedNorms.push_back(vps[j]->normal());
+                if(find(addedNorms.begin(), addedNorms.end(), vp->normal()) == addedNorms.end()){
+                    addedNorms.push_back(vp->normal());
                     normal += addedNorms[addedNorms.size() - 1];
                 }
             }
@@ -320,8 +320,8 @@ void objParser::parse(const string& filename, shape* s, const bool smooth){
         }
     }
 
-    for(size_t i=0; i<tris.size(); ++i){
-        s->addPrimitive(tris[i]);
+    for(auto tri : tris){
+        s->addPrimitive(tri);
     }
 
     file.close();
