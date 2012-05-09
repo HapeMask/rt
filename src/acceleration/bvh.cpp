@@ -46,14 +46,14 @@ bool bvh::intersectB(const ray& r) const{
 }
 
 const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
-    const int numPrims = node.prims[1] - node.prims[0];
+    const int primsToTest = node.primitives[1] - node.primitives[0];
 
     // Check each hit and find the closest.
     intersection closestIsect = noIntersect;
 
-    for(int i=0; i<numPrims; ++i){
+    for(int i=0; i<primsToTest; ++i){
         ray rCopy(r);
-        const intersection isect = primitives[node.prims[0]+i]->intersect(rCopy);
+        const intersection isect = primitives[node.primitives[0]+i]->intersect(rCopy);
         if(isect.hit){
             if(isect.t < closestIsect.t){
                 closestIsect = isect;
@@ -72,7 +72,7 @@ const intersection bvh::_intersect(const int& index, const ray& r) const{
 
     if(!node.box.intersect(r, tLeftMin, tLeftMax)){
         return noIntersect;
-    }else if(node.axis == AXIS_LEAF){
+    }else if(node.rightChild == -1){
         return leafTest(node, r);
     }
 
@@ -118,12 +118,12 @@ bool bvh::_intersectB(const int& index, const ray& r) const{
     const bvhNode& node = nodes[index];
     if(!node.box.intersect(r, tLeftMin, tLeftMax)){
         return false;
-    }else if(node.axis == AXIS_LEAF){
-        const int numPrims = node.prims[1] - node.prims[0];
+    }else if(node.rightChild == -1){
+        const int primsToTest = node.primitives[1] - node.primitives[0];
 
         // Find the intersection points for each primitive in the leaf.
-        for(int i=0; i<numPrims; ++i){
-            if(primitives[node.prims[0]+i]->intersectB(r)){
+        for(int i=0; i<primsToTest; ++i){
+            if(primitives[node.primitives[0]+i]->intersectB(r)){
                 return true;
             }
         }
@@ -152,37 +152,31 @@ void bvh::build(const scene& s){
     const vector<shapePtr>& shapes = s.getShapes();
 
     numPrims = 0;
-    for(size_t i=0; i<shapes.size(); ++i){
-        numPrims += shapes[i]->getPrimitives().size();
+    for(auto shape : shapes){
+        numPrims += shape->getPrimitives().size();
     }
 
-    // Allocate primitive array.
-    //primitives = new primitive*[numPrims];
-    primitives = vector<primitive*>(numPrims);
+    primitives = vector<primitivePtr>(numPrims);
 
     // Fill the list of primitives.
     int k = 0;
-    for(size_t i=0; i<shapes.size(); ++i){
-        const vector<primitivePtr>& p = shapes[i]->getPrimitives();
-        for(size_t j=0; j<p.size(); ++j){
-            primitives[k] = p[j].get();
+    for(auto shape : shapes){
+        for(auto prim : shape->getPrimitives()){
+            primitives[k] = prim;
             ++k;
         }
     }
 
     // Allocate space for the trees.
-    // A binary tree with N leaves has 2N-1 total nodes.
-    //numNodes = 2 * ceil((float)numPrims / (float)BVH_MAX_PRIMS_PER_LEAF) - 1;
     numNodes = 2 * numPrims - 1;
-
-    nodes = new bvhNode[numNodes];
+    nodes.reserve(numNodes);
 
     int index = 0;
     cerr << "Building BVH..." << endl;
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
 
-    _build(s.getBounds(), 0, numPrims, AXIS_X, index);
+    _build(s.getBounds(), 0, numPrims, index);
 
 	gettimeofday(&end, NULL);
 	float sec = end.tv_sec - start.tv_sec;
@@ -190,73 +184,59 @@ void bvh::build(const scene& s){
 	cerr << "Built BVH in " << sec << "s." << endl;
 }
 
-void bvh::_build(const aabb& box,
-        int start, int end,
-        uint8_t axis, int& index){
-
-    if(start == end){
-        return;
-    }
-
+int bvh::_build(const aabb& box, int start, int end, int index){
     bvhNode node;
     node.box = box;
 
     if((end-start) <= BVH_MAX_PRIMS_PER_LEAF){
-        node.prims[0] = start;
-        node.prims[1] = end;
-        node.axis = AXIS_LEAF;
+        node.primitives[0] = start;
+        node.primitives[1] = end;
+        node.rightChild = -1;
         nodes[index] = node;
-        return;
+        return index+1;
     }
 
-    // Sort the current chunk of the list.
-    switch(axis){
-        case AXIS_X:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpX);
-            break;
-        case AXIS_Y:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpY);
-            break;
-        case AXIS_Z:
-            sort(primitives.begin() + start, primitives.begin() + end, aabbMidCmpZ);
-            break;
-        case AXIS_LEAF:
-            cerr << "Hit leaf twice in BVH build recursion. This should never happen." << endl;
-            return;
-    }
+    int bestSplit = start+1;
+    float bestCost = MAX_FLOAT;
+    aabb bestLeftBox, bestRightBox;
+    vector<primitivePtr> tempPrimitives(primitives);
 
-    // Rounding ensures that the leaves are well-filled.
-    // (# leaves with nPrims < BVH_MAX_PRIMS_PER_LEAF is 0 or 1)
-    //const int mid = roundUpToMultiple((start+end)/2, BVH_MAX_PRIMS_PER_LEAF);
-    const int mid = (start+end)/2;
+    for(int axis=0; axis<3; ++axis) {
+        auto cmp = (axis == AXIS_X) ? aabbMidCmpX : ((axis == AXIS_Y) ? aabbMidCmpY : aabbMidCmpZ);
+        sort(tempPrimitives.begin() + start, tempPrimitives.begin() + end, cmp);
 
-    aabb leftBox(primitives[start]->getBounds());
-    aabb rightBox(primitives[mid]->getBounds());
+        for(int split = start; split < (end-1); ++split) {
+            aabb leftBox(tempPrimitives[start]->getBounds());
+            aabb rightBox(tempPrimitives[split]->getBounds());
+            float areaLeft=0.f, areaRight=0.f;
 
-    for(int i=start; i<mid; ++i){
-        leftBox = mergeAabb(leftBox, primitives[i]->getBounds());
-    }
+            for(int i=start; i<split; ++i){
+                leftBox = mergeAabb(leftBox, tempPrimitives[i]->getBounds());
+                areaLeft += tempPrimitives[i]->area();
+            }
 
-    for(int i=mid; i<end; ++i){
-        rightBox = mergeAabb(rightBox, primitives[i]->getBounds());
+            for(int i=split; i<end; ++i){
+                rightBox = mergeAabb(rightBox, tempPrimitives[i]->getBounds());
+                areaRight += tempPrimitives[i]->area();
+            }
+
+            const float costSAH = areaLeft * (split - start) + areaRight * (end - split);
+            if(costSAH < bestCost) {
+                bestCost = costSAH;
+                bestSplit = split;
+                bestLeftBox = leftBox;
+                bestRightBox = rightBox;
+                primitives = tempPrimitives;
+            }
+        }
     }
 
     // Put the node into the storage array.
-    node.axis = axis;
     nodes[index] = node;
 
-    const int savedIndex(index);
+    const int leftIndex = _build(bestLeftBox, start, bestSplit, index+1);
+    const int rightIndex = _build(bestRightBox, bestSplit, end, leftIndex+1);
 
-    // Set the next free position.
-    ++index;
-
-    // The left side will be built in DFS order, after which index will point to the next
-    // free node.
-    _build(leftBox, start, mid, nextAxis(axis), index);
-
-    // Set the next free position.
-    ++index;
-    nodes[savedIndex].rightChild = index;
-
-    _build(rightBox, mid, end, nextAxis(axis), index);
+    nodes[index].rightChild = leftIndex + 1;
+    return rightIndex;
 }

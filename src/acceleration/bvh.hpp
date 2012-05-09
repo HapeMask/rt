@@ -11,40 +11,15 @@ using std::vector;
 enum {LEFT=0, RIGHT=1};
 const short BVH_MAX_PRIMS_PER_LEAF = 16;
 
-inline uint8_t nextAxis(uint8_t axis){
-    switch(axis){
-        case AXIS_X:
-          return AXIS_Y;
-        case AXIS_Y:
-          return AXIS_Z;
-        case AXIS_Z:
-          return AXIS_X;
-        case AXIS_LEAF:
-          return AXIS_LEAF;
-        default:
-          return AXIS_LEAF;
-    }
-}
-
 typedef struct bn {
     aabb box;
-    union{
-        int prims[2];
-        int rightChild;
-    };
-
-    uint8_t axis;
+    int primitives[2];
+    int rightChild;
 } bvhNode;
 
 class bvh : public accelerator {
     public:
         bvh() {}
-
-        ~bvh() {
-            if(nodes != NULL){
-                delete[] nodes;
-            }
-        }
 
 		virtual const intersection intersect(ray& r) const;
 		virtual bool intersectB(const ray& r) const;
@@ -52,16 +27,32 @@ class bvh : public accelerator {
 		virtual void build(const scene& s);
 
     private:
-        void _build(const aabb& box,
-                int start, int end,
-                uint8_t axis, int& index);
+        /**
+         *  Recursively builds the portion of the BVH subtree stored in the
+         *  array from start to end.
+         *
+         *  @param box: The bounding box for the root of the current BVH tree.
+         *
+         *  @param start: The array index of the first primitive in this BVH's
+         *  tree.
+         *
+         *  @param end: The array index of the last primitive in this BVH's
+         *  tree.
+         *
+         *  @param index: the index of the next free position in the node
+         *  array.
+         *
+         *  @return: the next free position in the node array.
+         */
+        int _build(const aabb& box, int start, int end, int index);
 
         const intersection _intersect(const int& index, const ray& r) const;
         bool _intersectB(const int& index, const ray& r) const;
+
         const intersection leafTest(const bvhNode& node, const ray& r) const;
 
         int numNodes;
         int numPrims;
-        bvhNode* nodes;
-        vector<primitive*> primitives;
+        vector<bvhNode> nodes;
+        vector<primitivePtr> primitives;
 };
