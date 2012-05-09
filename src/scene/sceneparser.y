@@ -224,8 +224,7 @@ material :
          ;
 
 bsdf :
-    lambert { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
-    phong { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
+    bxdf { bsdf* b = new bsdf(); b->addBxdf($1); $$ = b; } |
     specular { $$ = $1; } |
     frosted { $$ = $1; } |
     substrate { $$ = $1; } |
