@@ -13,34 +13,9 @@ class point2 {
 	public:
 		point2(const vec2& u);
 
-		point2(){
-			coords[0] = 0.f;
-			coords[1] = 0.f;
-		}
-
-		point2(const float& x, const float& y){
-			coords[0] = x;
-			coords[1] = y;
-		}
-
-		point2(const point2& p){
-			coords[0] = p(0);
-			coords[1] = p(1);
-		}
-
-		inline const float& operator()(const short& index) const{
-#ifdef DEBUG
-			assert(index < 2);
-#endif
-			return coords[index];
-		}
-
-		inline float& operator()(const short& index){
-#ifdef DEBUG
-			assert(index < 2);
-#endif
-			return coords[index];
-		}
+        constexpr point2() : x(0), y(0) {}
+        constexpr point2(const float& x_, const float& y_) : x(x_), y(y_) {}
+        constexpr point2(const point2& p) : x(p.x), y(p.y) {}
 
         inline const point2 operator+(const vec2& u) const {
             return point2(*this) += u;
@@ -71,18 +46,8 @@ class point2 {
                 (y == p.y);
         }
 
-	private:
-        union {
-            float coords[2];
-            struct {
-                float x;
-                float y;
-            };
-            struct {
-                float s;
-                float t;
-            };
-        };
+        float x;
+        float y;
 };
 
 class point3 {
@@ -96,17 +61,8 @@ class point3 {
 			coords[2] = 0.f;
 		}
 
-		point3(const float& x, const float& y, const float& z){
-			coords[0] = x;
-			coords[1] = y;
-			coords[2] = z;
-		}
-
-		point3(const point3& p){
-			coords[0] = p(0);
-			coords[1] = p(1);
-			coords[2] = p(2);
-		}
+        point3(const float& x_, const float& y_, const float& z_) : x(x_), y(y_), z(z_) {}
+        point3(const point3& p) : x(p.x), y(p.y), z(p.z) {}
 
 		inline const float& operator()(const short& index) const{
 #ifdef DEBUG

@@ -9,7 +9,8 @@ using std::vector;
 #include "mathlib/ray.hpp"
 
 enum {LEFT=0, RIGHT=1};
-const short BVH_MAX_PRIMS_PER_LEAF = 16;
+constexpr int BVH_MAX_PRIMS_PER_LEAF = 16;
+constexpr int BVH_NUM_SPLIT_CANDIDATES = 64;
 
 typedef struct bn {
     aabb box;

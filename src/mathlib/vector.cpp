@@ -7,28 +7,23 @@
 
 using std::ostream;
 
-vec3::vec3(const point3& p){
 #ifdef HAVE_SSE2
-    vector = p.vector;
+vec3::vec3(const point3& p) : vector(p.vector) {}
 #else
-    x = p.x;
-    y = p.y;
-    z = p.z;
-    w = 0;
+vec3::vec3(const point3& p) : x(p.x), y(p.y), z(p.z), w(0) {}
 #endif
-}
 
-ostream& operator<<(ostream& out, const vec2& x){
-    out << "vec2(" << x(0) << ", " << x(1) << ")";
+ostream& operator<<(ostream& out, const vec2& v){
+    out << "vec2(" << v.x << ", " << v.y << ")";
     return out;
 }
 
-ostream& operator<<(ostream& out, const vec3& x){
-    out << "vec3(" << x(0) << ", " << x(1) << ", " << x(2) << ")";
+ostream& operator<<(ostream& out, const vec3& v){
+    out << "vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
     return out;
 }
 
-ostream& operator<<(ostream& out, const vec4& x){
-    out << "vec4(" << x(0) << ", " << x(1) << ", " << x(2) << ", " << x(3) <<  ")";
+ostream& operator<<(ostream& out, const vec4& v){
+    out << "vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w <<  ")";
     return out;
 }

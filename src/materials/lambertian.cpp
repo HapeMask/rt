@@ -31,7 +31,7 @@ float lambertianBrdf::pdf(const vec3& wo, const vec3& wi) const {
 }
 
 void lambertianBrdf::updateFromUVTexture(const vec2& uv) {
-    if(hasTexture && uv.s != -1) {
+    if(hasTexture && uv.x != -1) {
         const rgbColor c = textureLookup(DIFFUSE_COLOR, uv);
 #ifdef RT_MULTITHREADED
         texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c * rOverPi;

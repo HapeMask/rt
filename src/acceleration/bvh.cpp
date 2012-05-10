@@ -19,6 +19,7 @@ using std::vector;
 #include "geometry/aabb.hpp"
 
 #include "scene/scene.hpp"
+#include "samplers/samplers.hpp"
 
 #include "mathlib/ray.hpp"
 #include "mathlib/constants.hpp"
@@ -199,15 +200,20 @@ int bvh::_build(const aabb& box, int start, int end, int index){
     float bestCost = MAX_FLOAT;
     aabb bestLeftBox, bestRightBox;
     vector<primitive*> tempPrimitives(primitives);
+    vector<int> splits(BVH_NUM_SPLIT_CANDIDATES);
 
     for(int axis=0; axis<3; ++axis) {
         auto cmp = (axis == AXIS_X) ? aabbMidCmpX : ((axis == AXIS_Y) ? aabbMidCmpY : aabbMidCmpZ);
         sort(tempPrimitives.begin() + start, tempPrimitives.begin() + end, cmp);
 
-        for(int split = start; split < (end-1); ++split) {
+        for(int i=0; i < BVH_NUM_SPLIT_CANDIDATES; ++i) {
+            splits[i] = sampleRange(sampleUniform(), start+1, end-2);
+        }
+
+        for(const int& split : splits) {
             aabb leftBox(tempPrimitives[start]->getBounds());
             aabb rightBox(tempPrimitives[split]->getBounds());
-            float areaLeft=0.f, areaRight=0.f;
+            float areaLeft=0, areaRight=0;
 
             for(int i=start; i<split; ++i){
                 leftBox = mergeAabb(leftBox, tempPrimitives[i]->getBounds());

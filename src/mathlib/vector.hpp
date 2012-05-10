@@ -14,59 +14,35 @@ class point3;
 
 class vec2 {
     public:
-        vec2(){
-            x = 0.f;
-            y = 0.f;
-        }
+        vec2() : x(0), y(0) {}
 
-        vec2(const float& x_, const float& y_){
-            x = x_;
-            y = y_;
-        }
+        constexpr vec2(const float& x_, const float& y_) : x(x_), y(y_) { }
+        constexpr vec2(const vec2& v) : x(v.x), y(v.y) {}
 
-        vec2(const vec2& v){
-            x = v.x;
-            y = v.y;
-        }
-
-        const float& operator()(const int& index) const{
-#ifdef DEBUG
-            assert(index < 2);
-#endif
-            return *(&x + index);
-        }
-
-        float& operator()(const int& index){
-#ifdef DEBUG
-            assert(index < 2);
-#endif
-            return *(&x + index);
-        }
-
-        inline const vec2 operator+(const vec2& v) const {
-            return vec2(*this) += v;
+        inline constexpr vec2 operator+(const vec2& v) const {
+            return vec2(x + v.x, y + v.y);
         }
 
         inline vec2& operator+=(const vec2& v){
-            x += v(0);
-            y += v(1);
+            x += v.x;
+            y += v.y;
             return (*this);
         }
 
-        inline const vec2 operator-(const vec2& v) const {
-            return vec2(*this) -= v;
+        inline constexpr vec2 operator-(const vec2& v) const {
+            return vec2(x - v.x, y - v.y);
         }
 
         inline vec2& operator-=(const vec2& v){
             return (*this) += -v;
         }
 
-        inline const vec2 operator-() const {
+        inline constexpr vec2 operator-() const {
             return vec2(-x, -y);
         }
 
-        inline const vec2 operator*(const float& f) const {
-            return vec2(*this) *= f;
+        inline constexpr vec2 operator*(const float& f) const {
+            return vec2(x * f, y * f);
         }
 
         inline vec2& operator*=(const float& f){
@@ -75,48 +51,40 @@ class vec2 {
             return (*this);
         }
 
-        inline const vec2 operator*(const vec2& v) const {
-            return vec2(*this) *= v;
+        inline constexpr vec2 operator*(const vec2& v) const {
+            return vec2(x * v.x, y * v.y);
         }
 
         inline vec2& operator*=(const vec2& v){
-            x *= v(0);
-            y *= v(1);
+            x *= v.x;
+            y *= v.y;
             return (*this);
         }
 
-        inline const vec2 operator/(const float& f) const {
-            return vec2(*this) *= 1.f / f;
+        inline constexpr vec2 operator/(const float& f) const {
+            return (*this) * (1.f / f);
         }
 
         inline vec2& operator/=(const float& f){
             return (*this) *= 1.f / f;
         }
 
-        inline const vec2 operator/(const vec2& v) const {
-            return vec2(*this) /= v;
+        inline constexpr vec2 operator/(const vec2& v) const {
+            return vec2(x / v.x, y / v.y);
         }
 
         inline vec2& operator/=(const vec2& v){
-            x /= v(0);
-            y /= v(1);
+            x /= v.x;
+            y /= v.y;
             return (*this);
         }
 
-        inline bool operator==(const vec2& v) const {
+        inline constexpr bool operator==(const vec2& v) const {
             return (x == v.x) && (y == v.y);
         }
 
-        union {
-            struct {
-                float x;
-                float y;
-            };
-            struct {
-                float s;
-                float t;
-            };
-        };
+        float x;
+        float y;
 };
 
 class vec3 {
@@ -251,9 +219,9 @@ class vec3 {
 #ifdef HAVE_SSE2
             vector = mulps(vector, v.vector);
 #else
-            x *= v(0);
-            y *= v(1);
-            z *= v(2);
+            x *= v.x;
+            y *= v.y;
+            z *= v.z;
 #endif
             return (*this);
         }
@@ -287,9 +255,9 @@ class vec3 {
 #ifdef HAVE_SSE2
             vector = divps(vector, v.vector);
 #else
-            x /= v(0);
-            y /= v(1);
-            z /= v(2);
+            x /= v.x;
+            y /= v.y;
+            z /= v.z;
 #endif
             return (*this);
         }
@@ -301,23 +269,24 @@ class vec3 {
                 (z == v.z);
         }
 
-        union{
 #ifdef HAVE_SSE2
+        union{
             __m128 vector;
-#endif
             struct {
                 float x;
                 float y;
                 float z;
                 float w;
             };
-            struct {
-                float s;
-                float t;
-                float r;
-                float q;
-            };
         };
+#else
+        struct {
+            float x;
+            float y;
+            float z;
+            float w;
+        };
+#endif
 };
 
 class vec4 {

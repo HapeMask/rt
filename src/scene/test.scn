@@ -1,27 +1,26 @@
 scene<bvh, path>{
-	camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
-    light<area>(0,2.8,0, 4, 1,1,1, 2,0,0, 0,0,2)
-    //light<point>(0,2.8,0, 16, 1,1,1)
-    //light<sphere>(0,2.5,0, 8, 1,1,1, 0.5)
+	camera<256,256>(45, 0,0,8, 0,0,0, 0,1,0)
+    light<area>(0,2.9,0, 2, 1,1,0.7, 2,0,0, 0,0,2)
+    //light<sphere>(0,-2.5,0, 4, 0.5,0.6,1, 0.5)
 
 	shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
         triangle(-3,3,-3, -3,3,3, -3,-3,3)
-		material(lambert(0.05,0.6,0.05))
-		//material(lambert(0.75,0.75,0.75))
+		material(lambert(0.01,0.6,0.01))
 	}
 
 	shape{
         triangle(3,-3,3, 3,3,-3, 3,-3,-3)
         triangle(3,-3,3, 3,3,3, 3,3,-3)
-		material(lambert(0.05,0.05,0.6))
-		//material(lambert(0.75,0.75,0.75))
+		material(lambert(0.01,0.01,0.6))
 	}
 
     shape{
-        triangle(-3,-3,-3, 3,-3,-3, -3,3,-3)
-        triangle(3,3,-3, -3,3,-3, 3,-3,-3)
-        material(lambert(0.75,0.75,0.75))
+        //sphere(0,-2,0,1)
+        objfile<flat>("../models/wave.obj")
+        //objfile<smooth>("../models/vee.obj")
+		material(lambert(0.5,0.5,0.5))
+        //material(specular<dielectric>(0.8,0.8,0.8, 1.6))
     }
 
 	shape{
@@ -31,21 +30,9 @@ scene<bvh, path>{
         triangle(3,3,-3, 3,3,3, -3,3,-3)
         triangle(3,3,3, -3,3,3, -3,3,-3)
 
-		material(lambert(0.75,0.75,0.75))
-	}
+        triangle(3,-3,-3,-3,3,-3,-3,-3,-3)
+        triangle(3,3,-3, -3,3,-3, 3,-3,-3)
 
-    shape{
-        //sphere(0,-2,-2,1)
-        objfile<smooth>("../models/sphere.obj")
-        material(pair(
-            ward(0.5,0.5,0.5, 0.5, 0.5),
-            ward(0.5,0.5,0.5, 0.5, 0.5)
-            )
-        )
-        //material(specular<dielectric>(0.1,0.6,0.9, 1.6))
-        //material(frosted(
-        //    microfacet(1.8, 1, blinn(0.4,0.4,0.4, 200)),
-        //    microfacet(1.8, 1, blinn(0.9,0.9,0.9, 200))
-        //    ))
-    }
+		material(lambert(0.5,0.5,0.5))
+	}
 }

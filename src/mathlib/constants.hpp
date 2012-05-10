@@ -2,22 +2,22 @@
 #include <cmath>
 #include <limits>
 
-static const float POS_INF = -logf(0);
-static const float NEG_INF = logf(0);
-static const float PI = 3.141592653589793f;
-static const float TWOPI = 2.0f*PI;
-static const float HALFPI = PI/2.0f;
-static const float INVPI = 1.f/PI;
-static const float INVTWOPI = 1.f/TWOPI;
+constexpr float POS_INF = std::numeric_limits<float>::infinity();
+constexpr float NEG_INF = -std::numeric_limits<float>::infinity();
+constexpr float PI = 3.141592653589793f;
+constexpr float TWOPI = 2.0f*PI;
+constexpr float HALFPI = PI/2.0f;
+constexpr float INVPI = 1.f/PI;
+constexpr float INVTWOPI = 1.f/TWOPI;
 
-static const int MAX_UINT = std::numeric_limits<int>::max();
-static const float MAX_FLOAT = std::numeric_limits<float>::max();
-static const float MIN_FLOAT = std::numeric_limits<float>::min();
+constexpr int MAX_UINT = std::numeric_limits<int>::max();
+constexpr float MAX_FLOAT = std::numeric_limits<float>::max();
+constexpr float MIN_FLOAT = std::numeric_limits<float>::min();
 
 // Bigger than real machine epsilon usually.
-static const float EPSILON = 5e-5f;
+constexpr float EPSILON = 5e-5f;
 
-static const float primes[128] = {
+constexpr float primes[128] = {
 2,
 3,
 5,
