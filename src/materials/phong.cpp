@@ -12,11 +12,11 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
     const float sinAlpha = sqrtf(1.f - powf(u0, 2.f / (float)(n+1)));
     const float phi = TWOPI * u1;
 
-    wi.x = sinAlpha * cosf(phi);
-    wi.y = powf(u0, (1.f / (float)(n+1)));
-    wi.z = sinAlpha * sinf(phi);
+    wi.x() = sinAlpha * cosf(phi);
+    wi.y() = powf(u0, (1.f / (float)(n+1)));
+    wi.z() = sinAlpha * sinf(phi);
 
-    if(wi.y < 0){
+    if(wi.y() < 0){
         pd = 0.f;
         return rgbColor(0.f);
     }else{

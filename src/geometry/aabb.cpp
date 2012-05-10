@@ -12,10 +12,10 @@ ostream& operator<<(ostream& out, const aabb& b){
 
 bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
 #ifdef HAVE_SSE2
-    const __m128 boxMin = min.vector;
-    const __m128 boxMax = max.vector;
-    const __m128 pos = r.origin.vector;
-    const __m128 invDir = r.invDir.vector;
+    const __m128 boxMin = min.xyzw;
+    const __m128 boxMax = max.xyzw;
+    const __m128 pos = r.origin.xyzw;
+    const __m128 invDir = r.invDir.xyzw;
 
     const __m128 l1 = mulps(subps(boxMin, pos), invDir);
     const __m128 l2 = mulps(subps(boxMax, pos), invDir);
@@ -65,11 +65,11 @@ bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
 
 bool aabb::intersect(const aabb& box) const {
 #ifdef HAVE_SSE2
-    const __m128 aMin = min.vector;
-    const __m128 aMax = max.vector;
+    const __m128 aMin = min.xyzw;
+    const __m128 aMax = max.xyzw;
 
-    const __m128 bMin = box.min.vector;
-    const __m128 bMax = box.max.vector;
+    const __m128 bMin = box.min.xyzw;
+    const __m128 bMax = box.max.xyzw;
 
     const __m128 test1 = _mm_cmple_ps(aMin, bMax);
     const __m128 test2 = _mm_cmpge_ps(aMax, bMin);

@@ -65,7 +65,7 @@ const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     rgbColor f(0.f);
 
     // Ignore BTDFs if the vectors are on the same side of the surface. 
-    if(wo.y * wi.y > 0){
+    if(wo.y() * wi.y() > 0){
         type = bxdfType(type & ~TRANSMISSION);
     }else{
         type = bxdfType(type & ~REFLECTION);
@@ -218,7 +218,5 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
 
 testBsdf::testBsdf() {
     glossRef.reset(new microfacetBrdf(1.8f, 1.f, new blinn(rgbColor(0.9f,0.9f,0.9f), 50)));
-    //glossRef = new lambertianBrdf(rgbColor(0,0,0));
     glossTra.reset(new microfacetBtdf(1.8f, 1.f, new blinn(rgbColor(64, 128, 255), 50)));
-    //glossTra = new lambertianBrdf(rgbColor(0,0,0));
 }

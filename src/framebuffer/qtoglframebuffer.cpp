@@ -268,8 +268,8 @@ void qtOpenGLFramebuffer::positionCamera() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(camPos.x, camPos.y, camPos.z,
-			camPos.x + camForward.x, camPos.y + camForward.y, camPos.z + camForward.z,
+	gluLookAt(camPos.x(), camPos.y(), camPos.z(),
+			camPos.x() + camForward.x(), camPos.y() + camForward.y(), camPos.z() + camForward.z(),
 			0, 1, 0);
 }
 
@@ -332,7 +332,7 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     vec3 wo(0,0,1);
     glColor3f(0,1,1);
     glVertex3f(0,0,0);
-    glVertex3f(wo.x, wo.y, wo.z);
+    glVertex3f(wo.x(), wo.y(), wo.z());
 
     wo = worldToBsdf(wo, vec3(0,0,1), vec3(0,1,0), vec3(1,0,0));
 
@@ -363,7 +363,7 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
         wi = bsdfToWorld(wi, vec3(0,0,1), vec3(0,1,0), vec3(1,0,0));
 
         glVertex3f(0,0,0);
-        glVertex3f(wi.x, wi.y, wi.z);
+        glVertex3f(wi.x(), wi.y(), wi.z());
     }
 
     glEnd();
@@ -419,7 +419,7 @@ void qtOpenGLFramebuffer::_render() {
         for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
             for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
                 /*
-                if(x != 192 || y != 192){
+                if(x != 140 || y != 100){
                     continue;
                 }
 

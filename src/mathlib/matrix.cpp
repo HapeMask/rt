@@ -10,18 +10,20 @@ const mat4 mat4::operator*(const float& x) const {
 }
 
 const vec4 mat4::operator*(const vec4& u) const{
-	return vec4(
-			dot(u, hslice(0)),
-			dot(u, hslice(1)),
-			dot(u, hslice(2)),
-			dot(u, hslice(3))
-			);
+    float x,y,z,w;
+    for(int i=0; i<4; ++i) {
+        x += u(i) * data[0][i];
+        y += u(i) * data[1][i];
+        z += u(i) * data[2][i];
+        w += u(i) * data[3][i];
+    }
+    return vec4(x,y,z,w);
 }
 
 mat4& mat4::operator*=(const float& x) {
 	for(int i=0; i<4; i++){
 		for(int j=0; j<4; j++){
-			values[i][j] *= x;
+			data[i][j] *= x;
 		}
 	}
 
@@ -34,79 +36,89 @@ mat4& mat4::operator*=(const mat4& m) {
 }
 
 const mat4 mat4::operator*(const mat4& m) const{
-	mat4 n;
+	float D[4][4];
 	for(int i=0; i<4; i++){
 		for(int j=0; j<4; j++){
-			n(i,j) = dot(hslice(i), m.vslice(j));
+            D[i][j] = 0;
+            for(int k=0; k<4; ++k) {
+                D[i][j] += data[i][k] * m.data[k][j];
+            }
 		}
 	}
 
-	return n;
+	return mat4(D);
 }
 
 bool mat4::operator==(const mat4& m) const{
+    int test = 1;
 	for(int i=0; i<4; i++){
 		for(int j=0; j<4; j++){
-			if(values[i][j] != m(i,j)) return false;
+			test *= (data[i][j] == m(i,j));
 		}
 	}
-	return true;
+	return test;
 }
 
 float mat4::det() const{
 	return
-		values[0][0]*values[1][1]*values[2][2]*values[3][3] + values[0][0]*values[1][2]*values[2][3]*values[3][1] + values[0][0]*values[1][3]*values[2][1]*values[3][2] +
-		values[0][1]*values[1][0]*values[2][3]*values[3][2] + values[0][1]*values[1][2]*values[2][0]*values[3][3] + values[0][1]*values[1][3]*values[2][2]*values[3][0] +
-		values[0][2]*values[1][0]*values[2][1]*values[3][3] + values[0][2]*values[1][1]*values[2][3]*values[3][0] + values[0][2]*values[1][3]*values[2][0]*values[3][1] +
-		values[0][3]*values[1][0]*values[2][2]*values[3][1] + values[0][3]*values[1][1]*values[2][0]*values[3][2] + values[0][3]*values[1][2]*values[2][1]*values[3][0] -
-		values[0][0]*values[1][1]*values[2][3]*values[3][2] - values[0][0]*values[1][2]*values[2][1]*values[3][3] - values[0][0]*values[1][3]*values[2][2]*values[3][1] -
-		values[0][1]*values[1][0]*values[2][2]*values[3][3] - values[0][1]*values[1][2]*values[2][3]*values[3][0] - values[0][1]*values[1][3]*values[2][0]*values[3][2] -
-		values[0][2]*values[1][0]*values[2][3]*values[3][1] - values[0][2]*values[1][1]*values[2][0]*values[3][3] - values[0][2]*values[1][3]*values[2][1]*values[3][0] -
-		values[0][3]*values[1][0]*values[2][1]*values[3][2] - values[0][3]*values[1][1]*values[2][2]*values[3][0] - values[0][3]*values[1][2]*values[2][0]*values[3][1];
+		data[0][0]*data[1][1]*data[2][2]*data[3][3] + data[0][0]*data[1][2]*data[2][3]*data[3][1] + data[0][0]*data[1][3]*data[2][1]*data[3][2] +
+		data[0][1]*data[1][0]*data[2][3]*data[3][2] + data[0][1]*data[1][2]*data[2][0]*data[3][3] + data[0][1]*data[1][3]*data[2][2]*data[3][0] +
+		data[0][2]*data[1][0]*data[2][1]*data[3][3] + data[0][2]*data[1][1]*data[2][3]*data[3][0] + data[0][2]*data[1][3]*data[2][0]*data[3][1] +
+		data[0][3]*data[1][0]*data[2][2]*data[3][1] + data[0][3]*data[1][1]*data[2][0]*data[3][2] + data[0][3]*data[1][2]*data[2][1]*data[3][0] -
+		data[0][0]*data[1][1]*data[2][3]*data[3][2] - data[0][0]*data[1][2]*data[2][1]*data[3][3] - data[0][0]*data[1][3]*data[2][2]*data[3][1] -
+		data[0][1]*data[1][0]*data[2][2]*data[3][3] - data[0][1]*data[1][2]*data[2][3]*data[3][0] - data[0][1]*data[1][3]*data[2][0]*data[3][2] -
+		data[0][2]*data[1][0]*data[2][3]*data[3][1] - data[0][2]*data[1][1]*data[2][0]*data[3][3] - data[0][2]*data[1][3]*data[2][1]*data[3][0] -
+		data[0][3]*data[1][0]*data[2][1]*data[3][2] - data[0][3]*data[1][1]*data[2][2]*data[3][0] - data[0][3]*data[1][2]*data[2][0]*data[3][1];
 }
 
 const mat4 mat4::inverse() const{
 	mat4 inv;
 
-	inv(0,0)=   values[1][1]*values[2][2]*values[3][3] - values[1][1]*values[2][3]*values[3][2] - values[2][1]*values[1][2]*values[3][3]
-		+ values[2][1]*values[1][3]*values[3][2] + values[3][1]*values[1][2]*values[2][3] - values[3][1]*values[1][3]*values[2][2];
-	inv(1,0) =  -values[1][0]*values[2][2]*values[3][3] + values[1][0]*values[2][3]*values[3][2] + values[2][0]*values[1][2]*values[3][3]
-		- values[2][0]*values[1][3]*values[3][2] - values[3][0]*values[1][2]*values[2][3] + values[3][0]*values[1][3]*values[2][2];
-	inv(2,0) =   values[1][0]*values[2][1]*values[3][3] - values[1][0]*values[2][3]*values[3][1] - values[2][0]*values[1][1]*values[3][3]
-		+ values[2][0]*values[1][3]*values[3][1] + values[3][0]*values[1][1]*values[2][3] - values[3][0]*values[1][3]*values[2][1];
-	inv(3,0) = -values[1][0]*values[2][1]*values[3][2] + values[1][0]*values[2][2]*values[3][1] + values[2][0]*values[1][1]*values[3][2]
-		- values[2][0]*values[1][2]*values[3][1] - values[3][0]*values[1][1]*values[2][2] + values[3][0]*values[1][2]*values[2][1];
-	inv(0,1) =  -values[0][1]*values[2][2]*values[3][3] + values[0][1]*values[2][3]*values[3][2] + values[2][1]*values[0][2]*values[3][3]
-		- values[2][1]*values[0][3]*values[3][2] - values[3][1]*values[0][2]*values[2][3] + values[3][1]*values[0][3]*values[2][2];
-	inv(1,1) =   values[0][0]*values[2][2]*values[3][3] - values[0][0]*values[2][3]*values[3][2] - values[2][0]*values[0][2]*values[3][3]
-		+ values[2][0]*values[0][3]*values[3][2] + values[3][0]*values[0][2]*values[2][3] - values[3][0]*values[0][3]*values[2][2];
-	inv(2,1) =  -values[0][0]*values[2][1]*values[3][3] + values[0][0]*values[2][3]*values[3][1] + values[2][0]*values[0][1]*values[3][3]
-		- values[2][0]*values[0][3]*values[3][1] - values[3][0]*values[0][1]*values[2][3] + values[3][0]*values[0][3]*values[2][1];
-	inv(3,1) =  values[0][0]*values[2][1]*values[3][2] - values[0][0]*values[2][2]*values[3][1] - values[2][0]*values[0][1]*values[3][2]
-		+ values[2][0]*values[0][2]*values[3][1] + values[3][0]*values[0][1]*values[2][2] - values[3][0]*values[0][2]*values[2][1];
-	inv(0,2) =   values[0][1]*values[1][2]*values[3][3] - values[0][1]*values[1][3]*values[3][2] - values[1][1]*values[0][2]*values[3][3]
-		+ values[1][1]*values[0][3]*values[3][2] + values[3][1]*values[0][2]*values[1][3] - values[3][1]*values[0][3]*values[1][2];
-	inv(1,2) =  -values[0][0]*values[1][2]*values[3][3] + values[0][0]*values[1][3]*values[3][2] + values[1][0]*values[0][2]*values[3][3]
-		- values[1][0]*values[0][3]*values[3][2] - values[3][0]*values[0][2]*values[1][3] + values[3][0]*values[0][3]*values[1][2];
-	inv(2,2) =  values[0][0]*values[1][1]*values[3][3] - values[0][0]*values[1][3]*values[3][1] - values[1][0]*values[0][1]*values[3][3]
-		+ values[1][0]*values[0][3]*values[3][1] + values[3][0]*values[0][1]*values[1][3] - values[3][0]*values[0][3]*values[1][1];
-	inv(3,2) = -values[0][0]*values[1][1]*values[3][2] + values[0][0]*values[1][2]*values[3][1] + values[1][0]*values[0][1]*values[3][2]
-		- values[1][0]*values[0][2]*values[3][1] - values[3][0]*values[0][1]*values[1][2] + values[3][0]*values[0][2]*values[1][1];
-	inv(0,3) =  -values[0][1]*values[1][2]*values[2][3] + values[0][1]*values[1][3]*values[2][2] + values[1][1]*values[0][2]*values[2][3]
-		- values[1][1]*values[0][3]*values[2][2] - values[2][1]*values[0][2]*values[1][3] + values[2][1]*values[0][3]*values[1][2];
-	inv(1,3) =   values[0][0]*values[1][2]*values[2][3] - values[0][0]*values[1][3]*values[2][2] - values[1][0]*values[0][2]*values[2][3]
-		+ values[1][0]*values[0][3]*values[2][2] + values[2][0]*values[0][2]*values[1][3] - values[2][0]*values[0][3]*values[1][2];
-	inv(2,3) = -values[0][0]*values[1][1]*values[2][3] + values[0][0]*values[1][3]*values[2][1] + values[1][0]*values[0][1]*values[2][3]
-		- values[1][0]*values[0][3]*values[2][1] - values[2][0]*values[0][1]*values[1][3] + values[2][0]*values[0][3]*values[1][1];
-	inv(3,3) =  values[0][0]*values[1][1]*values[2][2] - values[0][0]*values[1][2]*values[2][1] - values[1][0]*values[0][1]*values[2][2]
-		+ values[1][0]*values[0][2]*values[2][1] + values[2][0]*values[0][1]*values[1][2] - values[2][0]*values[0][2]*values[1][1];
+	inv(0,0)=   data[1][1]*data[2][2]*data[3][3] - data[1][1]*data[2][3]*data[3][2] - data[2][1]*data[1][2]*data[3][3]
+		+ data[2][1]*data[1][3]*data[3][2] + data[3][1]*data[1][2]*data[2][3] - data[3][1]*data[1][3]*data[2][2];
+	inv(1,0) =  -data[1][0]*data[2][2]*data[3][3] + data[1][0]*data[2][3]*data[3][2] + data[2][0]*data[1][2]*data[3][3]
+		- data[2][0]*data[1][3]*data[3][2] - data[3][0]*data[1][2]*data[2][3] + data[3][0]*data[1][3]*data[2][2];
+	inv(2,0) =   data[1][0]*data[2][1]*data[3][3] - data[1][0]*data[2][3]*data[3][1] - data[2][0]*data[1][1]*data[3][3]
+		+ data[2][0]*data[1][3]*data[3][1] + data[3][0]*data[1][1]*data[2][3] - data[3][0]*data[1][3]*data[2][1];
+	inv(3,0) = -data[1][0]*data[2][1]*data[3][2] + data[1][0]*data[2][2]*data[3][1] + data[2][0]*data[1][1]*data[3][2]
+		- data[2][0]*data[1][2]*data[3][1] - data[3][0]*data[1][1]*data[2][2] + data[3][0]*data[1][2]*data[2][1];
+	inv(0,1) =  -data[0][1]*data[2][2]*data[3][3] + data[0][1]*data[2][3]*data[3][2] + data[2][1]*data[0][2]*data[3][3]
+		- data[2][1]*data[0][3]*data[3][2] - data[3][1]*data[0][2]*data[2][3] + data[3][1]*data[0][3]*data[2][2];
+	inv(1,1) =   data[0][0]*data[2][2]*data[3][3] - data[0][0]*data[2][3]*data[3][2] - data[2][0]*data[0][2]*data[3][3]
+		+ data[2][0]*data[0][3]*data[3][2] + data[3][0]*data[0][2]*data[2][3] - data[3][0]*data[0][3]*data[2][2];
+	inv(2,1) =  -data[0][0]*data[2][1]*data[3][3] + data[0][0]*data[2][3]*data[3][1] + data[2][0]*data[0][1]*data[3][3]
+		- data[2][0]*data[0][3]*data[3][1] - data[3][0]*data[0][1]*data[2][3] + data[3][0]*data[0][3]*data[2][1];
+	inv(3,1) =  data[0][0]*data[2][1]*data[3][2] - data[0][0]*data[2][2]*data[3][1] - data[2][0]*data[0][1]*data[3][2]
+		+ data[2][0]*data[0][2]*data[3][1] + data[3][0]*data[0][1]*data[2][2] - data[3][0]*data[0][2]*data[2][1];
+	inv(0,2) =   data[0][1]*data[1][2]*data[3][3] - data[0][1]*data[1][3]*data[3][2] - data[1][1]*data[0][2]*data[3][3]
+		+ data[1][1]*data[0][3]*data[3][2] + data[3][1]*data[0][2]*data[1][3] - data[3][1]*data[0][3]*data[1][2];
+	inv(1,2) =  -data[0][0]*data[1][2]*data[3][3] + data[0][0]*data[1][3]*data[3][2] + data[1][0]*data[0][2]*data[3][3]
+		- data[1][0]*data[0][3]*data[3][2] - data[3][0]*data[0][2]*data[1][3] + data[3][0]*data[0][3]*data[1][2];
+	inv(2,2) =  data[0][0]*data[1][1]*data[3][3] - data[0][0]*data[1][3]*data[3][1] - data[1][0]*data[0][1]*data[3][3]
+		+ data[1][0]*data[0][3]*data[3][1] + data[3][0]*data[0][1]*data[1][3] - data[3][0]*data[0][3]*data[1][1];
+	inv(3,2) = -data[0][0]*data[1][1]*data[3][2] + data[0][0]*data[1][2]*data[3][1] + data[1][0]*data[0][1]*data[3][2]
+		- data[1][0]*data[0][2]*data[3][1] - data[3][0]*data[0][1]*data[1][2] + data[3][0]*data[0][2]*data[1][1];
+	inv(0,3) =  -data[0][1]*data[1][2]*data[2][3] + data[0][1]*data[1][3]*data[2][2] + data[1][1]*data[0][2]*data[2][3]
+		- data[1][1]*data[0][3]*data[2][2] - data[2][1]*data[0][2]*data[1][3] + data[2][1]*data[0][3]*data[1][2];
+	inv(1,3) =   data[0][0]*data[1][2]*data[2][3] - data[0][0]*data[1][3]*data[2][2] - data[1][0]*data[0][2]*data[2][3]
+		+ data[1][0]*data[0][3]*data[2][2] + data[2][0]*data[0][2]*data[1][3] - data[2][0]*data[0][3]*data[1][2];
+	inv(2,3) = -data[0][0]*data[1][1]*data[2][3] + data[0][0]*data[1][3]*data[2][1] + data[1][0]*data[0][1]*data[2][3]
+		- data[1][0]*data[0][3]*data[2][1] - data[2][0]*data[0][1]*data[1][3] + data[2][0]*data[0][3]*data[1][1];
+	inv(3,3) =  data[0][0]*data[1][1]*data[2][2] - data[0][0]*data[1][2]*data[2][1] - data[1][0]*data[0][1]*data[2][2]
+		+ data[1][0]*data[0][2]*data[2][1] + data[2][0]*data[0][1]*data[1][2] - data[2][0]*data[0][2]*data[1][1];
 
 	inv *= 1.f / det();
 	return inv;
 }
 
 const mat4 mat4::transpose() const{
-	return mat4(hslice(0), hslice(1), hslice(2), hslice(3));
+    float D[4][4];
+	for(int i=0; i<4; ++i) {
+        for(int j=0; j<4; ++j) {
+            D[i][j] = data[j][i];
+        }
+    }
+    return mat4(D);
 }
 
 ostream& operator<<(ostream& out, const mat4& m){

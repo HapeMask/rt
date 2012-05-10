@@ -32,7 +32,7 @@ const rgbColor frostedGlassBsdf::sampleF(const float& u0, const float& u1, const
 
 const rgbColor frostedGlassBsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const {
     // Ignore BTDFs if the vectors are on the same side of the surface. 
-    if(wo.y * wi.y > 0 && bsdf::isSubtype(glossRef->getType(), type)){
+    if(wo.y() * wi.y() > 0 && bsdf::isSubtype(glossRef->getType(), type)){
         return glossRef->f(wo, wi);
     }else if(bsdf::isSubtype(glossTra->getType(), type)){
         return glossTra->f(wo, wi);

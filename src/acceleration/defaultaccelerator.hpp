@@ -13,7 +13,7 @@ using std::shared_ptr;
 
 /**
  * Default "acceleration structure." Just checks all
- * available shapes until it finds an intersection.
+ * available primitives until it finds an intersection.
  */
 class defaultAccelerator : public accelerator {
 	public:
@@ -25,5 +25,5 @@ class defaultAccelerator : public accelerator {
 		virtual void build(const scene& s);
 
 	private:
-		vector<primitive*> shapes;
+		vector<primitive*> primitives;
 };

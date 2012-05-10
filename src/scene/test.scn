@@ -16,11 +16,9 @@ scene<bvh, path>{
 	}
 
     shape{
-        //sphere(0,-2,0,1)
-        objfile<flat>("../models/wave.obj")
-        //objfile<smooth>("../models/vee.obj")
-		material(lambert(0.5,0.5,0.5))
-        //material(specular<dielectric>(0.8,0.8,0.8, 1.6))
+        objfile<smooth>("../models/wave.obj")
+		//material(lambert(0.5,0.5,0.5))
+        material(specular<dielectric>(0.8,0.8,0.8, 1.6))
     }
 
 	shape{

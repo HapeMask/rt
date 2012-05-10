@@ -21,18 +21,18 @@ int sampleRange(const float& u0, const int& a, const int& b){
 void sampleDisk(vec3& v, const float& u0, const float& u1){
 	const float r = sqrtf(u0);
 	const float theta = u1 * TWOPI;
-	v.x = cos(theta) * r;
-	v.z = sin(theta) * r;
+	v.x() = cos(theta) * r;
+	v.z() = sin(theta) * r;
 }
 
 void sampleHemisphere(vec3& v, const float& u0, const float& u1) {
-	v.y = u0;
+	v.y() = u0;
     // Sqrt of r normalizes the distance distribution from the center (since it
     // takes up ~r^2 less area as radius decreases).
 	const float r = sqrtf(std::max(0.f, 1.f - u0*u0));
 	const float phi = TWOPI * u1;
-	v.x = r * cos(phi);
-	v.z = r * sin(phi);
+	v.x() = r * cos(phi);
+	v.z() = r * sin(phi);
 }
 
 void uniformSampleHemisphere(vec3& v) {
@@ -47,7 +47,7 @@ void sampleSphere(vec3& v, const float& u0, const float& u1) {
         sampleHemisphere(v, 2.f * u0, u1);
     }else{
         sampleHemisphere(v, 2.f * (1 - u0), u1);
-        v.y = -v.y;
+        v.y() = -v.y();
     }
 }
 
@@ -78,7 +78,7 @@ void uniformSampleRectangle(point3& p, const vec3& a, const vec3& b, const point
 
 void cosineSampleHemisphere(vec3& v, const float& u0, const float& u1){
 	sampleDisk(v, u0, u1);
-    v.y = sqrtf(std::max(0.f, 1.f - v.x*v.x - v.z*v.z));
+    v.y() = sqrtf(std::max(0.f, 1.f - v.x()*v.x() - v.z()*v.z()));
 }
 
 float radicalInverse(int n, const int& base){

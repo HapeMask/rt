@@ -7,13 +7,12 @@ using std::shared_ptr;
 using std::vector;
 
 const intersection defaultAccelerator::intersect(ray& r) const{
-	// Just check every shape we have.
 	vector<intersection> hits;
 
 	const point3 ro(r.origin);
-	for(auto shape : shapes){
+	for(auto prim : primitives){
         ray rCopy(r);
-        const intersection isect = shape->intersect(rCopy);
+        const intersection isect = prim->intersect(rCopy);
 		if(isect.hit){
 			hits.push_back(isect);
 		}
@@ -39,8 +38,8 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 
 bool defaultAccelerator::intersectB(const ray& r) const{
 	ray r2(r);
-	for(auto shape : shapes){
-		if(shape->intersect(r2).hit){
+	for(auto prim : primitives){
+		if(prim->intersect(r2).hit){
 			return true;
 		}
 	}
@@ -51,7 +50,7 @@ bool defaultAccelerator::intersectB(const ray& r) const{
 void defaultAccelerator::build(const scene& s){
 	for(const auto& shape : s.getShapes()){
 		for(const auto& prim : shape->getPrimitives()){
-			shapes.push_back(prim.get());
+			primitives.push_back(prim.get());
 		}
 	}
 }

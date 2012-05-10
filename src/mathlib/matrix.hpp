@@ -10,7 +10,7 @@ class mat4 {
 		mat4(){
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
-					values[i][j] = (i==j) ? 1.f : 0.f;
+					data[i][j] = (i==j) ? 1.f : 0.f;
 				}
 			}
 		}
@@ -18,7 +18,7 @@ class mat4 {
 		mat4(const mat4& m){
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
-					values[i][j] = m(i,j);
+					data[i][j] = m(i,j);
 				}
 			}
 		}
@@ -28,17 +28,17 @@ class mat4 {
 		 */
 		mat4(const vec4& a, const vec4& b, const vec4& c, const vec4& d){
 			for(int i=0; i<4; i++){
-				values[i][0] = a(i);
-				values[i][1] = b(i);
-				values[i][2] = c(i);
-				values[i][3] = d(i);
+				data[i][0] = a(i);
+				data[i][1] = b(i);
+				data[i][2] = c(i);
+				data[i][3] = d(i);
 			}
 		}
 
 		mat4(const float v[4][4]){
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
-					values[i][j] = v[i][j];
+					data[i][j] = v[i][j];
 				}
 			}
 		}
@@ -47,14 +47,14 @@ class mat4 {
 #ifdef DEBUG
 			assert(i < 4 && j < 4);
 #endif
-			return values[i][j];
+			return data[i][j];
 		}
 
 		float& operator()(const short& i, const short& j){
 #ifdef DEBUG
 			assert(i < 4 && j < 4);
 #endif
-			return values[i][j];
+			return data[i][j];
 		}
 
 		const mat4 inverse() const;
@@ -73,22 +73,8 @@ class mat4 {
 
 		bool operator==(const mat4& m) const;
 
-		const vec4 hslice(const short& i) const {
-#ifdef DEBUG
-			assert(i<4);
-#endif
-			return vec4(values[i][0], values[i][1], values[i][2], values[i][3]);
-		}
-
-		const vec4 vslice(const short& i) const {
-#ifdef DEBUG
-			assert(i<4);
-#endif
-			return vec4(values[0][i], values[1][i], values[2][i], values[3][i]);
-		}
-
 	private:
-		float values[4][4];
+		float data[4][4];
 };
 
 ostream& operator<<(ostream& out, const mat4& m);

@@ -16,6 +16,7 @@ set(NUM_PARALLEL_LOOPS 4)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 add_definitions(-O3
+    -g
     -fno-rtti -fno-exceptions -std=c++11
     -m64 -march=native
     -mmmx -msse -msse2 -mfpmath=sse

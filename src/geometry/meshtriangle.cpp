@@ -154,10 +154,10 @@ void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
     const vec2& uv3 = meshParent->uvLookup(cuv);
 
     // Compute partial derivatives in u/v for the hit.
-    du1 = uv1.x - uv3.x;
-    du2 = uv2.x - uv3.x;
-    dv1 = uv1.y - uv3.y;
-    dv2 = uv2.y - uv3.y;
+    du1 = uv1.x() - uv3.x();
+    du2 = uv2.x() - uv3.x();
+    dv1 = uv1.y() - uv3.y();
+    dv2 = uv2.y() - uv3.y();
     invDetUV = 1.f / (du1*dv2 - dv1*du2);
     binormal_ = normalize((dv2*B - dv1*C) * invDetUV);
 }
@@ -166,26 +166,26 @@ void meshTriangle::setUVs(const int& auv, const int& buv, const int& cuv){
 void meshTriangle::prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).x;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).x();
             ++normalData;
-            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).y;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).y();
             ++normalData;
-            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).z;
+            (*normalData) = meshParent->vertNormalLookup(vertNormals[i]).z();
             ++normalData;
         }else{
-            (*normalData) = normal_.x;
+            (*normalData) = normal_.x();
             ++normalData;
-            (*normalData) = normal_.y;
+            (*normalData) = normal_.y();
             ++normalData;
-            (*normalData) = normal_.z;
+            (*normalData) = normal_.z();
             ++normalData;
         }
 
-        (*vertexData) = meshParent->pointLookup(points[i]).x;
+        (*vertexData) = meshParent->pointLookup(points[i]).x();
         ++vertexData;
-        (*vertexData) = meshParent->pointLookup(points[i]).y;
+        (*vertexData) = meshParent->pointLookup(points[i]).y();
         ++vertexData;
-        (*vertexData) = meshParent->pointLookup(points[i]).z;
+        (*vertexData) = meshParent->pointLookup(points[i]).z();
         ++vertexData;
     }
 }

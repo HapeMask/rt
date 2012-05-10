@@ -29,12 +29,12 @@
 #include <smmintrin.h>
 
 // dec(241) = bin(1111 0001), uses all 4 dwords of input and uses the LSdword of the output.
-static const int DOTMASK = 241;
+constexpr int DOTMASK = 241;
 
 #define dotps           _mm_dp_ps
 #endif
 
-static const float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};
-static const float PS_NEG_INF[4] = {NEG_INF, NEG_INF, NEG_INF, NEG_INF};
-static const float PS_ONES[4] = {1,1,1,1};
-static const float PS_ZEROES[4] = {0,0,0,0};
+constexpr float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};
+constexpr float PS_NEG_INF[4] = {NEG_INF, NEG_INF, NEG_INF, NEG_INF};
+constexpr float PS_ONES[4] = {1,1,1,1};
+constexpr float PS_ZEROES[4] = {0,0,0,0};

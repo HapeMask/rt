@@ -48,7 +48,7 @@ void beckmann::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& w
     sphericalToDirection(wh, sinThetaH, cosThetaH, phiH);
     wh = normalize(wh);
 
-    if(wh.y > 0){
+    if(wh.y() > 0){
         wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;
         pd = pdf(wo, wi);
     }else{
