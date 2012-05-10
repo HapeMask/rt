@@ -10,13 +10,15 @@ const mat4 mat4::operator*(const float& x) const {
 }
 
 const vec4 mat4::operator*(const vec4& u) const{
-    float x,y,z,w;
+    float x=0.f,y=0.f,z=0.f,w=0.f;
+
     for(int i=0; i<4; ++i) {
         x += u(i) * data[0][i];
         y += u(i) * data[1][i];
         z += u(i) * data[2][i];
         w += u(i) * data[3][i];
     }
+
     return vec4(x,y,z,w);
 }
 
