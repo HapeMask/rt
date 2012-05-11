@@ -17,8 +17,8 @@ bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
     const __m128 pos = r.origin.xyzw;
     const __m128 invDir = r.invDir.xyzw;
 
-    const __m128 l1 = mulps(subps(boxMin, pos), invDir);
-    const __m128 l2 = mulps(subps(boxMax, pos), invDir);
+    const __m128 l1 = (boxMin - pos) * invDir;
+    const __m128 l2 = (boxMax - pos) * invDir;
 
     __m128 lmax = maxps(l1, l2);
     __m128 lmin = minps(l1, l2);

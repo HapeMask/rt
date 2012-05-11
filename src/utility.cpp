@@ -51,17 +51,17 @@ int roundUpToMultiple(int n, int m){
 }
 
 void makeCoordinateSystem(const vec3& u, vec3& v, vec3& w){
-    if(fabsf(u.x()) > fabsf(u.z())){
-        const float invLen = 1.f / sqrtf(u.x()*u.x() + u.y()*u.y());
-        v.x() = -u.y() * invLen;
-        v.y() = u.x() * invLen;
-        v.z() = 0.f;
+    if(fabsf(u.x) > fabsf(u.z)){
+        const float invLen = 1.f / sqrtf(u.x*u.x + u.y*u.y);
+        v.x = -u.y * invLen;
+        v.y = u.x * invLen;
+        v.z = 0.f;
         v = normalize(v);
     }else{
-        const float invLen = 1.f / sqrtf(u.z()*u.z() + u.y()*u.y());
-        v.x() = 0.f;
-        v.y() = -u.z() * invLen;
-        v.z() = u.y() * invLen;
+        const float invLen = 1.f / sqrtf(u.z*u.z + u.y*u.y);
+        v.x = 0.f;
+        v.y = -u.z * invLen;
+        v.z = u.y * invLen;
     }
     w = normalize(cross(u,v));
 }
@@ -72,9 +72,9 @@ const vec3 worldToBsdf(const vec3& v, const intersection& isect){
 
 const vec3 bsdfToWorld(const vec3& v, const intersection& isect){
     return vec3(
-        isect.binormal.x() * v.x() + isect.shadingNormal.x() * v.y() + isect.tangent.x() * v.z(),
-        isect.binormal.y() * v.x() + isect.shadingNormal.y() * v.y() + isect.tangent.y() * v.z(),
-        isect.binormal.z() * v.x() + isect.shadingNormal.z() * v.y() + isect.tangent.z() * v.z());
+        isect.binormal.x * v.x + isect.shadingNormal.x * v.y + isect.tangent.x * v.z,
+        isect.binormal.y * v.x + isect.shadingNormal.y * v.y + isect.tangent.y * v.z,
+        isect.binormal.z * v.x + isect.shadingNormal.z * v.y + isect.tangent.z * v.z);
 }
 
 const vec3 worldToBsdf(const vec3& v, const vec3& normal, const vec3& binormal, const vec3& tangent){
@@ -83,15 +83,15 @@ const vec3 worldToBsdf(const vec3& v, const vec3& normal, const vec3& binormal, 
 
 const vec3 bsdfToWorld(const vec3& v, const vec3& normal, const vec3& binormal, const vec3& tangent){
     return vec3(
-        binormal.x() * v.x() + normal.x() * v.y() + tangent.x() * v.z(),
-        binormal.y() * v.x() + normal.y() * v.y() + tangent.y() * v.z(),
-        binormal.z() * v.x() + normal.z() * v.y() + tangent.z() * v.z());
+        binormal.x * v.x + normal.x * v.y + tangent.x * v.z,
+        binormal.y * v.x + normal.y * v.y + tangent.y * v.z,
+        binormal.z * v.x + normal.z * v.y + tangent.z * v.z);
 }
 
 void sphericalToDirection(vec3& v, const float& sinTheta, const float& cosTheta, const float& phi){
-    v.x() = sinTheta * cosf(phi);
-    v.y() = cosTheta;
-    v.z() = sinTheta * sinf(phi);
+    v.x = sinTheta * cosf(phi);
+    v.y = cosTheta;
+    v.z = sinTheta * sinf(phi);
 }
 
 /**

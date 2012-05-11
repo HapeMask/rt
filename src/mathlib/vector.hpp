@@ -8,26 +8,26 @@
 using namespace std;
 
 class point3;
-class vec3;
+//class vec3;
 
 class vec2 {
-    friend class vec3;
+    //friend class vec3;
     public:
-        constexpr vec2() : x_(0), y_(0) {}
-        constexpr vec2(const float& x, const float& y) : x_(x), y_(y) {}
+        constexpr vec2() : x(0), y(0) {}
+        constexpr vec2(const float& x, const float& y) : x(x), y(y) {}
 
         inline constexpr vec2 operator+(const vec2& v) {
-            return vec2(x_ + v.x_, y_ + v.y_);
+            return vec2(x + v.x, y + v.y);
         }
 
         inline vec2& operator+=(const vec2& v){
-            x_ += v.x_;
-            y_ += v.y_;
+            x += v.x;
+            y += v.y;
             return (*this);
         }
 
         inline constexpr vec2 operator-(const vec2& v) {
-            return vec2(x_ - v.x_, y_ - v.y_);
+            return vec2(x - v.x, y - v.y);
         }
 
         inline vec2& operator-=(const vec2& v){
@@ -35,31 +35,31 @@ class vec2 {
         }
 
         inline constexpr vec2 operator-() {
-            return vec2(-x_, -y_);
+            return vec2(-x, -y);
         }
 
         inline constexpr vec2 operator*(const float& f) {
-            return vec2(x_ * f, y_ * f);
+            return vec2(x * f, y * f);
         }
 
         inline vec2& operator*=(const float& f){
-            x_ *= f;
-            y_ *= f;
+            x *= f;
+            y *= f;
             return (*this);
         }
 
         inline constexpr vec2 operator*(const vec2& v) {
-            return vec2(x_ * v.x_, y_ * v.y_);
+            return vec2(x * v.x, y * v.y);
         }
 
         inline vec2& operator*=(const vec2& v){
-            x_ *= v.x_;
-            y_ *= v.y_;
+            x *= v.x;
+            y *= v.y;
             return (*this);
         }
 
         inline constexpr vec2 operator/(const float& f) {
-            return vec2(x_ / f, y_ / f);
+            return vec2(x / f, y / f);
         }
 
         inline vec2& operator/=(const float& f){
@@ -67,38 +67,21 @@ class vec2 {
         }
 
         inline constexpr vec2 operator/(const vec2& v) {
-            return vec2(x_ / v.x_, y_ / v.y_);
+            return vec2(x / v.x, y / v.y);
         }
 
         inline vec2& operator/=(const vec2& v){
-            x_ /= v.x_;
-            y_ /= v.y_;
+            x /= v.x;
+            y /= v.y;
             return (*this);
         }
 
         inline constexpr bool operator==(const vec2& v) {
-            return (x_ == v.x_) && (y_ == v.y_);
+            return (x == v.x) && (y == v.y);
         }
 
-        inline constexpr float x() {
-            return x_;
-        }
-
-        inline float& x() {
-            return x_;
-        }
-
-        inline constexpr float y() {
-            return y_;
-        }
-
-        inline float& y() {
-            return y_;
-        }
-
-    private:
-        float x_;
-        float y_;
+        float x;
+        float y;
 };
 
 class vec3 {
@@ -106,14 +89,12 @@ class vec3 {
     public:
         vec3(const point3& p);
 
-        // Can't use constexpr yet because __m128 is not a literal :C
-
-        /*constexpr*/ vec3() : xyzw{0,0,0,0} {}
-        /*constexpr*/ vec3(const float& x, const float& y, const float& z) : xyzw{x, y, z, 0.} {}
-        /*constexpr*/ vec3(const vec2& v, const float& f) : xyzw{v.x_, v.y_, f, 0} {}
-        /*constexpr*/ vec3(const float& f, const vec2& v) : xyzw{f, v.x_, v.y_, 0} {}
-        /*constexpr*/ vec3(const float& f) : xyzw{f,f,f,f} {}
-        /*constexpr*/ vec3(const __m128& v) : xyzw(v) {}
+        vec3() : xyzw{0,0,0,0} {}
+        vec3(const float& x, const float& y, const float& z) : xyzw{x, y, z, 0.f} {}
+        vec3(const vec2& v, const float& f) : xyzw{v.x, v.y, f, 0} {}
+        vec3(const float& f, const vec2& v) : xyzw{f, v.x, v.y, 0} {}
+        vec3(const float& f) : xyzw{f,f,f,f} {}
+        vec3(const __m128& v) : xyzw(v) {}
 
         inline const float& operator()(const int& index) const{
 #ifdef DEBUG
@@ -147,7 +128,7 @@ class vec3 {
         }
 
         inline const vec3 operator-() const {
-            return vec3(-x(), -y(), -z());
+            return vec3(-x, -y, -z);
         }
 
         inline const vec3 operator*(const float& f) const {
@@ -188,47 +169,27 @@ class vec3 {
 
         inline bool operator==(const vec3& v) const {
             return
-                (x() == v.x()) &&
-                (y() == v.y()) &&
-                (z() == v.z());
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z);
         }
 
-        inline const float& x() const {
-            return ((float*)&xyzw)[0];
-        }
+        union {
+            struct { float x, y, z, w; };
+            __m128 xyzw;
+        };
 
-        inline float& x() {
-            return ((float*)&xyzw)[0];
-        }
-
-        inline const float& y() const {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline float& y() {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline const float& z() const {
-            return ((float*)&xyzw)[2];
-        }
-
-        inline float& z() {
-            return ((float*)&xyzw)[2];
-        }
-
-        __m128 xyzw;
+    protected:
+        vec3(const float& x, const float& y, const float& z, const float& w) : xyzw{x,y,z,w} {}
 };
 
-class vec4 {
+class vec4 : public vec3 {
     public:
-        // Can't use constexpr yet because __m128 is not a literal :C
-
-        /*constexpr*/ vec4() : xyzw{0,0,0,0} {}
-        /*constexpr*/ vec4(const float& x, const float& y, const float& z, const float& w) : xyzw{x,y,z,w} {}
-        /*constexpr*/ vec4(const float& f) : xyzw{f,f,f,f} {}
-        /*constexpr*/ vec4(const __m128& v) : xyzw(v) {}
-        vec4(const vec3& v, const float& w) : xyzw{v.x(), v.y(), v.z(), w} {}
+        vec4() : vec3() {}
+        vec4(const float& x, const float& y, const float& z, const float& w) : vec3(x,y,z,w) {}
+        vec4(const float& f) : vec3(f) {}
+        vec4(const __m128& v) : vec3(v) {}
+        vec4(const vec3& v, const float& w) : vec3(v.x, v.y, v.z, w) {}
 
         inline const float& operator()(const int& index) const{
 #ifdef DEBUG
@@ -244,129 +205,42 @@ class vec4 {
             return ((float*)&xyzw)[index];
         }
 
-        inline const vec4 operator+(const vec4& v) const {
-            return vec4(*this) += v;
-        }
-
-        inline vec4& operator+=(const vec4& v){
-            xyzw = xyzw + v.xyzw;
-            return (*this);
-        }
-
-        inline const vec4 operator-(const vec4& v) const {
-            return vec4(xyzw - v.xyzw);
-        }
-
-        inline vec4& operator-=(const vec4& v){
-            xyzw = xyzw - v.xyzw;
-            return (*this);
-        }
-
-        inline const vec4 operator-() const {
-            return vec4(zerops() - xyzw);
-        }
-
-        inline const vec4 operator*(const float& f) const {
-            return vec4(*this) *= f;
-        }
-
-        inline vec4& operator*=(const float& f){
-            xyzw = xyzw * set1ps(f);
-            return (*this);
-        }
-
-        inline const vec4 operator*(const vec4& v) const {
-            return vec4(*this) *= v;
-        }
-
-        inline vec4& operator*=(const vec4& v){
-            return (*this);
-        }
-
-        inline const vec4 operator/(const float& f) const {
-            return vec4(*this) *= 1.f / f;
-        }
-
-        inline vec4& operator/=(const float& f){
-            return (*this) *= 1.f / f;
-        }
-
-        inline const vec4 operator/(const vec4& v) const {
-            return vec4(*this) /= v;
-        }
-
-        inline vec4& operator/=(const vec4& v){
-            xyzw = xyzw / v.xyzw;
-            return (*this);
-        }
-
         inline bool operator==(const vec4& v) const {
             return
-                (x() == v.x()) &&
-                (y() == v.y()) &&
-                (z() == v.z()) &&
-                (w() == v.w());
+                (x == v.x) &&
+                (y == v.y) &&
+                (z == v.z) &&
+                (w == v.w);
         }
-
-        inline const float& x() const {
-            return ((float*)&xyzw)[0];
-        }
-
-        inline float& x() {
-            return ((float*)&xyzw)[0];
-        }
-
-        inline const float& y() const {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline float& y() {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline const float& z() const {
-            return ((float*)&xyzw)[2];
-        }
-
-        inline float& z() {
-            return ((float*)&xyzw)[2];
-        }
-
-        inline const float& w() const {
-            return ((float*)&xyzw)[3];
-        }
-
-        inline float& w() {
-            return ((float*)&xyzw)[3];
-        }
-
-        __m128 xyzw;
 };
-
-template <typename vecType>
-inline float norm(const vecType& v) {
-    return sqrtf(norm2(v));
-}
 
 inline float dot(const vec2& u, const vec2& v){
     return
-        (u.x() * v.x()) +
-        (u.y() * v.y());
+        (u.x * v.x) +
+        (u.y * v.y);
 }
 
 inline float dot(const vec3& u, const vec3& v){
+#ifdef __SSE4_1__
+    return _mm_cvtss_f32(dpps(u, v, DOTMASK_3));
+#else
     return
-        (u.x() * v.x()) +
-        (u.y() * v.y()) +
-        (u.z() * v.z());
+        (u.x * v.x) +
+        (u.y * v.y) +
+        (u.z * v.z);
+#endif
 }
 
 inline float dot(const vec4& u, const vec4& v){
+#ifdef __SSE4_1__
+    return _mm_cvtss_f32(dpps(u, v, DOTMASK_4));
+#else
     return
-        (u.x() * v.x()) +
-        (u.y() * v.y()) +
-        (u.z() * v.z()) +
-        (u.w() * v.w());
+        (u.x * v.x) +
+        (u.y * v.y) +
+        (u.z * v.z) +
+        (u.w * v.w);
+#endif
 }
 
 inline vec3 cross(const vec3& a, const vec3& b){
@@ -388,10 +262,6 @@ inline const vec3 operator*(const float& f, const vec3& u){
     return u * f;
 }
 
-inline const vec4 operator*(const float& f, const vec4& u){
-    return u * f;
-}
-
 inline vec2& operator*=(const float& f, vec2& u){
     return (u *= f);
 }
@@ -400,20 +270,16 @@ inline vec3& operator*=(const float& f, vec3& u){
     return (u *= f);
 }
 
-inline vec4& operator*=(const float& f, vec4& u){
-    return (u *= f);
-}
-
 inline const vec2 operator/(const float& f, const vec2& v){
-    return vec2(f / v.x(), f / v.y());
+    return vec2(f / v.x, f / v.y);
 }
 
 inline const vec3 operator/(const float& f, const vec3& v){
-    return vec3(f / v.x(), f / v.y(), f / v.z());
+    return vec3(f / v.x, f / v.y, f / v.z);
 }
 
 inline const vec4 operator/(const float& f, const vec4& v){
-    return vec4(f / v.x(), f / v.y(), f / v.z(), f / v.w());
+    return vec4(f / v.x, f / v.y, f / v.z, f / v.w);
 }
 
 inline const vec3 min(const vec3& a, const vec3& b) {
@@ -425,19 +291,69 @@ inline const vec3 max(const vec3& a, const vec3& b) {
 }
 
 inline float norm2(const vec2& v) {
-    return v.x()*v.x() + v.y()*v.y();
+    return v.x*v.x + v.y*v.y;
+}
+
+inline float norm(const vec2& v) {
+    return sqrtf(norm2(v));
+}
+
+inline float norm(const vec3& v) {
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return _mm_cvtss_f32(sqrtss(dpps(v, v, DOTMASK_3)));
+#else
+    return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z);
+#endif
+}
+
+inline float norm(const vec4& v) {
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return _mm_cvtss_f32(sqrtss(dpps(v, v, DOTMASK_4)));
+#else
+    return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w);
+#endif
 }
 
 inline float norm2(const vec3& v) {
-    return v.x()*v.x() + v.y()*v.y() + v.z()*v.z();
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return _mm_cvtss_f32(dpps(v, v, DOTMASK_3));
+#else
+    return v.x*v.x + v.y*v.y + v.z*v.z;
+#endif
 }
 
 inline float norm2(const vec4& v) {
-    return v.x()*v.x() + v.y()*v.y() + v.z()*v.z() + v.w()*v.w();
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return _mm_cvtss_f32(dpps(v, v, DOTMASK_4));
+#else
+    return v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w;
+#endif
 }
 
 inline const vec3 normalize(const vec3& u){
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return u.xyzw * rsqrtps(dpps(u.xyzw, u.xyzw, 0x77));
+    // More Accurate:
+    //return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0x7F));
+#else
     return u / norm(u);
+#endif
+}
+
+inline const vec3 normalize(const vec4& u){
+#ifdef __SSE4_1__
+#error "TEST ME"
+    return u.xyzw * rsqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
+    // More Accurate:
+    //return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
+#else
+    return u / norm(u);
+#endif
 }
 
 ostream& operator<<(ostream& out, const vec2& x);

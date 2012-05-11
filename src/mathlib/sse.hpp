@@ -8,15 +8,14 @@
 #define loadps(mem)     _mm_load_ps((const float* const)(mem))
 #define storess(ss,mem) _mm_store_ss((float* const)(mem),(ss))
 #define minss           _mm_min_ss
-#define maxss           _mm_max_ss
 #define minps           _mm_min_ps
+#define maxss           _mm_max_ss
 #define maxps           _mm_max_ps
-#define addps           _mm_add_ps
-#define subps           _mm_sub_ps
-#define mulps           _mm_mul_ps
 #define mulss           _mm_mul_ss
-#define divps           _mm_div_ps
 #define sqrtps          _mm_sqrt_ps
+#define sqrtss          _mm_sqrt_ss
+#define rsqrtps         _mm_rsqrt_ps
+#define rsqrtss         _mm_rsqrt_ss
 #define shufps          _mm_shuffle_ps
 #define shufarg         _MM_SHUFFLE
 #define zerops          _mm_setzero_ps
@@ -28,10 +27,14 @@
 #ifdef __SSE4_1__
 #include <smmintrin.h>
 
-// dec(241) = bin(1111 0001), uses all 4 dwords of input and uses the LSdword of the output.
-constexpr int DOTMASK = 241;
+// 0x71 = bin(0111 0001), uses lower 3 floats in the input and uses the lowest
+// float of the output.
+constexpr int DOTMASK_3 = 0x71;
+// 0xF1 = bin(1111 0001), uses all 4 floats in the input and uses the lowest
+// float of the output.
+constexpr int DOTMASK_4 = 0xF1;
 
-#define dotps           _mm_dp_ps
+#define dpps           _mm_dp_ps
 #endif
 
 constexpr float PS_POS_INF[4] = {POS_INF, POS_INF, POS_INF, POS_INF};

@@ -11,17 +11,17 @@ class point2 {
 	public:
 		point2(const vec2& u);
 
-        constexpr point2() : x_(0), y_(0) {}
-        constexpr point2(const float& x, const float& y) : x_(x), y_(y) {}
-        constexpr point2(const point2& p) : x_(p.x_), y_(p.y_) {}
+        constexpr point2() : x(0), y(0) {}
+        constexpr point2(const float& x, const float& y) : x(x), y(y) {}
+        constexpr point2(const point2& p) : x(p.x), y(p.y) {}
 
         inline const point2 operator+(const vec2& u) const {
             return point2(*this) += u;
         }
 
         inline point2& operator+=(const vec2& u) {
-            x_ += u.x();
-            y_ += u.y();
+            x += u.x;
+            y += u.y;
             return (*this);
         }
 
@@ -35,52 +35,40 @@ class point2 {
         }
 
         inline const vec2 operator-(const point2& p) const {
-            return vec2(x_, y_) - vec2(p.x_, p.y_);
+            return vec2(x, y) - vec2(p.x, p.y);
         }
 
         inline bool operator==(const point2& p) const {
             return
-                (x_ == p.x_) &&
-                (y_ == p.y_);
+                (x == p.x) &&
+                (y == p.y);
         }
 
-        float x_;
-        float y_;
+        float x;
+        float y;
 };
 
-class point3 {
-	friend class vec3;
+class point3 : public vec3 {
 	public:
-		point3(const vec3& u);
-
-        point3() : xyzw(zerops()) {}
-
-        point3(const float& x_, const float& y_, const float& z_) {
-            x() = x_;
-            y() = y_;
-            z() = z_;
-        }
-
-        point3(const point3& p) {
-            x() = p.x();
-            y() = p.y();
-            z() = p.z();
-        }
+        point3() : vec3() {}
+		point3(const vec3& u) : vec3(u) {}
+        point3(const float& x, const float& y, const float& z) : vec3(x, y, z) {}
 
         inline const float& operator()(const int& index) const {
 #ifdef DEBUG
             assert(index < 3);
 #endif
-            return *(&x() + index);
+            return *(&x + index);
         }
 
         inline float& operator()(const int& index){
 #ifdef DEBUG
             assert(index < 3);
 #endif
-            return *(&x() + index);
+            return *(&x + index);
         }
 
+        /*
         inline const point3 operator+(const vec3& u) const {
             return point3(*this) += u;
         }
@@ -102,36 +90,7 @@ class point3 {
         inline const vec3 operator-(const point3& p) const {
             return vec3(xyzw - p.xyzw);
         }
-
-        inline bool operator==(const point3& p) const {
-            return (x() == p.x()) && (y() == p.y()) && (z() == p.z());
-        }
-
-        inline const float& x() const {
-            return ((float*)&xyzw)[0];
-        }
-
-        inline float& x() {
-            return ((float*)&xyzw)[0];
-        }
-
-        inline const float& y() const {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline float& y() {
-            return ((float*)&xyzw)[1];
-        }
-
-        inline const float& z() const {
-            return ((float*)&xyzw)[2];
-        }
-
-        inline float& z() {
-            return ((float*)&xyzw)[2];
-        }
-
-        __m128 xyzw;
+        */
 };
 
 inline const point3 min(const point3& a, const point3& b) {

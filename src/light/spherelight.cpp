@@ -49,9 +49,9 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     const float v2 = cosTheta;
     const float v3 = sinTheta * sinf(phi);
     const vec3 a = normalize(vec3(
-                v1 * u.x() + v2 * w.x() + v3 * v.x(),
-                v1 * u.y() + v2 * w.y() + v3 * v.y(),
-                v1 * u.z() + v2 * w.z() + v3 * v.z()));
+                v1 * u.x + v2 * w.x + v3 * v.x,
+                v1 * u.y + v2 * w.y + v3 * v.y,
+                v1 * u.z + v2 * w.z + v3 * v.z));
 
     const intersection isect = intersect(ray(p, a));
     const point3 samplePoint = p + isect.t * a;

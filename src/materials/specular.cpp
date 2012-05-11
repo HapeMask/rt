@@ -29,7 +29,7 @@ float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
 
 const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
-    wi = normalize(vec3(-wo.x(), wo.y(), -wo.z()));
+    wi = normalize(vec3(-wo.x, wo.y, -wo.z));
 
     const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
     return Fr * kR / fabsf(bsdf::cosTheta(wi));
@@ -52,9 +52,9 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
     // Total Internal Reflection
     if(sin2ThetaT > 1.f){
         if(entering) {
-            wi = normalize(vec3(-wo.x(), wo.y(), -wo.z()));
+            wi = normalize(vec3(-wo.x, wo.y, -wo.z));
         }else{
-            wi = normalize(vec3(-wo.x(), -wo.y(), -wo.z()));
+            wi = normalize(vec3(-wo.x, -wo.y, -wo.z));
         }
 
         const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
@@ -67,9 +67,9 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
         sqrtf(1.f - sin2ThetaT);
 
     wi = normalize(vec3(
-                eta * -wo.x(),
+                eta * -wo.x,
                 cosThetaT,
-                eta * -wo.z()
+                eta * -wo.z
             ));
 
     const rgbColor Ft = rgbColor(1.f) - evalFresnel(fabsf(bsdf::cosTheta(wo)));

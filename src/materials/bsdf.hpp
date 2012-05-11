@@ -38,7 +38,7 @@ inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
 }
 
 inline const vec3 reflect(const vec3& w) {
-    return vec3(-w.x(), w.y(), -w.z());
+    return vec3(-w.x, w.y, -w.z);
 }
 
 inline const vec3 halfVector(const vec3& a, const vec3& b) {
@@ -368,15 +368,15 @@ inline bool bsdf::isSubtype(bxdfType a, bxdfType b) {
 }
 
 inline float bsdf::cosTheta(const vec3& v){
-    return v.y();
+    return v.y;
 }
 
 inline float bsdf::cos2Theta(const vec3& v){
-    return v.y()*v.y();
+    return v.y*v.y;
 }
 
 inline float bsdf::sinTheta(const vec3& v){
-    return sqrtf(std::max(0.f, 1.f - v.y()*v.y()));
+    return sqrtf(std::max(0.f, 1.f - v.y*v.y));
 }
 
 inline float bsdf::sin2Theta(const vec3& v){

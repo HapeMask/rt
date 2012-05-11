@@ -19,8 +19,8 @@ rgbColor** texture2D::lookupCache;
 rgbColor texture2D::lookup(const vec2& uv) const {
     // Use bilinear interpolation. TODO: Maybe use the GPU for this
     // somehow? It does have dedicated bilerp hardware...
-    const float x = uv.x() * (width-1);
-    const float y = uv.y() * (height-1);
+    const float x = uv.x * (width-1);
+    const float y = uv.y * (height-1);
 
     const int xMin = floor(x);
     const int xMax = ceil(x);

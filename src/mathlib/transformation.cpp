@@ -8,15 +8,15 @@
 #include <cmath>
 
 const point3 transform3d::apply(const point3& p) const {
-	const vec4 v = mat * vec4(p.x(), p.y(), p.z(), 1.f);
-	return point3(v.x()/v.w(), v.y()/v.w(), v.z()/v.w());
+	const vec4 v = mat * vec4(p.x, p.y, p.z, 1.f);
+	return point3(v.x/v.w, v.y/v.w, v.z/v.w);
 }
 
 const vec3 transform3d::apply(const vec3& v) const {
 	return vec3(
-			mat(0,0) * v.x() + mat(0,1) * v.y() + mat(0,2) * v.z(),
-			mat(1,0) * v.x() + mat(1,1) * v.y() + mat(1,2) * v.z(),
-			mat(2,0) * v.x() + mat(2,1) * v.y() + mat(2,2) * v.z()
+			mat(0,0) * v.x + mat(0,1) * v.y + mat(0,2) * v.z,
+			mat(1,0) * v.x + mat(1,1) * v.y + mat(1,2) * v.z,
+			mat(2,0) * v.x + mat(2,1) * v.y + mat(2,2) * v.z
 		);
 }
 
@@ -25,15 +25,15 @@ const ray transform3d::apply(const ray& r) const {
 }
 
 const point3 transform3d::unapply(const point3& p) const {
-	const vec4 v = inv * vec4(p.x(), p.y(), p.z(), 1.f);
-	return point3(v.x()/v.w(), v.y()/v.w(), v.z()/v.w());
+	const vec4 v = inv * vec4(p.x, p.y, p.z, 1.f);
+	return point3(v.x/v.w, v.y/v.w, v.z/v.w);
 }
 
 const vec3 transform3d::unapply(const vec3& v) const {
 	return vec3(
-			inv(0,0) * v.x() + inv(0,1) * v.y() + inv(0,2) * v.z(),
-			inv(1,0) * v.x() + inv(1,1) * v.y() + inv(1,2) * v.z(),
-			inv(2,0) * v.x() + inv(2,1) * v.y() + inv(2,2) * v.z()
+			inv(0,0) * v.x + inv(0,1) * v.y + inv(0,2) * v.z,
+			inv(1,0) * v.x + inv(1,1) * v.y + inv(1,2) * v.z,
+			inv(2,0) * v.x + inv(2,1) * v.y + inv(2,2) * v.z
 		);
 }
 
@@ -85,9 +85,9 @@ const transform3d lookAt(const point3& pos, const point3& look, const vec3& up){
 	const vec3 newUp(cross(right, dir));
 
     const float v[4][4] = {
-        {right.x(), newUp.x(), dir.x(), pos.x()},
-        {right.y(), newUp.y(), dir.y(), pos.y()},
-        {right.z(), newUp.z(), dir.z(), pos.z()},
+        {right.x, newUp.x, dir.x, pos.x},
+        {right.y, newUp.y, dir.y, pos.y},
+        {right.z, newUp.z, dir.z, pos.z},
         {0.f, 0.f, 0.f, 1.f}
     };
 

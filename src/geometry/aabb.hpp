@@ -31,56 +31,56 @@ class aabb {
             min(b,l,f), max(t,r,ba), mid((min+max)/2.f) {}
 
         inline const float& top() const {
-            return max.y();
+            return max.y;
         }
 
         inline const float& right() const {
-            return max.x();
+            return max.x;
         }
 
         inline const float& back() const {
-            return max.z();
+            return max.z;
         }
 
         inline const float& bottom() const {
-            return min.y();
+            return min.y;
         }
 
         inline const float& left() const {
-            return min.x();
+            return min.x;
         }
 
         inline const float& front() const {
-            return min.z();
+            return min.z;
         }
 
         inline void setTop(const float& f){
-             max.y() = f;
+             max.y = f;
              updateMid();
         }
 
         inline void setRight(const float& f){
-             max.y() = f;
+             max.y = f;
              updateMid();
         }
 
         inline void setBack(const float& f){
-             max.y() = f;
+             max.y = f;
              updateMid();
         }
 
         inline void setBottom(const float& f){
-             min.y() = f;
+             min.y = f;
              updateMid();
         }
 
         inline void setLeft(const float& f){
-             min.y() = f;
+             min.y = f;
              updateMid();
         }
 
         inline void setFront(const float& f){
-             min.y() = f;
+             min.y = f;
              updateMid();
         }
 
@@ -97,9 +97,9 @@ class aabb {
         inline float surfaceArea() const {
             const vec3 diff = max - min;
             return 
-                (fabsf(diff.x()) > EPSILON) ? diff.x() : 1 *
-                (fabsf(diff.y()) > EPSILON) ? diff.y() : 1 *
-                (fabsf(diff.z()) > EPSILON) ? diff.z() : 1;
+                (fabsf(diff.x) > EPSILON) ? diff.x : 1 *
+                (fabsf(diff.y) > EPSILON) ? diff.y : 1 *
+                (fabsf(diff.z) > EPSILON) ? diff.z : 1;
         }
 
         bool intersect(const ray& r, float& tmin, float& tmax) const;
