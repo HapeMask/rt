@@ -223,6 +223,7 @@ class vec3 {
 class vec4 : public vec3 {
     public:
         vec4() : vec3() {}
+        vec4(const vec3& v) : vec3(v) {}
         vec4(const float& x, const float& y, const float& z, const float& w) : vec3(x,y,z,w) {}
         vec4(const float& f) : vec3(f) {}
         vec4(const __m128& v) : vec3(v) {}
@@ -401,7 +402,7 @@ inline vec3 normalize(const vec3& u){
 #endif
 }
 
-inline vec4 normalize(const vec4& u){
+inline vec4 normalize(const vec4 u){
 #ifdef __SSE4_1__
     return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
 #else
