@@ -14,9 +14,11 @@ add_definitions(${QT_DEFINITIONS})
 
 set(NUM_PARALLEL_LOOPS 4)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS} -flto")
+set(LINK_FLAGS "${LINK_FLAGS} -flto")
 
 add_definitions(-O3
-    -g
+    -g -Wall
     -fno-rtti -fno-exceptions -std=c++11
     -m64 -march=native
     -mmmx -msse -msse2 -mfpmath=sse
@@ -28,7 +30,7 @@ add_definitions(-O3
     -ffast-math -freciprocal-math -mrecip
     -pipe -fomit-frame-pointer
     -fexpensive-optimizations
-    -fgcse-sm -fgcse-las
+    -fgcse-sm -fgcse-las -flto
     -Wno-inline -Wno-unused-parameter)
 
 add_definitions(-DRT_NO_EXECPTIONS
