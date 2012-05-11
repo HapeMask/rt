@@ -130,7 +130,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
         r.tMin = EPSILON;
     }
 
-    if(!(isFinite(L.r) && isFinite(L.g) && isFinite(L.b))){
+    if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){
         return rgbColor(0.f, 0.f, 0.f);
     }else{
         return L;

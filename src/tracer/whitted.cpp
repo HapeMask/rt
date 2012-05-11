@@ -108,11 +108,8 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
         L += (ft / pdf) * _L(r2, depth+1) * fabsf(dot(specDir, normal));
     }
 
-    // TODO: Really need to find out what's causing this.
-    if(L.r < 0.f || L.g < 0.f || L.b < 0.f ||
-            isnan(L.r) || isnan(L.g) || isnan(L.b))
-    {
-        return rgbColor(0.f);
+    if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){
+        return rgbColor(0.f, 0.f, 0.f);
     }else{
         return L;
     }

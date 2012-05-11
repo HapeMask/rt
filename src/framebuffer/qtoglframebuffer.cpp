@@ -526,9 +526,9 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
                 (float)samplesPerPixel[offset];
 
             const rgbColor gammaC = clamp(rgbColor(
-                    powf(c.r, gamma),
-                    powf(c.g, gamma),
-                    powf(c.b, gamma)));
+                    powf(c.red(), gamma),
+                    powf(c.green(), gamma),
+                    powf(c.blue(), gamma)));
 
             setPixel(x, y, gammaC);
         }

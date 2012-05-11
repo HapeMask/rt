@@ -10,23 +10,20 @@
 #include <iostream>
 using std::ostream;
 
+#include "mathlib/sse.hpp"
+#include "mathlib/vector.hpp"
+
 class color {
 	public:
-		virtual float red() const = 0;
-		virtual float green() const = 0;
-		virtual float blue() const = 0;
+		float red() const { return 0; }
+		float green() const { return 0; }
+		float blue() const { return 0; }
+		float alpha() const { return 0; }
 
-		uint8_t R() const {
-			return 255.f * red();
-		}
-
-		uint8_t G() const {
-			return 255.f * green();
-		}
-
-		uint8_t B() const {
-			return 255.f * blue();
-		}
+        inline uint8_t R() const { return 0; }
+        inline uint8_t G() const { return 0; }
+        inline uint8_t B() const { return 0; }
+        inline uint8_t A() const { return 0; }
 
         inline float gray() const {
             return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
@@ -35,130 +32,52 @@ class color {
         inline float avg() const {
             return (red() + blue() + green()) / 3.f;
         }
-
-		virtual void invert() = 0;
 };
 
-class rgbColor : public color {
+class rgbColor : public color, public vec3 {
 	public:
-		rgbColor() : r(0), g(0), b(0) {}
-		rgbColor(const float& r, const float& g, const float& b);
-		rgbColor(const int& r, const int& g, const int& b);
-		rgbColor(const color& c);
+		rgbColor() : vec3(0,0,0,1) {}
+		rgbColor(const vec3& v) : vec3(v) {}
+        rgbColor(const float& r, const float& g, const float& b) :
+            vec3(r,g,b,1) {}
+        rgbColor(const float& r, const float& g, const float& b, const float& a) :
+            vec3(r,g,b,a) {}
+        rgbColor(const int& r, const int& g, const int& b) :
+            vec3(r/255.f, g/255.f, b/255.f, 1.f) {}
+        rgbColor(const int& r, const int& g, const int& b, const int& a) :
+            vec3(r/255.f, g/255.f, b/255.f, a/255.f) {}
+        rgbColor(const __m128& m) : vec3(m) {}
 
-        explicit rgbColor(const float& f);
+        explicit rgbColor(const float& f): vec3(f,f,f,1) {}
 
-		const rgbColor inverse() const;
-		virtual void invert();
+        inline rgbColor inverse() const {
+            return rgbColor(1.f) - (*this);
+        }
 
-		virtual float red() const {
-			return r;
-		}
+        const float& red() const { return x; }
+        const float& green() const { return y; }
+        const float& blue() const { return z; }
+        const float& alpha() const { return w; }
 
-		virtual float green() const {
-			return g;
-		}
-
-		virtual float blue() const {
-			return b;
-		}
+        inline uint8_t R() const { return 255.f * red(); }
+        inline uint8_t G() const { return 255.f * green(); }
+        inline uint8_t B() const { return 255.f * blue(); }
+        inline uint8_t A() const { return 255.f * alpha(); }
 
         inline bool isBlack() const {
-            return (r <= 0 && g <= 0 && b <= 0);
-        }
-
-		inline const rgbColor operator/(const rgbColor& c) const{
-            return rgbColor(*this) /= c;
-        }
-
-		inline rgbColor& operator/=(const rgbColor& c){
-            r /= c.r;
-            g /= c.g;
-            b /= c.b;
-            return (*this);
-        }
-
-        inline const rgbColor operator*(const float& f) const{
-            return rgbColor(*this) *= f;
-        }
-
-        inline rgbColor& operator*=(const float& f){
-            r *= f;
-            g *= f;
-            b *= f;
-            return (*this);
-        }
-
-        inline const rgbColor operator/(const float& f) const{
-            return rgbColor(*this) *= (1.f / f);
-        }
-
-        inline rgbColor& operator/=(const float& f){
-            return this->operator*=(1.f/f);
-        }
-
-        const rgbColor operator-(const rgbColor& c) const{
-            return rgbColor(*this) -= c;
-        }
-
-        inline rgbColor& operator-=(const rgbColor& c){
-            r -= c.r;
-            g -= c.g;
-            b -= c.b;
-            return (*this);
-        }
-
-        inline const rgbColor operator+(const rgbColor& c) const{
-            return rgbColor(*this) += c;
-        }
-
-        inline rgbColor& operator+=(const rgbColor& c){
-            r += c.r;
-            g += c.g;
-            b += c.b;
-            return (*this);
-        }
-
-        inline const rgbColor operator*(const rgbColor& c) const{
-            return rgbColor(*this) *= c;
-        }
-
-        inline rgbColor& operator*=(const rgbColor& c){
-            r *= c.r;
-            g *= c.g;
-            b *= c.b;
-            return (*this);
+            return (red() <= 0 && green() <= 0 && blue() <= 0);
         }
 
 #ifdef RT_USE_QT
         inline const QColor qcolor() const {
-            return QColor(255.f * r, 255.f * g, 255.f * b);
+            return QColor(255.f * x, 255.f * y, 255.f * z);
         }
 
         inline uint toUint() const {
             return QColormap::instance().pixel(qcolor());
         }
 #endif
-
-		float r;
-		float g;
-		float b;
 };
-
-inline const rgbColor sqrt(const rgbColor& c){
-    return rgbColor(sqrtf(c.r), sqrtf(c.g), sqrtf(c.b));
-}
-
-inline rgbColor& operator*=(const float& f, rgbColor& c){
-    c.r *= f;
-    c.g *= f;
-    c.b *= f;
-    return c;
-}
-
-inline const rgbColor operator*(const float& f, const rgbColor& c){
-    return rgbColor(f*c.r, f*c.g, f*c.b);
-}
 
 inline const rgbColor lerp(const rgbColor& a, const rgbColor& b, const float& alpha) {
     return (1.f - alpha) * a + alpha * b;

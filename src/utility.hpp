@@ -21,12 +21,12 @@ inline constexpr bool isFinite(const float& f){
 }
 
 inline rgbColor clamp(const rgbColor& c){
-    if(!(isFinite(c.r) && isFinite(c.g) && isFinite(c.b))){
+    if(!(isFinite(c.red()) && isFinite(c.green()) && isFinite(c.blue()))){
         return rgbColor(0.f);
     }else{
-        const float r = std::min(std::max(c.r, 0.f), 1.f);
-        const float g = std::min(std::max(c.g, 0.f), 1.f);
-        const float b = std::min(std::max(c.b, 0.f), 1.f);
+        const float r = std::min(std::max(c.red(), 0.f), 1.f);
+        const float g = std::min(std::max(c.green(), 0.f), 1.f);
+        const float b = std::min(std::max(c.blue(), 0.f), 1.f);
         return rgbColor(r,g,b);
     }
 }
