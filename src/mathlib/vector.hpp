@@ -7,11 +7,7 @@
 
 using namespace std;
 
-class point3;
-//class vec3;
-
 class vec2 {
-    //friend class vec3;
     public:
         constexpr vec2() : x(0), y(0) {}
         constexpr vec2(const float& x, const float& y) : x(x), y(y) {}
@@ -84,11 +80,10 @@ class vec2 {
         float y;
 };
 
+class point3;
 class vec3 {
-    friend class point3;
     public:
         vec3(const point3& p);
-
         vec3() : xyzw{0,0,0,0} {}
         vec3(const float& x, const float& y, const float& z) : xyzw{x, y, z, 0.f} {}
         vec3(const vec2& v, const float& f) : xyzw{v.x, v.y, f, 0} {}
@@ -222,7 +217,7 @@ inline float dot(const vec2& u, const vec2& v){
 
 inline float dot(const vec3& u, const vec3& v){
 #ifdef __SSE4_1__
-    return _mm_cvtss_f32(dpps(u, v, DOTMASK_3));
+    return _mm_cvtss_f32(dpps(u.xyzw, v.xyzw, DOTMASK_3));
 #else
     return
         (u.x * v.x) +
@@ -233,7 +228,7 @@ inline float dot(const vec3& u, const vec3& v){
 
 inline float dot(const vec4& u, const vec4& v){
 #ifdef __SSE4_1__
-    return _mm_cvtss_f32(dpps(u, v, DOTMASK_4));
+    return _mm_cvtss_f32(dpps(u.xyzw, v.xyzw, DOTMASK_4));
 #else
     return
         (u.x * v.x) +
@@ -244,14 +239,12 @@ inline float dot(const vec4& u, const vec4& v){
 }
 
 inline vec3 cross(const vec3& a, const vec3& b){
-    const __m128 v1 =
+    return vec3(
             shufps(b.xyzw, b.xyzw, shufarg(0, 1, 0, 2)) *
-            shufps(a.xyzw, a.xyzw, shufarg(0, 0, 2, 1));
-    const __m128 v2 =
-            shufps(b.xyzw, b.xyzw, shufarg(0, 0, 2, 1)) *
-            shufps(a.xyzw, a.xyzw, shufarg(0, 1, 0, 2));
+            shufps(a.xyzw, a.xyzw, shufarg(0, 0, 2, 1)) -
 
-    return vec3(v1 - v2);
+            shufps(b.xyzw, b.xyzw, shufarg(0, 0, 2, 1)) *
+            shufps(a.xyzw, a.xyzw, shufarg(0, 1, 0, 2)));
 }
 
 inline const vec2 operator*(const float& f, const vec2& u){
@@ -275,11 +268,7 @@ inline const vec2 operator/(const float& f, const vec2& v){
 }
 
 inline const vec3 operator/(const float& f, const vec3& v){
-    return vec3(f / v.x, f / v.y, f / v.z);
-}
-
-inline const vec4 operator/(const float& f, const vec4& v){
-    return vec4(f / v.x, f / v.y, f / v.z, f / v.w);
+    return vec3(set1ps(f) * rcpps(v.xyzw));
 }
 
 inline const vec3 min(const vec3& a, const vec3& b) {
@@ -300,8 +289,7 @@ inline float norm(const vec2& v) {
 
 inline float norm(const vec3& v) {
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return _mm_cvtss_f32(sqrtss(dpps(v, v, DOTMASK_3)));
+    return _mm_cvtss_f32(sqrtss(dpps(v.xyzw, v.xyzw, DOTMASK_3)));
 #else
     return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z);
 #endif
@@ -309,8 +297,7 @@ inline float norm(const vec3& v) {
 
 inline float norm(const vec4& v) {
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return _mm_cvtss_f32(sqrtss(dpps(v, v, DOTMASK_4)));
+    return _mm_cvtss_f32(sqrtss(dpps(v.xyzw, v.xyzw, DOTMASK_4)));
 #else
     return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w);
 #endif
@@ -318,8 +305,7 @@ inline float norm(const vec4& v) {
 
 inline float norm2(const vec3& v) {
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return _mm_cvtss_f32(dpps(v, v, DOTMASK_3));
+    return _mm_cvtss_f32(dpps(v.xyzw, v.xyzw, DOTMASK_3));
 #else
     return v.x*v.x + v.y*v.y + v.z*v.z;
 #endif
@@ -327,8 +313,7 @@ inline float norm2(const vec3& v) {
 
 inline float norm2(const vec4& v) {
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return _mm_cvtss_f32(dpps(v, v, DOTMASK_4));
+    return _mm_cvtss_f32(dpps(v.xyzw, v.xyzw, DOTMASK_4));
 #else
     return v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w;
 #endif
@@ -336,21 +321,15 @@ inline float norm2(const vec4& v) {
 
 inline const vec3 normalize(const vec3& u){
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return u.xyzw * rsqrtps(dpps(u.xyzw, u.xyzw, 0x77));
-    // More Accurate:
-    //return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0x7F));
+    return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0x7F));
 #else
     return u / norm(u);
 #endif
 }
 
-inline const vec3 normalize(const vec4& u){
+inline const vec4 normalize(const vec4& u){
 #ifdef __SSE4_1__
-#error "TEST ME"
-    return u.xyzw * rsqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
-    // More Accurate:
-    //return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
+    return u.xyzw / sqrtps(dpps(u.xyzw, u.xyzw, 0xFF));
 #else
     return u / norm(u);
 #endif

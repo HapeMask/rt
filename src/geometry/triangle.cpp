@@ -48,8 +48,6 @@ const intersection triangle::intersect(ray& r) const {
         intersection isect(this, t);
         isect.normal = normal_;
 
-        const float alpha = 1.f - (beta + gamma);
-
         isect.shadingNormal = normal_;
         isect.uv = vec2(beta, gamma);
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);

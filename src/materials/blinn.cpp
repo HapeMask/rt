@@ -23,7 +23,6 @@ void blinn::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
 
     if(wh.y > 0){
         wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;
-
         pd = ((exp + 2.f) * powf(cosThetaH, exp)) / (4.f * TWOPI * fabsf(dot(wo, wh)));
     }else{
         pd = 0.f;

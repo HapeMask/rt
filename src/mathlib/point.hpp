@@ -53,44 +53,6 @@ class point3 : public vec3 {
         point3() : vec3() {}
 		point3(const vec3& u) : vec3(u) {}
         point3(const float& x, const float& y, const float& z) : vec3(x, y, z) {}
-
-        inline const float& operator()(const int& index) const {
-#ifdef DEBUG
-            assert(index < 3);
-#endif
-            return *(&x + index);
-        }
-
-        inline float& operator()(const int& index){
-#ifdef DEBUG
-            assert(index < 3);
-#endif
-            return *(&x + index);
-        }
-
-        /*
-        inline const point3 operator+(const vec3& u) const {
-            return point3(*this) += u;
-        }
-
-        inline point3& operator+=(const vec3& u) {
-            xyzw += u.xyzw;
-            return (*this);
-        }
-
-        inline const point3 operator-(const vec3& u) const {
-            return point3(xyzw - u.xyzw);
-        }
-
-        inline point3& operator-=(const vec3& u) {
-            xyzw -= u.xyzw;
-            return (*this);
-        }
-
-        inline const vec3 operator-(const point3& p) const {
-            return vec3(xyzw - p.xyzw);
-        }
-        */
 };
 
 inline const point3 min(const point3& a, const point3& b) {

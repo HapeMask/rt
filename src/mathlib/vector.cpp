@@ -7,11 +7,7 @@
 
 using std::ostream;
 
-#ifdef HAVE_SSE2
-vec3::vec3(const point3& p) : xyzw(p.xyzw) {}
-#else
-vec3::vec3(const point3& p) : x(p.x), y(p.y), z(p.z), w(0) {}
-#endif
+//vec3::vec3(const point3& p) : xyzw(p.xyzw) {}
 
 ostream& operator<<(ostream& out, const vec2& v){
     out << "vec2(" << v.x << ", " << v.y << ")";

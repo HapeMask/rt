@@ -447,6 +447,10 @@ void qtOpenGLFramebuffer::_render() {
     averageSamplesPerSec = ((averageSamplesPerSec*iterations) +
         (float)(_width*_height)/timeElapsed) / (iterations+1.f);
     ++iterations;
+    if(iterations == 1024) {
+        toggleRendering();
+        saveToImage("water-test.png");
+    }
 
     blocksUsed = 0;
 }
