@@ -7,6 +7,7 @@
 
 #include "mathlib/vector.hpp"
 #include "mathlib/ray.hpp"
+#include "materials/bsdf.hpp"
 
 #include "acceleration/intersection.hpp"
 
