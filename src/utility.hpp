@@ -3,10 +3,7 @@
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "acceleration/intersection.hpp"
-
-#ifdef HAVE_SSE2
 #include "mathlib/sse.hpp"
-#endif
 
 inline constexpr float radians(const float& deg){
 	return (deg / 180.f) * PI;

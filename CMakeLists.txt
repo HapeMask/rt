@@ -18,8 +18,8 @@ set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS} -flto")
 set(LINK_FLAGS "${LINK_FLAGS} -flto")
 
 add_definitions(-O3
-    -g -Wall
-    -fno-rtti -fno-exceptions -std=c++11
+    -g -Wall -std=c++11
+    -fno-rtti -fno-exceptions
     -m64 -march=native
     -mmmx -msse -msse2 -mfpmath=sse
     -ftree-vectorize -fopenmp
@@ -31,10 +31,10 @@ add_definitions(-O3
     -pipe -fomit-frame-pointer
     -fexpensive-optimizations
     -fgcse-sm -fgcse-las -flto
+    -Wno-narrowing
     -Wno-inline -Wno-unused-parameter)
 
-add_definitions(-DRT_NO_EXECPTIONS
-                -DRT_MULTITHREADED
+add_definitions(-DRT_MULTITHREADED
                 -DHAVE_SSE2
                 -DMEXP=19937
                 -DRT_USE_QT

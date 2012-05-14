@@ -11,7 +11,6 @@ ostream& operator<<(ostream& out, const aabb& b){
 }
 
 bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
-#ifdef HAVE_SSE2
     const __m128 boxMin = min.xyzw;
     const __m128 boxMax = max.xyzw;
     const __m128 pos = r.origin.xyzw;
@@ -39,32 +38,9 @@ bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {
     storess(lmax, &tmax);
 
     return ret;
-#else
-    float t0 = r.tMin, t1 = r.tMax;
-    for(int i=0; i<3; ++i){
-        float tNear = (min(i) - r.origin(i)) * r.invDir(i);
-        float tFar = (max(i) - r.origin(i)) * r.invDir(i);
-
-        if(tNear > tFar) {
-            const float temp = tNear;
-            tNear = tFar;
-            tFar = temp;
-        }
-
-        t0 = tNear > t0 ? tNear : t0;
-        t1 = tFar < t1 ? tFar : t1;
-
-        if(t0 > t1) {
-            return false;
-        }
-    }
-
-    return true;
-#endif
 }
 
 bool aabb::intersect(const aabb& box) const {
-#ifdef HAVE_SSE2
     const __m128 aMin = min.xyzw;
     const __m128 aMax = max.xyzw;
 
@@ -79,6 +55,4 @@ bool aabb::intersect(const aabb& box) const {
     const int res2 = _mm_movemask_ps(test2) & 0x7;
 
     return (res1 && res2);
-#else
-#endif
 }

@@ -4,11 +4,6 @@
 #include "mathlib/vector.hpp"
 #include "color/color.hpp"
 #include "acceleration/intersection.hpp"
-
-#ifdef HAVE_SSE2
-#include "mathlib/sse.hpp"
-#endif
-
 #include "utility.hpp"
 
 void makeCoordinateSystem(const vec3& u, vec3& v, vec3& w){
