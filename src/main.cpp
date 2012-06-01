@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 #include <QApplication>
-#include "mathlib/SFMT.h"
 
 #include "framebuffer/qtoglframebuffer.hpp"
 #include "qtgui/qtmainwin.hpp"
@@ -29,9 +28,6 @@ using std::endl;
 using std::ifstream;
 
 int main(int argc, char* args[]){
-    // SFMT
-    init_gen_rand(time(NULL));
-
     scene scn;
 
     string filename = "../src/scene/test.scn";

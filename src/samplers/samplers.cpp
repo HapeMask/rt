@@ -1,21 +1,26 @@
+#include <cstdlib>
+#include <cmath>
+#include <random>
+
 #include "samplers.hpp"
 #include "utility.hpp"
-#include "mathlib/SFMT.h"
 
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 #include "geometry/triangle.hpp"
 
-#include <cstdlib>
-#include <cmath>
+// TODO: FIX THIS!
+static mt19937 rng;
+static uniform_real_distribution<float> uniform;
 
 float sampleUniform(){
-	//return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-    return genrand_real1();
+    return uniform(rng);
 }
 
 int sampleRange(const float& u0, const int& a, const int& b){
     return a + u0 * min((b-a + 1), b);
+    // Slower, probably because it has to construct a new RNG for each call.
+    //return uniform_int_distribution<int>(a, b)(rng);
 }
 
 void sampleDisk(vec3& v, const float& u0, const float& u1){

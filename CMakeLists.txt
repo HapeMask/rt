@@ -18,7 +18,7 @@ set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS} -flto")
 set(LINK_FLAGS "${LINK_FLAGS} -flto")
 
 add_definitions(-O3
-    -g -Wall -std=c++11
+    -g3 -Wall -std=c++11
     -fno-rtti -fno-exceptions
     -m64 -march=native
     -mmmx -msse -msse2 -mfpmath=sse
@@ -34,11 +34,7 @@ add_definitions(-O3
     -Wno-narrowing
     -Wno-inline -Wno-unused-parameter)
 
-add_definitions(-DRT_MULTITHREADED
-                -DHAVE_SSE2
-                -DMEXP=19937
-                -DRT_USE_QT
-)
+add_definitions(-DRT_MULTITHREADED -DRT_USE_QT)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
