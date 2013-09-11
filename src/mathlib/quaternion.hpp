@@ -1,5 +1,4 @@
-#ifndef __QUATERNION__
-#define __QUATERNION__
+#pragma once
 
 #include "vector.hpp"
 
@@ -36,5 +35,3 @@ quaternion qmult(const quaternion& a, const quaternion& b){
 	return quaternion(((a.w * b.w) - dot(q, r)),
 			vec3(((r * a.w) + (q * b.w) + cross(q, r))));
 }
-
-#endif

@@ -9,7 +9,7 @@
 #include <cmath>
 
 float aniso::D(const vec3& wh) const {
-    return ecTerm * powf(fabsf(bsdf::cosTheta(wh)), exponent(wh));
+    return ecTerm * pow(abs(bsdf::cosTheta(wh)), exponent(wh));
 }
 
 float aniso::exponent(const vec3& wh) const {
@@ -35,12 +35,12 @@ void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
         phi = TWOPI - phi;
     }
 
-    const float sintheta = sqrtf(std::max(0.f, 1.f - costheta*costheta));
+    const float sintheta = sqrt(std::max(0.f, 1.f - costheta*costheta));
     vec3 wh;
     sphericalToDirection(wh, sintheta, costheta, phi);
     wh = normalize(wh);
 
-    wi = 2.f * fabsf(dot(wo, wh)) * wh - wo;
+    wi = 2.f * abs(dot(wo, wh)) * wh - wo;
     pd = pdf(wo, wi);
 
     if(wo.y * wi.y < 0.f){
@@ -50,5 +50,5 @@ void aniso::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, 
 
 float aniso::pdf(const vec3& wo, const vec3& wi) const{
     const vec3 wh = halfVector(wo, wi);
-    return D(wh) / (4.f * fabsf(dot(wo, wh)));
+    return D(wh) / (4.f * abs(dot(wo, wh)));
 }

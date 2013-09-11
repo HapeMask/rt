@@ -11,7 +11,7 @@ const rgbColor frostedGlassBsdf::sampleF(const float& u0, const float& u1, const
         u2, const vec3& wo, vec3& wi, bxdfType type, bxdfType& sampledType,
         float& pd) const {
 
-    const rgbColor F = glossTra->evalFresnel(fabsf(bsdf::cosTheta(wo)));
+    const rgbColor F = glossTra->evalFresnel(abs(bsdf::cosTheta(wo)));
     const float Fr = (F.red() + F.blue() + F.green())/3.f;
     const float Ft = 1.f - Fr;
     rgbColor f(0.f);

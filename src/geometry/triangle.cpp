@@ -38,7 +38,7 @@ const intersection triangle::intersect(ray& r) const {
 
     const float t = dot(C, v2) * invD;
 
-    if(fabsf(D) > EPSILON &&
+    if(abs(D) > EPSILON &&
             beta >= 0.f && beta <= 1.f &&
             gamma >= 0.f && beta+gamma <= 1.f &&
             t >= r.tMin && t < r.tMax){
@@ -70,7 +70,7 @@ bool triangle::intersectB(const ray& r) const {
 
     const float t = dot(C, v2) * invD;
 
-    return (fabsf(D) > EPSILON &&
+    return (abs(D) > EPSILON &&
             beta >= 0.f && beta <= 1.f &&
             gamma >= 0.f && beta+gamma <= 1.f &&
             t >= r.tMin && t < r.tMax);

@@ -7,7 +7,7 @@
 areaLight::areaLight(const point3& p, const float& pow, const rgbColor& c,
         const vec3& vA, const vec3& vB) :
     light(p, pow, c), a(vA), b(vB), normal(normalize(cross(vA,vB))),
-    area(fabsf(norm(cross(vA,vB)))), invArea(1.f/fabsf(norm(cross(vA,vB))))
+    area(abs(norm(cross(vA,vB)))), invArea(1.f/abs(norm(cross(vA,vB))))
 {
     const point3 A = p - 0.5f*vA - 0.5f*vB;
     const point3 B = p + 0.5f*vA - 0.5f*vB;
@@ -38,7 +38,7 @@ float areaLight::pdf(const point3& p, const vec3& wi) const {
 
     if(isect.hit){
         // P(wi) = r^2 / cosTheta * A
-        const float cosTheta = fabsf(dot(-wi, normal));
+        const float cosTheta = abs(dot(-wi, normal));
         return (isect.t * isect.t) / (cosTheta * area);
     }else{
         return 0.f;

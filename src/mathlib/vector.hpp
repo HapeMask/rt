@@ -359,14 +359,14 @@ inline float norm2(const vec2& v) {
 }
 
 inline float norm(const vec2& v) {
-    return sqrtf(norm2(v));
+    return sqrt(norm2(v));
 }
 
 inline float norm(const vec3& v) {
 #ifdef __SSE4_1__
     return _mm_cvtss_f32(sqrtss(dpps(v.xyzw, v.xyzw, DOTMASK_3)));
 #else
-    return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z);
+    return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
 #endif
 }
 
@@ -374,7 +374,7 @@ inline float norm(const vec4& v) {
 #ifdef __SSE4_1__
     return _mm_cvtss_f32(sqrtss(dpps(v.xyzw, v.xyzw, DOTMASK_4)));
 #else
-    return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w);
+    return sqrt(v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w);
 #endif
 }
 

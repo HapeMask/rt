@@ -68,9 +68,9 @@ inline vec3 bsdfToWorld(const vec3& v, const vec3& normal, const vec3& binormal,
 }
 
 inline void sphericalToDirection(vec3& v, const float& sinTheta, const float& cosTheta, const float& phi){
-    v.x = sinTheta * cosf(phi);
+    v.x = sinTheta * cos(phi);
     v.y = cosTheta;
-    v.z = sinTheta * sinf(phi);
+    v.z = sinTheta * sin(phi);
 }
 
 /**
@@ -78,8 +78,8 @@ inline void sphericalToDirection(vec3& v, const float& sinTheta, const float& co
  * Y in the range [-0.5, 0.5]
  */
 inline constexpr float gaussian2DNormalization(const float& sigma) {
-    return 0.3989422804f * fabsf(1.f/sigma) * erf(0.353553389f *
-            fabsf(1.f/sigma)) * (-1.25331413f * sigma *
+    return 0.3989422804f * abs(1.f/sigma) * erf(0.353553389f *
+            abs(1.f/sigma)) * (-1.25331413f * sigma *
             erf(-0.353553389f/sigma) + 1.25331413f * sigma *
             erf(0.353553389f/sigma));
 }

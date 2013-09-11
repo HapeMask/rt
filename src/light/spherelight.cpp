@@ -33,21 +33,21 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     const vec3 u = normalize(cross(w, vec3(0,1,0)));
     const vec3 v = normalize(cross(u, w));
 
-    const float distanceTerm = sqrtf(1.f - radius2 / norm2(p-position));
+    const float distanceTerm = sqrt(1.f - radius2 / norm2(p-position));
     const float phi = TWOPI * u1;
 
     // Theta itself is never actually needed anywhere, so no need to calculate
     // it as specified in the paper.
     const float cosTheta = 1.f - u0 + u0*distanceTerm;
-    const float sinTheta = sqrtf(1.f - cosTheta*cosTheta);
-    //const float theta = acosf(cosTheta);
+    const float sinTheta = sqrt(1.f - cosTheta*cosTheta);
+    //const float theta = acos(cosTheta);
 
     // Note the swapping of w and v columns in the "matrix" below as compared
     // to the paper. This is because our coordinate system has Y-axis as the
     // "up" direction.
-    const float v1 = sinTheta * cosf(phi);
+    const float v1 = sinTheta * cos(phi);
     const float v2 = cosTheta;
-    const float v3 = sinTheta * sinf(phi);
+    const float v3 = sinTheta * sin(phi);
     const vec3 a = normalize(vec3(
                 v1 * u.x + v2 * w.x + v3 * v.x,
                 v1 * u.y + v2 * w.y + v3 * v.y,

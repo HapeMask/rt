@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <omp.h>
 
 #include "color/color.hpp"
 

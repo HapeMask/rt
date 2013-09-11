@@ -97,9 +97,9 @@ class aabb {
         inline float surfaceArea() const {
             const vec3 diff = max - min;
             return 
-                (fabsf(diff.x) > EPSILON) ? diff.x : 1 *
-                (fabsf(diff.y) > EPSILON) ? diff.y : 1 *
-                (fabsf(diff.z) > EPSILON) ? diff.z : 1;
+                (abs(diff.x) > EPSILON) ? diff.x : 1 *
+                (abs(diff.y) > EPSILON) ? diff.y : 1 *
+                (abs(diff.z) > EPSILON) ? diff.z : 1;
         }
 
         bool intersect(const ray& r, float& tmin, float& tmax) const;

@@ -94,7 +94,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				if(!fr.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);
 					ray r2(r.origin, specDir);
-					L += fr * _L<true>(r2, depth+1) * fabsf(dot(specDir, normal)) / pdf;
+					L += fr * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
 				}
 
 				const rgbColor ft =
@@ -104,7 +104,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 				if(!ft.isBlack()){
 					specDir = bsdfToWorld(specDir, isect);
 					ray r2(r.origin, specDir);
-					L += ft * _L<true>(r2, depth+1) * fabsf(dot(specDir, normal)) / pdf;
+					L += ft * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
 				}
 			}
             break;
@@ -112,7 +112,7 @@ const rgbColor pathTracer::_L(ray& r, const int depth) const {
 
         wi = normalize(bsdfToWorld(wi, isect));
 
-        throughput *= f * fabsf(dot(wi, normal)) / pdf;
+        throughput *= f * abs(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
         // Paths that carry a lot of light will last longer than darker paths.

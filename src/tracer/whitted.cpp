@@ -8,8 +8,6 @@
 #include "materials/bsdf.hpp"
 #include "scene/scene.hpp"
 
-#include <omp.h>
-
 const int areaSamples = 4;
 
 const rgbColor whittedRayTracer::L(const ray& r) const{
@@ -95,7 +93,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!fr.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (fr / pdf) * _L(r2, depth+1) * fabsf(dot(specDir, normal));
+        L += (fr / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
     }
 
     const rgbColor ft =
@@ -105,7 +103,7 @@ const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!ft.isBlack()){
 		specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (ft / pdf) * _L(r2, depth+1) * fabsf(dot(specDir, normal));
+        L += (ft / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
     }
 
     if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){

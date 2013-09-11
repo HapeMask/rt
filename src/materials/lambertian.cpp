@@ -27,7 +27,7 @@ const rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
 }
 
 float lambertianBrdf::pdf(const vec3& wo, const vec3& wi) const {
-    return fabsf(bsdf::cosTheta(wi) * INVPI);
+    return abs(bsdf::cosTheta(wi) * INVPI);
 }
 
 void lambertianBrdf::updateFromUVTexture(const vec2& uv) {

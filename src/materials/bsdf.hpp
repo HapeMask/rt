@@ -29,12 +29,12 @@ enum fresnelType {
 // Utility Functions
 //
 inline const rgbColor rescaledApproxFresnel(const float& eta, const float& k, const float& cosTheta){
-    return rgbColor(((eta-1.f)*(eta-1.f) + (4 * eta * powf(1.f - cosTheta, 5) + k*k)) /
+    return rgbColor(((eta-1.f)*(eta-1.f) + (4 * eta * pow(1.f - cosTheta, 5) + k*k)) /
         ((eta+1.f)*(eta+1.f) + k*k));
 }
 
 inline const rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
-	return r0 + (rgbColor(1.f) - r0) * powf(1.f - cosTheta, 5);
+	return r0 + (rgbColor(1.f) - r0) * pow(1.f - cosTheta, 5);
 }
 
 inline const vec3 reflect(const vec3& w) {
@@ -376,7 +376,7 @@ inline float bsdf::cos2Theta(const vec3& v){
 }
 
 inline float bsdf::sinTheta(const vec3& v){
-    return sqrtf(std::max(0.f, 1.f - v.y*v.y));
+    return sqrt(std::max(0.f, 1.f - v.y*v.y));
 }
 
 inline float bsdf::sin2Theta(const vec3& v){

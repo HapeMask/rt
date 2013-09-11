@@ -1,6 +1,5 @@
 #include "renderthread.hpp"
 #include "qtoglframebuffer.hpp"
-#include <omp.h>
 
 renderThread::renderThread(qtOpenGLFramebuffer* f) : shouldExit(false), rendering(false), fb(f) {}
 

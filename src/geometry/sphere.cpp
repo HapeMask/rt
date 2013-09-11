@@ -68,7 +68,7 @@ const intersection sphere::intersect(ray& r) const {
     isect.tangent = cross(isect.normal, isect.binormal);
 
     const float u = atan2f(isect.normal.z, isect.normal.x) * INVTWOPI;
-    const float v = (1.f + acosf(isect.normal.y)) * INVTWOPI;
+    const float v = (1.f + acos(isect.normal.y)) * INVTWOPI;
     isect.uv = vec2(u,v);
 	return isect;
 }

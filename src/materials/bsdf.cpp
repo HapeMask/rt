@@ -165,7 +165,7 @@ const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
      */
 	///*
     if(specRef && specTra && matches.size() > 1){
-        const rgbColor F = specRef->evalFresnel(fabsf(bsdf::cosTheta(wo)));
+        const rgbColor F = specRef->evalFresnel(abs(bsdf::cosTheta(wo)));
         const float Fr = (F.red() + F.blue() + F.green())/3.f;
         const float Ft = 1.f - Fr;
 

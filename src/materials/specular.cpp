@@ -31,8 +31,8 @@ const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec
     pd = 1.f;
     wi = normalize(vec3(-wo.x, wo.y, -wo.z));
 
-    const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
-    return Fr * kR / fabsf(bsdf::cosTheta(wi));
+    const rgbColor Fr = evalFresnel(abs(bsdf::cosTheta(wo)));
+    return Fr * kR / abs(bsdf::cosTheta(wi));
 }
 
 const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
@@ -57,14 +57,14 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
             wi = normalize(vec3(-wo.x, -wo.y, -wo.z));
         }
 
-        const rgbColor Fr = evalFresnel(fabsf(bsdf::cosTheta(wo)));
-        return Fr / fabsf(bsdf::cosTheta(wi));
+        const rgbColor Fr = evalFresnel(abs(bsdf::cosTheta(wo)));
+        return Fr / abs(bsdf::cosTheta(wi));
     }
 
     // Flip the normal if we're entering the surface.
     const float cosThetaT = entering ?
-        -sqrtf(1.f - sin2ThetaT) :
-        sqrtf(1.f - sin2ThetaT);
+        -sqrt(1.f - sin2ThetaT) :
+        sqrt(1.f - sin2ThetaT);
 
     wi = normalize(vec3(
                 eta * -wo.x,
@@ -72,6 +72,6 @@ const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec
                 eta * -wo.z
             ));
 
-    const rgbColor Ft = rgbColor(1.f) - evalFresnel(fabsf(bsdf::cosTheta(wo)));
-    return eta2 * Ft * kT / fabsf(bsdf::cosTheta(wi));
+    const rgbColor Ft = rgbColor(1.f) - evalFresnel(abs(bsdf::cosTheta(wo)));
+    return eta2 * Ft * kT / abs(bsdf::cosTheta(wi));
 }

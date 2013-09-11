@@ -73,9 +73,9 @@ colorTexture2D::colorTexture2D(const string& filename) :
 
             // Un-apply gamma correction to textures since we apply it after rendering
             texels[i][j] = rgbColor(
-                    powf(qRed(c) / 255.f, inverseGamma),
-                    powf(qGreen(c) / 255.f, inverseGamma),
-                    powf(qBlue(c) / 255.f, inverseGamma)
+                    pow(qRed(c) / 255.f, inverseGamma),
+                    pow(qGreen(c) / 255.f, inverseGamma),
+                    pow(qBlue(c) / 255.f, inverseGamma)
                     );
         }
     }
