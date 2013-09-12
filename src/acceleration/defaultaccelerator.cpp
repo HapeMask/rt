@@ -7,35 +7,30 @@ using std::shared_ptr;
 using std::vector;
 
 intersection defaultAccelerator::intersect(ray& r) const{
-    vector<intersection> hits;
-
-    const point3 ro(r.origin);
-    for(auto prim : primitives){
-        ray rCopy(r);
-        const intersection isect = prim->intersect(rCopy);
-        if(isect.hit){
-            hits.push_back(isect);
-        }
-    }
-
-    if(hits.empty()){ return noIntersect; }
-
     // Grab the closest hit.
     float minDist = POS_INF;
     intersection closestIntersection;
-    for(auto hit : hits){
-        if(hit.t < minDist){
-            minDist = hit.t;
-            closestIntersection = hit;
+
+    for(const auto& prim : primitives){
+        ray rCopy(r);
+        const intersection isect = prim->intersect(rCopy);
+
+        if(isect.t < minDist){
+            minDist = isect.t;
+            closestIntersection = isect;
         }
     }
 
-    r.origin += closestIntersection.t * r.direction;
-    return closestIntersection;
+    if(minDist == POS_INF) {
+        return noIntersect;
+    } else {
+        r.origin += closestIntersection.t * r.direction;
+        return closestIntersection;
+    }
 }
 
 bool defaultAccelerator::intersectB(const ray& r) const{
-    for(auto prim : primitives){
+    for(const auto& prim : primitives){
         if(prim->intersectB(r)){ return true; }
     }
 
