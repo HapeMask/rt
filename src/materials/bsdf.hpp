@@ -126,7 +126,7 @@ class lambertianBrdf : public bxdf {
     public:
         lambertianBrdf(const rgbColor& r) :
             bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI) {}
-        lambertianBrdf(const rgbColor& r, texture2DPtr diffuseTex);
+        lambertianBrdf(texture2DPtr diffuseTex);
 
         virtual rgbColor f(const vec3& wo, const vec3& wi) const;
         virtual rgbColor sampleF(const float& u0, const float& u1,

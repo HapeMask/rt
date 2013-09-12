@@ -236,9 +236,8 @@ bsdf :
 lambert :
         LAMBERT '(' FLOAT ',' FLOAT ',' FLOAT ')'
         { $$ = new lambertianBrdf(rgbColor($3, $5, $7)); } |
-        LAMBERT '<' TEXTURED '>' '(' FLOAT ',' FLOAT ',' FLOAT ',' texture')'
-        { texture2DPtr p($12);
-        $$ = new lambertianBrdf(rgbColor($6, $8, $10), p); }
+        LAMBERT '<' TEXTURED '>' '(' texture ')'
+        { texture2DPtr p($6); $$ = new lambertianBrdf(p); }
         ;
 
 phong :

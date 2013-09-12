@@ -1,8 +1,8 @@
 #include "bsdf.hpp"
 #include "samplers/samplers.hpp"
 
-lambertianBrdf::lambertianBrdf(const rgbColor& r, texture2DPtr diffuseTex) :
-    bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(r * INVPI)
+lambertianBrdf::lambertianBrdf(texture2DPtr diffuseTex) :
+    bxdf(bxdfType(DIFFUSE | REFLECTION)), rOverPi(0)
 {
     setTexture(DIFFUSE_COLOR, diffuseTex);
 }
@@ -34,7 +34,7 @@ void lambertianBrdf::updateFromUVTexture(const vec2& uv) {
     if(hasTexture && uv.x != -1) {
         const rgbColor c = textureLookup(DIFFUSE_COLOR, uv);
 #ifdef RT_USE_OPENMP
-        texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c * rOverPi;
+        texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c;
 #else
         rOverPi = c;
 #endif
