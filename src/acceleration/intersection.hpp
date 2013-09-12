@@ -6,7 +6,7 @@
 class light;
 class shape;
 class intersection {
-	public:
+    public:
         // Delegating Constructors
         intersection(const light* l, const float t = 0.f) :
             intersection(nullptr, nullptr, l, true, t) {}

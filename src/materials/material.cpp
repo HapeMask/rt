@@ -6,7 +6,7 @@ material::material(bsdf* bs) : b(bs), emissive(false), emitColor(0.f), emitPower
 {}
 
 material::material(const rgbColor& c, const float& pow) : emissive(true),
-		emitColor(c), emitPower(pow)
+        emitColor(c), emitPower(pow)
 {
     bsdf* p = new bsdf();
     p->addBxdf(new lambertianBrdf(rgbColor(1.f)));

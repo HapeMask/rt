@@ -6,8 +6,8 @@ static const int HORIZ_BLOCKS = 4;
 static const int VERT_BLOCKS = 4;
 
 class framebuffer {
-	public:
-		framebuffer(scene& sc, const int& b) :
+    public:
+        framebuffer(scene& sc, const int& b) :
             fb_width(sc.getCamera().width()), fb_height(sc.getCamera().height()),
             fb_bpp(b), scn(sc),
             blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
@@ -18,7 +18,7 @@ class framebuffer {
         virtual ~framebuffer() {}
         virtual void render() = 0;
 
-	protected:
+    protected:
         /*
          * Generates upper-left coordinates for the next block in the sequence of image
          * blocks.
@@ -41,7 +41,7 @@ class framebuffer {
             return done;
         }
 
-		int fb_width, fb_height, fb_bpp;
+        int fb_width, fb_height, fb_bpp;
 
         scene& scn;
 

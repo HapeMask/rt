@@ -138,35 +138,35 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
         return;
     }
 
-	// Camera side vector.
-	vec3 right = normalize(cross(camForward, vec3(0, 1, 0)));
+    // Camera side vector.
+    vec3 right = normalize(cross(camForward, vec3(0, 1, 0)));
     vec3 up = normalize(cross(right, camForward));
 
     switch(event->key()){
         case Qt::Key_W:
-			camPos += camForward / 5.f;
+            camPos += camForward / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_A:
-			camPos -= right / 5.f;
+            camPos -= right / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_S:
-			camPos -= camForward / 5.f;
+            camPos -= camForward / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_D:
-			camPos += right / 5.f;
+            camPos += right / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_Space:
-			camPos += up / 5.f;
+            camPos += up / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_Z:
-			camPos -= up / 5.f;
+            camPos -= up / 5.f;
             showRenderView = false;
-			break;
+            break;
         case Qt::Key_Plus:
         case Qt::Key_Equal:
             fovy += 2;
@@ -246,30 +246,30 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void qtOpenGLFramebuffer::positionCamera() {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     gluPerspective(fovy, (float)fb_width / fb_height, 0.5, 100);
 
-	// Construct quaternions for composite rotation around
-	// Y and X axes.
-	const quaternion q(cos(-viewRotY/2.0f), vec3(0, 1, 0) * sin(-viewRotY/2.0f));
-	const quaternion r(cos(-viewRotX/2.0f), vec3(1, 0, 0) * sin(-viewRotX/2.0f));
+    // Construct quaternions for composite rotation around
+    // Y and X axes.
+    const quaternion q(cos(-viewRotY/2.0f), vec3(0, 1, 0) * sin(-viewRotY/2.0f));
+    const quaternion r(cos(-viewRotX/2.0f), vec3(1, 0, 0) * sin(-viewRotX/2.0f));
 
-	// Canonical view vector (quaternion form).
-	const quaternion p(0, 0, 0, -1);
+    // Canonical view vector (quaternion form).
+    const quaternion p(0, 0, 0, -1);
 
-	// Rotate p around Y, then around X, then scale by distance.
-	const quaternion pr = qmult(qmult(qmult(q, r), p), qmult(q, r).inverse());
-	camForward = normalize(vec3(pr.x, pr.y, pr.z));
+    // Rotate p around Y, then around X, then scale by distance.
+    const quaternion pr = qmult(qmult(qmult(q, r), p), qmult(q, r).inverse());
+    camForward = normalize(vec3(pr.x, pr.y, pr.z));
 
     // Update the tracer's camera.
     scn.getCamera().setLook(camPos + normalize(camForward));
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(camPos.x, camPos.y, camPos.z,
-			camPos.x + camForward.x, camPos.y + camForward.y, camPos.z + camForward.z,
-			0, 1, 0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(camPos.x, camPos.y, camPos.z,
+            camPos.x + camForward.x, camPos.y + camForward.y, camPos.z + camForward.z,
+            0, 1, 0);
 }
 
 void qtOpenGLFramebuffer::clearBuffers() {
@@ -299,10 +299,10 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat0);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat0);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat0);
-	glMaterialf(GL_FRONT, GL_SHININESS, shine);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat0);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat0);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat0);
+    glMaterialf(GL_FRONT, GL_SHININESS, shine);
 
     glPushMatrix();
 
@@ -476,33 +476,33 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
 }
 
 void qtOpenGLFramebuffer::enableGLOptions() {
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glShadeModel(GL_SMOOTH);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
 
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
 }
 
 void qtOpenGLFramebuffer::disableGLOptions() {
-	glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glShadeModel(GL_SMOOTH);
 
-	glDisable(GL_LIGHTING);
-	glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);

@@ -246,9 +246,9 @@ phong :
       ;
 
 ward :
-	 WARD '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
+     WARD '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'
      { $$ = new newWard(rgbColor($3, $5, $7), $9, $11); }
-	 ;
+     ;
 
 blinn :
       BLINN '(' FLOAT ',' FLOAT ',' FLOAT ',' FLOAT ')'

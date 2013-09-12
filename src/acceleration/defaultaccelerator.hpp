@@ -16,14 +16,14 @@ using std::shared_ptr;
  * available primitives until it finds an intersection.
  */
 class defaultAccelerator : public accelerator {
-	public:
+    public:
         defaultAccelerator() {}
 
-		virtual intersection intersect(ray& r) const;
-		virtual bool intersectB(const ray& r) const;
+        virtual intersection intersect(ray& r) const;
+        virtual bool intersectB(const ray& r) const;
 
-		virtual void build(const scene& s);
+        virtual void build(const scene& s);
 
-	private:
-		vector<primitive*> primitives;
+    private:
+        vector<primitive*> primitives;
 };

@@ -12,9 +12,9 @@ rgbColor bdpt::L(const ray& r) const {
     ray eyeRay(r);
 
     // Don't bounce off lights if the eye ray hits one, just return the color.
-	if(parent.getLight(0).intersect(r).hit){
-		return parent.getLight(0).L(r);
-	}
+    if(parent.getLight(0).intersect(r).hit){
+        return parent.getLight(0).L(r);
+    }
 
     // Pick a random light and start a path on it in a random direction.
     int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
@@ -33,7 +33,7 @@ rgbColor bdpt::L(const ray& r) const {
     makeCoordinateSystem(normal, binormal, tangent);
     wi = normalize(bsdfToWorld(wi, normal, binormal, tangent));
 
-	// Add the sampled point on the light as the start of the light path.
+    // Add the sampled point on the light as the start of the light path.
     rgbColor L(0.f);
 
     return L;

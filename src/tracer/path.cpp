@@ -1,3 +1,5 @@
+#include <cfloat>
+
 #include "tracer.hpp"
 #include "utility.hpp"
 
@@ -12,6 +14,8 @@ rgbColor pathTracer::L(const ray& r) const {
     return _L<true>(r2);
 }
 
+static const rgbColor ERR = {FLT_MAX,0.f,0.f};
+
 template <const bool recursiveSpecular>
 rgbColor pathTracer::_L(ray& r, const int depth) const {
     rgbColor throughput(1.f), L(0.f);
@@ -24,7 +28,10 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
         const intersection isect = parent.intersect(r);
         //return rgbColor(0, isect.debugInfo / 1e5f, 0);
 
-        if(!isect.hit || isect.li){
+        // If the ray hits a light directly (only possible for physical lights
+        // (area, sphere etc...)), or if it misses everything, the light
+        // contribution needs special handling.
+        if(isect.li || !isect.hit){
             if(pathLength == 0 || lastBounceWasSpecular){
                 for(int i=0; i<parent.numLights(); ++i){
                     const vec3 lightDir = parent.getLight(i).getPosition() - r.origin;
@@ -37,21 +44,14 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
                         L += throughput * isectL.li->L(rOrig);
                     }
                 }
-
-                // If the first hit was a light, don't keep bouncing.
-                if(pathLength == 0){
-                    return L;
-                }
             }
 
-            //L += throughput * rgbColor(0.02f, 0.01f, 0.03f);
+            if(!isect.li) {
+                // TODO: Sky goes here.
+                //L += throughput * rgbColor(0.02f, 0.01f, 3.f);
+            }
 
             break;
-        }
-
-		// Handle direct light bounces from a specular surface.
-        if(lastBounceWasSpecular && isect.li){
-            L += throughput * isect.li->L(rOrig);
         }
 
         material& mat = isect.li ? *isect.li->getMaterial().get() : *isect.s->getMaterial().get();
@@ -59,8 +59,8 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
         const vec3 wo = worldToBsdf(-r.direction, isect);
         const bsdf& bsdf = mat.getBsdf(isect.uv);
 
-		// Perform explicit direct lighting computations.
-		//
+        // Perform explicit direct lighting computations.
+        //
         // This is why the above test for specular bounces is needed.  If a ray
         // hits a light after bouncing from a specular object, only then do we
         // need to add in the light contribution. Explicit direct lighting
@@ -74,39 +74,39 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
 
         bxdfType sampledType;
 
-		// Only sample non-specular reflection on the first bounce, leave the
-		// 1st-bounce specular hits for the recursive step below.
-		const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ?
+        // Only sample non-specular reflection on the first bounce, leave the
+        // 1st-bounce specular hits for the recursive step below.
+        const bxdfType reflectionType = (recursiveSpecular && pathLength == 0) ?
             bxdfType(ALL & ~SPECULAR) : ALL;
 
         const rgbColor f = bsdf.sampleF(sampleUniform(),sampleUniform(),sampleUniform(),
                 wo, wi, reflectionType, sampledType, pdf);
 
         if(f.isBlack() && pdf == 0.f){
-			// Trace both specular reflection and refraction recursively.
-			if(recursiveSpecular && pathLength == 0 && depth < MAX_DEPTH){
-				vec3 specDir;
+            // Trace both specular reflection and transmission recursively.
+            if(recursiveSpecular && pathLength == 0 && depth < MAX_DEPTH){
+                vec3 specDir;
 
-				const rgbColor fr =
-					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                const rgbColor fr =
+                    bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
                             wo, specDir, bxdfType(SPECULAR | REFLECTION), sampledType, pdf);
 
-				if(!fr.isBlack()){
-					specDir = bsdfToWorld(specDir, isect);
-					ray r2(r.origin, specDir);
-					L += fr * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
-				}
+                if(!fr.isBlack()){
+                    specDir = bsdfToWorld(specDir, isect);
+                    ray r2(r.origin, specDir);
+                    L += fr * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
+                }
 
-				const rgbColor ft =
-					bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
+                const rgbColor ft =
+                    bsdf.sampleF(sampleUniform(), sampleUniform(), sampleUniform(),
                             wo, specDir, bxdfType(SPECULAR | TRANSMISSION), sampledType, pdf);
 
-				if(!ft.isBlack()){
-					specDir = bsdfToWorld(specDir, isect);
-					ray r2(r.origin, specDir);
-					L += ft * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
-				}
-			}
+                if(!ft.isBlack()){
+                    specDir = bsdfToWorld(specDir, isect);
+                    ray r2(r.origin, specDir);
+                    L += ft * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
+                }
+            }
             break;
         }
 
@@ -115,7 +115,8 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
         throughput *= f * abs(dot(wi, normal)) / pdf;
         lastBounceWasSpecular = (sampledType & SPECULAR) != 0;
 
-        // Paths that carry a lot of light will last longer than darker paths.
+        // Russian Roulette: Paths that carry a lot of light will last longer
+        // than darker paths.
         if(pathLength > rrThreshold){
             if(sampleUniform() > throughput.gray()){
                 break;
@@ -131,7 +132,7 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
     }
 
     if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){
-        return rgbColor(0.f, 0.f, 0.f);
+        return ERR;
     }else{
         return L;
     }

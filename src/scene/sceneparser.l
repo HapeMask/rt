@@ -41,7 +41,7 @@
 "phong"                                 { return Bison::Parser::token::PHONG; }
 "specular"                              { return Bison::Parser::token::SPECULAR; }
 "lambert"                               { return Bison::Parser::token::LAMBERT; }
-"ward"		                            { return Bison::Parser::token::WARD; }
+"ward"                                    { return Bison::Parser::token::WARD; }
 "substrate"                             { return Bison::Parser::token::SUBSTRATE; }
 "pair"                                  { return Bison::Parser::token::PAIR; }
 "microfacet"                            { return Bison::Parser::token::MICROFACET; }

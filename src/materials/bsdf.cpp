@@ -163,7 +163,7 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     /*
      * Specular importance sampling I think.
      */
-	///*
+    ///*
     if(specRef && specTra && matches.size() > 1){
         const rgbColor F = specRef->evalFresnel(abs(bsdf::cosTheta(wo)));
         const float Fr = (F.red() + F.blue() + F.green())/3.f;
@@ -172,15 +172,15 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         if(u0 < Ft){
             f = specTra->sampleF(u1, u2, wo, wi, p);
             sampledType = specTra->getType();
-			p = Ft;
+            p = Ft;
         }else{
             f = specRef->sampleF(u1, u2, wo, wi, p);
             sampledType = specRef->getType();
-			p = Fr;
+            p = Fr;
         }
         return f;
     }
-	//*/
+    //*/
 
     // Select and sample a random bxdf component to find wi.
     const unsigned int index = sampleRange(u0, 0, matches.size()-1);
@@ -207,9 +207,9 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     // Evaluate and add the bsdf component values.
     if(!(sampledType & SPECULAR)){
         for(size_t i=0; i<matches.size(); ++i){
-			if(i != index){
-				f += matches[i]->f(wo, wi);
-			}
+            if(i != index){
+                f += matches[i]->f(wo, wi);
+            }
         }
     }
 

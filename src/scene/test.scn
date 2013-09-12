@@ -1,30 +1,31 @@
 scene<bvh, path>{
-	camera<256,256>(45, 0,0,8, 0,0,0, 0,1,0)
-    light<area>(0,2.9,0, 2, 1,1,0.7, 2,0,0, 0,0,2)
-    //light<sphere>(0,-2.5,0, 4, 0.5,0.6,1, 0.5)
+    camera<512,512>(45, 0,0,8, 0,0,0, 0,1,0)
+    light<area>(0,2.9,0, 2, 1,1,1, 2,0,0, 0,0,2)
+    //light<sphere>(0,2.5,0, 2, 1,1,1, 0.5)
 
-	shape{
+    shape{
         triangle(-3,-3,-3, -3,3,-3, -3,-3,3)
         triangle(-3,3,-3, -3,3,3, -3,-3,3)
-		material(lambert(0.01,0.6,0.01))
-	}
+        material(lambert(0.01,0.6,0.01))
+    }
 
-	shape{
+    shape{
         triangle(3,-3,3, 3,3,-3, 3,-3,-3)
         triangle(3,-3,3, 3,3,3, 3,3,-3)
-		material(lambert(0.01,0.01,0.6))
-	}
+        material(lambert(0.01,0.01,0.6))
+    }
 
     shape{
         sphere(0, -1.5, 0, 1.5)
         //objfile<smooth>("../models/sphere.obj")
-		//material(lambert(0.5,0.5,0.5))
-		//material(lambert<textured>(0.5, 0.5, 0.5, imageTexture("../src/scene/uv_test_checkerboard.jpg")))
-        material(specular<dielectric>(0.8,0.8,0.8, 1.333))
-        //material(substrate(0.5,0.5,0.5, aniso(0.5,0.5,0.5, 100, 100)))
+        //material(lambert(0.5,0.5,0.5))
+        //material(lambert<textured>(imageTexture("../src/scene/uv_test_checkerboard.jpg")))
+        material(specular<dielectric>(0.8,0.8,0.8, 1.6))
+        //material(specular<conductor>(0.8,0.8,0.8, 1, 1))
+        //material(substrate(0.5,0.5,0.5, aniso(0.5,0.5,0.5, 10, 100)))
     }
 
-	shape{
+    shape{
         triangle(3,3,-3, 3,3,3, -3,3,-3)
         triangle(3,3,3, -3,3,3, -3,3,-3)
 
@@ -34,6 +35,6 @@ scene<bvh, path>{
         triangle(-3,-3,-3, 3,-3,3, 3,-3,-3)
         triangle(-3,-3,-3, -3,-3,3, 3,-3,3)
 
-		material(lambert(0.5,0.5,0.5))
-	}
+        material(lambert(0.5,0.5,0.5))
+    }
 }

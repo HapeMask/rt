@@ -3,11 +3,11 @@
 #include <cmath>
 
 ostream& operator<<(ostream& out, const aabb& b){
-	out << "AABB:" <<
-		"\n\tMin: " << b.min <<
-		"\n\tMax: " << b.max;
+    out << "AABB:" <<
+        "\n\tMin: " << b.min <<
+        "\n\tMax: " << b.max;
 
-	return out;
+    return out;
 }
 
 bool aabb::intersect(const ray& r, float& tmin, float& tmax) const {

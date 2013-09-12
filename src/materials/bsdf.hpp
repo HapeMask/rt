@@ -34,7 +34,7 @@ inline rgbColor rescaledApproxFresnel(const float& eta, const float& k, const fl
 }
 
 inline rgbColor schlickFresnel(const rgbColor& r0, const float& cosTheta){
-	return r0 + (rgbColor(1.f) - r0) * pow(1.f - cosTheta, 5);
+    return r0 + (rgbColor(1.f) - r0) * pow(1.f - cosTheta, 5);
 }
 
 inline vec3 reflect(const vec3& w) {
@@ -321,9 +321,9 @@ class beckmann : public microfacetDistribution {
 };
 
 class newWard : public bxdf {
-	public:
-		newWard(const rgbColor& rs, const float& a, const float& b) :
-			bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b),
+    public:
+        newWard(const rgbColor& rs, const float& a, const float& b) :
+            bxdf(bxdfType(GLOSSY | REFLECTION)), Rs(rs), alpha(a), beta(b),
             isIsotropic(alpha==beta) {}
 
         virtual rgbColor f(const vec3& wo, const vec3& wi) const;
@@ -333,9 +333,9 @@ class newWard : public bxdf {
 
         virtual void updateFromUVTexture(const vec2& uv) {}
 
-	private:
-		rgbColor Rs;
-		float alpha, beta;
+    private:
+        rgbColor Rs;
+        float alpha, beta;
         bool isIsotropic;
 };
 

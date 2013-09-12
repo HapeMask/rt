@@ -9,26 +9,26 @@
 #include "acceleration/intersection.hpp"
 
 class triangle : public primitive {
-	public:
+    public:
         triangle() : area_(0), hasVertNormals(false), hasUVs(false) {}
 
-		triangle(const point3& a, const point3& b, const point3& c);
-		virtual ~triangle() {}
+        triangle(const point3& a, const point3& b, const point3& c);
+        virtual ~triangle() {}
 
-		virtual intersection intersect(ray& r) const;
-		virtual bool intersectB(const ray& r) const;
+        virtual intersection intersect(ray& r) const;
+        virtual bool intersectB(const ray& r) const;
 
-		inline const point3& a() const{
-			return a_;
-		}
+        inline const point3& a() const{
+            return a_;
+        }
 
-		inline const point3& b() const{
-			return b_;
-		}
+        inline const point3& b() const{
+            return b_;
+        }
 
-		inline const point3& c() const{
-			return c_;
-		}
+        inline const point3& c() const{
+            return c_;
+        }
 
         virtual vec3 getNormal(const point3& p) const {
             return normal_;
@@ -55,11 +55,11 @@ class triangle : public primitive {
             return 3;
         }
 
-	private:
-		point3 a_, b_, c_;
+    private:
+        point3 a_, b_, c_;
         vec3 vertNormals[3];
         vec2 uvs[3];
-		vec3 normal_, binormal_, tangent_;
+        vec3 normal_, binormal_, tangent_;
         vec3 B, C;
 
         float area_;

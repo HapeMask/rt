@@ -5,12 +5,12 @@
 #include "materials/material.hpp"
 
 void shape::setMaterial(materialPtr m){
-	mat = m;
+    mat = m;
 }
 
 void shape::addPrimitive(primitive* p){
-	p->setParent(this);
-	prims.push_back(shared_ptr<primitive>(p));
+    p->setParent(this);
+    prims.push_back(shared_ptr<primitive>(p));
 
     bounds = mergeAabb(bounds, p->getBounds());
     area_ += p->area();

@@ -9,7 +9,7 @@ scene::scene(accelerator* a) : accel(a), needsBuilding(false), totalVertices(0)
 {}
 
 void scene::addLight(light* l){
-	lights.push_back(unique_ptr<light>(l));
+    lights.push_back(unique_ptr<light>(l));
 }
 
 void scene::addShape(shape* s){
@@ -20,7 +20,7 @@ void scene::addShape(shape* s){
         emitters.push_back(p);
     }
 
-	needsBuilding = true;
+    needsBuilding = true;
     bounds = mergeAabb(bounds, p->getBounds());
     totalVertices += s->vertexCount();
 }
@@ -31,7 +31,7 @@ void scene::setAccelerator(acceleratorPtr a){
 
 intersection scene::intersect(ray& r) const{
     const ray rCopy(r);
-	const intersection isectG = accel->intersect(r);
+    const intersection isectG = accel->intersect(r);
     intersection closestIsect = isectG;
 
     for(const auto& light : lights){
@@ -46,14 +46,14 @@ intersection scene::intersect(ray& r) const{
 }
 
 bool scene::intersectB(const ray& r) const{
-	return accel->intersectB(r);
+    return accel->intersectB(r);
 }
 
 void scene::build(){
-	if(needsBuilding){
-		accel->build(*this);
-		needsBuilding = false;
-	}
+    if(needsBuilding){
+        accel->build(*this);
+        needsBuilding = false;
+    }
 }
 
 void scene::dumpToVbo(GLfloat* vertexBuffer, GLfloat* normalBuffer) const {

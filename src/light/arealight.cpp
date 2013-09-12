@@ -66,5 +66,5 @@ intersection areaLight::intersect(const ray& r) const {
 }
 
 bool areaLight::intersectB(const ray& r) const{
-	return (tri1.intersectB(r) || tri2.intersectB(r));
+    return (tri1.intersectB(r) || tri2.intersectB(r));
 }

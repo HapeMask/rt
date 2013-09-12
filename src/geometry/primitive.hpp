@@ -17,17 +17,17 @@ class shape;
 class intersection;
 
 class primitive {
-	public:
+    public:
         primitive() : lastRayTested(nullptr), parent(nullptr) {}
         primitive(const aabb& box) : primitive(nullptr, nullptr, box) {}
         primitive(const aabb& box, shape* p) : primitive(nullptr, p, box) {}
         primitive(ray* lrt, shape* p, const aabb& box) :
             lastRayTested(lrt), parent(p), boundingBox(box) {}
 
-		virtual ~primitive() {}
+        virtual ~primitive() {}
 
-		virtual intersection intersect(ray& r) const = 0;
-		virtual bool intersectB(const ray& r) const = 0;
+        virtual intersection intersect(ray& r) const = 0;
+        virtual bool intersectB(const ray& r) const = 0;
 
         virtual point3 sampleSurface(const float& u0, const float& u1) const = 0;
         virtual point3 uniformSampleSurface() const {
@@ -37,17 +37,17 @@ class primitive {
         virtual vec3 getNormal(const point3& p) const = 0;
         virtual float area() const = 0;
 
-		void setParent(shape* p){
+        void setParent(shape* p){
             parent = p;
-		}
+        }
 
-		const aabb& getBounds() const{
-			return boundingBox;
-		}
+        const aabb& getBounds() const{
+            return boundingBox;
+        }
 
-		shape* getParent() const {
-			return parent;
-		}
+        shape* getParent() const {
+            return parent;
+        }
 
 #ifdef RT_USE_QT
         /**
@@ -68,7 +68,7 @@ class primitive {
 
         ray* lastRayTested;
 
-	protected:
-		shape* parent;
-		aabb boundingBox;
+    protected:
+        shape* parent;
+        aabb boundingBox;
 };

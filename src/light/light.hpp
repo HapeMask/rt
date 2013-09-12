@@ -10,8 +10,8 @@
 #include "materials/material.hpp"
 
 class light {
-	public:
-		light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {
+    public:
+        light(const point3& p, const float& pow, const rgbColor& c) : position(p), power(pow), lightColor(c) {
             bsdf* b = new bsdf();
             b->addBxdf(new lambertianBrdf(rgbColor(1.f)));
             mat = materialPtr(new material(b));
@@ -27,11 +27,11 @@ class light {
             return false;
         }
 
-		inline virtual rgbColor L(const ray& r) const {
+        inline virtual rgbColor L(const ray& r) const {
             return lightColor * power;
         }
 
-		inline virtual rgbColor L(const point3& p) const {
+        inline virtual rgbColor L(const point3& p) const {
             return (lightColor * power) / norm2(position - p);
         }
 
@@ -41,13 +41,13 @@ class light {
             return position;
         }
 
-		const float& getPower() const {
-			return power;
-		}
+        const float& getPower() const {
+            return power;
+        }
 
-		const rgbColor& getColor() const {
-			return lightColor;
-		}
+        const rgbColor& getColor() const {
+            return lightColor;
+        }
 
         // PDF of for generating point p on the surface of the light.
         virtual float pdf(const point3& p) const {
@@ -67,9 +67,9 @@ class light {
         virtual vec3 getNormal(const point3& p) const = 0;
         virtual point3 uniformSampleSurface() const = 0;
 
-	protected:
+    protected:
         point3 position;
-		float power;
-		rgbColor lightColor;
+        float power;
+        rgbColor lightColor;
         materialPtr mat;
 };

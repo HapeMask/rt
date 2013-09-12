@@ -58,7 +58,7 @@ class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
 
         uint64_t pixelsSampled, iterations;
         float averageSamplesPerSec;
-		bool showUpdates, showRenderView, rendering;
+        bool showUpdates, showRenderView, rendering;
 
         rgbColor* buffer;
         rgbColor* sumOfSquares;

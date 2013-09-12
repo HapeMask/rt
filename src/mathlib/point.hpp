@@ -8,8 +8,8 @@
 using namespace std;
 
 class point2 {
-	public:
-		point2(const vec2& u);
+    public:
+        point2(const vec2& u);
 
         constexpr point2() : x(0), y(0) {}
         constexpr point2(const float& x, const float& y) : x(x), y(y) {}
@@ -49,12 +49,12 @@ class point2 {
 };
 
 class point3 : public vec3 {
-	public:
+    public:
         point3() : vec3() {}
-		point3(const vec3& u) : vec3(u) {}
+        point3(const vec3& u) : vec3(u) {}
         point3(const float& x, const float& y, const float& z) : vec3(x, y, z) {}
 
-		explicit point3(const float& f) : vec3(f) {}
+        explicit point3(const float& f) : vec3(f) {}
 };
 
 inline point3 min(const point3& a, const point3& b) {

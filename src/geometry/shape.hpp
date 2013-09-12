@@ -12,25 +12,25 @@ using std::shared_ptr;
 using std::vector;
 
 class shape {
-	public:
-		virtual ~shape() {}
+    public:
+        virtual ~shape() {}
 
-		void setMaterial(materialPtr m);
-		void addPrimitive(primitive* p);
+        void setMaterial(materialPtr m);
+        void addPrimitive(primitive* p);
 
-		void setMaterial(material* m);
+        void setMaterial(material* m);
 
-		inline materialPtr getMaterial() const {
-			return mat;
-		}
+        inline materialPtr getMaterial() const {
+            return mat;
+        }
 
-		inline const vector<shared_ptr<primitive>>& getPrimitives() const {
-			return prims;
-		}
+        inline const vector<shared_ptr<primitive>>& getPrimitives() const {
+            return prims;
+        }
 
-		inline const aabb& getBounds(){
-			return bounds;
-		}
+        inline const aabb& getBounds(){
+            return bounds;
+        }
 
         const point3 sampleSurface(vec3& normal, const float& u0, const float& u1) const {
             const primitive& prim = *prims[sampleRange(sampleUniform(), 0,prims.size()-1)].get();
@@ -80,9 +80,9 @@ class shape {
         }
 #endif
 
-	protected:
+    protected:
         float area_, pdf_;
-		vector<shared_ptr<primitive>> prims;
-		materialPtr mat;
-		aabb bounds;
+        vector<shared_ptr<primitive>> prims;
+        materialPtr mat;
+        aabb bounds;
 };

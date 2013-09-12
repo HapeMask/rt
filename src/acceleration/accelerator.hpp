@@ -12,13 +12,13 @@ const int AXIS_LEAF = 4;
 
 class scene;
 class accelerator {
-	public:
+    public:
         virtual ~accelerator() {}
 
-		virtual intersection intersect(ray& r) const = 0;
-		virtual bool intersectB(const ray& r) const = 0;
+        virtual intersection intersect(ray& r) const = 0;
+        virtual bool intersectB(const ray& r) const = 0;
 
-		virtual void build(const scene& s) = 0;
+        virtual void build(const scene& s) = 0;
 };
 
 typedef std::shared_ptr<accelerator> acceleratorPtr;

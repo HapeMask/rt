@@ -14,11 +14,11 @@ using std::ostream;
 #include "mathlib/vector.hpp"
 
 class color {
-	public:
-		virtual float red() const = 0;
-		virtual float green() const = 0;
-		virtual float blue() const = 0;
-		virtual float alpha() const = 0;
+    public:
+        virtual float red() const = 0;
+        virtual float green() const = 0;
+        virtual float blue() const = 0;
+        virtual float alpha() const = 0;
 
         virtual uint8_t R() const = 0;
         virtual uint8_t G() const = 0;
@@ -33,10 +33,10 @@ class color {
 };
 
 class rgbColor : public color, public vec3 {
-	public:
-		rgbColor() : vec3(0,0,0,1) {}
+    public:
+        rgbColor() : vec3(0,0,0,1) {}
         rgbColor(const color& c) : vec3(c.red(), c.green(), c.blue(), c.alpha()) {}
-		rgbColor(const vec3& v) : vec3(v) {}
+        rgbColor(const vec3& v) : vec3(v) {}
         rgbColor(const float& r, const float& g, const float& b) :
             vec3(r,g,b,1) {}
         rgbColor(const float& r, const float& g, const float& b, const float& a) :
@@ -49,7 +49,7 @@ class rgbColor : public color, public vec3 {
 
         explicit rgbColor(const float& f): vec3(f,f,f,1) {}
 
-        inline rgbColor inverse() const {
+        rgbColor inverse() const {
             return rgbColor(__m128{1.f,1.f,1.f,1.f} - xyzw);
         }
 
@@ -58,21 +58,21 @@ class rgbColor : public color, public vec3 {
         float blue() const { return z; }
         float alpha() const { return w; }
 
-        inline uint8_t R() const { return 255 * red(); }
-        inline uint8_t G() const { return 255 * green(); }
-        inline uint8_t B() const { return 255 * blue(); }
-        inline uint8_t A() const { return 255 * alpha(); }
+        uint8_t R() const { return 255 * red(); }
+        uint8_t G() const { return 255 * green(); }
+        uint8_t B() const { return 255 * blue(); }
+        uint8_t A() const { return 255 * alpha(); }
 
-        inline bool isBlack() const {
+        bool isBlack() const {
             return (red() <= EPSILON &&
                     green() <= EPSILON &&
                     blue() <= EPSILON);
         }
 
 #ifdef RT_USE_QT
-        inline QColor qcolor() const { return QColor(R(), G(), B()); }
+        QColor qcolor() const { return QColor(R(), G(), B()); }
 
-        inline uint toUint() const {
+        uint toUint() const {
             return QColormap::instance().pixel(qcolor());
         }
 #endif
@@ -84,6 +84,6 @@ inline Color lerp(const Color& a, const Color& b, const float& alpha) {
 }
 
 inline ostream& operator<<(ostream& out, const color& c) {
-	out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
-	return out;
+    out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
+    return out;
 }

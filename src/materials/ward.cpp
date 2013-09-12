@@ -14,25 +14,25 @@ rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3
         return rgbColor(0.f);
     }
 
-	const float phi = isIsotropic ? 
+    const float phi = isIsotropic ? 
         TWOPI * u0 :
         atan2(beta * sin(TWOPI * u0), alpha * cos(TWOPI * u0));
 
-	const float cosPhi = cos(phi);
-	const float sinPhi = sin(phi);
-	const float theta = isIsotropic ?
+    const float cosPhi = cos(phi);
+    const float sinPhi = sin(phi);
+    const float theta = isIsotropic ?
         atan(alpha * sqrt(-logf(u1))) :
         atan(
                                     sqrt(-logf(u1) /
-				((cosPhi*cosPhi)/(alpha*alpha) + (sinPhi*sinPhi)/(beta*beta)))
+                ((cosPhi*cosPhi)/(alpha*alpha) + (sinPhi*sinPhi)/(beta*beta)))
             );
 
     vec3 wh;
     sphericalToDirection(wh, sin(theta), cos(theta), phi);
     wh = normalize(wh);
 
-	// Find the incident direction that corresponds to this half vector and the
-	// reflected direction.
+    // Find the incident direction that corresponds to this half vector and the
+    // reflected direction.
     wi = 2.f * dot(wo, wh) * wh - wo;
     if(wi.y < 0.f){
         pd = 0.f;
@@ -48,11 +48,11 @@ rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3
 }
 
 rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
-	if(wo.y*wi.y < 0.f){
-		return rgbColor(0.f);
-	}
+    if(wo.y*wi.y < 0.f){
+        return rgbColor(0.f);
+    }
 
-	const vec3 wh = halfVector(wo, wi);
+    const vec3 wh = halfVector(wo, wi);
 
     const float meanX = wh.x / alpha;
     const float meanZ = wh.z / beta;
@@ -62,9 +62,9 @@ rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
 }
 
 float newWard::pdf(const vec3& wo, const vec3& wi) const{
-	if(wo.y*wi.y < 0.f){
-		return 0.f;
-	}
+    if(wo.y*wi.y < 0.f){
+        return 0.f;
+    }
 
     const vec3 wh(halfVector(wo, wi));
 

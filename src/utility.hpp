@@ -12,11 +12,11 @@
 #endif
 
 inline constexpr float radians(const float& deg){
-	return (deg / 180.f) * PI;
+    return (deg / 180.f) * PI;
 }
 
 inline constexpr float degrees(const float& rad){
-	return (rad / PI) * 180.f;
+    return (rad / PI) * 180.f;
 }
 
 inline constexpr bool isFinite(const float& f){
@@ -39,12 +39,12 @@ inline vec3 clamp(const vec3& v){
 }
 
 inline float clamp(const float& f){
-	return std::min(std::max(f, 0.f), 1.f);
+    return std::min(std::max(f, 0.f), 1.f);
 }
 
 
 inline vec3 reflect(const vec3& v, const vec3& n){
-	return v - (2.f * dot(v,n)*n);
+    return v - (2.f * dot(v,n)*n);
 }
 
 void makeCoordinateSystem(const vec3& u, vec3& v, vec3& w);

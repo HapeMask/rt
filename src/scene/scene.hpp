@@ -25,34 +25,34 @@ using std::shared_ptr;
 using std::vector;
 
 class scene {
-	public:
-		scene();
-		scene(accelerator* a);
+    public:
+        scene();
+        scene(accelerator* a);
 
-		void addLight(light* p);
-		void addShape(shape* s);
+        void addLight(light* p);
+        void addShape(shape* s);
 
-		/**
-		 * NOTE: Destroys the previous accelerator.
-		 */
-		void setAccelerator(acceleratorPtr a);
+        /**
+         * NOTE: Destroys the previous accelerator.
+         */
+        void setAccelerator(acceleratorPtr a);
 
-		acceleratorPtr getAccelerator() { return accel; }
+        acceleratorPtr getAccelerator() { return accel; }
 
-		intersection intersect(ray& r) const;
-		bool intersectB(const ray& r) const;
+        intersection intersect(ray& r) const;
+        bool intersectB(const ray& r) const;
 
-		const vector<shared_ptr<shape>>& getShapes() const {
-			return shapes;
-		}
+        const vector<shared_ptr<shape>>& getShapes() const {
+            return shapes;
+        }
 
-		int numLights() const {
-			return lights.size();
-		}
+        int numLights() const {
+            return lights.size();
+        }
 
-		const light& getLight(const int& i) const {
-			return *lights[i];
-		}
+        const light& getLight(const int& i) const {
+            return *lights[i];
+        }
 
         size_t numEmitters() const {
             return emitters.size();
@@ -62,15 +62,15 @@ class scene {
             return *emitters[i];
         }
 
-		const aabb& getBounds() const{
-			return bounds;
-		}
+        const aabb& getBounds() const{
+            return bounds;
+        }
 
-		inline void setCamera(cameraPtr p){
+        inline void setCamera(cameraPtr p){
             cam = p;
         }
 
-		inline void setTracer(rayTracerPtr p){
+        inline void setTracer(rayTracerPtr p){
             rt = p;
         }
 
@@ -82,7 +82,7 @@ class scene {
             return *cam;
         }
 
-		void build();
+        void build();
 
         void dumpToVbo(GLfloat* vertexVbo, GLfloat* normalVbo) const;
         void drawGL() const;
@@ -95,17 +95,17 @@ class scene {
             return totalVertices;
         }
 
-	private:
-		vector<shared_ptr<shape>> shapes;
-		vector<shared_ptr<shape>> emitters;
-		vector<unique_ptr<light>> lights;
+    private:
+        vector<shared_ptr<shape>> shapes;
+        vector<shared_ptr<shape>> emitters;
+        vector<unique_ptr<light>> lights;
 
-		cameraPtr cam;
+        cameraPtr cam;
         rayTracerPtr rt;
-		acceleratorPtr accel;
+        acceleratorPtr accel;
 
-		bool needsBuilding;
-		aabb bounds;
+        bool needsBuilding;
+        aabb bounds;
 
         long totalVertices;
 };

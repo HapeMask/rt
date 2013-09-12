@@ -16,13 +16,13 @@ triangle::triangle(const point3& a, const point3& b, const point3& c) :
     primitive(aabb(min(min(a, b), c), max(max(a, b), c))),
     B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
 
-	a_ = a;
-	b_ = b;
-	c_ = c;
+    a_ = a;
+    b_ = b;
+    c_ = c;
 
     normal_ = cross(b-a, c-a);
     area_ = 0.5 * norm(normal_);
-	normal_ = normalize(normal_);
+    normal_ = normalize(normal_);
 }
 
 intersection triangle::intersect(ray& r) const {

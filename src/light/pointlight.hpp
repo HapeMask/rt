@@ -1,8 +1,8 @@
 #include "light.hpp"
 
 class pointLight : public light {
-	public:
-		pointLight(const point3& p, const float& pow, const rgbColor& c);
+    public:
+        pointLight(const point3& p, const float& pow, const rgbColor& c);
 
         inline virtual bool isPointSource() const {
             return true;

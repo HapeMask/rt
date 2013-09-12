@@ -15,8 +15,8 @@
 using std::vector;
 
 class triangleMesh : public shape {
-	public:
-		triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL), totalVertices(0)
+    public:
+        triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL), totalVertices(0)
         {}
 
         ~triangleMesh(){

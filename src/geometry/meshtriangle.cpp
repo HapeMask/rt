@@ -22,9 +22,9 @@ meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMes
             ),
     hasVertNormals(false), hasUVs(false), meshParent(p) {
 
-	points[0] = a;
-	points[1] = b;
-	points[2] = c;
+    points[0] = a;
+    points[1] = b;
+    points[2] = c;
 
     const point3& pa = p->pointLookup(a);
     const point3& pb = p->pointLookup(b);
@@ -35,7 +35,7 @@ meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMes
     normal_ = cross(B, C);
 
     area_ = 0.5 * (float)norm(normal_);
-	normal_ = normalize(normal_);
+    normal_ = normalize(normal_);
 }
 
 intersection meshTriangle::intersect(ray& r) const {
@@ -60,11 +60,11 @@ intersection meshTriangle::intersect(ray& r) const {
     }
 
     const float t = dot(C, s2) * invD;
-	if(t < r.tMin || t >= r.tMax){
-		return noIntersect;
-	}
+    if(t < r.tMin || t >= r.tMax){
+        return noIntersect;
+    }
 
-	r.origin = r.origin + t * r.direction;
+    r.origin = r.origin + t * r.direction;
 
     intersection isect(this, t);
     isect.normal = normal_;
@@ -94,7 +94,7 @@ intersection meshTriangle::intersect(ray& r) const {
         makeCoordinateSystem(isect.shadingNormal, isect.binormal, isect.tangent);
     }
 
-	return isect;
+    return isect;
 }
 
 bool meshTriangle::intersectB(const ray& r) const {
@@ -119,9 +119,9 @@ bool meshTriangle::intersectB(const ray& r) const {
     }
 
     const float t = dot(C, s2) * invD;
-	if(t < r.tMin || t >= r.tMax){
-		return false;
-	}
+    if(t < r.tMin || t >= r.tMax){
+        return false;
+    }
 
     return true;
 }

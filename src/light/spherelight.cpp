@@ -63,22 +63,22 @@ rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, const 
 }
 
 intersection sphereLight::intersect(const ray& r) const {
-	const vec3 dir(r.origin - position);
-	const float A = dot(r.direction, r.direction);
-	const float B = dot(2.f*dir, r.direction);
-	const float C = dot(dir, dir) - (radius*radius);
-	const float s = (B*B - 4*A*C);
+    const vec3 dir(r.origin - position);
+    const float A = dot(r.direction, r.direction);
+    const float B = dot(2.f*dir, r.direction);
+    const float C = dot(dir, dir) - (radius*radius);
+    const float s = (B*B - 4*A*C);
 
-	if(s < 0.f){
-		return noIntersect;
-	}
+    if(s < 0.f){
+        return noIntersect;
+    }
 
     const float q = (B < 0) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
-	const float t0 = q / A;
-	const float t1 = C / q;
+    const float t0 = q / A;
+    const float t1 = C / q;
 
-	if( (t0 <= r.tMin || t0 >= r.tMax) &&
-		(t1 <= r.tMin || t1 >= r.tMax)){
+    if( (t0 <= r.tMin || t0 >= r.tMax) &&
+        (t1 <= r.tMin || t1 >= r.tMax)){
         return noIntersect;
     }
 
@@ -95,26 +95,26 @@ intersection sphereLight::intersect(const ray& r) const {
 
     intersection isect(this, t);
     isect.normal = normalize(t * r.direction - position);
-	return isect;
+    return isect;
 }
 
 bool sphereLight::intersectB(const ray& r) const {
-	const vec3 dir(r.origin - position);
-	const float A = dot(r.direction, r.direction);
-	const float B = dot(2.f*dir, r.direction);
-	const float C = dot(dir, dir) - (radius*radius);
-	const float s = (B*B - 4*A*C);
+    const vec3 dir(r.origin - position);
+    const float A = dot(r.direction, r.direction);
+    const float B = dot(2.f*dir, r.direction);
+    const float C = dot(dir, dir) - (radius*radius);
+    const float s = (B*B - 4*A*C);
 
-	if(s < 0.f){
-		return false;
-	}
+    if(s < 0.f){
+        return false;
+    }
 
     const float q = (B < 0) ? (-B + sqrt(s)) / 2.f : (-B - sqrt(s)) / 2.f;;
-	const float t0 = q / A;
-	const float t1 = C / q;
+    const float t0 = q / A;
+    const float t1 = C / q;
 
-	if( (t0 <= r.tMin || t0 >= r.tMax) &&
-		(t1 <= r.tMin || t1 >= r.tMax)){
+    if( (t0 <= r.tMin || t0 >= r.tMax) &&
+        (t1 <= r.tMin || t1 >= r.tMax)){
         return false;
     }
 
