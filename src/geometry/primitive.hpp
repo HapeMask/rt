@@ -18,14 +18,15 @@ class intersection;
 
 class primitive {
 	public:
-        primitive() :parent(NULL) {}
-
-        primitive(const aabb& box) : boundingBox(box) {}
-        primitive(const aabb& box, shape* p) : parent(p), boundingBox(box) {}
+        primitive() : lastRayTested(nullptr), parent(nullptr) {}
+        primitive(const aabb& box) : primitive(nullptr, nullptr, box) {}
+        primitive(const aabb& box, shape* p) : primitive(nullptr, p, box) {}
+        primitive(ray* lrt, shape* p, const aabb& box) :
+            lastRayTested(lrt), parent(p), boundingBox(box) {}
 
 		virtual ~primitive() {}
 
-		virtual const intersection intersect(ray& r) const = 0;
+		virtual intersection intersect(ray& r) const = 0;
 		virtual bool intersectB(const ray& r) const = 0;
 
         virtual const point3 sampleSurface(const float& u0, const float& u1) const = 0;

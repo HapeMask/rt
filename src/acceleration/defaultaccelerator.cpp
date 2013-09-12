@@ -18,9 +18,7 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 		}
 	}
 
-	if(hits.empty()){
-		return intersection(false);
-	}
+    if(hits.empty()){ return noIntersect; }
 
 	// Grab the closest hit.
 	float minDist = POS_INF;
@@ -37,11 +35,8 @@ const intersection defaultAccelerator::intersect(ray& r) const{
 }
 
 bool defaultAccelerator::intersectB(const ray& r) const{
-	ray r2(r);
 	for(auto prim : primitives){
-		if(prim->intersect(r2).hit){
-			return true;
-		}
+        if(prim->intersectB(r)){ return true; }
 	}
 
 	return false;

@@ -20,11 +20,7 @@ class transform3d{
         }
 
         inline vec3 apply(const vec3& v) const {
-            return vec3(
-                    mat(0,0) * v.x + mat(0,1) * v.y + mat(0,2) * v.z,
-                    mat(1,0) * v.x + mat(1,1) * v.y + mat(1,2) * v.z,
-                    mat(2,0) * v.x + mat(2,1) * v.y + mat(2,2) * v.z
-                    );
+            return mat * vec4(v, 0.f);
         }
 
         inline ray apply(const ray& r) const {
@@ -37,11 +33,7 @@ class transform3d{
         }
 
         inline vec3 unapply(const vec3& v) const {
-            return vec3(
-                    inv(0,0) * v.x + inv(0,1) * v.y + inv(0,2) * v.z,
-                    inv(1,0) * v.x + inv(1,1) * v.y + inv(1,2) * v.z,
-                    inv(2,0) * v.x + inv(2,1) * v.y + inv(2,2) * v.z
-                    );
+            return mat * vec4(v, 0.f);
         }
 
         inline ray unapply(const ray& r) const {

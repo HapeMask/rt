@@ -53,6 +53,8 @@ class point3 : public vec3 {
         point3() : vec3() {}
 		point3(const vec3& u) : vec3(u) {}
         point3(const float& x, const float& y, const float& z) : vec3(x, y, z) {}
+
+		explicit point3(const float& f) : vec3(f) {}
 };
 
 inline const point3 min(const point3& a, const point3& b) {

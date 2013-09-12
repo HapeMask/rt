@@ -1,10 +1,17 @@
 #pragma once
+#include <random>
 
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 
 class triangle;
-float sampleUniform();
+
+// TODO: FIX THIS?
+static std::mt19937 rng;
+static std::uniform_real_distribution<float> uniform;
+
+inline float sampleUniform(){ return uniform(rng); }
+
 int sampleRange(const float& u0, const int& a, const int& b);
 
 void uniformSampleDisk(vec3& v);

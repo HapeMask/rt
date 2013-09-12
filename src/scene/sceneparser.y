@@ -1,8 +1,9 @@
 %skeleton "lalr1.cc"
 %defines
 %locations
-%define namespace "Bison"
-%define parser_class_name "Parser"
+%define parse.error verbose
+%define api.namespace {Bison}
+%define parser_class_name {Parser}
 
 %parse-param    {scanner& scan}
 %parse-param    {scene& scn}
@@ -25,7 +26,6 @@
     #include "mathlib/vector.hpp"
 
     #include "acceleration/bvh.hpp"
-    #include "acceleration/octree.hpp"
     #include "acceleration/defaultaccelerator.hpp"
 
     #include "light/spherelight.hpp"
@@ -66,7 +66,6 @@
     bsdf* bval;
     bxdf* bxval;
     texture2D* texval;
-    map<textureSlot, texture2D*>* tmval;
     textureSlot tsval;
     microfacetBrdf* mbrval;
     microfacetBtdf* mbtval;
@@ -120,8 +119,11 @@
 %type <aval> accelerator
 %type <tval> tracer
 %type <texval> texture
-%type <tmval> texture_list
+/*
+%type <f_tmval> f_texture_list
+%type <c_tmval> c_texture_list
 %type <tsval> texture_slot
+*/
 
 %%
 scene_file :
@@ -134,7 +136,6 @@ scene_file :
 
 accelerator :
             BVH { $$ = new bvh(); } |
-            OCTREE { $$ = new octree(); } |
             DEFAULT { $$ = new defaultAccelerator(); }
             ;
 
@@ -349,23 +350,25 @@ testBsdf :
          }
          ;
 
+texture :
+        IMGTEX '(' FILEPATH ')' { $$ = new colorTexture2D(stripQuotes($3)); }
+        ;
+
+/*
 texture_list :
             texture_slot ':' texture texture_list { (*$4)[$1] = $3; } |
             texture_slot ':' texture {
-            map<textureSlot, texture2D*>* m = new map<textureSlot, texture2D*>;
+            map<textureSlot, texture2D*>* m = new map<textureSlot, texture2D>*>;
             for(int i=0; i < NUM_TEXTURE_SLOTS; ++i) (*m)[i] = NULL;
             (*m)[$1] = $3;
             $$ = m;
             }
             ;
 
-texture :
-        IMGTEX '(' FILEPATH ')' { $$ = new colorTexture2D(stripQuotes($3)); }
-        ;
-
 texture_slot :
              DIFFUSETEX { $$ = DIFFUSE_COLOR; }
              ;
+*/
 %%
 
 void Bison::Parser::error(const Bison::Parser::location_type& loc, const std::string& msg){

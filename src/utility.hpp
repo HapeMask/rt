@@ -5,6 +5,12 @@
 #include "acceleration/intersection.hpp"
 #include "mathlib/sse.hpp"
 
+#ifdef RT_THROW_EXCEPTIONS
+#define rt_throw(x) throw(x)
+#else
+#define rt_throw(x) cerr << "Error: " << (x) << endl; exit(1);
+#endif
+
 inline constexpr float radians(const float& deg){
 	return (deg / 180.f) * PI;
 }
@@ -68,9 +74,7 @@ inline vec3 bsdfToWorld(const vec3& v, const vec3& normal, const vec3& binormal,
 }
 
 inline void sphericalToDirection(vec3& v, const float& sinTheta, const float& cosTheta, const float& phi){
-    v.x = sinTheta * cos(phi);
-    v.y = cosTheta;
-    v.z = sinTheta * sin(phi);
+    v.xyzw = __m128{ sinTheta * cos(phi), cosTheta, sinTheta * sin(phi), 0.f};
 }
 
 /**
@@ -82,31 +86,4 @@ inline constexpr float gaussian2DNormalization(const float& sigma) {
             abs(1.f/sigma)) * (-1.25331413f * sigma *
             erf(-0.353553389f/sigma) + 1.25331413f * sigma *
             erf(0.353553389f/sigma));
-}
-
-/**
- * Fast Float/Int conversion from PBRT.
- */
-//2^52 * 1.5, uses limited precision to floor.
-constexpr double doublemagic = 6755399441055744.0;
-constexpr double doublemagicroundeps = .5-1.4e-11;
-
-/**
- * Fast Float/Int conversion from PBRT.
- */
-inline int Round2Int(double val) {
-	val	= val + doublemagic;
-	return (reinterpret_cast<long*>(&val))[0];
-}
-
-inline int Float2Int(const float val) {
-    return sse_float2int(val);
-}
-
-inline int Floor2Int(const double val) {
-	return Round2Int(val - doublemagicroundeps);
-}
-
-inline int Ceil2Int(const double val) {
-	return Round2Int(val + doublemagicroundeps);
 }

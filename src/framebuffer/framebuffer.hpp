@@ -8,29 +8,15 @@ static const int VERT_BLOCKS = 4;
 class framebuffer {
 	public:
 		framebuffer(scene& sc, const int& b) :
-            scn(sc),
+            fb_width(sc.getCamera().width()), fb_height(sc.getCamera().height()),
+            fb_bpp(b), scn(sc),
             blockWidth(sc.getCamera().width() / HORIZ_BLOCKS),
             blockHeight(sc.getCamera().height() / VERT_BLOCKS),
-            blocksUsed(0),
-            _width(sc.getCamera().width()), _height(sc.getCamera().height()),
-            _bpp(b)
+            blocksUsed(0)
         {}
 
         virtual ~framebuffer() {}
-
         virtual void render() = 0;
-
-		const int& width() const{
-			return _width;
-		}
-
-		const int& height() const{
-			return _height;
-		}
-
-		const int& bpp() const{
-			return _bpp;
-		}
 
 	protected:
         /*
@@ -41,7 +27,7 @@ class framebuffer {
             bool done = false;
 
             // Critical section protects against race conditions on blocksUsed.
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 #pragma omp critical
 #endif
             {
@@ -55,12 +41,12 @@ class framebuffer {
             return done;
         }
 
+		int fb_width, fb_height, fb_bpp;
+
         scene& scn;
 
         const int blockWidth, blockHeight;
         int blocksUsed;
-
-		int _width, _height, _bpp;
 
         virtual void addSample(const int& x, const int& y, const rgbColor& c) = 0;
         virtual void setPixel(const int& x, const int& y, const rgbColor& c) = 0;

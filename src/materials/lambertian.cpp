@@ -15,7 +15,7 @@ const rgbColor lambertianBrdf::sampleF(
 }
 
 const rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
     if(hasTexture) {
         return texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR];
     }else {
@@ -33,7 +33,7 @@ float lambertianBrdf::pdf(const vec3& wo, const vec3& wi) const {
 void lambertianBrdf::updateFromUVTexture(const vec2& uv) {
     if(hasTexture && uv.x != -1) {
         const rgbColor c = textureLookup(DIFFUSE_COLOR, uv);
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
         texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c * rOverPi;
 #else
         rOverPi = c;

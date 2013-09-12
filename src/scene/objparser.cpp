@@ -1,3 +1,4 @@
+#include "utility.hpp"
 #include "objparser.hpp"
 
 #include "geometry/meshtriangle.hpp"
@@ -28,7 +29,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
     vector<meshTriangle*> tris(0);
 
     if(!file.is_open() || !file.good()){
-        cerr << "Unable to open OBJ file for reading: " << filename.c_str() << endl;
+        rt_throw("Unable to open OBJ file for reading: " + filename);
     }
 
     string chunk("");
@@ -39,8 +40,8 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
     }
 
     if(file.eof()){
-        cerr << "End of file reached before finding any valid data." << endl;
         file.close();
+        rt_throw("End of file reached before finding any valid data.");
     }
 
     vector<point3> points;
@@ -62,7 +63,7 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
     }
 
     if(file.eof()){
-        cerr << "End of file reached before making any faces." << endl;
+        rt_throw("End of file reached before making any faces.");
     }
 
     // Consume any intermediate info.

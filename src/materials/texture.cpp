@@ -11,7 +11,7 @@
 using std::cerr;
 using std::endl;
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 bool texture2D::lookupInitialized;
 rgbColor** texture2D::lookupCache;
 #endif

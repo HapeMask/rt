@@ -2,17 +2,19 @@
 #include <iostream>
 #include <fstream>
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 #include <omp.h>
 #endif
 
 #include <sys/time.h>
 #include <unistd.h>
 
+#ifdef RT_USE_QT
 #include <QApplication>
+#include <QImage>
 
-#include "framebuffer/qtoglframebuffer.hpp"
 #include "qtgui/qtmainwin.hpp"
+#endif
 
 #include "camera/camera.hpp"
 #include "scene/scene.hpp"
@@ -21,7 +23,6 @@
 
 #include "materials/texture.hpp"
 #include "utility.hpp"
-#include <QImage>
 
 using std::cerr;
 using std::endl;
@@ -61,10 +62,11 @@ int main(int argc, char* args[]){
         return 1;
     }
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
     omp_set_num_threads(numThreads);
 #endif
 
+#ifdef RT_USE_QT
     sceneloader::load(in, scn);
     in.close();
     scn.build();
@@ -76,4 +78,7 @@ int main(int argc, char* args[]){
     win.show();
 
     return app.exec();
+#else
+    return 1;
+#endif
 }

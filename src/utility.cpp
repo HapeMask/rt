@@ -9,15 +9,10 @@
 void makeCoordinateSystem(const vec3& u, vec3& v, vec3& w){
     if(abs(u.x) > abs(u.z)){
         const float invLen = 1.f / sqrt(u.x*u.x + u.y*u.y);
-        v.x = -u.y * invLen;
-        v.y = u.x * invLen;
-        v.z = 0.f;
-        v = normalize(v);
+        v = normalize({-u.y * invLen, u.x * invLen, 0.f});
     }else{
         const float invLen = 1.f / sqrt(u.z*u.z + u.y*u.y);
-        v.x = 0.f;
-        v.y = -u.z * invLen;
-        v.z = u.y * invLen;
+        v = normalize({0.f, -u.z * invLen, u.y * invLen});
     }
     w = normalize(cross(u,v));
 }

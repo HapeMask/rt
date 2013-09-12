@@ -1,11 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include "scanner.hpp"
-
 using std::istream;
-using std::cerr;
-using std::endl;
+
+#include "utility.hpp"
+#include "scanner.hpp"
 
 class sceneloader{
     public:
@@ -13,10 +12,7 @@ class sceneloader{
             scanner scan(&in);
             Bison::Parser parser(scan, s);
             int result = parser.parse();
-            if(result != 0){
-                cerr << "Parse error. Exiting." << endl;
-                exit(result);
-            }
+            if(result != 0){ rt_throw("Parse error."); }
         }
     private:
         sceneloader();

@@ -13,9 +13,9 @@ class quaternion{
 
 		quaternion(const float& w_, const vec3& v){
 			w = w_;
-			x = v(0);
-			y = v(1);
-			z = v(2);
+			x = v.x;
+			y = v.y;
+			z = v.z;
 		}
 
 		float w;

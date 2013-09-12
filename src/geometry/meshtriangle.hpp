@@ -13,7 +13,7 @@ class meshTriangle : public primitive {
 	public:
 		meshTriangle(const int& a, const int& b, const int& c, triangleMesh* parent);
 
-		virtual const intersection intersect(ray& r) const;
+		virtual intersection intersect(ray& r) const;
 		virtual bool intersectB(const ray& r) const;
 
 		const int& aIndex() const{

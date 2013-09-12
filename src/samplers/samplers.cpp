@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cmath>
-#include <random>
 
 #include "samplers.hpp"
 #include "utility.hpp"
@@ -8,14 +7,6 @@
 #include "mathlib/vector.hpp"
 #include "mathlib/constants.hpp"
 #include "geometry/triangle.hpp"
-
-// TODO: FIX THIS!
-static mt19937 rng;
-static uniform_real_distribution<float> uniform;
-
-float sampleUniform(){
-    return uniform(rng);
-}
 
 int sampleRange(const float& u0, const int& a, const int& b){
     return a + u0 * min((b-a + 1), b);

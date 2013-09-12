@@ -9,14 +9,15 @@ using namespace std;
 
 class vec2 {
     public:
-        constexpr vec2() : x(0), y(0) {}
+        constexpr vec2() : x(0.f), y(0.f) {}
         constexpr vec2(const float& x, const float& y) : x(x), y(y) {}
+        explicit constexpr vec2(const float& f) : x(f), y(f) {}
 
-        inline constexpr vec2 operator+(const vec2& v) {
+        inline constexpr vec2 operator+(const vec2& v) const {
             return vec2(x + v.x, y + v.y);
         }
 
-        inline constexpr vec2 operator+(const float& f) {
+        inline constexpr vec2 operator+(const float& f) const {
             return vec2(x + f, y + f);
         }
 
@@ -32,11 +33,11 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator-(const vec2& v) {
+        inline constexpr vec2 operator-(const vec2& v) const {
             return vec2(x - v.x, y - v.y);
         }
 
-        inline constexpr vec2 operator-(const float& f) {
+        inline constexpr vec2 operator-(const float& f) const {
             return vec2(x - f, y - f);
         }
 
@@ -52,11 +53,11 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator-() {
+        inline constexpr vec2 operator-() const {
             return vec2(-x, -y);
         }
 
-        inline constexpr vec2 operator*(const float& f) {
+        inline constexpr vec2 operator*(const float& f) const {
             return vec2(x * f, y * f);
         }
 
@@ -66,7 +67,7 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator*(const vec2& v) {
+        inline constexpr vec2 operator*(const vec2& v) const {
             return vec2(x * v.x, y * v.y);
         }
 
@@ -76,7 +77,7 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator/(const float& f) {
+        inline constexpr vec2 operator/(const float& f) const {
             return vec2(x / f, y / f);
         }
 
@@ -84,7 +85,7 @@ class vec2 {
             return (*this) *= 1.f / f;
         }
 
-        inline constexpr vec2 operator/(const vec2& v) {
+        inline constexpr vec2 operator/(const vec2& v) const {
             return vec2(x / v.x, y / v.y);
         }
 
@@ -94,7 +95,7 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr bool operator==(const vec2& v) {
+        inline constexpr bool operator==(const vec2& v) const {
             return (x == v.x) && (y == v.y);
         }
 
@@ -105,11 +106,11 @@ class vec2 {
 class point3;
 class vec3 {
     public:
-        vec3() : xyzw{0,0,0,0} {}
+        vec3() : xyzw(_mm_setzero_ps()) {}
         vec3(const point3& p);
         vec3(const float& x, const float& y, const float& z) : xyzw{x, y, z, 0.f} {}
-        vec3(const vec2& v, const float& f) : xyzw{v.x, v.y, f, 0} {}
-        vec3(const float& f, const vec2& v) : xyzw{f, v.x, v.y, 0} {}
+        vec3(const vec2& v, const float& f) : xyzw{v.x, v.y, f, 0.f} {}
+        vec3(const float& f, const vec2& v) : xyzw{f, v.x, v.y, 0.f} {}
         vec3(const __m128& v) : xyzw(v) {}
 
         explicit vec3(const float& f) : xyzw{f,f,f,f} {}

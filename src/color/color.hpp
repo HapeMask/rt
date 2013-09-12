@@ -20,16 +20,16 @@ class color {
 		float blue() const { return 0; }
 		float alpha() const { return 0; }
 
-        inline uint8_t R() const { return 0; }
-        inline uint8_t G() const { return 0; }
-        inline uint8_t B() const { return 0; }
-        inline uint8_t A() const { return 0; }
+        uint8_t R() const { return 0; }
+        uint8_t G() const { return 0; }
+        uint8_t B() const { return 0; }
+        uint8_t A() const { return 0; }
 
-        inline float gray() const {
+        float gray() const {
             return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
         }
 
-        inline float avg() const {
+        float avg() const {
             return (red() + blue() + green()) / 3.f;
         }
 };
@@ -37,6 +37,7 @@ class color {
 class rgbColor : public color, public vec3 {
 	public:
 		rgbColor() : vec3(0,0,0,1) {}
+        rgbColor(const color& c) : vec3(c.red(), c.green(), c.blue(), c.alpha()) {}
 		rgbColor(const vec3& v) : vec3(v) {}
         rgbColor(const float& r, const float& g, const float& b) :
             vec3(r,g,b,1) {}
@@ -51,18 +52,18 @@ class rgbColor : public color, public vec3 {
         explicit rgbColor(const float& f): vec3(f,f,f,1) {}
 
         inline rgbColor inverse() const {
-            return rgbColor(1.f) - (*this);
+            return rgbColor(__m128{1.f,1.f,1.f,1.f} - xyzw);
         }
 
-        const float& red() const { return x; }
-        const float& green() const { return y; }
-        const float& blue() const { return z; }
-        const float& alpha() const { return w; }
+        float red() const { return x; }
+        float green() const { return y; }
+        float blue() const { return z; }
+        float alpha() const { return w; }
 
-        inline uint8_t R() const { return 255.f * red(); }
-        inline uint8_t G() const { return 255.f * green(); }
-        inline uint8_t B() const { return 255.f * blue(); }
-        inline uint8_t A() const { return 255.f * alpha(); }
+        inline uint8_t R() const { return 255 * red(); }
+        inline uint8_t G() const { return 255 * green(); }
+        inline uint8_t B() const { return 255 * blue(); }
+        inline uint8_t A() const { return 255 * alpha(); }
 
         inline bool isBlack() const {
             return (red() <= 0 && green() <= 0 && blue() <= 0);
@@ -70,7 +71,7 @@ class rgbColor : public color, public vec3 {
 
 #ifdef RT_USE_QT
         inline const QColor qcolor() const {
-            return QColor(255.f * x, 255.f * y, 255.f * z);
+            return QColor(R(), G(), B());
         }
 
         inline uint toUint() const {
@@ -79,7 +80,8 @@ class rgbColor : public color, public vec3 {
 #endif
 };
 
-inline const rgbColor lerp(const rgbColor& a, const rgbColor& b, const float& alpha) {
+template <typename Color>
+inline Color lerp(const Color& a, const Color& b, const float& alpha) {
     return (1.f - alpha) * a + alpha * b;
 }
 

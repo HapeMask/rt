@@ -14,7 +14,7 @@
 
 #include "renderthread.hpp"
 class qtOpenGLFramebuffer : public QGLWidget, public framebuffer {
-    // Only if you use signals/slots.
+    // Needed if you use signals/slots.
     Q_OBJECT
 
     friend class renderThread;

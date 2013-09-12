@@ -61,9 +61,6 @@ class mat4 {
 		const mat4 transpose() const;
 		float det() const;
 
-		// Solve Ax = b where A = *this, return x.
-		const vec4 solve(const vec4& b);
-
 		const mat4 operator*(const float& x) const;
 		mat4& operator*=(const float& x);
 

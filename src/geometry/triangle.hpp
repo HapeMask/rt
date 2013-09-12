@@ -10,12 +10,12 @@
 
 class triangle : public primitive {
 	public:
-        triangle() {}
+        triangle() : area_(0), hasVertNormals(false), hasUVs(false) {}
 
 		triangle(const point3& a, const point3& b, const point3& c);
 		virtual ~triangle() {}
 
-		virtual const intersection intersect(ray& r) const;
+		virtual intersection intersect(ray& r) const;
 		virtual bool intersectB(const ray& r) const;
 
 		inline const point3& a() const{

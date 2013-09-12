@@ -38,7 +38,7 @@ meshTriangle::meshTriangle(const int& a, const int& b, const int& c, triangleMes
 	normal_ = normalize(normal_);
 }
 
-const intersection meshTriangle::intersect(ray& r) const {
+intersection meshTriangle::intersect(ray& r) const {
     const vec3 s1 = cross(C, r.direction);
     const float D = dot(s1, B);
     if(abs(D) < EPSILON){

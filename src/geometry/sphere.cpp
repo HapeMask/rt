@@ -16,14 +16,14 @@
 
 sphere::sphere(const point3& p, const float& r) :
 	primitive(aabb(
-                    vec3(p.x-r, p.y-r, p.z-r),
-                    vec3(p.x+r, p.y+r, p.z+r)
+                    vec3(p-r),
+                    vec3(p+r)
                 )
             ),
 	location(p), radius(r), radius2(r*r)
 {}
 
-const intersection sphere::intersect(ray& r) const {
+intersection sphere::intersect(ray& r) const {
 	const vec3 dir(r.origin - location);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);

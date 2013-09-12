@@ -19,7 +19,7 @@ scene<bvh, path>{
         //sphere(0, -1.5, 0, 1.5)
         objfile<smooth>("../models/sphere.obj")
 		//material(lambert(0.5,0.5,0.5))
-		material(lambert<textured>(0.5, 0.5, 0.5, imageTexture("/home/gbs25/ground-truth.png")))
+		material(lambert<textured>(0.5, 0.5, 0.5, imageTexture("../src/scene/uv_test_checkerboard.jpg")))
         //material(specular<dielectric>(0.8,0.8,0.8, 1.333))
         //material(substrate(0.5,0.5,0.5, aniso(0.5,0.5,0.5, 100, 100)))
     }

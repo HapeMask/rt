@@ -6,7 +6,7 @@
 using std::string;
 using std::shared_ptr;
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 #include <omp.h>
 #endif
 
@@ -26,19 +26,19 @@ enum textureSlot {
 
 class texture2D {
     public:
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
         static bool lookupInitialized;
         static rgbColor** lookupCache;
 #endif
 
         texture2D(const int& w, const int& h) : width(w), height(h) {
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
             initializeLookupCache();
 #endif
         }
 
         texture2D(const string& filename) : width(0), height(0) {
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
             initializeLookupCache();
 #endif
         }
@@ -52,7 +52,7 @@ class texture2D {
     protected:
         virtual const rgbColor& _lookup(const int& x, const int& y) const = 0;
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
     private:
         static void initializeLookupCache() {
 #pragma omp critical

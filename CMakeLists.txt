@@ -1,40 +1,52 @@
 cmake_minimum_required(VERSION 2.8)
 project(rt)
 
+option(ENABLE_EXCEPTIONS "Enable exception support." ON)
+option(USE_OPENMP "Enable OpenMP multi-threading support." ON)
+option(USE_QT "Enable interactive Qt GUI." ON)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules/)
-find_package(OpenMP REQUIRED)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(GLEW REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL)
+if(USE_OPENMP)
+    find_package(OpenMP REQUIRED)
+endif(USE_OPENMP)
+if(USE_QT)
+    find_package(OpenGL REQUIRED)
+    find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL)
+endif(USE_QT)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
 set(NUM_PARALLEL_LOOPS 4)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS} -flto")
-set(LINK_FLAGS "${LINK_FLAGS} -flto")
+set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS}")
+set(LINK_FLAGS "${LINK_FLAGS}")
 
 add_definitions(-O3
-    -g3 -Wall -std=c++11
-    -fno-rtti -fno-exceptions
-    -m64 -march=native
-    -mmmx -msse -msse2 -mfpmath=sse
-    -ftree-vectorize -fopenmp
-    -funroll-loops -funsafe-loop-optimizations
-    -floop-parallelize-all
-    -ftree-parallelize-loops=${NUM_PARALLEL_LOOPS}
-    -ftree-loop-distribution -fgraphite-identity
-    -ffast-math -freciprocal-math -mrecip
-    -pipe -fomit-frame-pointer
-    -fexpensive-optimizations
-    -fgcse-sm -fgcse-las -flto
-    -Wno-narrowing
-    -Wno-inline -Wno-unused-parameter)
+    -g3 -Wall -Winline -Wextra
+    -std=c++11 -fno-rtti
+    -march=native
+    -mmmx -msse -msse2 -msse3
+    -ftree-vectorize -funroll-loops
+    -ffast-math -freciprocal-math
+    -Wno-unused-parameter)
 
-add_definitions(-DRT_MULTITHREADED -DRT_USE_QT)
+if(USE_OPENMP)
+    add_definitions(-DRT_USE_OPENMP -fopenmp)
+endif(USE_OPENMP)
+
+if(USE_QT)
+    add_definitions(-DRT_USE_QT)
+endif(USE_QT)
+
+if(ENABLE_EXCEPTIONS)
+    add_definitions(-DRT_THROW_EXCEPTIONS)
+else(ENABLE_EXCEPTIONS)
+    add_definitions(-fno-exceptions)
+endif(ENABLE_EXCEPTIONS)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src

@@ -51,8 +51,7 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     makeCurrent();
     GLenum ret = glewInit();
     if(ret != GLEW_OK) {
-        cerr << "Error initializing glew: " << glewGetErrorString(ret) << endl;
-        return;
+        rt_throw("Error initializing glew: " + string((const char*)glewGetErrorString(ret)));
     }else{
         cerr << "Using GLEW version: " << glewGetString(GLEW_VERSION) << endl;
     }
@@ -87,9 +86,9 @@ qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* paren
     delete[] vertexData;
     delete[] normalData;
 
-    buffer = new rgbColor[_width*_height];
-    sumOfSquares = new rgbColor[_width*_height];
-    samplesPerPixel = new int[_width*_height];
+    buffer = new rgbColor[fb_width*fb_height];
+    sumOfSquares = new rgbColor[fb_width*fb_height];
+    samplesPerPixel = new int[fb_width*fb_height];
 
     static const float sigma = 0.45f;
     float sum = 0.f;
@@ -123,11 +122,11 @@ qtOpenGLFramebuffer::~qtOpenGLFramebuffer() {
 }
 
 QSize qtOpenGLFramebuffer::minimumSizeHint() const {
-    return QSize(_width, _height);
+    return QSize(fb_width, fb_height);
 }
 
 QSize qtOpenGLFramebuffer::sizeHint() const {
-    return QSize(_width, _height);
+    return QSize(fb_width, fb_height);
 }
 
 void qtOpenGLFramebuffer::initializeGL(){
@@ -225,8 +224,8 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
         }
 
         // Derp multiple inheritance...
-        viewRotY += sin(TWOPI * (dx / (float)framebuffer::width()));
-        viewRotX += sin(TWOPI * (dy / (float)framebuffer::height()));
+        viewRotY += sin(TWOPI * (dx / (float)fb_width));
+        viewRotX += sin(TWOPI * (dy / (float)fb_height));
 
         if(viewRotY >= TWOPI){
             viewRotY = 0;
@@ -249,7 +248,7 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
 void qtOpenGLFramebuffer::positionCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-    gluPerspective(fovy, (float)_width / _height, 0.5, 100);
+    gluPerspective(fovy, (float)fb_width / fb_height, 0.5, 100);
 
 	// Construct quaternions for composite rotation around
 	// Y and X axes.
@@ -277,7 +276,7 @@ void qtOpenGLFramebuffer::clearBuffers() {
     imgBuffer.fill(0);
 
     const rgbColor black(0.f);
-    for(int i=0; i<_width*_height; ++i){
+    for(int i=0; i<fb_width*fb_height; ++i){
         sumOfSquares[i] = rgbColor(0.f);
         buffer[i] = black;
         samplesPerPixel[i] = 0;
@@ -317,9 +316,7 @@ void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
     glDrawArrays(GL_TRIANGLES, 0, scn.vertexCount());
 
     const GLenum err = glGetError();
-    if(err != GL_NO_ERROR) {
-        cerr << gluErrorString(glGetError()) << endl;
-    }
+    if(err != GL_NO_ERROR) { rt_throw(gluErrorString(glGetError())); }
 
     /* SAMPLER DEMO CODE
     glDisable(GL_LIGHTING);
@@ -407,7 +404,7 @@ void qtOpenGLFramebuffer::_render() {
     struct timeval start, now;
     gettimeofday(&start, NULL);
 
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 #pragma omp parallel for schedule(dynamic)
 #endif
     // Fill blocks as long as the thread can get new ones.
@@ -431,7 +428,9 @@ void qtOpenGLFramebuffer::_render() {
                 const float yOffset = sampleUniform() - 0.5f;
                 const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
 
+#ifdef RT_USE_OPENMP
 #pragma omp critical
+#endif
                 {
                 addSample(x, y, L);
                 }
@@ -445,7 +444,7 @@ void qtOpenGLFramebuffer::_render() {
 
     // Lazy.
     averageSamplesPerSec = ((averageSamplesPerSec*iterations) +
-        (float)(_width*_height)/timeElapsed) / (iterations+1.f);
+        (float)(fb_width*fb_height)/timeElapsed) / (iterations+1.f);
     ++iterations;
     if(iterations == 1024) {
         toggleRendering();
@@ -458,16 +457,16 @@ void qtOpenGLFramebuffer::_render() {
 void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
     for(int i=0; i<7; ++i){
         for(int j=0; j<7; ++j){
-            const int offset = (y + 3-i) * _width + x + 3 - j;
+            const int offset = (y + 3-i) * fb_width + x + 3 - j;
 
-            if(offset > 0 && offset < _width*_height){
+            if(offset > 0 && offset < fb_width*fb_height){
                 const rgbColor C = c * gkern[i][j];
                 buffer[offset] += C;
             }
         }
     }
 
-    const int offset = y * _width + x;
+    const int offset = y * fb_width + x;
     ++samplesPerPixel[offset];
     ++pixelsSampled;
 
@@ -514,12 +513,12 @@ void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c
 }
 
 void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
-#ifdef RT_MULTITHREADED
+#ifdef RT_USE_OPENMP
 #pragma omp parallel for collapse(2)
 #endif
-    for(int y = 0; y <_height; y++){
-        for(int x = 0; x < _width; x++){
-            const int offset = y * _width + x;
+    for(int y = 0; y <fb_height; y++){
+        for(int x = 0; x < fb_width; x++){
+            const int offset = y * fb_width + x;
 
             static const float gamma = 1.f/2.2f;
             const rgbColor& c = buffer[offset] /
