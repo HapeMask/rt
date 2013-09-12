@@ -6,10 +6,6 @@
 #include "utility.hpp"
 
 #include <cmath>
-#include <iostream>
-
-using std::cerr;
-using std::endl;
 
 #ifdef RT_USE_OPENMP
 bool texture2D::lookupInitialized;
@@ -56,8 +52,7 @@ colorTexture2D::colorTexture2D(const string& filename) :
 
     QImage img(QObject::tr(filename.c_str()));
     if(img.isNull()){
-        cerr << "Error loading texture image: " << filename << endl;
-        return;
+        rt_throw("Error loading texture image: " + filename);
     }
 
     width = img.width();

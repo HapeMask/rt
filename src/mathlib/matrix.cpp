@@ -1,9 +1,8 @@
+#include <iostream>
+using std::ostream;
+
 #include "matrix.hpp"
 #include "vector.hpp"
-#include <iostream>
-
-using std::cerr;
-using std::endl;
 
 mat4 mat4::operator*(const float& x) const {
     return mat4(*this) *= x;

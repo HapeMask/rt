@@ -35,8 +35,8 @@ GLfloat specularMat0[] = {0.5, 0.5, 0.5, 1.0};
 
 GLfloat shine = 100;
 
-qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* parent) :
-    QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), parent),
+qtOpenGLFramebuffer::qtOpenGLFramebuffer(scene& s, const int bpp, QWidget* _parent) :
+    QGLWidget(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer), _parent),
     framebuffer(s, bpp), vertexVbo(0), normalVbo(0),
     viewRotX(0.f), viewRotY(0.f), fovy(s.getCamera().getFov()),
     lastPos(0.f, 0.f),
@@ -133,8 +133,8 @@ void qtOpenGLFramebuffer::initializeGL(){
     enableGLOptions();
 }
 
-void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
-    if(rendering && event->key() != Qt::Key_R) {
+void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* evt){
+    if(rendering && evt->key() != Qt::Key_R) {
         return;
     }
 
@@ -142,7 +142,7 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
     vec3 right = normalize(cross(camForward, vec3(0, 1, 0)));
     vec3 up = normalize(cross(right, camForward));
 
-    switch(event->key()){
+    switch(evt->key()){
         case Qt::Key_W:
             camPos += camForward / 5.f;
             showRenderView = false;
@@ -201,21 +201,21 @@ void qtOpenGLFramebuffer::keyPressEvent(QKeyEvent* event){
     update();
 }
 
-void qtOpenGLFramebuffer::mousePressEvent(QMouseEvent* event) {
+void qtOpenGLFramebuffer::mousePressEvent(QMouseEvent* evt) {
     if(!rendering) {
-        lastPos = event->pos();
+        lastPos = evt->pos();
     }
 
     setFocus(Qt::MouseFocusReason);
 }
 
-void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
+void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* evt) {
     if(rendering) {
         return;
     }
 
-    const int dx = event->x() - lastPos.x();
-    const int dy = event->y() - lastPos.y();
+    const int dx = evt->x() - lastPos.x();
+    const int dy = evt->y() - lastPos.y();
 
     if(dx != 0 || dy != 0){
         if(showRenderView){
@@ -239,7 +239,7 @@ void qtOpenGLFramebuffer::mouseMoveEvent(QMouseEvent* event) {
             viewRotX = -HALFPI + EPSILON;
         }
 
-        lastPos = event->pos();
+        lastPos = evt->pos();
 
         update();
     }
@@ -286,12 +286,12 @@ void qtOpenGLFramebuffer::clearBuffers() {
     iterations = 0;
 }
 
-void qtOpenGLFramebuffer::resizeGL(int width, int height) {
+void qtOpenGLFramebuffer::resizeGL(int _width, int _height) {
     // Don't allow resizing for now.
     resize(scn.getCamera().width(), scn.getCamera().height());
 }
 
-void qtOpenGLFramebuffer::paintEvent(QPaintEvent* event) {
+void qtOpenGLFramebuffer::paintEvent(QPaintEvent* evt) {
     enableGLOptions();
 
     positionCamera();
@@ -413,26 +413,17 @@ void qtOpenGLFramebuffer::_render() {
         getNextBlock(blockCornerX, blockCornerY);
 
         // Render the pixels in block.
-        for(int y=blockCornerY; y< blockCornerY + blockHeight; ++y){
-            for(int x=blockCornerX; x < blockCornerX + blockWidth; ++x){
-                /*
-                if(x != 140 || y != 100){
-                    continue;
-                }
-
-                cerr << scn.L(x, y) << endl;
-                exit(0);
-                */
-
+        for(int py=blockCornerY; py< blockCornerY + blockHeight; ++py){
+            for(int px=blockCornerX; px < blockCornerX + blockWidth; ++px){
                 const float xOffset = sampleUniform() - 0.5f;
                 const float yOffset = sampleUniform() - 0.5f;
-                const rgbColor L = scn.L((float)x + xOffset, (float)y + yOffset);
+                const rgbColor L = scn.L((float)px + xOffset, (float)py + yOffset);
 
 #ifdef RT_USE_OPENMP
 #pragma omp critical
 #endif
                 {
-                addSample(x, y, L);
+                addSample(px, py, L);
                 }
             }
         }
@@ -454,10 +445,10 @@ void qtOpenGLFramebuffer::_render() {
     blocksUsed = 0;
 }
 
-void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& c){
+void qtOpenGLFramebuffer::addSample(const int& px, const int& py, const rgbColor& c){
     for(int i=0; i<7; ++i){
         for(int j=0; j<7; ++j){
-            const int offset = (y + 3-i) * fb_width + x + 3 - j;
+            const int offset = (py + 3-i) * fb_width + px + 3 - j;
 
             if(offset > 0 && offset < fb_width*fb_height){
                 const rgbColor C = c * gkern[i][j];
@@ -466,7 +457,7 @@ void qtOpenGLFramebuffer::addSample(const int& x, const int& y, const rgbColor& 
         }
     }
 
-    const int offset = y * fb_width + x;
+    const int offset = py * fb_width + px;
     ++samplesPerPixel[offset];
     ++pixelsSampled;
 
@@ -508,17 +499,17 @@ void qtOpenGLFramebuffer::disableGLOptions() {
     glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-void qtOpenGLFramebuffer::setPixel(const int& x, const int& y, const rgbColor& c) {
-    imgBuffer.setPixel(x, y, qRgb(c.R(), c.G(), c.B()));
+void qtOpenGLFramebuffer::setPixel(const int& px, const int& py, const rgbColor& c) {
+    imgBuffer.setPixel(px, py, qRgb(c.R(), c.G(), c.B()));
 }
 
 void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
 #ifdef RT_USE_OPENMP
 #pragma omp parallel for collapse(2)
 #endif
-    for(int y = 0; y <fb_height; y++){
-        for(int x = 0; x < fb_width; x++){
-            const int offset = y * fb_width + x;
+    for(int py = 0; py <fb_height; py++){
+        for(int px = 0; px < fb_width; px++){
+            const int offset = py * fb_width + px;
 
             static const float gamma = 1.f/2.2f;
             const rgbColor& c = buffer[offset] /
@@ -529,7 +520,7 @@ void qtOpenGLFramebuffer::tonemapAndUpdateScreen(QPainter& painter){
                     pow(c.green(), gamma),
                     pow(c.blue(), gamma)));
 
-            setPixel(x, y, gammaC);
+            setPixel(px, py, gammaC);
         }
     }
 

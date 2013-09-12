@@ -18,9 +18,12 @@ class intersection;
 
 class primitive {
     public:
-        primitive() : lastRayTested(nullptr), parent(nullptr) {}
+        primitive() : primitive(nullptr, nullptr) {}
+        primitive(shape* p) : primitive(nullptr, p) {}
         primitive(const aabb& box) : primitive(nullptr, nullptr, box) {}
         primitive(const aabb& box, shape* p) : primitive(nullptr, p, box) {}
+        primitive(ray* lrt, shape* p) :
+            lastRayTested(lrt), parent(p), boundingBox() {}
         primitive(ray* lrt, shape* p, const aabb& box) :
             lastRayTested(lrt), parent(p), boundingBox(box) {}
 

@@ -36,7 +36,7 @@ rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     const vec3 wo = worldToBsdf(-r.direction, isect);
 
     bxdfType sampledType;
-    rgbColor L(0.f);
+    rgbColor colorSum(0.f);
 
     if(isect.s->getMaterial()->isEmissive()){
         return mat.Le();
@@ -58,12 +58,12 @@ rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
             if(!parent.intersectB(shadowRay)){
                 const vec3 wi = worldToBsdf(lightDir, isect);
                 const rgbColor f = bsdf.f(wo, wi, bxdfType(DIFFUSE | GLOSSY | REFLECTION)) + mat.Le();
-                L += f * dot(normal, lightDir) * (Li / lightPdf);
+                colorSum += f * dot(normal, lightDir) * (Li / lightPdf);
             }
         }else{
             rgbColor areaContrib(0.f);
 
-            for(int i=0; i<areaSamples; ++i){
+            for(int j=0; j<areaSamples; ++j){
                 vec3 lightDir;
 
                 const rgbColor Li = li.sampleL(r.origin, lightDir, sampleUniform(), sampleUniform(), lightPdf);
@@ -79,7 +79,7 @@ rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
                     areaContrib += f * dot(normal, lightDir) * (Li / lightPdf);
                 }
             }
-            L += areaContrib / (float)areaSamples;
+            colorSum += areaContrib / (float)areaSamples;
         }
     }
 
@@ -93,7 +93,7 @@ rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!fr.isBlack()){
         specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (fr / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
+        colorSum += (fr / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
     }
 
     const rgbColor ft =
@@ -103,12 +103,12 @@ rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
     if(!ft.isBlack()){
         specDir = bsdfToWorld(specDir, isect);
         ray r2(r.origin, specDir);
-        L += (ft / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
+        colorSum += (ft / pdf) * _L(r2, depth+1) * abs(dot(specDir, normal));
     }
 
-    if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){
-        return rgbColor(0.f, 0.f, 0.f);
-    }else{
-        return L;
+    if(!isFinite(colorSum.avg())) {
+        return ERROR_COLOR;
+    } else {
+        return colorSum;
     }
 }

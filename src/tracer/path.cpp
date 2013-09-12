@@ -1,4 +1,4 @@
-#include <cfloat>
+#include <cmath>
 
 #include "tracer.hpp"
 #include "utility.hpp"
@@ -7,18 +7,15 @@
 #include "light/light.hpp"
 #include "acceleration/intersection.hpp"
 #include "scene/scene.hpp"
-#include <cmath>
 
 rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
     return _L<true>(r2);
 }
 
-static const rgbColor ERR = {FLT_MAX,0.f,0.f};
-
 template <const bool recursiveSpecular>
 rgbColor pathTracer::_L(ray& r, const int depth) const {
-    rgbColor throughput(1.f), L(0.f);
+    rgbColor throughput(1.f), colorSum(0.f);
     bool lastBounceWasSpecular = false;
 
     for(int pathLength = 0; ; ++pathLength){
@@ -41,14 +38,14 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
 
                     const intersection isectL = parent.getLight(i).intersect(rOrig);
                     if(isectL.hit && !parent.intersectB(lightRay)){
-                        L += throughput * isectL.li->L(rOrig);
+                        colorSum += throughput * isectL.li->L(rOrig);
                     }
                 }
             }
 
             if(!isect.li) {
                 // TODO: Sky goes here.
-                //L += throughput * rgbColor(0.02f, 0.01f, 3.f);
+                //colorSum += throughput * rgbColor(0.02f, 0.01f, 3.f);
             }
 
             break;
@@ -66,8 +63,8 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
         // need to add in the light contribution. Explicit direct lighting
         // handles non-specular surfaces.
 
-        //L += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
-        L += throughput * (sampleAllLights(r.origin, wo, isect, bsdf) + mat.Le());
+        //colorSum += throughput * (sampleOneLight(r.origin, wo, isect, bsdf) + mat.Le());
+        colorSum += throughput * (sampleAllLights(r.origin, wo, isect, bsdf) + mat.Le());
 
         vec3 wi;
         float pdf = 0.f;
@@ -94,7 +91,7 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
                 if(!fr.isBlack()){
                     specDir = bsdfToWorld(specDir, isect);
                     ray r2(r.origin, specDir);
-                    L += fr * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
+                    colorSum += fr * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
                 }
 
                 const rgbColor ft =
@@ -104,7 +101,7 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
                 if(!ft.isBlack()){
                     specDir = bsdfToWorld(specDir, isect);
                     ray r2(r.origin, specDir);
-                    L += ft * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
+                    colorSum += ft * _L<true>(r2, depth+1) * abs(dot(specDir, normal)) / pdf;
                 }
             }
             break;
@@ -131,9 +128,9 @@ rgbColor pathTracer::_L(ray& r, const int depth) const {
         r.tMin = EPSILON;
     }
 
-    if(!(isFinite(L.red()) && isFinite(L.green()) && isFinite(L.blue()))){
-        return ERR;
-    }else{
-        return L;
+    if(!isFinite(colorSum.avg())) {
+        return ERROR_COLOR;
+    } else {
+        return colorSum;
     }
 }

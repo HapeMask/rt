@@ -3,10 +3,6 @@
 #include <QWaitCondition>
 #include <QMutex>
 
-#include <iostream>
-using std::cerr;
-using std::endl;
-
 class qtOpenGLFramebuffer;
 class renderThread : public QThread {
     Q_OBJECT

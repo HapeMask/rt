@@ -11,21 +11,21 @@
 
 #include "framebuffer/qtoglframebuffer.hpp"
 
-rtGUI::rtGUI(scene& s, QWidget* parent) : QMainWindow(parent),
+rtGUI::rtGUI(scene& s, QWidget* _parent) : QMainWindow(_parent),
     scn(s), fb(new qtOpenGLFramebuffer(s))
 {
-    QAction* quit = new QAction("&Quit", this);
-    quit->setShortcut(tr("CTRL+Q"));
+    QAction* ac_quit = new QAction("&Quit", this);
+    ac_quit->setShortcut(tr("CTRL+Q"));
     QMenu* file = menuBar()->addMenu("&File");
-    file->addAction(quit);
-    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    file->addAction(ac_quit);
+    connect(ac_quit, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(fb, SIGNAL(iterated(uint64_t, float)),
             this, SLOT(iterated(uint64_t, float)));
 
-    QAction* save = new QAction("&Save", this);
-    save->setShortcut(tr("CTRL+S"));
-    file->addAction(save);
-    connect(save, SIGNAL(triggered()), this, SLOT(save()));
+    QAction* ac_save = new QAction("&Save", this);
+    ac_save->setShortcut(tr("CTRL+S"));
+    file->addAction(ac_save);
+    connect(ac_save, SIGNAL(triggered()), this, SLOT(save()));
 
     fb->resize(scn.getCamera().width(), scn.getCamera().height());
     QWidget* win = new QWidget(this);

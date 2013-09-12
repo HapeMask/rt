@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cfloat>
 
 #include "color/color.hpp"
 
@@ -12,7 +13,8 @@
 
 using std::shared_ptr;
 
-const int MAX_DEPTH = 4;
+static const rgbColor ERROR_COLOR = {FLT_MAX,0.f,0.f};
+static const int MAX_DEPTH = 4;
 
 class scene;
 class rayTracer {

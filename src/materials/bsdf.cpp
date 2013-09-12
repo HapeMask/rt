@@ -8,10 +8,7 @@
 
 #include <cmath>
 #include <vector>
-#include <iostream>
 using std::vector;
-using std::cerr;
-using std::endl;
 
 void bsdf::updateFromUVTexture(const vec2& uv) {
     if(diffRef) {
@@ -56,13 +53,13 @@ void bsdf::addBxdf(bxdf* b){
             glossRef.reset(b);
             break;
         default:
-            cerr << "Invalid type added: " << b->getType() << endl;
+            rt_throw("Invalid BSDF type added.");
             break;
     }
 }
 
 rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
-    rgbColor f(0.f);
+    rgbColor ret(0.f);
 
     // Ignore BTDFs if the vectors are on the same side of the surface. 
     if(wo.y * wi.y > 0){
@@ -72,18 +69,18 @@ rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     }
 
     if(isSubtype(REFLECTION, type)){
-        if(isSubtype(DIFFUSE, type) && diffRef) f += diffRef->f(wo, wi);
-        if(isSubtype(SPECULAR, type) && specRef) f += specRef->f(wo, wi);
-        if(isSubtype(GLOSSY, type) && glossRef) f += glossRef->f(wo, wi);
+        if(isSubtype(DIFFUSE, type) && diffRef) ret += diffRef->f(wo, wi);
+        if(isSubtype(SPECULAR, type) && specRef) ret += specRef->f(wo, wi);
+        if(isSubtype(GLOSSY, type) && glossRef) ret += glossRef->f(wo, wi);
     }
 
     if(isSubtype(TRANSMISSION, type)){
-        if(isSubtype(DIFFUSE, type) && diffTra) f += diffTra->f(wo, wi);
-        if(isSubtype(SPECULAR, type) && specTra) f += specTra->f(wo, wi);
-        if(isSubtype(GLOSSY, type) && glossTra) f += glossTra->f(wo, wi);
+        if(isSubtype(DIFFUSE, type) && diffTra) ret += diffTra->f(wo, wi);
+        if(isSubtype(SPECULAR, type) && specTra) ret += specTra->f(wo, wi);
+        if(isSubtype(GLOSSY, type) && glossTra) ret += glossTra->f(wo, wi);
     }
 
-    return f;
+    return ret;
 }
 
 float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
@@ -127,7 +124,7 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         const vec3& wo, vec3& wi,
         bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;
-    rgbColor f(0.f);
+    rgbColor ret(0.f);
     vector<const bxdf*> matches;
 
     // Find all matching bxdfs.
@@ -155,10 +152,7 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         }
     }
 
-    if(matches.empty()){
-        p = 0.f;
-        return rgbColor(0.f);
-    }
+    if(matches.empty()){ return ret; }
 
     /*
      * Specular importance sampling I think.
@@ -170,21 +164,21 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         const float Ft = 1.f - Fr;
 
         if(u0 < Ft){
-            f = specTra->sampleF(u1, u2, wo, wi, p);
+            ret = specTra->sampleF(u1, u2, wo, wi, p);
             sampledType = specTra->getType();
             p = Ft;
         }else{
-            f = specRef->sampleF(u1, u2, wo, wi, p);
+            ret = specRef->sampleF(u1, u2, wo, wi, p);
             sampledType = specRef->getType();
             p = Fr;
         }
-        return f;
+        return ret;
     }
     //*/
 
     // Select and sample a random bxdf component to find wi.
     const unsigned int index = sampleRange(u0, 0, matches.size()-1);
-    f = matches[index]->sampleF(u1, u2, wo, wi, p);
+    ret = matches[index]->sampleF(u1, u2, wo, wi, p);
     sampledType = matches[index]->getType();
 
     // If it was a specular bxdf, then we just take the value from f
@@ -208,12 +202,12 @@ rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
     if(!(sampledType & SPECULAR)){
         for(size_t i=0; i<matches.size(); ++i){
             if(i != index){
-                f += matches[i]->f(wo, wi);
+                ret += matches[i]->f(wo, wi);
             }
         }
     }
 
-    return f;
+    return ret;
 }
 
 testBsdf::testBsdf() {

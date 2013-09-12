@@ -34,9 +34,9 @@ rgbColor bdpt::L(const ray& r) const {
     wi = normalize(bsdfToWorld(wi, normal, binormal, tangent));
 
     // Add the sampled point on the light as the start of the light path.
-    rgbColor L(0.f);
+    rgbColor Li(0.f);
 
-    return L;
+    return rgbColor(0.f);
 }
 
 void bdpt::createPath(ray& r, vector<pathPoint>& points) const {

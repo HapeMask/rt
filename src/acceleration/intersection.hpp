@@ -8,10 +8,10 @@ class shape;
 class intersection {
     public:
         // Delegating Constructors
-        intersection(const light* l, const float t = 0.f) :
-            intersection(nullptr, nullptr, l, true, t) {}
-        intersection(const primitive* p, const float t = 0.f) :
-            intersection(p->getParent(), p, nullptr, true, t) {}
+        intersection(const light* _li, const float _t = 0.f) :
+            intersection(nullptr, nullptr, li, true, _t) {}
+        intersection(const primitive* _p, const float _t = 0.f) :
+            intersection(_p->getParent(), _p, nullptr, true, _t) {}
 
         // Full Constructor
         intersection(

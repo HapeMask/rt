@@ -56,10 +56,10 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
         points.push_back(point3(x, y, z));
     }
 
-    // Fill in the scene's point heap.
-    p->pointHeap = new point3[points.size()];
+    // Fill in the scene's point storage.
+    p->pointStorage = new point3[points.size()];
     for(size_t i=0; i<points.size(); ++i){
-        p->pointHeap[i] = points[i];
+        p->pointStorage[i] = points[i];
     }
 
     if(file.eof()){
@@ -84,9 +84,9 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
     }
 
     if(uvs.size() > 0){
-        p->uvHeap = new vec2[uvs.size()];
+        p->uvStorage = new vec2[uvs.size()];
         for(size_t i=0; i<uvs.size(); ++i){
-            p->uvHeap[i] = uvs[i];
+            p->uvStorage[i] = uvs[i];
         }
     }
 
@@ -164,10 +164,10 @@ void objParser::parse(const string& filename, triangleMesh* p, const bool smooth
             vertNormals.push_back(normalize(normal));
         }
 
-        // Fill in the scene's vert normal heap.
-        p->vertexNormalHeap = new vec3[vertNormals.size()];
+        // Fill in the scene's vert normal storage.
+        p->vertexNormalStorage = new vec3[vertNormals.size()];
         for(size_t i=0;i<vertNormals.size(); ++i){
-            p->vertexNormalHeap[i] = vertNormals[i];
+            p->vertexNormalStorage[i] = vertNormals[i];
         }
 
         for(size_t i=0; i<tris.size(); ++i){

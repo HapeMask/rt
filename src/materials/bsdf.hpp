@@ -110,8 +110,8 @@ class bxdf {
 
 class specularBxdf : public bxdf {
     public:
-        specularBxdf(const bxdfType type, const float& eta, const float& K, const fresnelType ft) :
-            bxdf(type), fType(ft), ior(eta), k(K) {}
+        specularBxdf(const bxdfType _type, const float& eta, const float& K, const fresnelType ft) :
+            bxdf(_type), fType(ft), ior(eta), k(K) {}
 
         virtual rgbColor evalFresnel(const float& cosThetaO) const;
         virtual void updateFromUVTexture(const vec2& uv) {}

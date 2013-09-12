@@ -10,7 +10,7 @@ class rtGUI : public QMainWindow {
     Q_OBJECT
 
     public:
-        rtGUI(scene& s, QWidget* parent = 0);
+        rtGUI(scene& s, QWidget* _parent = 0);
 
     private:
         scene& scn;

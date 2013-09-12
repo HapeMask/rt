@@ -14,20 +14,20 @@ rgbColor frostedGlassBsdf::sampleF(const float& u0, const float& u1, const float
     const rgbColor F = glossTra->evalFresnel(abs(bsdf::cosTheta(wo)));
     const float Fr = (F.red() + F.blue() + F.green())/3.f;
     const float Ft = 1.f - Fr;
-    rgbColor f(0.f);
+    rgbColor ret(0.f);
     pd = 0.f;
 
     if(isSubtype(glossTra->getType(), type) && u0 < Ft){
-        f = glossTra->sampleF(u1, u2, wo, wi, pd);
+        ret = glossTra->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossTra->getType();
         pd *= Ft;
     }else if(isSubtype(glossRef->getType(), type)){
-        f = glossRef->sampleF(u1, u2, wo, wi, pd);
+        ret = glossRef->sampleF(u1, u2, wo, wi, pd);
         sampledType = glossRef->getType();
         pd *= Fr;
     }
 
-    return f;
+    return ret;
 }
 
 rgbColor frostedGlassBsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const {

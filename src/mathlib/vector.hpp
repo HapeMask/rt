@@ -10,7 +10,7 @@ using namespace std;
 class vec2 {
     public:
         constexpr vec2() : x(0.f), y(0.f) {}
-        constexpr vec2(const float& x, const float& y) : x(x), y(y) {}
+        constexpr vec2(const float& _x, const float& _y) : x(_x), y(_y) {}
         explicit constexpr vec2(const float& f) : x(f), y(f) {}
 
         inline constexpr vec2 operator+(const vec2& _v) const {

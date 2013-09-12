@@ -26,7 +26,7 @@ set(CMAKE_LINK_FLAGS "${CMAKE_LINK_FLAGS}")
 set(LINK_FLAGS "${LINK_FLAGS}")
 
 add_definitions(-O3
-    -g3 -Wall -Winline -Wextra
+    -g3 -Wall -Winline -Wextra -Wshadow
     -std=c++11 -fno-rtti
     -march=native
     -mmmx -msse -msse2 -msse3
