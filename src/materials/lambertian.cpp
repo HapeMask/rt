@@ -7,14 +7,14 @@ lambertianBrdf::lambertianBrdf(const rgbColor& r, texture2DPtr diffuseTex) :
     setTexture(DIFFUSE_COLOR, diffuseTex);
 }
 
-const rgbColor lambertianBrdf::sampleF(
+rgbColor lambertianBrdf::sampleF(
         const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const {
     cosineSampleHemisphere(wi, u0, u1);
     pd = pdf(wo, wi);
     return f(wo, wi);
 }
 
-const rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
+rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
 #ifdef RT_USE_OPENMP
     if(hasTexture) {
         return texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR];

@@ -7,11 +7,11 @@
 
 #include <cmath>
 
-const rgbColor specularBxdf::evalFresnel(const float& cosThetaO) const {
+rgbColor specularBxdf::evalFresnel(const float& cosThetaO) const {
     return rescaledApproxFresnel(ior, k, cosThetaO);
 }
 
-const rgbColor specularBrdf::f(const vec3& wo, const vec3& wi) const {
+rgbColor specularBrdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
 }
 
@@ -19,7 +19,7 @@ float specularBrdf::pdf(const vec3& wo, const vec3& wi) const {
     return 0.f;
 }
 
-const rgbColor specularBtdf::f(const vec3& wo, const vec3& wi) const {
+rgbColor specularBtdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
 }
 
@@ -27,7 +27,7 @@ float specularBtdf::pdf(const vec3& wo, const vec3& wi) const {
     return 0.f;
 }
 
-const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
     wi = normalize(vec3(-wo.x, wo.y, -wo.z));
 
@@ -35,7 +35,7 @@ const rgbColor specularBrdf::sampleF(const float& u0, const float& u1, const vec
     return Fr * kR / abs(bsdf::cosTheta(wi));
 }
 
-const rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+rgbColor specularBtdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     pd = 1.f;
     // The normal always points out of the object (as in PBRT), thus
     // we need to check if the ray is inside the object by checking

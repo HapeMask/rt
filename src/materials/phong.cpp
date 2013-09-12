@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     const float sinAlpha = sqrt(1.f - pow(u0, 2.f / (float)(n+1)));
     const float phi = TWOPI * u1;
 
@@ -25,7 +25,7 @@ const rgbColor phongBrdf::sampleF(const float& u0, const float& u1, const vec3& 
     }
 }
 
-const rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
+rgbColor phongBrdf::f(const vec3& wo, const vec3& wi) const{
     const float cosAlpha = dot(wo, reflect(wi));
     if(cosAlpha < 0){
         return rgbColor(0.f);

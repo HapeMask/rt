@@ -29,7 +29,7 @@ void scene::setAccelerator(acceleratorPtr a){
     accel = a;
 }
 
-const intersection scene::intersect(ray& r) const{
+intersection scene::intersect(ray& r) const{
     const ray rCopy(r);
 	const intersection isectG = accel->intersect(r);
     intersection closestIsect = isectG;

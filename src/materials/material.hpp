@@ -12,7 +12,7 @@ class material {
         material(bsdf* br);
         material(const rgbColor& c, const float& pow);
 
-        const rgbColor Le() const;
+        rgbColor Le() const;
 
         inline const bsdf& getBsdf() const {
             return *b.get();

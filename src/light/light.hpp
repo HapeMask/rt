@@ -17,9 +17,9 @@ class light {
             mat = materialPtr(new material(b));
         }
 
-        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1,
+        virtual rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1,
                 float& pdf) const = 0;
-        virtual const intersection intersect(const ray& r) const {
+        virtual intersection intersect(const ray& r) const {
             return noIntersect;
         }
 
@@ -27,11 +27,11 @@ class light {
             return false;
         }
 
-		inline virtual const rgbColor L(const ray& r) const {
+		inline virtual rgbColor L(const ray& r) const {
             return lightColor * power;
         }
 
-		inline virtual const rgbColor L(const point3& p) const {
+		inline virtual rgbColor L(const point3& p) const {
             return (lightColor * power) / norm2(position - p);
         }
 
@@ -64,8 +64,8 @@ class light {
             return mat;
         }
 
-        virtual const vec3 getNormal(const point3& p) const = 0;
-        virtual const point3 uniformSampleSurface() const = 0;
+        virtual vec3 getNormal(const point3& p) const = 0;
+        virtual point3 uniformSampleSurface() const = 0;
 
 	protected:
         point3 position;

@@ -40,7 +40,7 @@ class meshTriangle : public primitive {
 			return ((triangleMesh*)parent)->pointHeap[points[2]];
 		}
 
-        virtual const vec3 getNormal(const point3& p) const {
+        virtual vec3 getNormal(const point3& p) const {
             return normal_;
         }
 
@@ -51,7 +51,7 @@ class meshTriangle : public primitive {
         void setVertNormals(const int& an, const int& bn, const int& cn);
         void setUVs(const int& auv, const int& buv, const int& cuv);
 
-        virtual const point3 sampleSurface(const float& u0, const float& u1) const;
+        virtual point3 sampleSurface(const float& u0, const float& u1) const;
         inline virtual float area() const {
             return area_;
         }

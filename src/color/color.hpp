@@ -70,9 +70,7 @@ class rgbColor : public color, public vec3 {
         }
 
 #ifdef RT_USE_QT
-        inline const QColor qcolor() const {
-            return QColor(R(), G(), B());
-        }
+        inline QColor qcolor() const { return QColor(R(), G(), B()); }
 
         inline uint toUint() const {
             return QColormap::instance().pixel(qcolor());

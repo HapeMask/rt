@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     if(wo.y < 0.f) {
         pd = 0.f;
         return rgbColor(0.f);
@@ -47,7 +47,7 @@ const rgbColor newWard::sampleF(const float& u0, const float& u1, const vec3& wo
     return Rs;
 }
 
-const rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
+rgbColor newWard::f(const vec3& wo, const vec3& wi) const{
 	if(wo.y*wi.y < 0.f){
 		return rgbColor(0.f);
 	}

@@ -21,7 +21,7 @@ float sphereLight::pdf(const point3& p, const vec3& wi) const {
     }
 }
 
-const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const {
+rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const {
     // Create an arbitrary basis around w (direction towards the light) for the
     // transformation from that space to world space.
     //
@@ -62,7 +62,7 @@ const rgbColor sphereLight::sampleL(const point3& p, vec3& wi, const float& u0, 
     return lightColor * power;
 }
 
-const intersection sphereLight::intersect(const ray& r) const {
+intersection sphereLight::intersect(const ray& r) const {
 	const vec3 dir(r.origin - position);
 	const float A = dot(r.direction, r.direction);
 	const float B = dot(2.f*dir, r.direction);

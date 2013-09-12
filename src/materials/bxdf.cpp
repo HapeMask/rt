@@ -19,6 +19,6 @@ const texture2D& bxdf::getTexture(textureSlot slot) const {
     return *textureSlots[slot];
 }
 
-const rgbColor bxdf::textureLookup(const textureSlot& slot, const vec2& uv) const {
+rgbColor bxdf::textureLookup(const textureSlot& slot, const vec2& uv) const {
     return textureSlots[slot]->lookup(uv);
 }

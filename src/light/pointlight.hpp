@@ -8,14 +8,14 @@ class pointLight : public light {
             return true;
         }
 
-        virtual const point3 uniformSampleSurface() const {
+        virtual point3 uniformSampleSurface() const {
             return position;
         }
 
-        virtual const vec3 getNormal(const point3& p) const {
+        virtual vec3 getNormal(const point3& p) const {
             return vec3(0.f, 0.f, 0.f);
         }
 
-        virtual const rgbColor sampleL(const point3& p, vec3& wi,
+        virtual rgbColor sampleL(const point3& p, vec3& wi,
                 const float& u0, const float& u1, float& pdf) const;
 };

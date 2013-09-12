@@ -50,7 +50,7 @@ void camera::move(const vec3& dir){
     updateMatrices();
 }
 
-const ray camera::getRay(const float& x, const float& y) const{
+ray camera::getRay(const float& x, const float& y) const{
 	const point3 rasterPos(x, y, 0.f);
 	const point3 cameraPos = rasterToCamera.apply(rasterPos);
 

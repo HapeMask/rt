@@ -29,7 +29,7 @@ using std::vector;
 int boxesTested = 0;
 #endif
 
-const intersection bvh::intersect(ray& r) const{
+intersection bvh::intersect(ray& r) const{
     intersection isect = _intersect(0, r);
     if(isect.hit){
         r.origin += isect.t * r.direction;
@@ -46,7 +46,7 @@ bool bvh::intersectB(const ray& r) const{
     return _intersectB(0, r);
 }
 
-const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
+intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     const int primsToTest = node.primitives[1] - node.primitives[0];
 
     // Check each hit and find the closest.
@@ -65,7 +65,7 @@ const intersection bvh::leafTest(const bvhNode& node, const ray& r) const{
     return closestIsect;
 }
 
-const intersection bvh::_intersect(const int& index, const ray& r) const{
+intersection bvh::_intersect(const int& index, const ray& r) const{
     float tLeftMin=0, tRightMin=0;
     float tLeftMax=0, tRightMax=0;
 

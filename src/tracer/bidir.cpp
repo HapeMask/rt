@@ -8,7 +8,7 @@
 #include "mathlib/vector.hpp"
 #include "scene/scene.hpp"
 
-const rgbColor bdpt::L(const ray& r) const {
+rgbColor bdpt::L(const ray& r) const {
     ray eyeRay(r);
 
     // Don't bounce off lights if the eye ray hits one, just return the color.
@@ -42,5 +42,5 @@ const rgbColor bdpt::L(const ray& r) const {
 void bdpt::createPath(ray& r, vector<pathPoint>& points) const {
 }
 
-const rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
+rgbColor bdpt::tracePath(const vector<pathPoint>& points) const{
 }

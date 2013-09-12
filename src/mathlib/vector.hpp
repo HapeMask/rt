@@ -323,7 +323,7 @@ inline vec3 operator-(const float& f, vec3& u){
     return u - f;
 }
 
-inline const vec2 operator*(const float& f, const vec2& u){
+inline vec2 operator*(const float& f, const vec2& u){
     return u * f;
 }
 
@@ -339,7 +339,7 @@ inline vec3& operator*=(const float& f, vec3& u){
     return (u *= f);
 }
 
-inline const vec2 operator/(const float& f, const vec2& v){
+inline vec2 operator/(const float& f, const vec2& v){
     return vec2(f / v.x, f / v.y);
 }
 

@@ -10,13 +10,13 @@
 
 const int areaSamples = 4;
 
-const rgbColor whittedRayTracer::L(const ray& r) const{
+rgbColor whittedRayTracer::L(const ray& r) const{
     ray r2(r);
 	return _L(r2);
 }
 
-const int nsamp = 512*512*16*2;
-const rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
+static const int N_SAMPLES = 512*512*16*2;
+rgbColor whittedRayTracer::_L(ray& r, const int& depth) const{
 	if(depth > MAX_DEPTH){
 		return rgbColor(0.f);
 	}

@@ -30,7 +30,7 @@ class triangle : public primitive {
 			return c_;
 		}
 
-        virtual const vec3 getNormal(const point3& p) const {
+        virtual vec3 getNormal(const point3& p) const {
             return normal_;
         }
 
@@ -41,7 +41,7 @@ class triangle : public primitive {
         void setVertNormals(const vec3& an, const vec3& bn, const vec3& cn);
         void setUVs(const vec2& auv, const vec2& buv, const vec2& cuv);
 
-        virtual const point3 sampleSurface(const float& u0, const float& u1) const;
+        virtual point3 sampleSurface(const float& u0, const float& u1) const;
         inline virtual float area() const {
             return area_;
         }
@@ -66,7 +66,7 @@ class triangle : public primitive {
         bool hasVertNormals, hasUVs;
 };
 
-inline const point3 triangle::sampleSurface(const float& u0, const float& u1) const {
+inline point3 triangle::sampleSurface(const float& u0, const float& u1) const {
     point3 ret;
     sampleTriangle(ret, *this, u0, u1);
     return ret;

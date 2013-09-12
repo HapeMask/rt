@@ -96,7 +96,7 @@ bool sphere::intersectB(const ray& r) const {
     return true;
 }
 
-const vec3 sphere::getNormal(const point3& p) const{
+vec3 sphere::getNormal(const point3& p) const{
     return normalize(p - location);
 }
 

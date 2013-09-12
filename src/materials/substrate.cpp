@@ -12,7 +12,7 @@ substrate::~substrate(){
     delete distrib;
 }
 
-const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
+rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& wo, vec3& wi, float& pd) const{
     if(u0 < 0.5f){
         const float u = 2.f * u0;
         cosineSampleHemisphere(wi, u, u1);
@@ -29,7 +29,7 @@ const rgbColor substrate::sampleF(const float& u0, const float& u1, const vec3& 
     return f(wo, wi);
 }
 
-const rgbColor substrate::f(const vec3& wo, const vec3& wi) const{
+rgbColor substrate::f(const vec3& wo, const vec3& wi) const{
     const rgbColor diffuse = ecTerm *
         (1.f - pow(1.f - bsdf::cosTheta(wo) * 0.5f, 5)) * 
         (1.f - pow(1.f - bsdf::cosTheta(wi) * 0.5f, 5));

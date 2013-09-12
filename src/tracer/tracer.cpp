@@ -9,7 +9,7 @@
 
 #include "mathlib/vector.hpp"
 
-const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
+rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
     if(parent.numLights() > 0){
         const int i = sampleRange(sampleUniform(), 0, parent.numLights()-1);
@@ -19,7 +19,7 @@ const rgbColor rayTracer::sampleOneLight(const point3& p, const vec3& wo, const 
     }
 }
 
-const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const intersection& isect,
+rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const intersection& isect,
         const bsdf& bsdf) const{
     if(parent.numLights() > 0){
         rgbColor L(0.f);
@@ -33,7 +33,7 @@ const rgbColor rayTracer::sampleAllLights(const point3& p, const vec3& wo, const
     }
 }
 
-const rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
+rgbColor rayTracer::sampleDirect(const point3& p, const vec3& wo,
         const intersection& isect, const bsdf& bsdf, const light& li) const {
     // Ignore lights.
     if(isect.li){

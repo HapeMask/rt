@@ -15,7 +15,7 @@ class point2 {
         constexpr point2(const float& x, const float& y) : x(x), y(y) {}
         constexpr point2(const point2& p) : x(p.x), y(p.y) {}
 
-        inline const point2 operator+(const vec2& u) const {
+        inline point2 operator+(const vec2& u) const {
             return point2(*this) += u;
         }
 
@@ -25,7 +25,7 @@ class point2 {
             return (*this);
         }
 
-        inline const point2 operator-(const vec2& u) const {
+        inline point2 operator-(const vec2& u) const {
             return point2(*this) -= u;
         }
 
@@ -34,7 +34,7 @@ class point2 {
             return (*this);
         }
 
-        inline const vec2 operator-(const point2& p) const {
+        inline vec2 operator-(const point2& p) const {
             return vec2(x, y) - vec2(p.x, p.y);
         }
 
@@ -57,11 +57,11 @@ class point3 : public vec3 {
 		explicit point3(const float& f) : vec3(f) {}
 };
 
-inline const point3 min(const point3& a, const point3& b) {
+inline point3 min(const point3& a, const point3& b) {
     return point3(minps(a.xyzw, b.xyzw));
 }
 
-inline const point3 max(const point3& a, const point3& b) {
+inline point3 max(const point3& a, const point3& b) {
     return point3(maxps(a.xyzw, b.xyzw));
 }
 

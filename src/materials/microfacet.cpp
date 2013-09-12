@@ -17,7 +17,7 @@ float microfacetDistribution::G(const vec3& wo, const vec3& wi, const vec3& wh) 
                 2.f * ndotwh * ndotwi / wodotwh));
 }
 
-const rgbColor microfacetBrdf::f(const vec3& wo, const vec3& wi) const {
+rgbColor microfacetBrdf::f(const vec3& wo, const vec3& wi) const {
     const vec3 wh = halfVector(wo, wi);
     const float cosThetaO = abs(bsdf::cosTheta(wo));
     const float cosThetaT = abs(bsdf::cosTheta(wi));
@@ -29,11 +29,11 @@ const rgbColor microfacetBrdf::f(const vec3& wo, const vec3& wi) const {
         (4.f * cosThetaO * cosThetaT);
 }
 
-const rgbColor microfacetBrdf::evalFresnel(const float& cosTheta) const {
+rgbColor microfacetBrdf::evalFresnel(const float& cosTheta) const {
     return rescaledApproxFresnel(eta, k, cosTheta);
 }
 
-const rgbColor microfacetBrdf::sampleF(const float& u0, const float& u1,
+rgbColor microfacetBrdf::sampleF(const float& u0, const float& u1,
         const vec3& wo, vec3& wi, float& pd) const {
     distrib->sampleF(u0, u1, wo, wi, pd);
     return f(wo, wi);
@@ -51,15 +51,15 @@ microfacetBtdf::~microfacetBtdf(){
     delete distrib;
 }
 
-const rgbColor microfacetBtdf::f(const vec3& wo, const vec3& wi) const {
+rgbColor microfacetBtdf::f(const vec3& wo, const vec3& wi) const {
     return rgbColor(0.f);
 }
 
-const rgbColor microfacetBtdf::evalFresnel(const float& cosTheta) const {
+rgbColor microfacetBtdf::evalFresnel(const float& cosTheta) const {
     return rescaledApproxFresnel(eta, k, cosTheta);
 }
 
-const rgbColor microfacetBtdf::sampleF(const float& u0, const float& u1,
+rgbColor microfacetBtdf::sampleF(const float& u0, const float& u1,
         const vec3& wo, vec3& wi, float& pd) const
 {
     distrib->sampleF(u0, u1, wo, wi, pd);

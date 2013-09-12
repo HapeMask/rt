@@ -126,7 +126,7 @@ bool meshTriangle::intersectB(const ray& r) const {
     return true;
 }
 
-const point3 meshTriangle::sampleSurface(const float& u0, const float& u1) const {
+point3 meshTriangle::sampleSurface(const float& u0, const float& u1) const {
     /*
     point3 ret;
     sampleTriangle(ret, *this, u0, u1);

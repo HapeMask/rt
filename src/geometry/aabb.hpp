@@ -54,6 +54,6 @@ ostream& operator<<(ostream& out, const aabb& b);
 /*
  * Returns the bounding box that bounds boxes a and b.
  */
-inline const aabb mergeAabb(const aabb& a, const aabb& b){
+inline aabb mergeAabb(const aabb& a, const aabb& b){
     return aabb(min(a.min, b.min), max(a.max, b.max));
 }

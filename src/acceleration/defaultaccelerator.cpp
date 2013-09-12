@@ -6,7 +6,7 @@
 using std::shared_ptr;
 using std::vector;
 
-const intersection defaultAccelerator::intersect(ray& r) const{
+intersection defaultAccelerator::intersect(ray& r) const{
 	vector<intersection> hits;
 
 	const point3 ro(r.origin);

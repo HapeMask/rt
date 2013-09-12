@@ -39,7 +39,7 @@ class scene {
 
 		acceleratorPtr getAccelerator() { return accel; }
 
-		const intersection intersect(ray& r) const;
+		intersection intersect(ray& r) const;
 		bool intersectB(const ray& r) const;
 
 		const vector<shared_ptr<shape>>& getShapes() const {
@@ -87,7 +87,7 @@ class scene {
         void dumpToVbo(GLfloat* vertexVbo, GLfloat* normalVbo) const;
         void drawGL() const;
 
-        inline const rgbColor L(const float& x, const float& y) const {
+        inline rgbColor L(const float& x, const float& y) const {
             return rt->L(cam->getRay(x, y));
         }
 

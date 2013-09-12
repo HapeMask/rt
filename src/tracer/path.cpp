@@ -7,13 +7,13 @@
 #include "scene/scene.hpp"
 #include <cmath>
 
-const rgbColor pathTracer::L(const ray& r) const {
+rgbColor pathTracer::L(const ray& r) const {
     ray r2(r);
     return _L<true>(r2);
 }
 
 template <const bool recursiveSpecular>
-const rgbColor pathTracer::_L(ray& r, const int depth) const {
+rgbColor pathTracer::_L(ray& r, const int depth) const {
     rgbColor throughput(1.f), L(0.f);
     bool lastBounceWasSpecular = false;
 

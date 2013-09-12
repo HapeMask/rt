@@ -14,13 +14,13 @@ class sphere : public primitive {
 		virtual intersection intersect(ray& r) const;
 		virtual bool intersectB(const ray& r) const;
 
-        inline virtual const point3 sampleSurface(const float& u0, const float& u1) const {
+        inline virtual point3 sampleSurface(const float& u0, const float& u1) const {
             vec3 v;
             sampleSphere(v, u0, u1);
             return point3(v);
         }
 
-        virtual const vec3 getNormal(const point3& p) const;
+        virtual vec3 getNormal(const point3& p) const;
 
         inline virtual float area() const {
             return 4.f * PI * radius2;

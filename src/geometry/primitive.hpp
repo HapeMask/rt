@@ -29,12 +29,12 @@ class primitive {
 		virtual intersection intersect(ray& r) const = 0;
 		virtual bool intersectB(const ray& r) const = 0;
 
-        virtual const point3 sampleSurface(const float& u0, const float& u1) const = 0;
-        virtual const point3 uniformSampleSurface() const {
+        virtual point3 sampleSurface(const float& u0, const float& u1) const = 0;
+        virtual point3 uniformSampleSurface() const {
             return sampleSurface(sampleUniform(), sampleUniform());
         }
 
-        virtual const vec3 getNormal(const point3& p) const = 0;
+        virtual vec3 getNormal(const point3& p) const = 0;
         virtual float area() const = 0;
 
 		void setParent(shape* p){

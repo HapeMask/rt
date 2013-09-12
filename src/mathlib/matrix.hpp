@@ -57,16 +57,16 @@ class mat4 {
 			return data[i][j];
 		}
 
-		const mat4 inverse() const;
-		const mat4 transpose() const;
+		mat4 inverse() const;
+		mat4 transpose() const;
 		float det() const;
 
-		const mat4 operator*(const float& x) const;
+		mat4 operator*(const float& x) const;
 		mat4& operator*=(const float& x);
 
-		const vec4 operator*(const vec4& u) const;
+		vec4 operator*(const vec4& u) const;
 		mat4& operator*=(const mat4& m);
-		const mat4 operator*(const mat4& m) const;
+		mat4 operator*(const mat4& m) const;
 
 		bool operator==(const mat4& m) const;
 

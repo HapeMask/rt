@@ -61,7 +61,7 @@ void bsdf::addBxdf(bxdf* b){
     }
 }
 
-const rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
+rgbColor bsdf::f(const vec3& wo, const vec3& wi, bxdfType type) const{
     rgbColor f(0.f);
 
     // Ignore BTDFs if the vectors are on the same side of the surface. 
@@ -123,7 +123,7 @@ float bsdf::pdf(const vec3& wo, const vec3& wi, bxdfType type) const{
     return matches > 0 ? p / (float)matches : 0.f;
 }
 
-const rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
+rgbColor bsdf::sampleF(const float& u0, const float& u1, const float& u2,
         const vec3& wo, vec3& wi,
         bxdfType type, bxdfType& sampledType, float& p) const{
     p = 0.f;

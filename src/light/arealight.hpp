@@ -6,7 +6,7 @@ class areaLight : public light {
         areaLight(const point3& p, const float& pow, const rgbColor& c,
                 const vec3& vA, const vec3& vB);
 
-        virtual const intersection intersect(const ray& r) const;
+        virtual intersection intersect(const ray& r) const;
         virtual bool intersectB(const ray& r) const;
 
         inline virtual bool isPointSource() const {
@@ -19,13 +19,13 @@ class areaLight : public light {
 
         virtual float pdf(const point3& p, const vec3& wi) const;
 
-        virtual const rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const;
+        virtual rgbColor sampleL(const point3& p, vec3& wi, const float& u0, const float& u1, float& pd) const;
 
-        virtual const vec3 getNormal(const point3& p) const {
+        virtual vec3 getNormal(const point3& p) const {
             return normal;
         }
 
-        inline virtual const point3 uniformSampleSurface() const {
+        inline virtual point3 uniformSampleSurface() const {
             point3 samplePoint;
             sampleRectangle(samplePoint, a, b, position, sampleUniform(), sampleUniform());
             return samplePoint;

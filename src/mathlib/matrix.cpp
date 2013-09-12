@@ -5,11 +5,11 @@
 using std::cerr;
 using std::endl;
 
-const mat4 mat4::operator*(const float& x) const {
+mat4 mat4::operator*(const float& x) const {
 	return mat4(*this) *= x;
 }
 
-const vec4 mat4::operator*(const vec4& u) const{
+vec4 mat4::operator*(const vec4& u) const{
     float x=0.f,y=0.f,z=0.f,w=0.f;
 
     for(int i=0; i<4; ++i) {
@@ -37,7 +37,7 @@ mat4& mat4::operator*=(const mat4& m) {
 	return (*this);
 }
 
-const mat4 mat4::operator*(const mat4& m) const{
+mat4 mat4::operator*(const mat4& m) const{
 	float D[4][4];
 	for(int i=0; i<4; i++){
 		for(int j=0; j<4; j++){
@@ -73,7 +73,7 @@ float mat4::det() const{
 		data[0][3]*data[1][0]*data[2][1]*data[3][2] - data[0][3]*data[1][1]*data[2][2]*data[3][0] - data[0][3]*data[1][2]*data[2][0]*data[3][1];
 }
 
-const mat4 mat4::inverse() const{
+mat4 mat4::inverse() const{
 	mat4 inv;
 
 	inv(0,0)=   data[1][1]*data[2][2]*data[3][3] - data[1][1]*data[2][3]*data[3][2] - data[2][1]*data[1][2]*data[3][3]
@@ -113,7 +113,7 @@ const mat4 mat4::inverse() const{
 	return inv;
 }
 
-const mat4 mat4::transpose() const{
+mat4 mat4::transpose() const{
     float D[4][4];
 	for(int i=0; i<4; ++i) {
         for(int j=0; j<4; ++j) {

@@ -13,7 +13,7 @@ material::material(const rgbColor& c, const float& pow) : emissive(true),
     b.reset(p);
 }
 
-const rgbColor material::Le() const {
+rgbColor material::Le() const {
     if(emissive){
         return emitColor * emitPower;
     }else{

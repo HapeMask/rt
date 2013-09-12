@@ -22,7 +22,7 @@ class bvh : public accelerator {
     public:
         bvh() {}
 
-		virtual const intersection intersect(ray& r) const;
+		virtual intersection intersect(ray& r) const;
 		virtual bool intersectB(const ray& r) const;
 
 		virtual void build(const scene& s);
@@ -47,10 +47,10 @@ class bvh : public accelerator {
          */
         int _build(const aabb& box, int start, int end, int index);
 
-        const intersection _intersect(const int& index, const ray& r) const;
+        intersection _intersect(const int& index, const ray& r) const;
         bool _intersectB(const int& index, const ray& r) const;
 
-        const intersection leafTest(const bvhNode& node, const ray& r) const;
+        intersection leafTest(const bvhNode& node, const ray& r) const;
 
         int numNodes;
         int numPrims;
