@@ -15,7 +15,6 @@ add_library(Materials STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/ward.cpp)
 
 target_link_libraries(Materials
-    Color
     Utility
     Samplers
     )

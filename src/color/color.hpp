@@ -15,23 +15,21 @@ using std::ostream;
 
 class color {
 	public:
-		float red() const { return 0; }
-		float green() const { return 0; }
-		float blue() const { return 0; }
-		float alpha() const { return 0; }
+		virtual float red() const = 0;
+		virtual float green() const = 0;
+		virtual float blue() const = 0;
+		virtual float alpha() const = 0;
 
-        uint8_t R() const { return 0; }
-        uint8_t G() const { return 0; }
-        uint8_t B() const { return 0; }
-        uint8_t A() const { return 0; }
+        virtual uint8_t R() const = 0;
+        virtual uint8_t G() const = 0;
+        virtual uint8_t B() const = 0;
+        virtual uint8_t A() const = 0;
 
         float gray() const {
             return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
         }
 
-        float avg() const {
-            return (red() + blue() + green()) / 3.f;
-        }
+        float avg() const { return (red() + green() + blue()) / 3.f; }
 };
 
 class rgbColor : public color, public vec3 {
@@ -66,7 +64,9 @@ class rgbColor : public color, public vec3 {
         inline uint8_t A() const { return 255 * alpha(); }
 
         inline bool isBlack() const {
-            return (red() <= 0 && green() <= 0 && blue() <= 0);
+            return (red() <= EPSILON &&
+                    green() <= EPSILON &&
+                    blue() <= EPSILON);
         }
 
 #ifdef RT_USE_QT
@@ -83,4 +83,7 @@ inline Color lerp(const Color& a, const Color& b, const float& alpha) {
     return (1.f - alpha) * a + alpha * b;
 }
 
-ostream& operator<<(ostream& out, const color& c);
+inline ostream& operator<<(ostream& out, const color& c) {
+	out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
+	return out;
+}

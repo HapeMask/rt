@@ -61,7 +61,6 @@ add_library(Utility STATIC
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/acceleration)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/camera)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/color)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/framebuffer)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/geometry)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/light)
@@ -89,7 +88,6 @@ target_link_libraries(rt
     ${GLEW_LIBRARIES}
     Acceleration
     Camera
-    Color
     Framebuffer
     Geometry
     Light
