@@ -29,8 +29,6 @@ using std::endl;
 using std::ifstream;
 
 int main(int argc, char* args[]){
-    scene scn;
-
     string filename = "../src/scene/test.scn";
     int numThreads = 4;
     int c;
@@ -66,8 +64,15 @@ int main(int argc, char* args[]){
     omp_set_num_threads(numThreads);
 #endif
 
+    scene scn;
+    try {
+        sceneloader::load(in, scn);
+    } catch (string e) {
+        cerr << "Failed to load scene: " << e << endl;
+        return 1;
+    }
+
 #ifdef RT_USE_QT
-    sceneloader::load(in, scn);
     in.close();
     scn.build();
     QApplication app(argc, args);
