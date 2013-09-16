@@ -11,73 +11,76 @@
 
 class meshTriangle : public primitive {
     public:
-        meshTriangle(const int& a, const int& b, const int& c, triangleMesh* parent);
+        meshTriangle(const int& _a, const int& _b, const int& _c, triangleMesh* p);
 
         virtual intersection intersect(ray& r) const;
         virtual bool intersectB(const ray& r) const;
 
-        const int& aIndex() const{
-            return points[0];
+        const int& aIndex() const{ return points[0]; }
+        const int& bIndex() const{ return points[1]; }
+        const int& cIndex() const{ return points[2]; }
+
+        virtual vec3 getNormal(const point3& p) const { return normal_; }
+        inline const vec3& normal() const { return normal_; }
+
+        inline virtual const point3& a() const{
+            return parentMesh()->pointStorage[points[0]];
         }
 
-        const int& bIndex() const{
-            return points[1];
+        inline virtual const point3& b() const{
+            return parentMesh()->pointStorage[points[1]];
         }
 
-        const int& cIndex() const{
-            return points[2];
+        inline virtual const point3& c() const{
+            return parentMesh()->pointStorage[points[2]];
         }
 
-        const point3& a() const{
-            return ((triangleMesh*)parent)->pointHeap[points[0]];
+        inline const vec3& vertNormal(const int& i) const {
+            return parentMesh()->vertNormalLookup(vertNormals[i]);
         }
 
-        const point3& b() const{
-            return ((triangleMesh*)parent)->pointHeap[points[1]];
+        inline const vec2& uv(const int& i) const {
+            return parentMesh()->uvLookup(uvs[i]);
         }
 
-        const point3& c() const{
-            return ((triangleMesh*)parent)->pointHeap[points[2]];
+        inline triangleMesh* parentMesh() {
+            return static_cast<triangleMesh*>(parent);
         }
 
-        virtual vec3 getNormal(const point3& p) const {
-            return normal_;
+        inline const triangleMesh* parentMesh() const {
+            return static_cast<const triangleMesh*>(parent);
         }
 
-        inline const vec3& normal() const {
-            return normal_;
-        }
+        virtual point3 sampleSurface(const float& u0, const float& u1) const;
+        inline virtual float area() const { return area_; }
 
         void setVertNormals(const int& an, const int& bn, const int& cn);
         void setUVs(const int& auv, const int& buv, const int& cuv);
 
-        virtual point3 sampleSurface(const float& u0, const float& u1) const;
-        inline virtual float area() const {
-            return area_;
-        }
+        inline virtual long vertexCount() const { return 3; }
 
 #ifdef RT_USE_QT
         virtual void prepGL(GLfloat*& vertexData, GLfloat*& normalData) const;
-        virtual void drawGL() const;
+        virtual void drawGL() const {};
 #endif
-
-        inline virtual long vertexCount() const {
-            return 3;
-        }
 
     private:
         int points[3];
         int vertNormals[3];
         int uvs[3];
 
-        float du1,du2,dv1,dv2, invDetUV;
-
         vec3 normal_, binormal_;
         vec3 B, C;
 
         float area_;
         bool hasVertNormals, hasUVs;
-        triangleMesh* meshParent;
 };
+
+inline point3 meshTriangle::sampleSurface(const float& u0, const float& u1) const {
+    point3 ret;
+    const triangle t(a(), b(), c());
+    sampleTriangle(ret, t, u0, u1);
+    return ret;
+}
 
 typedef std::shared_ptr<meshTriangle> meshTrianglePtr;

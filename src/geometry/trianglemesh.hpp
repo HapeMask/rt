@@ -16,34 +16,34 @@ using std::vector;
 
 class triangleMesh : public shape {
     public:
-        triangleMesh() : pointHeap(NULL), vertexNormalHeap(NULL), uvHeap(NULL), totalVertices(0)
+        triangleMesh() : pointStorage(NULL), vertexNormalStorage(NULL), uvStorage(NULL), totalVertices(0)
         {}
 
-        ~triangleMesh(){
-            if(pointHeap) delete[] pointHeap;
-            if(vertexNormalHeap) delete[] vertexNormalHeap;
-            if(uvHeap) delete[] uvHeap;
+        virtual ~triangleMesh(){
+            if(pointStorage) delete[] pointStorage;
+            if(vertexNormalStorage) delete[] vertexNormalStorage;
+            if(uvStorage) delete[] uvStorage;
         }
 
         inline const point3& pointLookup(const int& i) const{
-            return pointHeap[i];
+            return pointStorage[i];
         }
 
         inline const vec3& vertNormalLookup(const int& i) const{
-            return vertexNormalHeap[i];
+            return vertexNormalStorage[i];
         }
 
         inline const vec2& uvLookup(const int& i) const{
-            return uvHeap[i];
+            return uvStorage[i];
         }
 
         inline virtual long vertexCount() const {
             return totalVertices;
         }
 
-        point3* pointHeap;
-        vec3* vertexNormalHeap;
-        vec2* uvHeap;
+        point3* pointStorage;
+        vec3* vertexNormalStorage;
+        vec2* uvStorage;
 
         long totalVertices;
 };

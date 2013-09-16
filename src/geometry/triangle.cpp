@@ -12,15 +12,12 @@
 
 #include <cmath>
 
-triangle::triangle(const point3& a, const point3& b, const point3& c) :
-    primitive(aabb(min(min(a, b), c), max(max(a, b), c))),
-    B(b-a), C(c-a), hasVertNormals(false), hasUVs(false) {
+triangle::triangle(const point3& _a, const point3& _b, const point3& _c) :
+    primitive(aabb(min(min(_a, _b), _c), max(max(_a, _b), _c))),
+    a_(_a), b_(_b), c_(_c), B(_b-_a), C(_c-_a),
+    hasVertNormals(false), hasUVs(false) {
 
-    a_ = a;
-    b_ = b;
-    c_ = c;
-
-    normal_ = cross(b-a, c-a);
+    normal_ = cross(_b-_a, _c-_a);
     area_ = 0.5 * norm(normal_);
     normal_ = normalize(normal_);
 }
@@ -82,45 +79,36 @@ void triangle::setUVs(const vec2& auv, const vec2& buv, const vec2& cuv){
     uvs[2] = cuv;
     hasUVs = true;
 
+    const vec2 d1 = uvs[0] - uvs[2];
+    const vec2 d2 = uvs[1] - uvs[2];
+
     // Compute partial derivatives in u/v for the hit.
-    const float du1 = uvs[0].x - uvs[2].x;
-    const float du2 = uvs[1].x - uvs[2].x;
-    const float dv1 = uvs[0].y - uvs[2].y;
-    const float dv2 = uvs[1].y - uvs[2].y;
-    const float invDetUV = 1.f / (du1*dv2 - dv1*du2);
+    const float invDetUV = 1.f / (d1.u*d2.v - d1.v*d2.u);
+    binormal_ = normalize((d2.v*B - d1.v*C) * invDetUV);
 
     const vec3 dp1 = a_ - c_;
     const vec3 dp2 = b_ - c_;
 
-    binormal_ = normalize((dv2 *  dp1 - dv1 * dp2) * invDetUV);
-    tangent_ = normalize((-du2 *  dp1 + du1 * dp2) * invDetUV);
+    binormal_ = normalize((d2.v *  dp1 - d1.v * dp2) * invDetUV);
+    tangent_ = normalize((-d2.u *  dp1 + d1.u * dp2) * invDetUV);
 }
 
 void triangle::prepGL(GLfloat*& vertexData, GLfloat*& normalData) const {
     for(int i=0; i<3; ++i){
         if(hasVertNormals){
-            (*normalData) = vertNormals[i].x;
-            ++normalData;
-            (*normalData) = vertNormals[i].y;
-            ++normalData;
-            (*normalData) = vertNormals[i].z;
-            ++normalData;
+            (*normalData) = vertNormals[i].x; ++normalData;
+            (*normalData) = vertNormals[i].y; ++normalData;
+            (*normalData) = vertNormals[i].z; ++normalData;
         }else{
-            (*normalData) = normal_.x;
-            ++normalData;
-            (*normalData) = normal_.y;
-            ++normalData;
-            (*normalData) = normal_.z;
-            ++normalData;
+            (*normalData) = normal_.x; ++normalData;
+            (*normalData) = normal_.y; ++normalData;
+            (*normalData) = normal_.z; ++normalData;
         }
 
         const point3& p = (i == 0) ? a_ : ((i == 1) ? b_ : c_);
 
-        (*vertexData) = p.x;
-        ++vertexData;
-        (*vertexData) = p.y;
-        ++vertexData;
-        (*vertexData) = p.z;
-        ++vertexData;
+        (*vertexData) = p.x; ++vertexData;
+        (*vertexData) = p.y; ++vertexData;
+        (*vertexData) = p.z; ++vertexData;
     }
 }
