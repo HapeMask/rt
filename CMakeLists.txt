@@ -8,14 +8,21 @@ option(USE_QT "Enable interactive Qt GUI." ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules/)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
-find_package(GLEW REQUIRED)
 if(USE_OPENMP)
-    find_package(OpenMP REQUIRED)
-endif(USE_OPENMP)
+    find_package(OpenMP)
+    if (NOT OPENMP_FOUND)
+        set(USE_OPENMP OFF)
+    endif()
+endif()
 if(USE_QT)
-    find_package(OpenGL REQUIRED)
-    find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL)
-endif(USE_QT)
+    find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL)
+    find_package(OpenGL)
+    find_package(GLEW)
+
+    if (NOT Qt4_FOUND OR NOT QT_QTOPENGL_FOUND OR NOT OPENGL_FOUND OR NOT GLEW_FOUND)
+        set(USE_QT OFF)
+    endif()
+endif()
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
@@ -36,17 +43,17 @@ add_definitions(-O3
 
 if(USE_OPENMP)
     add_definitions(-DRT_USE_OPENMP -fopenmp)
-endif(USE_OPENMP)
+endif()
 
 if(USE_QT)
     add_definitions(-DRT_USE_QT)
-endif(USE_QT)
+endif()
 
 if(ENABLE_EXCEPTIONS)
     add_definitions(-DRT_THROW_EXCEPTIONS)
-else(ENABLE_EXCEPTIONS)
+else()
     add_definitions(-fno-exceptions)
-endif(ENABLE_EXCEPTIONS)
+endif()
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
@@ -98,3 +105,8 @@ target_link_libraries(rt
     QtGUI
     Utility
     )
+
+message("")
+message("==[Options]==")
+message("    Use OpenMP:\t\t"     ${USE_OPENMP})
+message("    Use Qt:\t\t"     ${USE_QT})
