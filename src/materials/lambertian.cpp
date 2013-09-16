@@ -18,12 +18,9 @@ rgbColor lambertianBrdf::f(const vec3& wo, const vec3& wi) const {
 #ifdef RT_USE_OPENMP
     if(hasTexture) {
         return texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR];
-    }else {
-        return rOverPi;
     }
-#else
-    return rOverPi;
 #endif
+    return rOverPi;
 }
 
 float lambertianBrdf::pdf(const vec3& wo, const vec3& wi) const {
@@ -32,11 +29,10 @@ float lambertianBrdf::pdf(const vec3& wo, const vec3& wi) const {
 
 void lambertianBrdf::updateFromUVTexture(const vec2& uv) {
     if(hasTexture && uv.x != -1) {
-        const rgbColor c = textureLookup(DIFFUSE_COLOR, uv);
+        const rgbColor c = textureLookup(DIFFUSE_COLOR, uv) * INVPI;
+        rOverPi = c;
 #ifdef RT_USE_OPENMP
         texture2D::lookupCache[omp_get_thread_num()][DIFFUSE_COLOR] = c;
-#else
-        rOverPi = c;
 #endif
     }
 }
