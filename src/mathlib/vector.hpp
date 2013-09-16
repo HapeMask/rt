@@ -13,17 +13,17 @@ class vec2 {
         constexpr vec2(const float& x, const float& y) : x(x), y(y) {}
         explicit constexpr vec2(const float& f) : x(f), y(f) {}
 
-        inline constexpr vec2 operator+(const vec2& v) const {
-            return vec2(x + v.x, y + v.y);
+        inline constexpr vec2 operator+(const vec2& _v) const {
+            return vec2(x + _v.x, y + _v.y);
         }
 
         inline constexpr vec2 operator+(const float& f) const {
             return vec2(x + f, y + f);
         }
 
-        inline vec2& operator+=(const vec2& v){
-            x += v.x;
-            y += v.y;
+        inline vec2& operator+=(const vec2& _v){
+            x += _v.x;
+            y += _v.y;
             return (*this);
         }
 
@@ -33,17 +33,17 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator-(const vec2& v) const {
-            return vec2(x - v.x, y - v.y);
+        inline constexpr vec2 operator-(const vec2& _v) const {
+            return vec2(x - _v.x, y - _v.y);
         }
 
         inline constexpr vec2 operator-(const float& f) const {
             return vec2(x - f, y - f);
         }
 
-        inline vec2& operator-=(const vec2& v){
-            x -= v.x;
-            y -= v.y;
+        inline vec2& operator-=(const vec2& _v){
+            x -= _v.x;
+            y -= _v.y;
             return (*this);
         }
 
@@ -67,13 +67,13 @@ class vec2 {
             return (*this);
         }
 
-        inline constexpr vec2 operator*(const vec2& v) const {
-            return vec2(x * v.x, y * v.y);
+        inline constexpr vec2 operator*(const vec2& _v) const {
+            return vec2(x * _v.x, y * _v.y);
         }
 
-        inline vec2& operator*=(const vec2& v){
-            x *= v.x;
-            y *= v.y;
+        inline vec2& operator*=(const vec2& _v){
+            x *= _v.x;
+            y *= _v.y;
             return (*this);
         }
 
@@ -85,22 +85,24 @@ class vec2 {
             return (*this) *= 1.f / f;
         }
 
-        inline constexpr vec2 operator/(const vec2& v) const {
-            return vec2(x / v.x, y / v.y);
+        inline constexpr vec2 operator/(const vec2& _v) const {
+            return vec2(x / _v.x, y / _v.y);
         }
 
-        inline vec2& operator/=(const vec2& v){
-            x /= v.x;
-            y /= v.y;
+        inline vec2& operator/=(const vec2& _v){
+            x /= _v.x;
+            y /= _v.y;
             return (*this);
         }
 
-        inline constexpr bool operator==(const vec2& v) const {
-            return (x == v.x) && (y == v.y);
+        inline constexpr bool operator==(const vec2& _v) const {
+            return (x == _v.x) && (y == _v.y);
         }
 
-        float x;
-        float y;
+        union {
+            struct { float x, y; };
+            struct { float u, v; };
+        };
 };
 
 class point3;
@@ -108,7 +110,7 @@ class vec3 {
     public:
         vec3() : xyzw(_mm_setzero_ps()) {}
         vec3(const point3& p);
-        vec3(const float& x, const float& y, const float& z) : xyzw{x, y, z, 0.f} {}
+        vec3(const float& _x, const float& _y, const float& _z) : xyzw{_x, _y, _z, 0.f} {}
         vec3(const vec2& v, const float& f) : xyzw{v.x, v.y, f, 0.f} {}
         vec3(const float& f, const vec2& v) : xyzw{f, v.x, v.y, 0.f} {}
         vec3(const __m128& v) : xyzw(v) {}
@@ -218,17 +220,17 @@ class vec3 {
         };
 
     protected:
-        vec3(const float& x, const float& y, const float& z, const float& w) : xyzw{x,y,z,w} {}
+        vec3(const float& _x, const float& _y, const float& _z, const float& _w) : xyzw{_x,_y,_z,_w} {}
 };
 
 class vec4 : public vec3 {
     public:
         vec4() : vec3() {}
         vec4(const vec3& v) : vec3(v) {}
-        vec4(const float& x, const float& y, const float& z, const float& w) : vec3(x,y,z,w) {}
+        vec4(const float& _x, const float& _y, const float& _z, const float& _w) : vec3(_x,_y,_z,_w) {}
         vec4(const float& f) : vec3(f) {}
         vec4(const __m128& v) : vec3(v) {}
-        vec4(const vec3& v, const float& w) : vec3(v.x, v.y, v.z, w) {}
+        vec4(const vec3& v, const float& _w) : vec3(v.x, v.y, v.z, _w) {}
 
         inline const float& operator()(const int& index) const{
 #ifdef DEBUG
