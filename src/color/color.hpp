@@ -13,29 +13,10 @@ using std::ostream;
 #include "mathlib/sse.hpp"
 #include "mathlib/vector.hpp"
 
-class color {
-    public:
-        virtual float red() const = 0;
-        virtual float green() const = 0;
-        virtual float blue() const = 0;
-        virtual float alpha() const = 0;
 
-        virtual uint8_t R() const = 0;
-        virtual uint8_t G() const = 0;
-        virtual uint8_t B() const = 0;
-        virtual uint8_t A() const = 0;
-
-        float gray() const {
-            return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
-        }
-
-        float avg() const { return (red() + green() + blue()) / 3.f; }
-};
-
-class rgbColor : public color, public vec3 {
+class rgbColor : public vec3 {
     public:
         rgbColor() : vec3(0,0,0,1) {}
-        rgbColor(const color& c) : vec3(c.red(), c.green(), c.blue(), c.alpha()) {}
         rgbColor(const vec3& v) : vec3(v) {}
         rgbColor(const float& r, const float& g, const float& b) :
             vec3(r,g,b,1) {}
@@ -69,6 +50,12 @@ class rgbColor : public color, public vec3 {
                     blue() <= EPSILON);
         }
 
+        float gray() const {
+            return red() * 0.297f + green() * 0.569f + blue() * 0.114f;
+        }
+
+        float avg() const { return (red() + green() + blue()) / 3.f; }
+
 #ifdef RT_USE_QT
         QColor qcolor() const { return QColor(R(), G(), B()); }
 
@@ -83,7 +70,7 @@ inline Color lerp(const Color& a, const Color& b, const float& alpha) {
     return (1.f - alpha) * a + alpha * b;
 }
 
-inline ostream& operator<<(ostream& out, const color& c) {
+inline ostream& operator<<(ostream& out, const rgbColor& c) {
     out << "color(" << c.red() << ", " << c.green() << ", " << c.blue() << ")";
     return out;
 }
